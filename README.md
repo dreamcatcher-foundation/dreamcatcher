@@ -1,5 +1,7 @@
 # dreamcatcher
 
+We have upgraded the project and restructured it. Here is the old repo [text](https://github.com/snqre/dreamcatcher).
+
 To install dependencies:
 
 ```bash
