@@ -1,1 +1,1 @@
-ref https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies
+From 8 months of research and development
