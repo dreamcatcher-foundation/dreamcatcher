@@ -1,0 +1,1 @@
+All scripts must have a counterpart html file.

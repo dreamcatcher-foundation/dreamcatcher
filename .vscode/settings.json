@@ -1,0 +1,10 @@
+{
+  "material-icon-theme.folders.associations": {
+    "disk": "jinja",
+    "'console": "circleci",
+    "'network": "circleci",
+    "'polygon": "circleci",
+    "route": "routes",
+    "shell": "jinja"
+  }
+}
