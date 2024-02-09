@@ -5,11 +5,11 @@
   "module": "./script.ts",
   "type": "module",
   "scripts": {
-    "bf": "bash ./shell/build_frontend.sh",
-    "build_frontend": "bash ./shell/build_frontend.sh",
-    "disk": "bash ./shell/check_disk.sh",
-    "bt": "bash ./shell/boot.sh",
-    "boot": "bash ./shell/boot.sh"
+    "bf": "bash ./shell/build_frontend.bash",
+    "build_frontend": "bash ./shell/build_frontend.bash",
+    "disk": "bash ./shell/check_disk.bash",
+    "bt": "bash ./shell/boot.bash",
+    "boot": "bash ./shell/boot.bash"
   },
   "devDependencies": {
     "@types/bun": "latest"

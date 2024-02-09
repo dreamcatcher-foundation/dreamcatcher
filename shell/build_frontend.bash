@@ -1,17 +1,23 @@
 #!/bin/bash
+
 if [ $# -lt 1 ]; then
   echo "Bash: command: $1 <program>"
   exit 1
 fi
+
 echo "Bash: building routes for $1"
+
 DIRECTORY="./code/frontend/$1/src/route"
+
 if [ ! -d "$DIRECTORY" ]; then
   echo "Bash: cannot find directory '$DIRECTORY'"
   exit 1
 fi
+
 DIST="./code/frontend/$1/dist"
 rm -rf "$DIST"
 mkdir -p "$DIST"
+
 for FOLDER in "$DIRECTORY"/*/; do
   if [ -d "$FOLDER" ]; then
     for TSX_FILE in "$FOLDER"*.tsx; do
@@ -29,4 +35,5 @@ for FOLDER in "$DIRECTORY"/*/; do
     done
   fi
 done
+
 echo "Bash: successfully built routes for $1 at '$DIST'"
