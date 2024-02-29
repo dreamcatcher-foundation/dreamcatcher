@@ -1,1 +1,0 @@
-Kowa **Pillar of Strength** v0.5.0

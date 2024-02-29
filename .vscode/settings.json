@@ -5,6 +5,7 @@
     "'network": "circleci",
     "'polygon": "circleci",
     "route": "routes",
-    "shell": "jinja"
+    "shell": "jinja",
+    "module": "prisma",
   }
 }
