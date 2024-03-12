@@ -40,6 +40,7 @@
     "framer": "^2.4.1",
     "framer-motion": "^11.0.3",
     "glob": "^10.3.10",
+    "hardhat": "^2.21.0",
     "loopring-solidity-flattener": "^3.0.8",
     "node-schedule": "^2.1.1",
     "react": "^18.2.0",

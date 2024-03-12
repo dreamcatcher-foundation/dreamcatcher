@@ -7,9 +7,33 @@ class Pointer<Value> {
 }
 
 
+class Result<Instance, Value> 
+{
+    public constructor
+    (
+        protected _root: Instance,
+        protected _value: Value,
+        protected _my_other_value: string
+    ) {}
+
+    match
+    (
+        against: Value,
+        callback: (value: Value) => void
+    ): this 
+    {
+        if (against === this._value)
+        {
+            callback(this._value);
+        }
+        return this;
+    }
+
+    
+}
 
 
-class Result<Instance, Value> {
+class Resulst<Instance, Value> {
     public constructor(
         protected _root: Instance,
         protected _value: Value

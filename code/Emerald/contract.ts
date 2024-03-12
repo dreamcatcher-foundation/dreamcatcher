@@ -14,10 +14,10 @@ type AddressLike = `0x${string}`;
 type Contract = {
     rpcUrl: () => string;
     address: () => string;
-    applicationBinaryInterface: () => unknown;
-    setRpcUrl: (rpcUrl: string) => Contract;
-    setAddress: (address: string) => Contract;
-    setApplicationBinaryInterface: (applicationBinaryInterface: unknown) => Contract;
+    application_binary_interface: () => unknown;
+    set_rpc_url: (rpcUrl: string) => Contract;
+    set_address: (address: string) => Contract;
+    set_application_binary_interface: (applicationBinaryInterface: unknown) => Contract;
     build: () => Contract;
     query: (methodSignature: string, ...args: any[]) => Promise<any>;
 }

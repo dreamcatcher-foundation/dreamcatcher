@@ -7,5 +7,6 @@
     "route": "routes",
     "shell": "jinja",
     "module": "prisma",
+    "memory": "jinja"
   }
 }
