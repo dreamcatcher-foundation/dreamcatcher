@@ -5,6 +5,22 @@ import "../storage/asset/TokenStorage.sol";
 contract TokenFacet is TokenStorage {
     using TokenStorageLib for TokenStorageLib.Token;
 
+    function selectors() external pure returns (bytes4[] memory) {
+        bytes4[] memory response = new bytes4[](11);
+        response[0] = bytes4(keccak256("name()"));
+        response[1] = bytes4(keccak256("symbol()"));
+        response[2] = bytes4(keccak256("decimals()"));
+        response[3] = bytes4(keccak256("totalSupply()"));
+        response[4] = bytes4(keccak256("balanceOf(address)"));
+        response[5] = bytes4(keccak256("allowance(address,address)"));
+        response[6] = bytes4(keccak256("transfer(address,uint256)"));
+        response[7] = bytes4(keccak256("transferFrom(address,address,uint256)"));
+        response[8] = bytes4(keccak256("approve(address,uint256)"));
+        response[9] = bytes4(keccak256("increaseAllowance(address,uint256)"));
+        response[10] = bytes4(keccak256("decreaseAllowance(address,uint256)"));
+        return response;
+    }
+
     function name() external view returns (string memory) {
         return token().name();
     }

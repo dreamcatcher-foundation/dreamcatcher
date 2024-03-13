@@ -117,3 +117,14 @@ library MarketStorageLib {
         return trade.sellWithSlippageCheck();
     }
 }
+
+contract MarketStorage {
+    bytes32 constant internal MARKET = bytes32(uint256(keccak256("eip1967.market")) - 1);
+
+    function market() internal pure returns (MarketStorageLib.Market storage sl) {
+        bytes32 loc = MARKET;
+        assembly {
+            sl.slot := loc
+        }
+    }
+}
