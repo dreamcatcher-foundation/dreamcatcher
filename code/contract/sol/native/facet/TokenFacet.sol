@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
-import '../storage/asset/TokenStorage.sol';
+import "../storage/asset/TokenStorage.sol";
 
 contract TokenFacet is TokenStorage {
     using TokenStorageLibrary for TokenStorageLibrary.Token;
