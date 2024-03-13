@@ -13,13 +13,6 @@ import "../interface/IFacet.sol";
 *      forms the foundation of modular plugIn-like architecture.
  */
 contract Diamond is SolidStateDiamond {
-
-    /**
-     * @dev Adds selectors to the diamond contract.
-     * @param implementation The address of the facet implementing the selectors.
-     * @param selectors The array of function selectors to be added.
-     * @return A boolean indicating whether the addition was successful or not.
-     */
     function addSelectors(address implementation, bytes4[] memory selectors) public virtual onlyOwner() returns (bool) {
         FacetCutAction action = FacetCutAction.ADD;
         FacetCut memory facetCut = FacetCut(implementation, action, selectors);
@@ -31,12 +24,6 @@ contract Diamond is SolidStateDiamond {
         return true;
     }
 
-    /**
-     * @dev Removes selectors from the diamond contract.
-     * @param implementation The address of the facet implementing the selectors.
-     * @param selectors The array of function selectors to be removed.
-     * @return A boolean indicating whether the removal was successful or not.
-     */
     function removeSelectors(address implementation, bytes4[] memory selectors) public virtual onlyOwner() returns (bool) {
         FacetCutAction action = FacetCutAction.REMOVE;
         FacetCut memory facetCut = FacetCut(implementation, action, selectors);
@@ -48,11 +35,6 @@ contract Diamond is SolidStateDiamond {
         return true;
     }
 
-    /**
-     * @dev Installs a new facet into the diamond contract.
-     * @param facet The address of the new facet to be installed.
-     * @return A boolean indicating whether the installation was successful or not.
-     */
     function install(address facet) public virtual onlyOwner() returns (bool) {
         IFacet facetInterface = IFacet(facet);
         bytes4[] memory selectors = facetInterface.selectors();
@@ -60,11 +42,6 @@ contract Diamond is SolidStateDiamond {
         return true;
     }
 
-    /**
-     * @dev Uninstalls an existing facet from the diamond contract.
-     * @param facet The address of the facet to be uninstalled.
-     * @return A boolean indicating whether the uninstallation was successful or not.
-     */
     function uninstall(address facet) public virtual onlyOwner() returns (bool) {
         IFacet facetInterface = IFacet(facet);
         bytes4[] memory selectors = facetInterface.selectors();
