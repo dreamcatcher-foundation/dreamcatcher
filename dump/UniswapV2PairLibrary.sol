@@ -72,7 +72,6 @@ library UniswapV2PairLibrary {
     }
 
     function swap(address[] memory path, address uniswapV2Factory, address uniswapV2Router02, uint256 amountAsNative) internal returns (uint256 asNative) {
-        IERC20 token = IERC20(path[0]);
         path[0].approve(uniswapV2Router02, 0);
         path[0].approve(uniswapV2Router02, amountAsNative);
         uint256[] memory amounts = IUniswapV2Router02(uniswapV2Router02).swapExactTokensForTokens(amountAsNative.asNonNative(path[0].decimals()), out(path, uniswapV2Factory, uniswapV2Router02, amountAsNative).asNonNative(path[path.length - 1].decimals()), path, msg.sender, block.timestamp);
