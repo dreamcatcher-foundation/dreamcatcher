@@ -108,7 +108,7 @@ library TokenAddressAdaptorLib {
      * @param amountR64 The allowance to set in the Dreamcatcher native r64 representation.
      * @return A boolean indicating whether the approval was successful.
      */
-    function approve(address token, address spender, uint amountR64) internal returns (bool) {
+    function approveR64(address token, address spender, uint amountR64) internal returns (bool) {
         return IERC20(token).approve(spender, token.asNonNativeDecimalRepresentation(amountR64));
     }
 }
