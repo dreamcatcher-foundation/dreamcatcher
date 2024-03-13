@@ -39,7 +39,7 @@ library RedeemActionLib {
             trade.uniswapV2Factory = redeem.uniswapV2Factory;
             trade.uniswapV2Router = redeem.uniswapV2Router;
             trade.amountInR64 = amountOutR64;
-            uint256 assetsOutR64 = TradeActionLib.sell(payload);
+            uint256 assetsOutR64 = TradeActionLib.sell(trade);
             redeem.asset.deliverToken(assetsOutR64);
             return true;
         }

@@ -156,9 +156,10 @@ library TokenStorageLib {
 contract TokenStorage {
     bytes32 constant internal TOKEN = bytes32(uint256(keccak256("eip1967.token")) - 1);
 
-    function token() internal pure returns (TokenMemoryLib.Token storage sl) {
+    function token() internal pure returns (TokenStorageLib.Token storage sl) {
+        bytes32 loc = TOKEN;
         assembly {
-            sl.slot := TOKEN
+            sl.slot := loc
         }
     }
 }

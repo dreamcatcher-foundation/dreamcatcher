@@ -1,0 +1,128 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f80fdfea26469706673582212208d4836f5c2e15661085f9d3f6880a3a046f8b58a2d6e4a3e49efae2bcc9e7bec64736f6c63430008180033",
+			"opcodes": "PUSH1 0x55 PUSH1 0x4B PUSH1 0xB DUP3 DUP3 DUP3 CODECOPY DUP1 MLOAD PUSH0 BYTE PUSH1 0x73 EQ PUSH1 0x3F JUMPI PUSH32 0x4E487B7100000000000000000000000000000000000000000000000000000000 PUSH0 MSTORE PUSH0 PUSH1 0x4 MSTORE PUSH1 0x24 PUSH0 REVERT JUMPDEST ADDRESS PUSH0 MSTORE PUSH1 0x73 DUP2 MSTORE8 DUP3 DUP2 RETURN INVALID PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 DUP14 BASEFEE CALLDATASIZE CREATE2 0xC2 0xE1 JUMP PUSH2 0x85F SWAP14 EXTCODEHASH PUSH9 0x80A3A046F8B58A2D6E BLOBBASEFEE RETURNDATACOPY BLOBHASH 0xEF 0xAE 0x2B 0xCC SWAP15 PUSH28 0xEC64736F6C6343000818003300000000000000000000000000000000 ",
+			"sourceMap": "133:2522:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "730000000000000000000000000000000000000000301460806040525f80fdfea26469706673582212208d4836f5c2e15661085f9d3f6880a3a046f8b58a2d6e4a3e49efae2bcc9e7bec64736f6c63430008180033",
+			"opcodes": "PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 DUP14 BASEFEE CALLDATASIZE CREATE2 0xC2 0xE1 JUMP PUSH2 0x85F SWAP14 EXTCODEHASH PUSH9 0x80A3A046F8B58A2D6E BLOBBASEFEE RETURNDATACOPY BLOBHASH 0xEF 0xAE 0x2B 0xCC SWAP15 PUSH28 0xEC64736F6C6343000818003300000000000000000000000000000000 ",
+			"sourceMap": "133:2522:0:-:0;;;;;;;;"
+		},
+		"gasEstimates": {
+			"creation": {
+				"codeDepositCost": "17000",
+				"executionCost": "92",
+				"totalCost": "17092"
+			},
+			"internal": {
+				"claim(struct AuthStorageLib.Auth storage pointer)": "infinite",
+				"grantRoleTo(struct AuthStorageLib.Auth storage pointer,string memory)": "infinite",
+				"grantRoleTo(struct AuthStorageLib.Auth storage pointer,string memory,address)": "infinite",
+				"isMemberOf(struct AuthStorageLib.Auth storage pointer,string memory)": "infinite",
+				"isMemberOf(struct AuthStorageLib.Auth storage pointer,string memory,address)": "infinite",
+				"membersLengthOf(struct AuthStorageLib.Auth storage pointer,string memory)": "infinite",
+				"membersOf(struct AuthStorageLib.Auth storage pointer,string memory)": "infinite",
+				"onlyMembersOf(struct AuthStorageLib.Auth storage pointer,string memory)": "infinite",
+				"onlyMembersOf(struct AuthStorageLib.Auth storage pointer,string memory,address)": "infinite",
+				"revokeRoleFrom(struct AuthStorageLib.Auth storage pointer,string memory)": "infinite",
+				"revokeRoleFrom(struct AuthStorageLib.Auth storage pointer,string memory,address)": "infinite"
+			}
+		},
+		"methodIdentifiers": {}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				},
+				{
+					"internalType": "string",
+					"name": "missingRole",
+					"type": "string"
+				}
+			],
+			"name": "MissingRole",
+			"type": "error"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "string",
+					"name": "role",
+					"type": "string"
+				},
+				{
+					"indexed": false,
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "GrantedRole",
+			"type": "event"
+		},
+		{
+			"anonymous": false,
+			"inputs": [
+				{
+					"indexed": false,
+					"internalType": "string",
+					"name": "role",
+					"type": "string"
+				},
+				{
+					"indexed": false,
+					"internalType": "address",
+					"name": "account",
+					"type": "address"
+				}
+			],
+			"name": "RevokedRole",
+			"type": "event"
+		}
+	]
+}

@@ -11,28 +11,28 @@ library TradeActionLib {
         uint256 amountInR64;
     }
 
-    function buy(TradePayload payload) internal returns (uint256 r64) {
+    function buy(TradePayload memory payload) internal returns (uint256 r64) {
         address[] memory path = new address[](2);
         path[0] = payload.asset;
         path[1] = payload.token;
-        UniswapV2PairLibrary.PathPayload swapPayload;
+        UniswapV2PairAdaptorLib.PathPayload memory swapPayload;
         swapPayload.path = path;
         swapPayload.uniswapV2Factory = payload.uniswapV2Factory;
         swapPayload.uniswapV2Router = payload.uniswapV2Router;
         swapPayload.amountInR64 = payload.amountInR64;
-        return UniswapV2PairLibrary.swap(swapPayload);
+        return UniswapV2PairAdaptorLib.swap(swapPayload);
     }
 
-    function sell(TradePayload payload) internal returns (uint256 r64) {
+    function sell(TradePayload memory payload) internal returns (uint256 r64) {
         address[] memory path = new address[](2);
         path[0] = payload.token;
         path[1] = payload.asset;
-        UniswapV2PairLibrary.PathPayload swapPayload;
+        UniswapV2PairAdaptorLib.PathPayload memory swapPayload;
         swapPayload.path = path;
         swapPayload.uniswapV2Factory = payload.uniswapV2Factory;
         swapPayload.uniswapV2Router = payload.uniswapV2Router;
         swapPayload.amountInR64 = payload.amountInR64;
-        return UniswapV2PairLibrary.swap(swapPayload);
+        return UniswapV2PairAdaptorLib.swap(swapPayload);
     }
 
     struct TradeWithSlippagePayload {
@@ -44,29 +44,29 @@ library TradeActionLib {
         uint256 maximumSlippageAsBasisPoint;
     }
 
-    function buyWithSlippageCheck(TradeWithSlippagePayload payload) internal returns (uint256 r64) {
+    function buyWithSlippageCheck(TradeWithSlippagePayload memory payload) internal returns (uint256 r64) {
         address[] memory path = new address[](2);
         path[0] = payload.asset;
         path[1] = payload.token;
-        UniswapV2PairLibrary.PathWithSlippagePayload swapPayload;
+        UniswapV2PairAdaptorLib.PathWithSlippagePayload memory swapPayload;
         swapPayload.path = path;
         swapPayload.uniswapV2Factory = payload.uniswapV2Factory;
         swapPayload.uniswapV2Router = payload.uniswapV2Router;
         swapPayload.amountInR64 = payload.amountInR64;
         swapPayload.maximumSlippageAsBasisPoint = payload.maximumSlippageAsBasisPoint;
-        return UniswapV2PairLibrary.swapWithSlippageCheck(swapPayload);
+        return UniswapV2PairAdaptorLib.swapWithSlippageCheck(swapPayload);
     }
 
-    function sellWithSlippageCheck(TradeWithSlippagePayload payload) internal returns (uint256 r64) {
+    function sellWithSlippageCheck(TradeWithSlippagePayload memory payload) internal returns (uint256 r64) {
         address[] memory path = new address[](2);
         path[0] = payload.token;
         path[1] = payload.asset;
-        UniswapV2PairLibrary.PathWithSlippagePayload swapPayload;
+        UniswapV2PairAdaptorLib.PathWithSlippagePayload memory swapPayload;
         swapPayload.path = path;
         swapPayload.uniswapV2Factory = payload.uniswapV2Factory;
         swapPayload.uniswapV2Router = payload.uniswapV2Router;
         swapPayload.amountInR64 = payload.amountInR64;
         swapPayload.maximumSlippageAsBasisPoint = payload.maximumSlippageAsBasisPoint;
-        return UniswapV2PairLibrary.swapWithSlippageCheck(swapPayload);
+        return UniswapV2PairAdaptorLib.swapWithSlippageCheck(swapPayload);
     }
 }

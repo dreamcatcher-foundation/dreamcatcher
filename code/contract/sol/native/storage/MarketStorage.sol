@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
-import "../../non-native/openzeppelin/utils/struct/EnumerableSet.sol";
+import "../../non-native/openzeppelin/utils/structs/EnumerableSet.sol";
 import "../util/action/TradeActionLib.sol";
 import "../util/adaptor/TokenAddressAdaptorLib.sol";
 
 library MarketStorageLib {
-    using EnumerableSet.AddressSet;
+    using EnumerableSet for EnumerableSet.AddressSet;
     using TradeActionLib for TradeActionLib.TradeWithSlippagePayload;
     using MarketStorageLib for Market;
     using TokenAddressAdaptorLib for address;
@@ -87,9 +87,9 @@ library MarketStorageLib {
         return market;
     }
 
-    function setMaximumSlippageAsBasisPoint(Market storage market, address maximumSlippageAsBasisPoint) internal returns (Market storage) {
+    function setMaximumSlippageAsBasisPoint(Market storage market, uint256 maximumSlippageAsBasisPoint) internal returns (Market storage) {
         market.hidden.maximumSlippageAsBasisPoint = maximumSlippageAsBasisPoint;
-        emit ChangedMarketMaximumSlippage(basisPoint);
+        emit ChangedMarketMaximumSlippage(maximumSlippageAsBasisPoint);
         return market;
     }
 

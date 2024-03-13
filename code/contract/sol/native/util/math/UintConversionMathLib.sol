@@ -13,12 +13,12 @@ library UintConversionMathLib {
     }
 
     struct ConversionPayload {
-        uint256 value,
-        uint8 oldDecimals,
-        uint8 newDecimals
+        uint256 value;
+        uint8 oldDecimals;
+        uint8 newDecimals;
     }
 
-    function asNew(ConversionPayload payload) internal pure returns (uint256 r) {
+    function asNew(ConversionPayload memory payload) internal pure returns (uint256 r) {
         _onlySupportedDecimalRepresentation(payload.oldDecimals);
         _onlySupportedDecimalRepresentation(payload.newDecimals);
         uint256 r64 = asR64(payload.value, payload.oldDecimals);

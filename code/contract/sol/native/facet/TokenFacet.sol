@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 import "../storage/asset/TokenStorage.sol";
 
 contract TokenFacet is TokenStorage {
-    using TokenStorageLibrary for TokenStorageLibrary.Token;
+    using TokenStorageLib for TokenStorageLib.Token;
 
     function name() external view returns (string memory) {
         return token().name();
@@ -13,7 +13,7 @@ contract TokenFacet is TokenStorage {
         return token().symbol();
     }
 
-    function decimals() external pure returns (uint8) {
+    function decimals() external view returns (uint8) {
         return token().decimals();
     }
 

@@ -18,33 +18,29 @@ library UniswapV2PairAdaptorLib {
         address uniswapV2Router;
     }
     
-    function asV2PairAddress(Payload payload) internal view returns (address) {
+    function asV2PairAddress(Payload memory payload) internal view returns (address) {
         return IUniswapV2Factory(payload.uniswapV2Factory).getPair(payload.token0, payload.token1);
     }
 
-    function asV2PairInterface(Payload payload) internal view returns (IUniswapV2Pair) {
+    function asV2PairInterface(Payload memory payload) internal view returns (IUniswapV2Pair) {
         return IUniswapV2Pair(asV2PairAddress(payload));
     }
 
-    function reserves(Payload payload) internal view returns (uint256[] memory response) {
+    function reserves(Payload memory payload) internal view returns (uint256[] memory response) {
         response = new uint256[](2);
-        (response[0], response[1],) = asV2PairInterface(
-            payload.token0,
-            payload.token1,
-            payload.uniswapV2Factory
-        ).getReserves();
+        (response[0], response[1],) = asV2PairInterface(payload).getReserves();
         return response;
     }
 
-    function isZeroV2PairAddress(Payload payload) internal view returns (bool) {
+    function isZeroV2PairAddress(Payload memory payload) internal view returns (bool) {
         return asV2PairAddress(payload) == address(0);
     }
 
-    function isSameLayoutAsV2PairInterface(Payload payload) internal view returns (bool) {
+    function isSameLayoutAsV2PairInterface(Payload memory payload) internal view returns (bool) {
         return payload.token0 == asV2PairInterface(payload).token0();
     }
 
-    function priceR64(Payload payload) internal view returns (uint256 r64) {
+    function priceR64(Payload memory payload) internal view returns (uint256 r64) {
         if (isZeroV2PairAddress(payload)) {
             return 0;
         }
@@ -73,17 +69,17 @@ library UniswapV2PairAdaptorLib {
         uint256 amountInR64;
     }
 
-    function amountOutR64(PathPayload payload) internal view returns (uint256 r64) {
+    function amountOutR64(PathPayload memory payload) internal view returns (uint256 r64) {
         uint256[] memory amounts = IUniswapV2Router02(payload.uniswapV2Router)
             .getAmountsOut(
                 payload.amountInR64.asR(IERC20Metadata(payload.path[0]).decimals()),
                 payload.path
             );
-        return amounts[amounts.length - 1].asR64(path[path.length - 1].decimals());
+        return amounts[amounts.length - 1].asR64(IERC20Metadata(payload.path[payload.path.length - 1]).decimals());
     }
 
-    function slippage(PathPayload payload) internal view returns (uint256 asBasisPoint) {
-        Payload basePayload;
+    function slippage(PathPayload memory payload) internal view returns (uint256 asBasisPoint) {
+        Payload memory basePayload;
         basePayload.token0 = payload.path[0];
         basePayload.token1 = payload.path[payload.path.length - 1];
         basePayload.uniswapV2Factory = payload.uniswapV2Factory;
@@ -93,7 +89,7 @@ library UniswapV2PairAdaptorLib {
         return ((realAmountOutR64 - bestAmountOutR64) / bestAmountOutR64) * 10000;
     }
 
-    function swap(PathPayload payload) internal view returns (uint256 r64) {
+    function swap(PathPayload memory payload) internal returns (uint256 r64) {
         payload.path[0].approveR64(payload.uniswapV2Router, 0);
         payload.path[0].approveR64(payload.uniswapV2Router, payload.amountInR64);
         uint256[] memory amounts = IUniswapV2Router02(payload.uniswapV2Router)
@@ -106,8 +102,8 @@ library UniswapV2PairAdaptorLib {
                 address(this),
                 block.timestamp
             );
-        return amoutns[amounts.length - 1]
-            .r64(IERC20Metadata(payload.path[payload.path.length - 1]).decimals());
+        return amounts[amounts.length - 1]
+            .asR64(IERC20Metadata(payload.path[payload.path.length - 1]).decimals());
     }
 
     struct PathWithSlippagePayload {
@@ -118,8 +114,8 @@ library UniswapV2PairAdaptorLib {
         uint256 maximumSlippageAsBasisPoint;
     }
 
-    function swapWithSlippageCheck(PathWithSlippagePayload payload) internal view returns (uint256 r64) {
-        PathPayload pathPayload;
+    function swapWithSlippageCheck(PathWithSlippagePayload memory payload) internal returns (uint256 r64) {
+        PathPayload memory pathPayload;
         pathPayload.path = payload.path;
         pathPayload.uniswapV2Factory = payload.uniswapV2Factory;
         pathPayload.uniswapV2Router = payload.uniswapV2Router;

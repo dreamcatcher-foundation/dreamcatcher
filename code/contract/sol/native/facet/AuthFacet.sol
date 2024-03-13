@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 import "../storage/auth/AuthStorage.sol";
 
-contract AuthFacet is AuthStorageLib {
+contract AuthFacet is AuthStorage {
     using AuthStorageLib for AuthStorageLib.Auth;
 
     function membersOf(string memory role) external view returns (address[] memory) {

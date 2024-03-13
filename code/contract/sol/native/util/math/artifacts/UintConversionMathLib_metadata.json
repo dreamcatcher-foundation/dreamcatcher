@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.24+commit.e11b9ed9"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"code/contract/sol/native/util/math/UintConversionMathLib.sol": "UintConversionMathLib"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"code/contract/sol/native/util/math/UintConversionMathLib.sol": {
+			"keccak256": "0xf662f10ae9f3c342cf20080c2056f1692c4748e3a45160f13489007b0def295e",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8959a23da5f14bb5fdf831bd043ce1a309a1f99ce1ae449fda895c39ad9cacdf",
+				"dweb:/ipfs/QmW1oZn6MNXHWboNnaJooixBN5rgitkKsmdoCkhCRWZQea"
+			]
+		}
+	},
+	"version": 1
+}

@@ -76,8 +76,9 @@ contract AuthStorage {
     bytes32 constant AUTH = bytes32(uint256(keccak256("eip1967.auth")) - 1);
 
     function auth() internal pure returns (AuthStorageLib.Auth storage sl) {
+        bytes32 loc = AUTH;
         assembly {
-            sl.slot := AUTH
+            sl.slot := loc
         }
     }
 }

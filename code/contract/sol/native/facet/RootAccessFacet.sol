@@ -4,6 +4,9 @@ import "../storage/auth/AuthStorage.sol";
 import "../storage/asset/TokenStorage.sol";
 
 contract RootAccessFacet is AuthStorage, TokenStorage {
+    using AuthStorageLib for AuthStorageLib.Auth;
+    using TokenStorageLib for TokenStorageLib.Token;
+
     function setName(string memory name) external returns (bool) {
         auth().onlyMembersOf("*");
         token().setName(name);
@@ -35,7 +38,7 @@ contract RootAccessFacet is AuthStorage, TokenStorage {
         return true;
     }
 
-    function revokeRoleFrom(string role, address account) external returns (bool) {
+    function revokeRoleFrom(string memory role, address account) external returns (bool) {
         auth()
             .onlyMembersOf("*")
             .revokeRoleFrom(role, account);
