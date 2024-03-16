@@ -45,7 +45,7 @@ function CompiledContractMaterial(srcDir: string, fsrcDir: string, id: string) {
             for (let i = 0; i < warnings_.length; i++) {
                 const warning = warnings_[i];
                 
-                if (warning['severity'] === 'error') {
+                if ((warning as any)['severity'] === 'error') {
                     errors_.push(warnings_.splice(i, 1))
                 }
                 
@@ -54,7 +54,7 @@ function CompiledContractMaterial(srcDir: string, fsrcDir: string, id: string) {
             if (errors_.length != 0) {
                 for (let i = 0; i < errors_.length; i++) {
                     const error = errors_[i];
-                    const formattedMessage = error[i]['formattedMessage']
+                    const formattedMessage = (error as any)[i]['formattedMessage']
                     console.error(formattedMessage);
                 }
     
