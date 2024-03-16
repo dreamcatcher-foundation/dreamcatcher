@@ -42,6 +42,8 @@
     "glob": "^10.3.10",
     "hardhat": "^2.21.0",
     "loopring-solidity-flattener": "^3.0.8",
+    "memoize": "^10.0.0",
+    "moize": "^6.1.6",
     "node-schedule": "^2.1.1",
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",

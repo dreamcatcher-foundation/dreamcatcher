@@ -1,4 +1,4 @@
-import { doka } from '../../../engine/Doka/doka.ts';
+import { doka } from '../../../framework/Doka/dokas.ts';
 
 async function main(
     networkId: string,

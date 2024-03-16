@@ -41,17 +41,17 @@ contract DiamondFactory {
     ) {
         preset = 
             Preset({
-                authFacet:                       authFacet,
-                managerAccessFacet:              managerAccessFacet,
-                marketFacet:                     marketFacet,
-                partialERC4626Facet:             partialERC4626Facet,
-                rootAccessFacet:                 rootAccessFacet,
-                tokenFacet:                      tokenFacet,
-                enabledTokens:                   enabledTokens,
-                asset:                           asset,
-                uniswapV2Factory:                uniswapV2Factory,
-                uniswapV2Router:                 uniswapV2Router,
-                maximumSlippageAsBasisPoint:     maximumSlippageAsBasisPoint
+                authFacet: authFacet,
+                managerAccessFacet: managerAccessFacet,
+                marketFacet: marketFacet,
+                partialERC4626Facet: partialERC4626Facet,
+                rootAccessFacet: rootAccessFacet,
+                tokenFacet: tokenFacet,
+                enabledTokens: enabledTokens,
+                asset: asset,
+                uniswapV2Factory: uniswapV2Factory,
+                uniswapV2Router: uniswapV2Router,
+                maximumSlippageAsBasisPoint: maximumSlippageAsBasisPoint
             });
     }
 
@@ -89,9 +89,9 @@ contract DiamondFactory {
         vaultDiamond.setMaximumSlippageAsBasisPoint(p.maximumSlippageAsBasisPoint);
         UintConversionMathLib.ConversionPayload memory conversion = 
             UintConversionMathLib.ConversionPayload({
-                value:           100,
-                oldDecimals:     2,
-                newDecimals:     64
+                value: 100,
+                oldDecimals: 2,
+                newDecimals: 64
             });
         p.asset.requestToken(conversion.asNew());
         vaultDiamond.liqLock();
@@ -105,19 +105,19 @@ contract DiamondFactory {
     function preset(string memory name, string memory symbol) external returns (address) {
         DeploymentPayload memory p = 
             DeploymentPayload({
-                authFacet:                       preset.authFacet,
-                managerAccessFacet:              preset.managerAccessFacet,
-                marketFacet:                     preset.marketFacet,
-                partialERC4626Facet:             preset.partialERC4626Facet,
-                rootAccessFacet:                 preset.rootAccessFacet,
-                tokenFacet:                      preset.tokenFacet,
-                enabledTokens:                   preset.enabledTokens,
-                asset:                           preset.asset,
-                uniswapV2Factory:                preset.uniswapV2Factory,
-                uniswapV2Router:                 preset.uniswapV2Router,
-                maximumSlippageAsBasisPoint:     preset.maximumSlippageAsBasisPoint,
-                name:                            name,
-                symbol:                          symbol
+                authFacet: preset.authFacet,
+                managerAccessFacet: preset.managerAccessFacet,
+                marketFacet: preset.marketFacet,
+                partialERC4626Facet: preset.partialERC4626Facet,
+                rootAccessFacet: preset.rootAccessFacet,
+                tokenFacet: preset.tokenFacet,
+                enabledTokens: preset.enabledTokens,
+                asset: preset.asset,
+                uniswapV2Factory: preset.uniswapV2Factory,
+                uniswapV2Router: preset.uniswapV2Router,
+                maximumSlippageAsBasisPoint: preset.maximumSlippageAsBasisPoint,
+                name: name,
+                symbol: symbol
             });
         return deploy(p);
     }
