@@ -8,4 +8,11 @@ import "./IRootAccessFacet.sol";
 import "./ITokenFacet.sol";
 import "./IDiamond.sol";
 
-interface IVaultDiamond is IDiamond {}
+interface IVaultDiamond is 
+    IDiamond,
+    IAuthFacet,
+    IManagerAccessFacet,
+    IMarketFacet,
+    IPartialERC4626Facet,
+    IRootAccessFacet,
+    ITokenFacet {}

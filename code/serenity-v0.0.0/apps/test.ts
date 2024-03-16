@@ -21,9 +21,11 @@ const app: App = {
 }
 
 function Program(engine: Engine): 0 | 1 {
-
     
-
+    engine.deployContract('polygonTenderlyFork', 'DiamondFactory')
+    .then(function(contract) {
+        
+    });
 
     return 1;
 }
