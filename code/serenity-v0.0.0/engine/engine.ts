@@ -21,16 +21,10 @@ export type App = {
 export type CompiledContractMaterial = ReturnType<typeof CompiledContractMaterial>;
 
 function CompiledContractMaterial(srcDir: string, fsrcDir: string, id: string) {
-    const self = (function() {
-        let ABI: object[] = [];
-        let bytecode: unknown;
-        let warnings: object[] | 'no errors or warnings' = 'no errors or warnings';
-        return {
-            ABI,
-            bytecode,
-            warnings
-        }
-    })();
+    let ABI_: object[] = [];
+    let bytecode_: string = '';
+    let warnings_: object[] = [];
+    let errors_: object[] = [];
 
     (function() {
 
@@ -44,31 +38,44 @@ function CompiledContractMaterial(srcDir: string, fsrcDir: string, id: string) {
             return compile_(path()!, fsrcDir, id);
         });
 
-        if (content()['errors']) self.warnings = content()['errors'];
-        
-        else self.warnings = 'no errors or warnings';
+        if (content()['errors']) warnings_ = content()['errors'];
 
-        // -> Handle compiler errors.
-        (function() {
-            if (self.warnings !== 'no errors or warnings') {
-                // TODO ...
+        // -> Handle solidity compiler error.
+        if (warnings_) {
+            for (let i = 0; i < warnings_.length; i++) {
+                const warning = warnings_[i];
+                
+                if (warning['severity'] === 'error') {
+                    errors_.push(warnings_.splice(i, 1))
+                }
+                
             }
-        })();
 
-        self.ABI = content()['contracts'][id][id]['abi'];
-        self.bytecode = content()['contracts'][id][id]['evm']['bytecode']['object'];
+            if (errors_.length != 0) {
+                for (let i = 0; i < errors_.length; i++) {
+                    const error = errors_[i];
+                    const formattedMessage = error[i]['formattedMessage']
+                    console.error(formattedMessage);
+                }
+    
+                throw 'Serenity: SolidityError'
+            }
+        }
+
+        ABI_ = content()['contracts'][id][id]['abi'];
+        bytecode_ = content()['contracts'][id][id]['evm']['bytecode']['object'];
     })();
 
     function ABI(): object[] {
-        return self.ABI;
+        return ABI_;
     }
 
     function bytecode(): unknown {
-        return self.bytecode;
+        return bytecode_;
     }
 
     function warnings(): object | 'no errors or warnings' {
-        return self.warnings;
+        return warnings_;
     }
 
     function compile_(path: string, fSrcDir: string, name: string): unknown {
