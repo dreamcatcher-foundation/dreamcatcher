@@ -6,7 +6,7 @@ import "../util/math/FinanceMathLib.sol";
 import "../util/adaptor/TokenAddressAdaptorLib.sol";
 
 contract ManagerAccessFacet is MarketStorage, AuthStorage {
-    using MarketStorageLib for MarketStorabeLib.Market;
+    using MarketStorageLib for MarketStorageLib.Market;
     using AuthStorageLib for AuthStorageLib.Auth;
     using FinanceMathLib for FinanceMathLib.LiquidityCheckPayload;
     using TokenAddressAdaptorLib for address;

@@ -22,7 +22,7 @@ contract MarketFacet is MarketStorage {
     }
 
     function enabledTokens(uint256 tokenId) external view returns (address) {
-        return market().enabledTokens();
+        return market().enabledTokens(tokenId);
     }
 
     function hasEnabledToken(address token) external view returns (bool) {

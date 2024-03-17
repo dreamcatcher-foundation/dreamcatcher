@@ -1,4 +1,4 @@
-import { type Engine, type Disk, main} from '../engine/engine.ts';
+import { type Engine, type Disk, main} from '../../../dump/engine.ts';
 
 export const disk: Disk = {
     contracts: [
