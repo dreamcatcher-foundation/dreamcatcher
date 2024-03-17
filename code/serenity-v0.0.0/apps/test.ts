@@ -49,45 +49,70 @@ function App(engine: IEngine): boolean {
         type IContract = Ethers.BaseContract & {deploymentTransaction(): Ethers.ContractTransactionResponse;} & Omit<Ethers.BaseContract, keyof Ethers.BaseContract>;
 
         async function deploy_(blueprint: string): Promise<IContract> {
-            console.log(`deploying ${blueprint}`);
             const contract: IContract = await engine.deploy(networkId, blueprint);
-            console.log(`deployed at ${await contract.getAddress()}`);
+            console.log(`deployed ${blueprint} at ${await contract.getAddress()}`);
             return contract;
         }
 
-        const authFacet:             IContract = await deploy_('AuthFacet');
-        const managerAccessFacet:    IContract = await deploy_('ManagerAccessFacet');
-        const marketFacet:           IContract = await deploy_('MarketFacet');
-        const partialERC4626Facet:   IContract = await deploy_('PartialERC4626Facet');
-        const rootAccessFacet:       IContract = await deploy_('RootAccessFacet');
-        const tokenFacet:            IContract = await deploy_('TokenFacet');
+        console.log("deploying facets");
 
-        // 0xb357a8c23305f01dd0c5145ffc5d9797bd7e03b4 DiamondFactory
+        const authFacet: IContract = await deploy_('AuthFacet');
+        const managerAccessFacet: IContract = await deploy_('ManagerAccessFacet');
+        const marketFacet: IContract = await deploy_('MarketFacet');
+        const partialERC4626Facet: IContract = await deploy_('PartialERC4626Facet');
+        const rootAccessFacet: IContract = await deploy_('RootAccessFacet');
+        const tokenFacet: IContract = await deploy_('TokenFacet');
 
-        const contract = engine.createContract(
-            ...[
-                'polygonTenderlyFork',
-                'DiamondFactory',
-                '0xb357a8c23305f01dd0c5145ffc5d9797bd7e03b4'
-        ]);
+        console.log("deploying diamond");
+        const diamond: IContract = await deploy_("Diamond");
 
+        async function install_(contract: IContract, tag: string) {
+            await (diamond as any).install(await contract.getAddress());
+            console.log(`installed ${tag}`);
+        }
+
+        await install_(authFacet, "AuthFacet");
+        await install_(managerAccessFacet, "ManagerAccessFacet");
+        await install_(marketFacet, "MarketFacet");
+        await install_(partialERC4626Facet, "PartialERC4626Facet");
+        await install_(rootAccessFacet, "RootAccessFacet");
+        await install_(tokenFacet, "TokenFacet");
+
+        const diamondFactory = await deploy_("DiamondFactory");
+        //const diamondFactory = engine.createContract(networkId, "DiamondFactory", "0x61357df5ef8580b4dc09f151b3a9e533002f35f3");
+
+        const quickswapRouter = "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff";
+        const quickswapFactory = "0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32";
+
+        const WBTC = "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6";
+        const WETH = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619";
+
+        const USDT = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
+
+        console.log("generating payload");
         const deploymentPayload = {
-            authFacet: '',
-            managerAccessFacet: '',
-            marketFacet: '',
-            partialERC4626Facet: '',
-            rootAccessFacet: '',
-            tokenFacet: '',
-            enabledTokens: [],
-            asset: '',
-            uniswapV2Factory: '',
-            uniswapV2Router: '',
+            authFacet: await authFacet.getAddress(),
+            managerAccessFacet: await managerAccessFacet.getAddress(),
+            marketFacet: await marketFacet.getAddress(),
+            partialERC4626Facet: await partialERC4626Facet.getAddress(),
+            rootAccessFacet: await rootAccessFacet.getAddress(),
+            tokenFacet: await tokenFacet.getAddress(),
+            enabledTokens: [
+                WBTC,
+                WETH
+            ],
+            asset: USDT,
+            uniswapV2Factory: quickswapFactory,
+            uniswapV2Router: quickswapRouter,
             maximumSlippageAsBasisPoint: 1000n,
             name: 'TestToken',
             symbol: 'vTT'
         }
 
-        //await contract.deploy(deploymentPayload);
+        console.log("deploying diamond through diamond factory");
+        await (diamondFactory as any).deploy(deploymentPayload);
+
+        //console.log("diamond deployed");
     }
 
     main();

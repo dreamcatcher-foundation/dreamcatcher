@@ -15,23 +15,27 @@ import "../interface/IFacet.sol";
 contract Diamond is SolidStateDiamond {
     function addSelectors(address implementation, bytes4[] memory selectors) public virtual onlyOwner() returns (bool) {
         FacetCutAction action = FacetCutAction.ADD;
-        FacetCut memory facetCut = FacetCut(implementation, action, selectors);
-        IDiamondWritable diamond = IDiamondWritable(address(this));
-        FacetCut[] memory facetCuts;
-        facetCuts = new FacetCut[](1);
+        FacetCut memory facetCut;
+        facetCut.target = implementation;
+        facetCut.action = action;
+        facetCut.selectors = selectors;
+        FacetCut[] memory facetCuts = new FacetCut[](1);
         facetCuts[0] = facetCut;
-        diamond.diamondCut(facetCuts, address(this), "");
+        bytes memory emptyBytes;
+        _diamondCut(facetCuts, address(0), emptyBytes); // issue here
         return true;
     }
 
     function removeSelectors(address implementation, bytes4[] memory selectors) public virtual onlyOwner() returns (bool) {
         FacetCutAction action = FacetCutAction.REMOVE;
-        FacetCut memory facetCut = FacetCut(implementation, action, selectors);
-        IDiamondWritable diamond = IDiamondWritable(address(this));
-        FacetCut[] memory facetCuts;
-        facetCuts = new FacetCut[](1);
+        FacetCut memory facetCut;
+        facetCut.target = implementation;
+        facetCut.action = action;
+        facetCut.selectors = selectors;
+        FacetCut[] memory facetCuts = new FacetCut[](1);
         facetCuts[0] = facetCut;
-        diamond.diamondCut(facetCuts, address(this), "");
+        bytes memory emptyBytes;
+        _diamondCut(facetCuts, address(0), emptyBytes);
         return true;
     }
 

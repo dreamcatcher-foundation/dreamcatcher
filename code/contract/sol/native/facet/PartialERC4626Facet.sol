@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 import "../storage/MarketStorage.sol";
 import "../util/math/FinanceMathLib.sol";
 import "../util/math/ShareMathLib.sol";
-import "../storage/TokenStorage.sol";
+import "../storage/asset/TokenStorage.sol";
 import "../util/action/PaymentActionLib.sol";
 import "../util/action/RedeemActionLib.sol";
 
@@ -95,8 +95,8 @@ contract PartialERC4626Facet is MarketStorage, TokenStorage {
             RedeemActionLib.RedeemPayload memory redeem;
             redeem.token = market().enabledTokens(i);
             redeem.asset = market().asset();
-            redeem.uniswapV2Factory = market().uniswapV2Factory;
-            redeem.uniswapV2Router = market().uniswapV2Router;
+            redeem.uniswapV2Factory = market().uniswapV2Factory();
+            redeem.uniswapV2Router = market().uniswapV2Router();
             redeem.ownershipAsBasisPoint = ownershipAsBasisPoint;
             redeem.maximumSlippageAsBasisPoint = market().maximumSlippageAsBasisPoint();
             redeem.redeem();

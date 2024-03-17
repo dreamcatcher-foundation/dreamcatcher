@@ -34,6 +34,40 @@ contract DiamondFactory {
         diamond.install(p.partialERC4626Facet);
         diamond.install(p.rootAccessFacet);
         diamond.install(p.tokenFacet);
+        IVaultDiamond diamondAsVault = IVaultDiamond(payable(address(diamond)));
+        diamondAsVault.claim();
+        //diamondAsVault.setName(p.name);
+        //diamondAsVault.setSymbol(p.symbol);
+        //diamondAsVault.setAsset(p.asset);
+        //diamondAsVault.setUniswapV2Factory(p.uniswapV2Factory);
+        //diamondAsVault.setUniswapV2Router(p.uniswapV2Router);
+        //diamondAsVault.setMaximumSlippageAsBasisPoint(p.maximumSlippageAsBasisPoint);
+        //UintConversionMathLib.ConversionPayload memory conversion = 
+        //    UintConversionMathLib.ConversionPayload({
+        //        value: 100,
+        //        oldDecimals: 2,
+        //        newDecimals: 64
+        //    });
+        // p.asset.requestToken(conversion.asNew());
+        // diamondAsVault.liqLock();
+
+        diamondAsVault.grantRoleTo("managers", msg.sender); // => TODO Check if the error is due to interfaces and use precide interface for each
+
+        for (uint256 i = 0; i < p.enabledTokens.length; i++) {
+            diamondAsVault.enableToken(p.enabledTokens[i]);
+        }
+        //return address(diamond);
+        return address(0);
+    }
+    /**
+    function deploy(DeploymentPayload memory p) public returns (address) {
+        Diamond diamond = new Diamond();
+        diamond.install(p.authFacet);
+        diamond.install(p.managerAccessFacet);
+        diamond.install(p.marketFacet);
+        diamond.install(p.partialERC4626Facet);
+        diamond.install(p.rootAccessFacet);
+        diamond.install(p.tokenFacet);
         IVaultDiamond vaultDiamond = IVaultDiamond(payable(address(diamond)));
         vaultDiamond.claim();
         vaultDiamond.setName(p.name);
@@ -56,4 +90,5 @@ contract DiamondFactory {
         vaultDiamond.grantRoleTo("managers", msg.sender);
         return address(diamond);
     }
+    */
 }

@@ -139,7 +139,7 @@ function Engine(
 
     function createContract(networkid: string, blueprint: string, address: string): Ethers.Contract {
         onlyIfAvailable_(networkid, blueprint);
-        return new Ethers.Contract(address, material[blueprint]!.ABI(), networks[networkid]);
+        return new Ethers.Contract(address, material[blueprint]!.ABI(), accounts[networkid]);
     }
 
     async function deploy(networkid: string, blueprint: string, ...args: any[]) {
@@ -178,7 +178,7 @@ export async function main(config: IConfig) {
         for (let i = 0; i < config.networks.length; i++) {
             const network = config.networks[i];
 
-            log_(config, "loading ${network.name} network");
+            log_(config, `loading ${network.name} network`);
 
             networks[network.name] = new Ethers.JsonRpcProvider(network.rpcUrl);
             accounts[network.name] = new Ethers.Wallet(network.privateKey, networks[network.name]);
