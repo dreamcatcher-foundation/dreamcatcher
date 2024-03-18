@@ -3,29 +3,8 @@ import * as Ethers from "ethers";
 
 const config: IConfig = {
     contracts: [{
-        name: "Diamond",
-        path: "./code/contract/sol/native/solidstate/Diamond.sol"
-    }, {
-        name: "DiamondFactory",
-        path: "./code/contract/sol/native/solidstate/DiamondFactory.sol"
-    }, {
-        name: "AuthFacet",
-        path: "./code/contract/sol/native/facet/AuthFacet.sol"
-    }, {
-        name: "ManagerAccessFacet",
-        path: "./code/contract/sol/native/facet/ManagerAccessFacet.sol"
-    }, {
-        name: "MarketFacet",
-        path: "./code/contract/sol/native/facet/MarketFacet.sol"
-    }, {
-        name: "PartialERC4626Facet",
-        path: "./code/contract/sol/native/facet/PartialERC4626Facet.sol"
-    }, {
-        name: "RootAccessFacet",
-        path: "./code/contract/sol/native/facet/RootAccessFacet.sol"
-    }, {
-        name: "TokenFacet",
-        path: "./code/contract/sol/native/facet/TokenFacet.sol"
+        name: "UniswapV2PairAdaptorLibTest",
+        path: "./code/contract/sol/native/util/UniswapV2PairAdaptorLib.sol"
     }],
     fSrcDir: "./code/contract/sol/dist",
     networks: [{
@@ -41,78 +20,90 @@ const config: IConfig = {
     silence: false
 }
 
+namespace PolygonToken {
+    export const WMATIC = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270";
+    export const DAI = "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063";
+    export const USDC = "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359";
+    export const USDT = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
+    export const QUICK = "0xB5C064F955D8e7F38fE0460C556a72987494eE17";
+    export const WETH = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619";
+    export const WBTC = "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6";
+    export const A51 = "0xe9E7c09e82328c3107d367f6c617cF9977e63ED0";
+    export const AAVE = "0xD6DF932A45C0f255f85145f286eA0b292B21C90B";
+    export const ABOND = "0xe6828D65bf5023AE1851D90D8783Cc821ba7eeE1";
+    export const ALI = "0xbFc70507384047Aa74c29Cdc8c5Cb88D0f7213AC";
+}
+
+const polygonTokens = [
+    PolygonToken.WMATIC,
+    PolygonToken.DAI,
+    PolygonToken.USDC,
+    PolygonToken.USDT,
+    PolygonToken.QUICK,
+    PolygonToken.WETH,
+    PolygonToken.WBTC,
+    PolygonToken.A51,
+    PolygonToken.AAVE,
+    PolygonToken.ABOND,
+    PolygonToken.ALI
+]
+
 function App(engine: IEngine): boolean {
     
     async function main() {
-        const networkId: string = 'polygonTenderlyFork';
+        const networkid_: string = "polygonTenderlyFork";
 
-        type IContract = Ethers.BaseContract & {deploymentTransaction(): Ethers.ContractTransactionResponse;} & Omit<Ethers.BaseContract, keyof Ethers.BaseContract>;
-
-        async function deploy_(blueprint: string): Promise<IContract> {
-            const contract: IContract = await engine.deploy(networkId, blueprint);
-            console.log(`deployed ${blueprint} at ${await contract.getAddress()}`);
-            return contract;
+        async function test(blueprint: string, fn: (contract: any) => any) {
+            console.log(`testing ${blueprint}`);
+            const contract = await deploy_(blueprint);
+            fn(contract);
         }
 
-        console.log("deploying facets");
-
-        const authFacet: IContract = await deploy_('AuthFacet');
-        const managerAccessFacet: IContract = await deploy_('ManagerAccessFacet');
-        const marketFacet: IContract = await deploy_('MarketFacet');
-        const partialERC4626Facet: IContract = await deploy_('PartialERC4626Facet');
-        const rootAccessFacet: IContract = await deploy_('RootAccessFacet');
-        const tokenFacet: IContract = await deploy_('TokenFacet');
-
-        console.log("deploying diamond");
-        const diamond: IContract = await deploy_("Diamond");
-
-        async function install_(contract: IContract, tag: string) {
-            await (diamond as any).install(await contract.getAddress());
-            console.log(`installed ${tag}`);
+        async function deploy_(blueprint: string) {
+            console.log(`deploying ${blueprint}`);
+            const contract_ = await engine.deploy(networkid_, blueprint);
+            console.log(`deployed ${blueprint} at ${await contract_.getAddress()}`);
+            return contract_;
         }
 
-        await install_(authFacet, "AuthFacet");
-        await install_(managerAccessFacet, "ManagerAccessFacet");
-        await install_(marketFacet, "MarketFacet");
-        await install_(partialERC4626Facet, "PartialERC4626Facet");
-        await install_(rootAccessFacet, "RootAccessFacet");
-        await install_(tokenFacet, "TokenFacet");
+        test("UniswapV2PairAdaptorLibTest", async function(contract) {
+            for (let i = 0; i < polygonTokens.length; i++) {
+                try {
+                    const payload = {
+                        token0: polygonTokens[i],
+                        token1: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+                        router: "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
+                        factory: "0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32"
+                    }
 
-        const diamondFactory = await deploy_("DiamondFactory");
-        //const diamondFactory = engine.createContract(networkId, "DiamondFactory", "0x61357df5ef8580b4dc09f151b3a9e533002f35f3");
 
-        const quickswapRouter = "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff";
-        const quickswapFactory = "0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32";
+                    const price_ = await contract.price(payload);
+                    
+                    const pathPayload = {
+                        path: [
+                            polygonTokens[i],
+                            "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+                        ],
+                        router: "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff",
+                        factory: "0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32",
+                        amountIn: 1n * (10n**18n)
+                    }
 
-        const WBTC = "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6";
-        const WETH = "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619";
+                    const amountOut_ = await contract.amountOut(pathPayload);
+                    const slippage_ = await contract.slippage(pathPayload);
+                    
+                    consoleLogN(price_);
+                    consoleLogN(amountOut_);
+                    console.log(slippage_);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
 
-        const USDT = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F";
-
-        console.log("generating payload");
-        const deploymentPayload = {
-            authFacet: await authFacet.getAddress(),
-            managerAccessFacet: await managerAccessFacet.getAddress(),
-            marketFacet: await marketFacet.getAddress(),
-            partialERC4626Facet: await partialERC4626Facet.getAddress(),
-            rootAccessFacet: await rootAccessFacet.getAddress(),
-            tokenFacet: await tokenFacet.getAddress(),
-            enabledTokens: [
-                WBTC,
-                WETH
-            ],
-            asset: USDT,
-            uniswapV2Factory: quickswapFactory,
-            uniswapV2Router: quickswapRouter,
-            maximumSlippageAsBasisPoint: 1000n,
-            name: 'TestToken',
-            symbol: 'vTT'
-        }
-
-        console.log("deploying diamond through diamond factory");
-        await (diamondFactory as any).deploy(deploymentPayload);
-
-        //console.log("diamond deployed");
+            function consoleLogN(number: bigint) {
+                console.log(Number(number) / (10**18));
+            }
+        });
     }
 
     main();
