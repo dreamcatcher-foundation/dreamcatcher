@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19;
-import "../../non-native/openzeppelin/token/ERC20/IERC20.sol";
-import "../../non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
-import "../../non-native/uniswap/interfaces/IUniswapV2Factory.sol";
-import "../../non-native/uniswap/interfaces/IUniswapV2Router02.sol";
-import "../../non-native/uniswap/interfaces/IUniswapV2Pair.sol";
+import "../../../non-native/openzeppelin/token/ERC20/IERC20.sol";
+import "../../../non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
+import "../../../non-native/uniswap/interfaces/IUniswapV2Factory.sol";
+import "../../../non-native/uniswap/interfaces/IUniswapV2Router02.sol";
+import "../../../non-native/uniswap/interfaces/IUniswapV2Pair.sol";
 import "../math/FixedPointArithmeticsMathLibrary.sol";
 import "../../ImmutableLibrary.sol";
 
 library UniswapV2AdaptorLibrary {
-    function price(address token0, address token1, address factory, address router) internal view returns (uint256 N_) {
+    function price(address token0, address token1, address factory, address router) internal view returns (uint256) {
 
         /**
         * NOTE This function does not revert if the pair was not found and
@@ -44,7 +44,7 @@ library UniswapV2AdaptorLibrary {
         return FixedPointArithmeticsMathLibrary.asNewR(quote_, decimals1_, N_());
     }
 
-    function amountOut(address[] memory path, address factory, address router, uint256 amountNIn) internal view returns (uint256 N_) {
+    function amountOut(address[] memory path, address factory, address router, uint256 amountNIn) internal view returns (uint256) {
         uint8 decimals0_ = IERC20Metadata(path[0]).decimals();
         uint8 decimals1_ = IERC20Metadata(path[path.length - 1]).decimals();
 
@@ -89,7 +89,7 @@ library UniswapV2AdaptorLibrary {
     }
 
 
-    function swapExactTokensForTokens(address[] memory path, address factory, address router, uint256 amountNIn) internal returns (uint256 N_) {
+    function swapExactTokensForTokens(address[] memory path, address factory, address router, uint256 amountNIn) internal returns (uint256) {
         uint8 decimals0_ = IERC20Metadata(path[0]).decimals();
         uint8 decimals1_ = IERC20Metadata(path[path.length - 1]).decimals();
         uint256 amountRIn_ = FixedPointArithmeticsMathLibrary.asNewR(amountNIn, N_(), decimals0_);
@@ -144,15 +144,15 @@ library UniswapV2AdaptorLibrary {
         return IUniswapV2Factory(factory).getPair(token0, token1);
     }
 
-    function pairInterface(address token0, address token1, address factory) internal view returns (address) {
+    function pairInterface(address token0, address token1, address factory) internal view returns (IUniswapV2Pair) {
         return IUniswapV2Pair(pairAddress(token0, token1, factory));
     }
 
     function pairReserves(address token0, address token1, address factory) internal view returns (uint256[] memory reserves_) {
         reserves_ = new uint256[](2);
         (
-            response_[0], 
-            response_[1],
+            reserves_[0], 
+            reserves_[1],
         ) = pairInterface(token0, token1, factory).getReserves();
         return reserves_;
     }

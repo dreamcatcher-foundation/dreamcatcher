@@ -4,6 +4,6 @@ import "./FixedPointArithmeticsMathLibrary.sol";
 
 contract TestableFixedPointArithmeticsMathLibrary {
     function maximumRepresentableEntireValue(uint8 decimals) external pure returns (uint256 R_) {
-        return TestableFixedPointArithmeticsMathLib.maximumRepresentableEntireValue(decimals);
+        return FixedPointArithmeticsMathLibrary.maximumRepresentableEntireValue(decimals);
     }
 }

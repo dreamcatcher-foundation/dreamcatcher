@@ -1,0 +1,117 @@
+{
+	"compiler": {
+		"version": "0.8.24+commit.e11b9ed9"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"code/contract/sol/native/utils/adaptor/UniswapV2AdaptorLibrary.sol": "UniswapV2AdaptorLibrary"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"code/contract/sol/native/ImmutableLibrary.sol": {
+			"keccak256": "0x88478f2e646528649cea2a7dfe1c00e50d3241230d3ba78436b367b087babdb1",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://b8b17ddd397d35f43a3cb5c1e59dbb062f6940ff1e2d5d663a867c4290373b77",
+				"dweb:/ipfs/QmZiGPReKtgHKSnmPcL8V8FdXQo86R5GrYY5X1vLTMwsJD"
+			]
+		},
+		"code/contract/sol/native/utils/adaptor/UniswapV2AdaptorLibrary.sol": {
+			"keccak256": "0x7db76e2b4013cd160f06e47d2af3dc6ccd4fe36ba3ed32a17049070097adff24",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://d00a5bbb85dbdbde04276fafde1d1faa18736a7abb9fc62d557e89f8ce3ff6ec",
+				"dweb:/ipfs/QmUVvAe9wRDQ4DK65GZAcFj1PARktxuTXfymtTmPCLCeYv"
+			]
+		},
+		"code/contract/sol/native/utils/math/FixedPointArithmeticsMathLibrary.sol": {
+			"keccak256": "0x020ec07f9b273248c0db5bcfbd65b9160c303a01469ebc665f01e00ffa5f7302",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://b7d4fb33347080f8aecb7e55a805ddd1028d8cf02341edaa97e61856c8c1ff31",
+				"dweb:/ipfs/QmSxFAPrGmYA3yHkbDCVrkVLD6zPXpkvp8FtNfr9EpXJxm"
+			]
+		},
+		"code/contract/sol/non-native/openzeppelin/token/ERC20/IERC20.sol": {
+			"keccak256": "0x25c33569824f7653c064ccac6b9c63ba19833c7818debaa3f7f7737f5175d7d7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6c002fe819fd2da94ef4cbcddcd4a62ba42454b000d2321314bfff73353792e7",
+				"dweb:/ipfs/QmadL9VMe3jTyf5sg8g8Y9Q4ESsyos42rZPnvJaKuhUacK"
+			]
+		},
+		"code/contract/sol/non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol": {
+			"keccak256": "0x2837661e72b15493671ff5e5099b565b626c53f4d90f347211dd78924aca24ca",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://34ced2145df7d08fbb3fba9471faf5a1609fc3def76d004c658f480e5cebb013",
+				"dweb:/ipfs/QmSJ42tRU39HdpJSLXCinUtzzxnxBFncnCbfK6juqqep7U"
+			]
+		},
+		"code/contract/sol/non-native/openzeppelin/utils/math/Math.sol": {
+			"keccak256": "0xffe8a176523d38132299bc22fd6bb138954ba3f35d41a86d004dac50dc31b615",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://67b3d7e2d3042e5061168827e518b2eb546be0f4a3f764f654c28205c5a428e5",
+				"dweb:/ipfs/Qma3d9Vim9NrzWAFASxpDppgGXo8MWZ6zorsgAYYXsbXph"
+			]
+		},
+		"code/contract/sol/non-native/uniswap/interfaces/IUniswapV2Factory.sol": {
+			"keccak256": "0x7f6769ef721e9595460b08bf5291fe15d2631fc64a46f5b81f19ccd973b3251c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://29709b519d7eeefd0d77dfe0f8b6ba1bf701d57d333802f3860f54ba1674945d",
+				"dweb:/ipfs/Qmc7uijgQptKJwta1bnhhwTSdbAhHgmjtZsg2jBwbdo1iA"
+			]
+		},
+		"code/contract/sol/non-native/uniswap/interfaces/IUniswapV2Pair.sol": {
+			"keccak256": "0x3beed1619839a5ba08240cec87d35f2bda61004c71602c6c49fa80d8791d9beb",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6757cdc17b00cd6a7ed6036eda37e620266d53bfefe7aa37d262512fabf51ffa",
+				"dweb:/ipfs/QmdXmsZxsKQ2FAeyzmaTjVcnVjBoAVZqKHgaX8tbMVDSsp"
+			]
+		},
+		"code/contract/sol/non-native/uniswap/interfaces/IUniswapV2Router01.sol": {
+			"keccak256": "0xbecc169999b4c3aaed2aa429fb09d0aad8f78e4f6c3ab460820f5d4d8ba2ec7c",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://741731c883ee363111bd4d57a80335cb349908ff32ddefdb2f642db7aecb972c",
+				"dweb:/ipfs/QmYUtoe3yghcUokPyvGxbFSh5CYwjhRmvXE2WtEmTG4a6t"
+			]
+		},
+		"code/contract/sol/non-native/uniswap/interfaces/IUniswapV2Router02.sol": {
+			"keccak256": "0x27c46e7acb0cba4035be66e0214ff08dd8f16e795187743e36c8324f4b0ea69f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f050951197356a91c8858be6bf55225275165438bdf9b3f2b111fc06616f7acb",
+				"dweb:/ipfs/Qmf9QRAJhQXcs21iing29aEazaWTKMxb2ueZ9vNKdFWHgr"
+			]
+		}
+	},
+	"version": 1
+}

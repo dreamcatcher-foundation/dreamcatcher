@@ -147,7 +147,7 @@ library FixedPointArithmeticsMathLibrary {
         return (sharesNIn * netAssetValueN) / totalSupplyN;
     }
 
-    function initialMint_(uint256 assetsNIn, uint256 netAssetValueN, uint256 totalSupplyN) internal pure returns (uint256 shares_) {
+    function initialMint_() internal pure returns (uint256 shares_) {
         return (1000000 * (10 ** N_()));
     }
 
@@ -232,14 +232,14 @@ library FixedPointArithmeticsMathLibrary {
     }
 
     // R => N *see styleguide
-    function asN(uint256 valueR, uint8 oldDecimals) internal pure returns (uint256 N_) {
+    function asN(uint256 valueR, uint8 oldDecimals) internal pure returns (uint256) {
         if (valueR == 0)
             return 0;
         return ((valueR * (10 ** N_()) / (10 ** oldDecimals)) * (10 ** N_())) / (10 ** N_());
     }
 
     // N => R *see styleguide
-    function asR(uint256 valueN, uint8 newDecimals) internal pure returns (uint256 R_) {
+    function asR(uint256 valueN, uint8 newDecimals) internal pure returns (uint256) {
         if (valueN == 0)
             return 0;
         return ((valueN * (10 ** N_()) / (10 ** N_())) * (10 ** newDecimals)) / (10 ** N_());
