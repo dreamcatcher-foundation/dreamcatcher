@@ -9,6 +9,10 @@ import "../math/FixedPointArithmeticsMathLibrary.sol";
 import "../../ImmutableLibrary.sol";
 
 library UniswapV2AdaptorLibrary {
+
+    /**
+    * => N
+     */
     function price(address token0, address token1, address factory, address router) internal view returns (uint256) {
 
         /**
@@ -44,6 +48,9 @@ library UniswapV2AdaptorLibrary {
         return FixedPointArithmeticsMathLibrary.asNewR(quote_, decimals1_, N_());
     }
 
+    /**
+    * => N
+     */
     function amountOut(address[] memory path, address factory, address router, uint256 amountNIn) internal view returns (uint256) {
         uint8 decimals0_ = IERC20Metadata(path[0]).decimals();
         uint8 decimals1_ = IERC20Metadata(path[path.length - 1]).decimals();
@@ -60,7 +67,10 @@ library UniswapV2AdaptorLibrary {
         return FixedPointArithmeticsMathLibrary.asNewR(amount_, decimals1_, N_());
     }
 
-    
+
+    /**
+    * => BPS
+     */
     function yield(address[] memory path, address factory, address router, uint256 amountNIn) internal view returns (uint256 BPS_) {
         address token0_ = path[0];
         address token1_ = path[path.length - 1];
@@ -89,6 +99,9 @@ library UniswapV2AdaptorLibrary {
     }
 
 
+    /**
+    * => N
+     */
     function swapExactTokensForTokens(address[] memory path, address factory, address router, uint256 amountNIn) internal returns (uint256) {
         uint8 decimals0_ = IERC20Metadata(path[0]).decimals();
         uint8 decimals1_ = IERC20Metadata(path[path.length - 1]).decimals();
@@ -101,6 +114,9 @@ library UniswapV2AdaptorLibrary {
         return FixedPointArithmeticsMathLibrary.asNewR(amount_, decimals1_, N_());
     }
 
+    /**
+    * => N
+     */
     function swapExactTokensForTokensForMinYield(address[] memory path, address factory, address router, uint256 amountNIn, uint256 minYieldBPS) internal returns (uint256 N_) {
         if (minYieldBPS > scale_())
             revert("UniswapV2: will not return a yield higher than the scale");
@@ -110,6 +126,9 @@ library UniswapV2AdaptorLibrary {
     }
 
 
+    /**
+    * => N
+     */
     function buy(address token, address asset, address factory, address router, uint256 amountNIn) internal returns (uint256 N_) {
         address[] memory path_ = new address[](2);
         path_[0] = asset;
@@ -117,6 +136,9 @@ library UniswapV2AdaptorLibrary {
         return swapExactTokensForTokens(path_, factory, router, amountNIn);
     }
 
+    /**
+    * => N
+     */
     function sell(address token, address asset, address factory, address router, uint256 amountNIn) internal returns (uint256 N_) {
         address[] memory path_ = new address[](2);
         path_[0] = token;
@@ -125,6 +147,9 @@ library UniswapV2AdaptorLibrary {
     }
 
 
+    /**
+    * => N
+     */
     function buyForMinYield(address token, address asset, address factory, address router, uint256 amountNIn, uint256 minYieldBPS) internal returns (uint256 N_) {
         address[] memory path_ = new address[](2);
         path_[0] = asset;
@@ -132,6 +157,9 @@ library UniswapV2AdaptorLibrary {
         return swapExactTokensForTokensForMinYield(path_, factory, router, amountNIn, minYieldBPS);
     }
 
+    /**
+    * => N
+     */
     function sellForMinYield(address token, address asset, address factory, address router, uint256 amountNIn, uint256 minYieldBPS) internal returns (uint256 N_) {
         address[] memory path_ = new address[](2);
         path_[0] = token;
