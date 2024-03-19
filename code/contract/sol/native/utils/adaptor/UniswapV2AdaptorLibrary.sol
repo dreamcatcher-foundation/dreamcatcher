@@ -5,11 +5,10 @@ import "../../non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol"
 import "../../non-native/uniswap/interfaces/IUniswapV2Factory.sol";
 import "../../non-native/uniswap/interfaces/IUniswapV2Router02.sol";
 import "../../non-native/uniswap/interfaces/IUniswapV2Pair.sol";
-import "../math/FixedPointArithmetic.sol";
-import "../../Immutable.sol";
+import "../math/FixedPointArithmeticsMathLibrary.sol";
+import "../../ImmutableLibrary.sol";
 
-library UniswapV2 {
-
+library UniswapV2AdaptorLibrary {
     function price(address token0, address token1, address factory, address router) internal view returns (uint256 N_) {
 
         /**
@@ -34,7 +33,7 @@ library UniswapV2 {
                 pairReserves(token0, token1, factory)[0],
                 pairReserves(token0, token1, factory)[1]
             );
-            return FixedPointArithmetic.asNewR(quote_, decimals1_, N_());
+            return FixedPointArithmeticsMathLibrary.asNewR(quote_, decimals1_, N_());
         }
         
         uint256 quote_ = IUniswapV2Router02(router).quote(
@@ -42,7 +41,7 @@ library UniswapV2 {
             pairReserves(token0, token1, factory)[1],
             pairReserves(token0, token1, factory)[0]
         );
-        return FixedPointArithmetic.asNewR(quote_, decimals1_, N_());
+        return FixedPointArithmeticsMathLibrary.asNewR(quote_, decimals1_, N_());
     }
 
     function amountOut(address[] memory path, address factory, address router, uint256 amountNIn) internal view returns (uint256 N_) {
@@ -55,17 +54,17 @@ library UniswapV2 {
         if (decimals0_ == 0 || decimals1_ == 0)
             return 0;
 
-        uint256 amountRIn_ = FixedPointArithmetic.asNewR(amountNIn, N_(), decimals0_);
+        uint256 amountRIn_ = FixedPointArithmeticsMathLibrary.asNewR(amountNIn, N_(), decimals0_);
         uint256[] memory amounts_ = IUniswapV2Router02(router).getAmountsOut(amountRIn_, path);
         uint256 amount_ = amounts_[amounts_.length - 1];
-        return FixedPointArithmetic.asNewR(amount_, decimals1_, N_());
+        return FixedPointArithmeticsMathLibrary.asNewR(amount_, decimals1_, N_());
     }
 
     
     function yield(address[] memory path, address factory, address router, uint256 amountNIn) internal view returns (uint256 BPS_) {
-        address token0 = path[0];
-        address token1 = path[path.length - 1];
-        uint256 bestAmountOutN_ = amountNIn * price(token0, token1, factory, router);
+        address token0_ = path[0];
+        address token1_ = path[path.length - 1];
+        uint256 bestAmountOutN_ = amountNIn * price(token0_, token1_, factory, router);
         uint256 realAmountOutN_ = amountOut(path, factory, router, amountNIn);
 
         /**
@@ -86,20 +85,20 @@ library UniswapV2 {
         /**
         * NOTE Return the % of the best amount that is actually returned.
          */
-        return FixedPointArithmetic.scale(realAmountOutN_, bestAmountOutN_);
+        return FixedPointArithmeticsMathLibrary.scale(realAmountOutN_, bestAmountOutN_);
     }
 
 
     function swapExactTokensForTokens(address[] memory path, address factory, address router, uint256 amountNIn) internal returns (uint256 N_) {
         uint8 decimals0_ = IERC20Metadata(path[0]).decimals();
         uint8 decimals1_ = IERC20Metadata(path[path.length - 1]).decimals();
-        uint256 amountRIn_ = FixedPointArithmetic.asNewR(amountNIn, N_(), decimals0_);
+        uint256 amountRIn_ = FixedPointArithmeticsMathLibrary.asNewR(amountNIn, N_(), decimals0_);
         IERC20(path[0]).approve(router, 0);
         IERC20(path[0]).approve(router, amountRIn_);
         uint256 amountOutR_ = amountOut(path, factory, router, amountNIn);
         uint256[] memory amounts_ = IUniswapV2Router02(router).swapExactTokensForTokens(amountRIn_, amountOutR_, path, address(this), block.timestamp);
         uint256 amount_ = amounts_[amounts_.length - 1];
-        return FixedPointArithmetic.asNewR(amount_, decimals1_, N_());
+        return FixedPointArithmeticsMathLibrary.asNewR(amount_, decimals1_, N_());
     }
 
     function swapExactTokensForTokensForMinYield(address[] memory path, address factory, address router, uint256 amountNIn, uint256 minYieldBPS) internal returns (uint256 N_) {
@@ -168,10 +167,10 @@ library UniswapV2 {
 
 
     function N_() private pure returns (uint8) {
-        return Immutable.NATIVE_DECIMAL_REPRESENTATION();
+        return ImmutableLibrary.NATIVE_DECIMAL_REPRESENTATION();
     }
 
     function scale_() private pure returns (uint256) {
-        return Immutable.SCALE();
+        return ImmutableLibrary.SCALE();
     }
 }

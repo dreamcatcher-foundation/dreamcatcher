@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.19;
+import "../Immutable.sol";
 
 library TokenStorageLib {
     event Approval(address indexed owner, address indexed spender, uint256 amount);
@@ -13,7 +14,7 @@ library TokenStorageLib {
     }
 
     function decimals(Token storage token) internal view returns (uint8) {
-        return 18;
+        return Immutable.NATIVE_DECIMAL_REPRESENTATION();
     }
 
     function totalSupply(Token storage token) internal view returns (uint256) {
@@ -129,7 +130,6 @@ contract TokenStorage {
 
     function token() internal pure returns (TokenStorageLib.Token storage sl) {
         bytes32 loc = TOKEN_;
-        
         assembly {
             sl.slot := loc
         }

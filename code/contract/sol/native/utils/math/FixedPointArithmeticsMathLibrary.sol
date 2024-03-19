@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19;
 import "../../../non-native/openzeppelin/utils/math/Math.sol";
-import "../../Immutable.sol";
+import "../../ImmutableLibrary.sol";
 
-library FixedPointArithmetic {
+library FixedPointArithmeticsMathLibrary {
     function maximumRepresentableEntireValue(uint8 decimals) internal pure returns (uint256 R_) {
         return uint256Max() / (10 ** decimals);
     }
@@ -175,7 +175,7 @@ library FixedPointArithmetic {
     }
 
     function scale_() private pure returns (uint256) {
-        return Immutable.SCALE();
+        return ImmutableLibrary.SCALE();
     }
 
 
@@ -246,6 +246,6 @@ library FixedPointArithmetic {
     }
 
     function N_() private pure returns (uint256 N_) {
-        return Immutable.NATIVE_DECIMAL_REPRESENTATION();
+        return ImmutableLibrary.NATIVE_DECIMAL_REPRESENTATION();
     }
 }

@@ -7,7 +7,7 @@ pragma solidity >=0.8.19;
 *      and debate. If changed can and will introduce breaking edge cases
 *      accross the protocol.
  */
-library Immutable {
+library ImmutableLibrary {
 
     /**
     * NOTE This is the native decimal representation for the protocol. Any
@@ -22,7 +22,7 @@ library Immutable {
         return 18;
     }
 
-    function MAX_FEE() internal pure returns (uint8 BP) {
+    function MAX_FEE() internal pure returns (uint8 BPS_) {
         return 200;
     }
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity >=0.8.19;
 import "../../non-native/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
 import "../../non-native/solidstate-v0.8.24/proxy/diamond/ISolidStateDiamond.sol";
 import "../../non-native/solidstate-v0.8.24/proxy/diamond/readable/IDiamondReadable.sol";
@@ -7,11 +7,6 @@ import "../../non-native/solidstate-v0.8.24/proxy/diamond/writable/IDiamondWrita
 import "../../non-native/solidstate-v0.8.24/proxy/diamond/writable/IDiamondWritableInternal.sol";
 import "../interface/IFacet.sol";
 
-/**
-* NOTE Diamond is a layer of abstraction over the SolidStateDiamond
-*      which picks selectors directly from IFacet contracts and
-*      forms the foundation of modular plugIn-like architecture.
- */
 contract Diamond is SolidStateDiamond {
     function addSelectors(address implementation, bytes4[] memory selectors) public virtual onlyOwner() returns (bool) {
         FacetCutAction action = FacetCutAction.ADD;

@@ -2,15 +2,13 @@
 pragma solidity >=0.8.19;
 
 library ReentrancyGuardStorageLib {
-    error REENTRANT_CALL();
-
     struct ReentrancyGuard {
         uint8 status_;
     }
 
     function nonReentrantBefore(ReentrancyGuard storage reentrancyGuard) internal {
         if (reentrancyGuard.status_ != _NOT_ENTERED()) {
-            revert REENTRANT_CALL();
+            revert("ReentrancyGuardStorageLib: reentrant call");
         }
         reentrancyGuard.status_ = ENTERED_();
     }

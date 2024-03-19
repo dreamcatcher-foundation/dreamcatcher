@@ -9,6 +9,7 @@
     "module": "prisma",
     "memory": "jinja",
     "internal": "private",
-    "engine": "delta"
+    "engine": "delta",
+    "adaptor": "delta"
   }
 }
