@@ -3,7 +3,6 @@ pragma solidity >=0.8.19;
 import "../../../non-native/uniswap/interfaces/IUniswapV2Pair.sol";
 import "./UniswapV2AdaptorLibrary.sol";
 
-
 contract TestableUniswapV2AdaptorLibrary {
     function price(address token0, address token1, address factory, address router) external view returns (uint256) {
         return UniswapV2AdaptorLibrary.price(token0, token1, factory, router);
@@ -23,8 +22,8 @@ contract TestableUniswapV2AdaptorLibrary {
         return UniswapV2AdaptorLibrary.swapExactTokensForTokens(path, factory, router, amountNIn);
     }
 
-    function swapExactTokensForTokensForMinYield(address[] memory path, address factory, address router, uint256 minYieldBPS) external returns (uint256) {
-        return UniswapV2AdaptorLibrary.swapExactTokensForTokensForMinYield(path, factory, router, minYieldBPS);
+    function swapExactTokensForTokensForMinYield(address[] memory path, address factory, address router, uint256 amountNIn, uint256 minYieldBPS) external returns (uint256) {
+        return UniswapV2AdaptorLibrary.swapExactTokensForTokensForMinYield(path, factory, router, amountNIn, minYieldBPS);
     }
 
 

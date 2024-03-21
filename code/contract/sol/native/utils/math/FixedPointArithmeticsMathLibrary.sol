@@ -38,15 +38,16 @@ library FixedPointArithmeticsMathLibrary {
     function amountToMint(uint256 assetsNIn, uint256 netAssetValueN, uint256 totalSupplyN) internal pure returns (uint256 sharesN_) {
 
         /**
-        * NOTE In this scenario there is no value in the vault and no supply
-        *      in circulation. When both values are insufficient to perform
-        *      the operation, the function will handle this by returning an
-        *      initial amount of '1000000' as ether.
+        * -> In this scenario there is no value in the vault and no supply
+        *    in circulation. When both values are insufficient to perform
+        *    the operation, the function will handle this by returning an
+        *    initial amount of '1000000' as ether.
         *
-        * NOTE This is the initial state vaults are going to be in when they
-        *      are first deployed. However, it is possible to arrive at
-        *      this state if all shares have been burnt.
+        * -> This is the initial state vaults are going to be in when they
+        *    are first deployed. However, it is possible to arrive at
+        *    this state if all shares have been burnt.
          */
+
         if (netAssetValueN == 0 && totalSupplyN == 0)
             return initialMint_();
         
