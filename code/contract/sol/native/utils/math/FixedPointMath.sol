@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19;
 import { Math } from "../../../non-native/openzeppelin/utils/math/Math.sol";
-import { FixedPointValue } from "../class/FixedPointValue.sol";
+import { FixedPointValue } from "../../shared/FixedPointValue.sol";
 
 interface IFixedPointMath {
     function scale(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory basisPoints);

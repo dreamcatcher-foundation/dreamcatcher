@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19;
 import { IFixedPointMath } from "./FixedPointMath.sol";
-import { FixedPointValue } from "../class/FixedPointValue.sol";
+import { FixedPointValue } from "../../shared/FixedPointValue.sol";
 
 interface IShareMath {
     function fixedPointMath() external view returns (IFixedPointMath);
