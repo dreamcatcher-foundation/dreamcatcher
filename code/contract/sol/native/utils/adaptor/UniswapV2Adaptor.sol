@@ -121,4 +121,75 @@ contract UniswapV2Adaptor {
         scale = fixedPointMath_.scale(realAmountOut, bestAmountOut);
         return scale;
     }
+
+    function swapExactTokensForTokens(address[] memory path, FixedPointValue memory amountIn) public returns (FixedPointValue memory) {
+        address token0;
+        address token1;
+        uint8 decimals0;
+        uint8 decimals1;
+        uint256 amount;
+        uint256[] memory amounts;
+        FixedPointValue memory out;
+        token0 = path[0];
+        token1 = path[path.length - 1];
+        decimals0 = IERC20Metadata(token0).decimals();
+        decimals1 = IERC20Metadata(token1).decimals();
+        amountIn = fixedPointMath_.asNewDecimals(amountIn, decimals0);
+        IERC20(token0).approve(address(router_), 0);
+        IERC20(token0).approve(address(router_), amountIn.value);
+        out = amountOut(path, amountIn);
+        out = fixedPointMath_.asNewDecimals(out, decimals1);
+        amounts = router_.swapExactTokensForTokens(amountIn.value, out.value, path, msg.sender, block.timestamp);
+        amount = amounts[amounts.length - 1];
+        out = FixedPointValue({value: amount, decimals: decimals1});
+        out = fixedPointMath_.asEther(out);
+        return out;
+    }
+
+    function swapExactTokensForTokensForMinYield(address[] memory path, FixedPointValue memory amountIn, FixedPointValue memory minYield) public returns (FixedPointValue memory) {
+        uint8 decimals;
+        FixedPointValue memory realYield;
+        FixedPointValue memory maxYield;
+        decimals = amountIn.decimals;
+        minYield = fixedPointMath_.asNewDecimals(minYield, decimals);
+        maxYield = FixedPointValue({value: 10_000, decimals: 0});
+        maxYield = fixedPointMath_.asNewDecimals(maxYield, decimals);
+        realYield = yield(path, amountIn);
+        realYield = fixedPointMath_.asNewDecimals(realYield, decimals);
+        require(minYield.value <= maxYield.value, "UniswapV2Adaptor: cannot return any yield higher than 100%, any amounts in excess will still be credited");
+        require(realYield.value >= minYield.value, "UniswapV2Adaptor: failed to meet the minimum required yield");
+        return swapExactTokensForTokens(path, amountIn);
+    }
+
+    function buy(address token, address asset, FixedPointValue memory amountIn) public returns (FixedPointValue memory) {
+        address[] memory path;
+        path = new address[](2);
+        path[0] = asset;
+        path[1] = token;
+        return swapExactTokensForTokens(path, amountIn);
+    }
+
+    function sell(address token, address asset, FixedPointValue memory amountIn) public returns (FixedPointValue memory) {
+        address[] memory path;
+        path = new address[](2);
+        path[0] = token;
+        path[1] = asset;
+        return swapExactTokensForTokens(path, amountIn);
+    }
+
+    function buyForMinYield(address token, address asset, FixedPointValue memory amountIn, FixedPointValue memory minYield) public returns (FixedPointValue memory) {
+        address[] memory path;
+        path = new address[](2);
+        path[0] = asset;
+        path[1] = token;
+        return swapExactTokensForTokensForMinYield(path, amountIn, minYield);
+    }
+
+    function sellForMinYield(address token, address asset, FixedPointValue memory amountIn, FixedPointValue memory minYield) public returns (FixedPointValue memory) {
+        address[] memory path;
+        path = new address[](2);
+        path[0] = token;
+        path[1] = asset;
+        return swapExactTokensForTokensForMinYield(path, amountIn, minYield);
+    }
 }
