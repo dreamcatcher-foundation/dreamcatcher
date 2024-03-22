@@ -62,16 +62,16 @@ contract FixedPointMath {
         return result;
     }
 
-    function slice_(FixedPointValue memory num, FixedPointValue memory sliceBasisPoints) private pure onlyMatchingFixedPointValueType(num0, num1) returns (FixedPointValue memory) {
+    function slice_(FixedPointValue memory num, FixedPointValue memory sliceBasisPoints) private pure onlyMatchingFixedPointValueType(num, sliceBasisPoints) returns (FixedPointValue memory) {
         uint8 decimals;
         uint256 representation;
         FixedPointValue memory result;
         FixedPointValue memory scale;
         decimals = num.decimals;
         representation = 10**decimals;
-        scale = FixedPointValue({value: 10_000 * representation}, decimals: decimals);
+        scale = FixedPointValue({value: 10_000 * representation, decimals: decimals});
         result = div_(num, scale);
-        result = mul_(result, slice);
+        result = mul_(result, sliceBasisPoints);
         return result;
     }
 
@@ -109,7 +109,7 @@ contract FixedPointMath {
         value0 = num0.value;
         value1 = num1.value;
         representation = 10**decimals;
-        if (decimals0 == 0) {
+        if (decimals == 0) {
             result = value0 * value1;
             return FixedPointValue({value: result, decimals: decimals});
         }
