@@ -4,14 +4,14 @@ import { Math } from "../../../non-native/openzeppelin/utils/math/Math.sol";
 import { FixedPointValue } from "../class/FixedPointValue.sol";
 
 interface IFixedPointMath {
-    scale(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory basisPoints);
-    slice(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
-    add(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
-    sub(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
-    mul(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
-    div(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
-    asNewDecimals(FixedPointValue memory num, uint8 decimals) external pure returns (FixedPointValue memory);
-    asEther(FixedPointValue memory num) external pure returns (FixedPointValue memory);
+    function scale(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory basisPoints);
+    function slice(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    function add(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    function sub(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    function mul(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    function div(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    function asNewDecimals(FixedPointValue memory num, uint8 decimals) external pure returns (FixedPointValue memory);
+    function asEther(FixedPointValue memory num) external pure returns (FixedPointValue memory);
 }
 
 contract FixedPointMath {

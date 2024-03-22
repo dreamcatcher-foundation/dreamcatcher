@@ -3,6 +3,13 @@ pragma solidity >=0.8.19;
 import { IFixedPointMath } from "./FixedPointMath.sol";
 import { FixedPointValue } from "../class/FixedPointValue.sol";
 
+interface IShareMath {
+    function fixedPointMath() external view returns (IFixedPointMath);
+    function amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) external view returns (FixedPointValue memory);
+    function amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) external view returns (FixedPointValue memory);
+    function initialMint(uint8 decimals) external pure returns (FixedPointValue memory);
+}
+
 contract ShareMath {
     IFixedPointMath private fixedPointMath_;
 
@@ -10,7 +17,7 @@ contract ShareMath {
         fixedPointMath_ = IFixedPointMath(fixedPointMath);
     }
 
-    function fixedPointMath() public pure returns (IFixedPointMath) {
+    function fixedPointMath() public view returns (IFixedPointMath) {
         return fixedPointMath_;
     }
 
@@ -19,8 +26,8 @@ contract ShareMath {
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) public pure returns (FixedPointValue memory) {
-        IFixedPointMath memory result;
+    function amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) public view returns (FixedPointValue memory) {
+        FixedPointValue memory result;
 
         /**
         * -> In this scenario there are not assets in the vault and no supply
@@ -74,8 +81,8 @@ contract ShareMath {
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) public pure returns (FixedPointValue memory) {
-        IFixedPointMath memory result;
+    function amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) public view returns (FixedPointValue memory) {
+        FixedPointValue memory result;
 
         /**
         * -> A redundant check to ensure that the amount of supply in
