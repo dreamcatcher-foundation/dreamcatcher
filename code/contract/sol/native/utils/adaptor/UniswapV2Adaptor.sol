@@ -135,6 +135,7 @@ contract UniswapV2Adaptor {
         decimals0 = IERC20Metadata(token0).decimals();
         decimals1 = IERC20Metadata(token1).decimals();
         amountIn = fixedPointMath_.asNewDecimals(amountIn, decimals0);
+        IERC20(token0).transferFrom(msg.sender, address(this), amountIn.value);
         IERC20(token0).approve(address(router_), 0);
         IERC20(token0).approve(address(router_), amountIn.value);
         out = amountOut(path, amountIn);
