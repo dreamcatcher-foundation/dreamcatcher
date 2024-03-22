@@ -3,6 +3,17 @@ pragma solidity >=0.8.19;
 import { Math } from "../../../non-native/openzeppelin/utils/math/Math.sol";
 import { FixedPointValue } from "../class/FixedPointValue.sol";
 
+interface IFixedPointMath {
+    scale(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory basisPoints);
+    slice(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    add(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    sub(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    mul(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    div(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory);
+    asNewDecimals(FixedPointValue memory num, uint8 decimals) external pure returns (FixedPointValue memory);
+    asEther(FixedPointValue memory num) external pure returns (FixedPointValue memory);
+}
+
 contract FixedPointMath {
     using Math for uint256;
 
@@ -21,8 +32,8 @@ contract FixedPointMath {
         return scale_(num0, num1);
     }
 
-    function slice(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory) {
-        return slice_(num0, num1);
+    function slice(FixedPointValue memory num0, FixedPointValue memory sliceBasisPoints) external pure returns (FixedPointValue memory) {
+        return slice_(num0, sliceBasisPoints);
     }
 
     function add(FixedPointValue memory num0, FixedPointValue memory num1) external pure returns (FixedPointValue memory) {
