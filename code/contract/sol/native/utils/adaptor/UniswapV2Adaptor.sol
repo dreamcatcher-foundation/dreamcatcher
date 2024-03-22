@@ -36,7 +36,7 @@ contract UniswapV2Adaptor {
     }
 
     function pairInterface(address token0, address token1) public view returns (IUniswapV2Pair) {
-        return IUniswapV2Pair(pairAddress(token0, token));
+        return IUniswapV2Pair(pairAddress(token0, token1));
     }
 
     function pairReserves(address token0, address token1) public view returns (uint256[] memory) {
@@ -98,7 +98,7 @@ contract UniswapV2Adaptor {
         decimals0 = IERC20Metadata(token0).decimals();
         decimals1 = IERC20Metadata(token1).decimals();
         amountIn = fixedPointMath_.asNewDecimals(amountIn, decimals0);
-        amounts = router_.getAmountsOut(amountIn, path);
+        amounts = router_.getAmountsOut(amountIn.value, path);
         amount = amounts[amounts.length - 1];
         amountOut = FixedPointValue({value: amount, decimals: decimals1});
         amountOut = fixedPointMath_.asEther(amountOut);
@@ -113,10 +113,11 @@ contract UniswapV2Adaptor {
         FixedPointValue memory scale;
         token0 = path[0];
         token1 = path[path.length - 1];
+        amountIn = fixedPointMath_.asEther(amountIn);
         bestAmountOut = fixedPointMath_.mul(amountIn, price(token0, token1));
         realAmountOut = amountOut(path, amountIn);
-        if (bestAmountOut == 0 || realAmountOut == 0) return FixedPointValue({value: 0, decimals: 18});
-        if (realAmountOut >= bestAmountOut) return fixedPointMath_.asEther(FixedPointValue({value: 10_000, decimals: 0}));
+        if (bestAmountOut.value == 0 || realAmountOut.value == 0) return FixedPointValue({value: 0, decimals: 18});
+        if (realAmountOut.value >= bestAmountOut.value) return fixedPointMath_.asEther(FixedPointValue({value: 10_000, decimals: 0}));
         scale = fixedPointMath_.scale(realAmountOut, bestAmountOut);
         return scale;
     }

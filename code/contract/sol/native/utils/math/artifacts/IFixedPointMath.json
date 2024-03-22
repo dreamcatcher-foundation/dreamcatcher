@@ -1,0 +1,515 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"add((uint256,uint8),(uint256,uint8))": "58633635",
+			"asEther((uint256,uint8))": "3e60d8e0",
+			"asNewDecimals((uint256,uint8),uint8)": "7d02ebf4",
+			"div((uint256,uint8),(uint256,uint8))": "8444b813",
+			"mul((uint256,uint8),(uint256,uint8))": "a7e7c9f9",
+			"scale((uint256,uint8),(uint256,uint8))": "e51356e8",
+			"slice((uint256,uint8),(uint256,uint8))": "4b602c6d",
+			"sub((uint256,uint8),(uint256,uint8))": "2833d1f0"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num0",
+					"type": "tuple"
+				},
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num1",
+					"type": "tuple"
+				}
+			],
+			"name": "add",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num",
+					"type": "tuple"
+				}
+			],
+			"name": "asEther",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num",
+					"type": "tuple"
+				},
+				{
+					"internalType": "uint8",
+					"name": "decimals",
+					"type": "uint8"
+				}
+			],
+			"name": "asNewDecimals",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num0",
+					"type": "tuple"
+				},
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num1",
+					"type": "tuple"
+				}
+			],
+			"name": "div",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num0",
+					"type": "tuple"
+				},
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num1",
+					"type": "tuple"
+				}
+			],
+			"name": "mul",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num0",
+					"type": "tuple"
+				},
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num1",
+					"type": "tuple"
+				}
+			],
+			"name": "scale",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "basisPoints",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num0",
+					"type": "tuple"
+				},
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num1",
+					"type": "tuple"
+				}
+			],
+			"name": "slice",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num0",
+					"type": "tuple"
+				},
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "num1",
+					"type": "tuple"
+				}
+			],
+			"name": "sub",
+			"outputs": [
+				{
+					"components": [
+						{
+							"internalType": "uint256",
+							"name": "value",
+							"type": "uint256"
+						},
+						{
+							"internalType": "uint8",
+							"name": "decimals",
+							"type": "uint8"
+						}
+					],
+					"internalType": "struct FixedPointValue",
+					"name": "",
+					"type": "tuple"
+				}
+			],
+			"stateMutability": "pure",
+			"type": "function"
+		}
+	]
+}
