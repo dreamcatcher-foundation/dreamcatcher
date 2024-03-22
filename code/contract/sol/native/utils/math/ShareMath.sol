@@ -10,12 +10,16 @@ contract ShareMath {
         fixedPointMath_ = IFixedPointMath(fixedPointMath);
     }
 
+    function fixedPointMath() public pure returns (IFixedPointMath) {
+        return fixedPointMath_;
+    }
+
     /**
     * -> If the fixed point values are not of the same decimal type
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function amountToMint_(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) private pure returns (FixedPointValue memory) {
+    function amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) public pure returns (FixedPointValue memory) {
         IFixedPointMath memory result;
 
         /**
@@ -28,7 +32,7 @@ contract ShareMath {
         *    are first deployed. However, it is possible to arrive at
         *    this state if all supply has been burnt.
          */
-        if (assets.value == 0 && supply.value == 0) return initialMint_(assetsIn.decimals);
+        if (assets.value == 0 && supply.value == 0) return initialMint(assetsIn.decimals);
 
         /**
         * -> In this scenario there are assets in the vault but no supply
@@ -38,7 +42,7 @@ contract ShareMath {
         * -> There are edge cases where the vault can arrive to this state
         *    when the assets have been transferred in.
          */
-        if (assets.value != 0 && supply.value == 0) return initialMint_(assetsIn.decimals);
+        if (assets.value != 0 && supply.value == 0) return initialMint(assetsIn.decimals);
 
         /**
         * -> In this scenario there are not assets in the vault but there is
@@ -70,7 +74,7 @@ contract ShareMath {
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function amountToSend_(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) private pure returns (FixedPointValue memory) {
+    function amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) public pure returns (FixedPointValue memory) {
         IFixedPointMath memory result;
 
         /**
@@ -124,7 +128,7 @@ contract ShareMath {
         return result;
     }
 
-    function initialMint_(uint8 decimals) private pure returns (FixedPointValue memory) {
+    function initialMint(uint8 decimals) public pure returns (FixedPointValue memory) {
         uint256 value;
         uint256 representation;
         uint256 result;
