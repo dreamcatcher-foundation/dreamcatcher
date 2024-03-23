@@ -13,12 +13,20 @@ contract UniswapV2Adaptor is FixedPointMath {
     IUniswapV2Router02 private _router;
 
     error PairDoesNotMatchPath(address[] memory path, PairLayout layout);
-    error PathDoesNotHavePair(); /// TODO Placeholder
+    error PairDoesNotExist(address[] memory path);
+    error InvalidPath(address[] memory path);
 
     enum PairLayout {
         MATCH,
         REVERSE_MATCH,
         NO_MATCH
+    }
+
+    modifier onlyValidPath(address[] memory path) {
+        if (path.length < 2) {
+            revert InvalidPath(path);
+        }
+        _;
     }
 
     constructor(address factory, address router) {
@@ -34,14 +42,28 @@ contract UniswapV2Adaptor is FixedPointMath {
         return _router;
     }
 
-    function quote(address[] memory path) internal view returns (FixedPointValue memory asEther) {
+    function yield(address[] memory path, FixedPointValue memory amountIn) public view onlyValidPath(path) returns (FixedPointValue memory basisPoints) {
+        return _calculateYield(bestAmountOut(path, amountIn), realAmountOut(path, amountIn));
+    }
+
+    function bestAmountOut(address[] memory path, FixedPointValue memory amountIn) public view onlyValidPath(path) returns (FixedPointValue memory asEther) {
+        return asEther(mul(asEther(amountIn), quote(path)));
+    }
+
+    function realAmountOut(address[] memory path, FixedPointValue memory amountIn) public view onlyValidPath(path) returns (FixedPointValue memory asEther) {
+        uint256[] memory amounts = router().getAmountsOut(asEther(amountIn).value, path);
+        uint256 amount = amounts[amounts.length - 1];
+        return asEther(FixedPointValue({value: amount, decimals: _decimals1(path)}));
+    }
+
+    function quote(address[] memory path) public view onlyValidPath(path) returns (FixedPointValue memory asEther) {
         if (!_hasPair(path)) {
-            revert PathDoesNotHavePair(); /// TODO Placeholder
+            revert PairDoesNotExist(path);
         }
         return _calculateQuote(path, _layoutOf(path));
     }
 
-    function _calculateQuote(address[] memory path, PairLayout layout) internal view returns (FixedPointValue memory asEther) {
+    function _calculateQuote(address[] memory path, PairLayout layout) internal view onlyValidPath(path) returns (FixedPointValue memory asEther) {
         if (layout == PairLayout.MATCH) {
             return _quoteLayout0(path);
         }
@@ -51,7 +73,7 @@ contract UniswapV2Adaptor is FixedPointMath {
         revert PairDoesNotMatchPath(path, layout);
     }
 
-    function _quoteLayout0(address[] memory path) internal view returns (FixedPointValue memory asEther) {
+    function _quoteLayout0(address[] memory path) internal view onlyValidPath(path) returns (FixedPointValue memory asEther) {
         uint256 result = router()
             .quote(
                 10**_decimals0(path),
@@ -61,7 +83,7 @@ contract UniswapV2Adaptor is FixedPointMath {
         return asEther(FixedPointValue({value: result, decimals: _decimals1(path)}));
     }
 
-    function _quoteLayout1(address[] memory path) internal view returns (FixedPointValue memory asEther) {
+    function _quoteLayout1(address[] memory path) internal view onlyValidPath(path) returns (FixedPointValue memory asEther) {
         uint256 result = router()
             .quote(
                 10**_decimals1(path),
@@ -92,23 +114,23 @@ contract UniswapV2Adaptor is FixedPointMath {
         return asEther(FixedPointValue({value: 10_000, decimals: 0}));
     }
 
-    function _addressOf(address[] memory path) internal view returns (address) {
+    function _addressOf(address[] memory path) internal view onlyValidPath(path) returns (address) {
         address token0 = path[0];
         address token1 = path[path.length - 1];
         return factory().getPair(token0, token1);
     }
 
-    function _interfaceOf(address[] memory path) internal view returns (IUniswapV2Pair) {
+    function _interfaceOf(address[] memory path) internal view onlyValidPath(path) returns (IUniswapV2Pair) {
         return IUniswapV2Pair(_addressOf(path));
     }
 
-    function _reserveOf(address[] memory path) internal view returns (uint256[] memory) {
+    function _reserveOf(address[] memory path) internal view onlyValidPath(path) returns (uint256[] memory) {
         uint256[] memory reserve = new uint256[](2);
         (reserve[0], reserve[1],) = _interfaceOf(path).getReserves();
         return reserve;
     }
 
-    function _layoutOf(address[] memory path) internal view returns (PairLayout) {
+    function _layoutOf(address[] memory path) internal view onlyValidPath(path) returns (PairLayout) {
         address pairInterface = _interfaceOf(path);
         address tkn0 = pairInterface.token0();
         address tkn1 = pairInterface.token1();
@@ -119,15 +141,15 @@ contract UniswapV2Adaptor is FixedPointMath {
         return PairLayout.NO_MATCH;
     }
 
-    function _hasPair(address[] memory path) internal view returns (bool) {
+    function _hasPair(address[] memory path) internal view onlyValidPath(path) returns (bool) {
         return _addressOf(path) != address(0);
     }
 
-    function _decimals0(address[] memory path) internal view returns (uint8) {
+    function _decimals0(address[] memory path) internal view onlyValidPath(path) returns (uint8) {
         return IERC20Metadata(path[0]).decimals();
     }
 
-    function _decimals1(address[] memory path) internal view returns (uint8) {
+    function _decimals1(address[] memory path) internal view onlyValidPath(path) returns (uint8) {
         return IERC20Metadata(path[path.length - 1]).decimals();
     }
 }

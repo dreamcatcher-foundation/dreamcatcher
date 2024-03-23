@@ -1,33 +1,16 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19;
-import { IFixedPointMath } from "./FixedPointMath.sol";
+import { FixedPointMath } from "./FixedPointMath.sol";
 import { FixedPointValue } from "../../shared/FixedPointValue.sol";
 
-interface IShareMath {
-    function fixedPointMath() external view returns (IFixedPointMath);
-    function amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) external view returns (FixedPointValue memory);
-    function amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) external view returns (FixedPointValue memory);
-    function initialMint(uint8 decimals) external pure returns (FixedPointValue memory);
-}
-
-contract ShareMath {
-    IFixedPointMath private fixedPointMath_;
-
-    constructor(address fixedPointMath) {
-        fixedPointMath_ = IFixedPointMath(fixedPointMath);
-    }
-
-    function fixedPointMath() public view returns (IFixedPointMath) {
-        return fixedPointMath_;
-    }
+contract ShareMath is FixedPointMath {
 
     /**
     * -> If the fixed point values are not of the same decimal type
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) public view returns (FixedPointValue memory) {
-        FixedPointValue memory result;
+    function _amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure onlySimilarFixedPointType([assetsIn, assets, supply]) returns (FixedPointValue memory) {
 
         /**
         * -> In this scenario there are not assets in the vault and no supply
@@ -39,7 +22,7 @@ contract ShareMath {
         *    are first deployed. However, it is possible to arrive at
         *    this state if all supply has been burnt.
          */
-        if (assets.value == 0 && supply.value == 0) return initialMint(assetsIn.decimals);
+        if (assets.value == 0 && supply.value == 0) return _initialMint(assetsIn.decimals);
 
         /**
         * -> In this scenario there are assets in the vault but no supply
@@ -49,7 +32,7 @@ contract ShareMath {
         * -> There are edge cases where the vault can arrive to this state
         *    when the assets have been transferred in.
          */
-        if (assets.value != 0 && supply.value == 0) return initialMint(assetsIn.decimals);
+        if (assets.value != 0 && supply.value == 0) return _initialMint(assetsIn.decimals);
 
         /**
         * -> In this scenario there are not assets in the vault but there is
@@ -71,9 +54,7 @@ contract ShareMath {
         * -> As all the possible edge cases have been handled the operation
         *    can now compute the response normally.
          */
-        result = fixedPointMath_.mul(assetsIn, supply);
-        result = fixedPointMath_.div(result, assets);
-        return result;
+        return _div(_mul(assetsIn, supply), assets);
     }
 
     /**
@@ -81,8 +62,7 @@ contract ShareMath {
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) public view returns (FixedPointValue memory) {
-        FixedPointValue memory result;
+    function _amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure onlySimilarFixedPointType([supplyIn, assets, supply]) returns (FixedPointValue memory) {
 
         /**
         * -> A redundant check to ensure that the amount of supply in
@@ -130,18 +110,10 @@ contract ShareMath {
         * -> As all possible edge cases have been handled, the operation
         *    can now compute the response normally.
          */
-        result = fixedPointMath_.mul(supplyIn, assets);
-        result = fixedPointMath_.div(result, supply);
-        return result;
+        return _div(_mul(supplyIn, assets), supply);
     }
 
-    function initialMint(uint8 decimals) public pure returns (FixedPointValue memory) {
-        uint256 value;
-        uint256 representation;
-        uint256 result;
-        value = 1_000_000;
-        representation = 10**decimals;
-        result = value * representation;
-        return FixedPointValue({value: result, decimals: decimals});
+    function _initialMint(uint8 decimals) private pure returns (FixedPointValue memory) {
+        return _asNewDecimals(FixedPointValue({value: 1_000_000, decimals: 0}), decimals);
     }
 }
