@@ -20,11 +20,9 @@ contract FixedPointMath {
     error IncompatibleDecimals(uint8 decimals0, uint8 decimals1);
 
     modifier onlyMatchingFixedPointValueType(FixedPointValue memory num0, FixedPointValue memory num1) {
-        uint8 decimals0;
-        uint8 decimals1;
-        decimals0 = num0.decimals;
-        decimals1 = num1.decimals;
-        if (decimals0 != decimals1) revert IncompatibleDecimals(decimals0, decimals1);
+        if (num0.decimals != num1.decimals) {
+            revert IncompatibleDecimals(num0.decimals, num1.decimals);
+        }
         _;
     }
 
@@ -35,7 +33,8 @@ contract FixedPointMath {
         FixedPointValue memory scale;
         decimals = num0.decimals;
         representation = 10**decimals;
-        scale = FixedPointValue({value: 10_000 * representation, decimals: decimals});
+        scale = FixedPointValue({value: 10_000, decimals: 0});
+        scale = asNewDecimals(scale, decimals);
         result = div(num0, num1);
         result = mul(result, scale);
         return result;
@@ -88,10 +87,6 @@ contract FixedPointMath {
         value0 = num0.value;
         value1 = num1.value;
         representation = 10**decimals;
-        if (decimals == 0) {
-            result = value0 * value1;
-            return FixedPointValue({value: result, decimals: decimals});
-        }
         result = value0.mulDiv(value1, representation);
         return FixedPointValue({value: result, decimals: decimals});
     }
@@ -111,27 +106,21 @@ contract FixedPointMath {
     }
 
     function asNewDecimals(FixedPointValue memory num, uint8 decimals) public pure returns (FixedPointValue memory) {
-        uint8 currentDecimals;
+        uint8 decimals0;
+        uint8 decimals1;
+        uint256 representation0;
+        uint256 representation1;
         uint256 value;
-        uint256 result;
-        currentDecimals = num.decimals;
+        decimals0 = num.decimals;
+        decimals1 = decimals;
+        representation0 = 10**decimals0;
+        representation1 = 10**decimals1;
         value = num.value;
-        if (currentDecimals != 18) {
-            FixedPointValue memory numAsEther;
-            numAsEther = asEther(num);
-            value = numAsEther.value;
-        }
-        result = ((value * (10**18) / (10**18)) * (10**decimals)) / (10**18);
-        return FixedPointValue({value: result, decimals: decimals});
+        value = value.mulDiv(representation1, representation0);
+        return FixedPointValue({value: value, decimals: decimals1}); 
     }
 
     function asEther(FixedPointValue memory num) public pure returns (FixedPointValue memory) {
-        uint8 currentDecimals;
-        uint256 value;
-        uint256 result;
-        currentDecimals = num.decimals;
-        value = num.value;
-        result = ((value * (10**18) / (10**currentDecimals)) * (10**18)) / (10**18);
-        return FixedPointValue({value: result, decimals: 18});
+        return asNewDecimals(num, 18);
     }
 }

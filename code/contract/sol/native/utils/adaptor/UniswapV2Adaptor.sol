@@ -6,191 +6,128 @@ import { IUniswapV2Factory } from "../../../non-native/uniswap/interfaces/IUnisw
 import { IUniswapV2Router02 } from "../../../non-native/uniswap/interfaces/IUniswapV2Router02.sol";
 import { IUniswapV2Pair } from "../../../non-native/uniswap/interfaces/IUniswapV2Pair.sol";
 import { FixedPointValue } from "../../shared/FixedPointValue.sol";
-import { IFixedPointMath } from "../math/FixedPointMath.sol";
+import { FixedPointMath } from "../math/FixedPointMath.sol";
 
-contract UniswapV2Adaptor {
-    IFixedPointMath private fixedPointMath_;
-    IUniswapV2Factory private factory_;
-    IUniswapV2Router02 private router_;
+contract UniswapV2Adaptor is FixedPointMath {
+    IUniswapV2Factory private _factory;
+    IUniswapV2Router02 private _router;
 
-    constructor(address fixedPointMath, address factory, address router) {
-        fixedPointMath_ = IFixedPointMath(fixedPointMath);
-        factory_ = IUniswapV2Factory(factory);
-        router_ = IUniswapV2Router02(router);
+    error PairDoesNotMatchPath(address[] memory path, PairLayout layout);
+    error PathDoesNotHavePair(); /// TODO Placeholder
+
+    enum PairLayout {
+        MATCH,
+        REVERSE_MATCH,
+        NO_MATCH
     }
 
-    function fixedPointMath() public view returns (IFixedPointMath) {
-        return fixedPointMath_;
+    constructor(address factory, address router) {
+        _factory = IUniswapV2Factory(factory);
+        _router = IUniswapV2Router02(router);
     }
 
     function factory() public view returns (IUniswapV2Factory) {
-        return factory_;
+        return _factory;
     }
 
     function router() public view returns (IUniswapV2Router02) {
-        return router_;
+        return _router;
     }
 
-    function pairAddress(address token0, address token1) public view returns (address) {
-        return factory_.getPair(token0, token1);
-    }
-
-    function pairInterface(address token0, address token1) public view returns (IUniswapV2Pair) {
-        return IUniswapV2Pair(pairAddress(token0, token1));
-    }
-
-    function pairReserves(address token0, address token1) public view returns (uint256[] memory) {
-        uint256[] memory reserves;
-        reserves = new uint256[](2);
-        (
-            reserves[0],
-            reserves[1],
-        ) = pairInterface(token0, token1).getReserves();
-        return reserves;
-    }
-
-    function pairIsZeroAddress(address token0, address token1) public view returns (bool) {
-        return pairAddress(token0, token1) == address(0);
-    }
-
-    function pairIsSameLayoutAsGivenTokens(address token0, address token1) public view returns (bool) {
-        return token0 == pairInterface(token0, token1).token0();
-    }
-
-    function price(address token0, address token1) public view returns (FixedPointValue memory) {
-        uint8 decimals0;
-        uint8 decimals1;
-        uint256 result;
-        FixedPointValue memory quote;
-        decimals0 = IERC20Metadata(token0).decimals();
-        decimals1 = IERC20Metadata(token1).decimals();
-        if (pairIsZeroAddress(token0, token1)) return FixedPointValue({value: 0, decimals: 18});
-        if (pairIsSameLayoutAsGivenTokens(token0, token1)) {
-            result = router_.quote(
-                10**decimals0,
-                pairReserves(token0, token1)[0],
-                pairReserves(token0, token1)[1]
-            );
-            quote = FixedPointValue({value: result, decimals: decimals1});
-            quote = fixedPointMath_.asEther(quote);
-            return quote;
+    function quote(address[] memory path) internal view returns (FixedPointValue memory asEther) {
+        if (!_hasPair(path)) {
+            revert PathDoesNotHavePair(); /// TODO Placeholder
         }
-        result = router_.quote(
-            10**decimals1,
-            pairReserves(token0, token1)[1],
-            pairReserves(token0, token1)[0]
-        );
-        quote = FixedPointValue({value: result, decimals: decimals1});
-        quote = fixedPointMath_.asEther(quote);
-        return quote;
+        return _calculateQuote(path, _layoutOf(path));
     }
 
-    function amountOut(address[] memory path, FixedPointValue memory amountIn) public view returns (FixedPointValue memory) {
-        address token0;
-        address token1;
-        uint8 decimals0;
-        uint8 decimals1;
-        uint256[] memory amounts;
-        uint256 amount;
-        FixedPointValue memory amountOut;
-        token0 = path[0];
-        token1 = path[path.length - 1];
-        decimals0 = IERC20Metadata(token0).decimals();
-        decimals1 = IERC20Metadata(token1).decimals();
-        amountIn = fixedPointMath_.asNewDecimals(amountIn, decimals0);
-        amounts = router_.getAmountsOut(amountIn.value, path);
-        amount = amounts[amounts.length - 1];
-        amountOut = FixedPointValue({value: amount, decimals: decimals1});
-        amountOut = fixedPointMath_.asEther(amountOut);
-        return amountOut;
+    function _calculateQuote(address[] memory path, PairLayout layout) internal view returns (FixedPointValue memory asEther) {
+        if (layout == PairLayout.MATCH) {
+            return _quoteLayout0(path);
+        }
+        if (layout == PairLayout.REVERSE_MATCH) {
+            return _quoteLayout1(path);
+        }
+        revert PairDoesNotMatchPath(path, layout);
     }
 
-    function yield(address[] memory path, FixedPointValue memory amountIn) public view returns (FixedPointValue memory basisPoints) {
-        address token0;
-        address token1;
-        FixedPointValue memory bestAmountOut;
-        FixedPointValue memory realAmountOut;
-        FixedPointValue memory scale;
-        token0 = path[0];
-        token1 = path[path.length - 1];
-        amountIn = fixedPointMath_.asEther(amountIn);
-        bestAmountOut = fixedPointMath_.mul(amountIn, price(token0, token1));
-        realAmountOut = amountOut(path, amountIn);
-        if (bestAmountOut.value == 0 || realAmountOut.value == 0) return FixedPointValue({value: 0, decimals: 18});
-        if (realAmountOut.value >= bestAmountOut.value) return fixedPointMath_.asEther(FixedPointValue({value: 10_000, decimals: 0}));
-        scale = fixedPointMath_.scale(realAmountOut, bestAmountOut);
-        return scale;
+    function _quoteLayout0(address[] memory path) internal view returns (FixedPointValue memory asEther) {
+        uint256 result = router()
+            .quote(
+                10**_decimals0(path),
+                _reserveOf(path)[0],
+                _reserveOf(path)[1]
+            );
+        return asEther(FixedPointValue({value: result, decimals: _decimals1(path)}));
     }
 
-    function swapExactTokensForTokens(address[] memory path, FixedPointValue memory amountIn) public returns (FixedPointValue memory) {
-        address token0;
-        address token1;
-        uint8 decimals0;
-        uint8 decimals1;
-        uint256 amount;
-        uint256[] memory amounts;
-        FixedPointValue memory out;
-        token0 = path[0];
-        token1 = path[path.length - 1];
-        decimals0 = IERC20Metadata(token0).decimals();
-        decimals1 = IERC20Metadata(token1).decimals();
-        amountIn = fixedPointMath_.asNewDecimals(amountIn, decimals0);
-        IERC20(token0).transferFrom(msg.sender, address(this), amountIn.value);
-        IERC20(token0).approve(address(router_), 0);
-        IERC20(token0).approve(address(router_), amountIn.value);
-        out = amountOut(path, amountIn);
-        out = fixedPointMath_.asNewDecimals(out, decimals1);
-        amounts = router_.swapExactTokensForTokens(amountIn.value, out.value, path, msg.sender, block.timestamp);
-        amount = amounts[amounts.length - 1];
-        out = FixedPointValue({value: amount, decimals: decimals1});
-        out = fixedPointMath_.asEther(out);
-        return out;
+    function _quoteLayout1(address[] memory path) internal view returns (FixedPointValue memory asEther) {
+        uint256 result = router()
+            .quote(
+                10**_decimals1(path),
+                _reserveOf(path)[1],
+                _reserveOf(path)[0]
+            );
+        return asEther(FixedPointValue({value: result, decimals: _decimals1(path)})); 
     }
 
-    function swapExactTokensForTokensForMinYield(address[] memory path, FixedPointValue memory amountIn, FixedPointValue memory minYield) public returns (FixedPointValue memory) {
-        uint8 decimals;
-        FixedPointValue memory realYield;
-        FixedPointValue memory maxYield;
-        decimals = amountIn.decimals;
-        minYield = fixedPointMath_.asNewDecimals(minYield, decimals);
-        maxYield = FixedPointValue({value: 10_000, decimals: 0});
-        maxYield = fixedPointMath_.asNewDecimals(maxYield, decimals);
-        realYield = yield(path, amountIn);
-        realYield = fixedPointMath_.asNewDecimals(realYield, decimals);
-        require(minYield.value <= maxYield.value, "UniswapV2Adaptor: cannot return any yield higher than 100%, any amounts in excess will still be credited");
-        require(realYield.value >= minYield.value, "UniswapV2Adaptor: failed to meet the minimum required yield");
-        return swapExactTokensForTokens(path, amountIn);
+    function _calculateYield(FixedPointValue memory bestAmountOut, FixedPointValue memory realAmountOut) internal pure onlyMatchingFixedPointValueType(bestAmountOut, realAmountOut) returns (FixedPointValue memory asBasisPoints) {
+        if (bestAmountOut.value == 0) {
+            return _zeroYield();
+        }
+        if (realAmountOut.value == 0) {
+            return _zeroYield();
+        }
+        if (realAmountOut.value >= bestAmountOut.value) {
+            return _fullYield();
+        }
+        return asEther(scale(realAmountOut, bestAmountOut));
     }
 
-    function buy(address token, address asset, FixedPointValue memory amountIn) public returns (FixedPointValue memory) {
-        address[] memory path;
-        path = new address[](2);
-        path[0] = asset;
-        path[1] = token;
-        return swapExactTokensForTokens(path, amountIn);
+    function _zeroYield() internal view returns (FixedPointValue memory asBasisPoints) {
+        return FixedPointValue({value: 0, decimals: 18}); 
     }
 
-    function sell(address token, address asset, FixedPointValue memory amountIn) public returns (FixedPointValue memory) {
-        address[] memory path;
-        path = new address[](2);
-        path[0] = token;
-        path[1] = asset;
-        return swapExactTokensForTokens(path, amountIn);
+    function _fullYield() internal view returns (FixedPointValue memory asBasisPoints) {
+        return asEther(FixedPointValue({value: 10_000, decimals: 0}));
     }
 
-    function buyForMinYield(address token, address asset, FixedPointValue memory amountIn, FixedPointValue memory minYield) public returns (FixedPointValue memory) {
-        address[] memory path;
-        path = new address[](2);
-        path[0] = asset;
-        path[1] = token;
-        return swapExactTokensForTokensForMinYield(path, amountIn, minYield);
+    function _addressOf(address[] memory path) internal view returns (address) {
+        address token0 = path[0];
+        address token1 = path[path.length - 1];
+        return factory().getPair(token0, token1);
     }
 
-    function sellForMinYield(address token, address asset, FixedPointValue memory amountIn, FixedPointValue memory minYield) public returns (FixedPointValue memory) {
-        address[] memory path;
-        path = new address[](2);
-        path[0] = token;
-        path[1] = asset;
-        return swapExactTokensForTokensForMinYield(path, amountIn, minYield);
+    function _interfaceOf(address[] memory path) internal view returns (IUniswapV2Pair) {
+        return IUniswapV2Pair(_addressOf(path));
+    }
+
+    function _reserveOf(address[] memory path) internal view returns (uint256[] memory) {
+        uint256[] memory reserve = new uint256[](2);
+        (reserve[0], reserve[1],) = _interfaceOf(path).getReserves();
+        return reserve;
+    }
+
+    function _layoutOf(address[] memory path) internal view returns (PairLayout) {
+        address pairInterface = _interfaceOf(path);
+        address tkn0 = pairInterface.token0();
+        address tkn1 = pairInterface.token1();
+        address token0 = path[0];
+        address token1 = path[path.length - 1];
+        if (token0 == tkn0 && token1 == tkn1) return PairLayout.MATCH;
+        if (token0 == tkn1 && token1 == tkn0) return PairLayout.REVERSE_MATCH;
+        return PairLayout.NO_MATCH;
+    }
+
+    function _hasPair(address[] memory path) internal view returns (bool) {
+        return _addressOf(path) != address(0);
+    }
+
+    function _decimals0(address[] memory path) internal view returns (uint8) {
+        return IERC20Metadata(path[0]).decimals();
+    }
+
+    function _decimals1(address[] memory path) internal view returns (uint8) {
+        return IERC20Metadata(path[path.length - 1]).decimals();
     }
 }
