@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19;
-import { IERC20 } from "../../../non-native/openzeppelin/token/ERC20/IERC20.sol";
-import { IERC20Metadata } from "../../../non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
-import { IUniswapV2Factory } from "../../../non-native/uniswap/interfaces/IUniswapV2Factory.sol";
-import { IUniswapV2Router02 } from "../../../non-native/uniswap/interfaces/IUniswapV2Router02.sol";
-import { IUniswapV2Pair } from "../../../non-native/uniswap/interfaces/IUniswapV2Pair.sol";
-import { FixedPointValue } from "../../shared/FixedPointValue.sol";
+import { IERC20 } from "../../non-native/openzeppelin/token/ERC20/IERC20.sol";
+import { IERC20Metadata } from "../../non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
+import { IUniswapV2Factory } from "../../non-native/uniswap/interfaces/IUniswapV2Factory.sol";
+import { IUniswapV2Router02 } from "../../non-native/uniswap/interfaces/IUniswapV2Router02.sol";
+import { IUniswapV2Pair } from "../../non-native/uniswap/interfaces/IUniswapV2Pair.sol";
+import { FixedPointValue } from "../shared/FixedPointValue.sol";
 import { FixedPointMath } from "../math/FixedPointMath.sol";
 
 contract UniswapV2Adaptor is FixedPointMath {

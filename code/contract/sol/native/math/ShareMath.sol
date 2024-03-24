@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.8.19;
-import { FixedPointMath } from "./FixedPointMath.sol";
-import { FixedPointValue } from "../../shared/FixedPointValue.sol";
+import { FixedPointValue } from "../shared/FixedPointValue.sol";
+import { FixedPointToolkit } from "./FixedPointToolkit.sol";
 
-contract ShareMath is FixedPointMath {
+contract ShareMath is
+         FixedPointToolkit {
 
     /**
     * -> If the fixed point values are not of the same decimal type
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function _amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure onlySimilarFixedPointType([assetsIn, assets, supply]) returns (FixedPointValue memory) {
+    function _amountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure only3SimilarFixedPointTypes(assetsIn, assets, supply) returns (FixedPointValue memory) {
 
         /**
         * -> In this scenario there are not assets in the vault and no supply
@@ -62,7 +63,7 @@ contract ShareMath is FixedPointMath {
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function _amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure onlySimilarFixedPointType([supplyIn, assets, supply]) returns (FixedPointValue memory) {
+    function _amountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure only3SimilarFixedPointTypes(supplyIn, assets, supply) returns (FixedPointValue memory) {
 
         /**
         * -> A redundant check to ensure that the amount of supply in
