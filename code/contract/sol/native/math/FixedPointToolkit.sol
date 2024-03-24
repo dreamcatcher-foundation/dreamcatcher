@@ -7,9 +7,8 @@ import { FixedPointScale } from "./FixedPointScale.sol";
 import { FixedPointUtils } from "./FixedPointUtils.sol";
 
 contract FixedPointToolkit is
+         FixedPointErrors,
+         FixedPointUtils,
          FixedPointArithmetics,
          FixedPointConversion,
-         FixedPointScale,
-         FixedPointErrors,
-         FixedPointScale,
-         FixedPointUtils {}
+         FixedPointScale {}

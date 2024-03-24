@@ -6,9 +6,9 @@ import { FixedPointArithmetics } from "./FixedPointArithmetics.sol";
 import { FixedPointErrors } from "./FixedPointErrors.sol";
 
 contract FixedPointScale is 
+         FixedPointErrors,
          FixedPointArithmetics, 
-         FixedPointConversion,
-         FixedPointErrors {
+         FixedPointConversion {
         
     function _slice(FixedPointValue memory num, FixedPointValue memory sliceAsBasisPoints) internal pure only2SimilarFixedPointTypes(num, sliceAsBasisPoints) returns (FixedPointValue memory) {
         return _mul(_div(num, _fullScale(num.decimals)), sliceAsBasisPoints);
