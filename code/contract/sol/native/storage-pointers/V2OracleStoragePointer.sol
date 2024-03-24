@@ -18,20 +18,20 @@ contract V2OracleStoragePointer {
         }
     }
 
-    function _factory() internal pure returns (IUniswapV2Factory) {
+    function _factory() internal view returns (IUniswapV2Factory) {
         return _v2Oracle()._factory;
     }
 
-    function _router() internal pure returns (IUniswapV2Router02) {
+    function _router() internal view returns (IUniswapV2Router02) {
         return _v2Oracle()._router;
     }
 
-    function _setFactory(address factory) internal pure {
+    function _setFactory(address factory) internal {
         _v2Oracle()._factory = IUniswapV2Factory(factory);
         return;
     }
 
-    function _setRouter(address router) internal pure {
+    function _setRouter(address router) internal {
         _v2Oracle()._router = IUniswapV2Router02(router);
         return;
     }
