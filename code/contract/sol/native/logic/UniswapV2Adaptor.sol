@@ -2,21 +2,19 @@
 pragma solidity >=0.8.19;
 import { IERC20 } from "../../non-native/openzeppelin/token/ERC20/IERC20.sol";
 import { IERC20Metadata } from "../../non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
-import { IUniswapV2Factory } from "../../non-native/uniswap/interfaces/IUniswapV2Factory.sol";
-import { IUniswapV2Router02 } from "../../non-native/uniswap/interfaces/IUniswapV2Router02.sol";
 import { IUniswapV2Pair } from "../../non-native/uniswap/interfaces/IUniswapV2Pair.sol";
 import { FixedPointValue } from "../shared/FixedPointValue.sol";
-import { FixedPointMath } from "../math/FixedPointMath.sol";
+import { FixedPointToolkit } from "../math/FixedPointToolkit.sol";
+import { V2OracleStoragePointer } from "../storage-pointers/V2OracleStoragePointer.sol";
 
-struct Oracle {
-    IUniswapV2Factory _factory;
-    IUniswapV2Router02 _router;
-}
+contract UniswapV2Adaptor is
+         V2OracleStoragePointer,
+         FixedPointToolkit {
 
-contract UniswapV2Oracle is FixedPointMath {
-    error PairDoesNotExist(address[] path);
-    error PairDoesNotMatchPath(address[] path, PairLayout layout);
-    error PathIsLengthIsLessThan2(address[] path);
+    error UniswapV2Adaptor__PairDoesNotExist(address[] path);
+    error UniswapV2Adaptor__PairDoesNotMatchPath(address[] path, PairLayout layout);
+    error UniswapV2Adaptor__PathIsLengthIsLessThan2(address[] path);
+    error UniswapV2Adaptor__InsufficientYield(address[] path, FixedPointValue amountIn, FixedPointValue minYield);
 
     enum PairLayout {
         HAS_MATCH,
@@ -29,18 +27,21 @@ contract UniswapV2Oracle is FixedPointMath {
         _;
     }
 
-    constructor(address factory, address router) {
-        oracle()._factory = IUniswapV2Factory(factory);
-        oracle()._router = IUniswapV2Router02(router);
+    function _swap(address[] memory path, FixedPointValue memory amountIn, FixedPointValue memory minYield) internal only2SimilarFixedPointTypes(amountIn, minYield) returns (FixedPointValue memory) {
+        if (_yield(path, amountIn).value < minYield.value) revert UniswapV2Adaptor__InsufficientYield(path, amountIn, minYield);
+        IERC20(_token0(path)).approve(address(oracle()._router), 0);
+        IERC20(_token0(path)).approve(address(oracle()._router), _asNewDecimals(amountIn, _decimals0(path)));
+        uint256[] memory amounts = oracle().router_.swapExactTokensForTokens(_amountInAsDecimals0(amountIn).value, _amountOutAsDecimals1(path, amountIn).value, path, msg.sender, block.timestamp);
+        uint256 amount = amounts[amounts.length - 1];
+        return _asEther(FixedPointValue({value: amount, decimals: _decimals1(path)}));
     }
 
-    bytes32 constant internal _ORACLE = bytes32(uint256(keccak256("eip1967.FACTORY")) - 1);
+    function _amountInAsDecimals0(FixedPointValue memory amountIn) private view returns (FixedPointValue memory) {
+        return _asNewDecimals(amountIn, _decimals0(path));
+    }
 
-    function oracle() internal pure returns (Oracle storage sl) {
-        bytes32 loc = _ORACLE;
-        assembly {
-            sl.slot := loc
-        }
+    function _amountOutAsDecimals1(address[] memory path, FixedPointValue memory amountIn) private view returns (FixedPointValue memory) {
+        return _asNewDecimals(_realAmountOut(path, amountIn), _decimals1(path));
     }
 
     function _yield(address[] memory path, FixedPointValue memory amountIn) internal view onlyIfPathLengthIsAtLeast2(path) returns (FixedPointValue memory asBasisPoints) {
@@ -52,14 +53,14 @@ contract UniswapV2Oracle is FixedPointMath {
     }
 
     function _realAmountOut(address[] memory path, FixedPointValue memory amountIn) internal view onlyIfPathLengthIsAtLeast2(path) returns (FixedPointValue memory asEther) {
-        uint256[] memory amounts = _router.getAmountsOut(_asEther(amountIn).value, path);
+        uint256[] memory amounts = _router().getAmountsOut(_asEther(amountIn).value, path);
         uint256 amount = amounts[amounts.length - 1];
         return _asEther(FixedPointValue({value: amount, decimals: _decimals1(path)}));
     }
 
     function _quote(address[] memory path) internal view onlyIfPathLengthIsAtLeast2(path) returns (FixedPointValue memory asEther) {
         if (!_hasPair(path)) {
-            revert PairDoesNotExist(path);
+            revert UniswapV2Adaptor__PairDoesNotExist(path);
         }
         return _calculateQuote(path, _layoutOf(path));
     }
@@ -71,12 +72,11 @@ contract UniswapV2Oracle is FixedPointMath {
         if (layout == PairLayout.HAS_REVERSE_MATCH) {
             return _quoteLayout1(path);
         }
-        revert PairDoesNotMatchPath(path, layout);
+        revert UniswapV2Adaptor__PairDoesNotMatchPath(path, layout);
     }
 
     function _quoteLayout0(address[] memory path) private view onlyIfPathLengthIsAtLeast2(path) returns (FixedPointValue memory asEther) {
-        uint256 result = oracle()
-            ._router
+        uint256 result = _router()
             .quote(
                 10**_decimals0(path),
                 _reserveOf(path)[0],
@@ -86,8 +86,7 @@ contract UniswapV2Oracle is FixedPointMath {
     }
 
     function _quoteLayout1(address[] memory path) private view onlyIfPathLengthIsAtLeast2(path) returns (FixedPointValue memory asEther) {
-        uint256 result = oracle()
-            ._router
+        uint256 result = _router()
             .quote(
                 10**_decimals1(path),
                 _reserveOf(path)[1],
@@ -141,7 +140,7 @@ contract UniswapV2Oracle is FixedPointMath {
     }
 
     function _addressOf(address[] memory path) private view onlyIfPathLengthIsAtLeast2(path) returns (address) {
-        return oracle()._factory.getPair(_token0(path), _token1(path));
+        return _factory().getPair(_token0(path), _token1(path));
     }
 
     function _decimals0(address[] memory path) private view onlyIfPathLengthIsAtLeast2(path) returns (uint8) {
@@ -162,7 +161,7 @@ contract UniswapV2Oracle is FixedPointMath {
 
     function _onlyIfPathLengthIsAtLeast2(address[] memory path) private pure {
         if (path.length < 2) {
-            revert PathIsLengthIsLessThan2(path);
+            revert UniswapV2Adaptor__PathIsLengthIsLessThan2(path);
         }
     }
 }
