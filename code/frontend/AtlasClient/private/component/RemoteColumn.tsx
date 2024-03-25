@@ -1,7 +1,7 @@
 import {EventEmitter} from "fbemitter";
 import {useEffect, type CSSProperties} from "react";
 import {broadcast} from "../library/EventsNetwork.ts";
-import {RemoteRender} from "./RemoteRender";
+import {RemoteRender} from "./RemoteRender.tsx";
 export function RemoteColumn({
   name,
   internalNetwork,
