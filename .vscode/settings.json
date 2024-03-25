@@ -10,6 +10,6 @@
     "memory": "jinja",
     "internal": "private",
     "engine": "delta",
-    "adaptor": "delta"
+    "mods": "delta"
   }
 }
