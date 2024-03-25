@@ -1,26 +1,26 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.19;
 import './FixedPointValueToolkit.sol';
-import '../../../non-native/openzeppelin/token/ERC20/IERC20.sol';
-import '../../../non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol';
-import '../../../non-native/uniswap/interfaces/IUniswapV2Factory.sol';
-import '../../../non-native/uniswap/interfaces/IUniswapV2Router02.sol';
-import '../../../non-native/uniswap/interfaces/IUniswapV2Pair.sol';
+import '../../non-native/openzeppelin/token/ERC20/IERC20.sol';
+import '../../non-native/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol';
+import '../../non-native/uniswap/interfaces/IUniswapV2Factory.sol';
+import '../../non-native/uniswap/interfaces/IUniswapV2Router02.sol';
+import '../../non-native/uniswap/interfaces/IUniswapV2Pair.sol';
 
-error UniswapV2Toolkit__InvalidPath(address path);
-error UniswapV2Toolkit__PairDoesNotExist(address path);
-error UniswapV2Toolkit__PairDoesNotMatch(address path, PairLayout layout);
+error UniswapV2Toolkit__InvalidPath(address[] path);
+error UniswapV2Toolkit__PairDoesNotExist(address[] path);
+error UniswapV2Toolkit__PairDoesNotMatch(address[] path, PairLayout layout);
 
 enum PairLayout {
     HAS_MATCH,
-    HAS_RESERVE_MATCH,
+    HAS_REVERSE_MATCH,
     HAS_NO_MATCH
 }
 
 function _yield(address[] memory path, address factory, address router, FixedPointValue memory amountIn) view returns (FixedPointValue memory asBasisPoints) {
     _onlyValidPath(path);
     FixedPointValue memory bestAmountOut = _bestAmountOut(path, factory, router, amountIn);
-    FixedPointValue memory realAmountOut = _realAmountOut(path, factory, router, amountIn);
+    FixedPointValue memory realAmountOut = _realAmountOut(path, router, amountIn);
     return _calculateYield(bestAmountOut, realAmountOut);
 }
 
@@ -28,12 +28,11 @@ function _bestAmountOut(address[] memory path, address factory, address router, 
     _onlyValidPath(path);
     amountIn = _asEther(amountIn);
     FixedPointValue memory quote = _quote(path, factory, router);
-    FixedPointValue memory result = _mul(amountIn, quote);
-    result = _asEther(result);
+    FixedPointValue memory result = _mul(amountIn, quote, 18);
     return result;
 }
 
-function _realAmountOut(address[] memory path, address factory, address router, FixedPointValue memory amountIn) view returns (FixedPointValue memory asEther) {
+function _realAmountOut(address[] memory path, address router, FixedPointValue memory amountIn) view returns (FixedPointValue memory asEther) {
     _onlyValidPath(path);
     amountIn = _asEther(amountIn);
     uint256 value = amountIn.value;
@@ -95,8 +94,7 @@ function _calculateYield(FixedPointValue memory bestAmountOut, FixedPointValue m
     if (value0 == 0) return _zero();
     if (value1 == 0) return _zero();
     if (value1 >= value0) return _full();
-    FixedPointValue memory scale = _scale(realAmountOut, bestAmountOut);
-    scale = _asEther(scale);
+    FixedPointValue memory scale = _scale(realAmountOut, bestAmountOut, 18);
     return scale;
 }
 
@@ -115,8 +113,8 @@ function _layoutOf(address[] memory path, address factory) view returns (PairLay
     address token1 = pairInterface.token1();
     address tkn0 = _token0(path);
     address tkn1 = _token1(path);
-    if (_tkn0 == token0 && _tkn1 == token1) return PairLayout.HAS_MATCH;
-    if (_tkn0 == token1 && _tkn1 == token0) return PairLayout.HAS_REVERSE_MATCH;
+    if (tkn0 == token0 && tkn1 == token1) return PairLayout.HAS_MATCH;
+    if (tkn0 == token1 && tkn1 == token0) return PairLayout.HAS_REVERSE_MATCH;
     return PairLayout.HAS_NO_MATCH;
 }
 
@@ -135,7 +133,7 @@ function _reserveOf(address[] memory path, address factory) view returns (uint25
     return reserve;
 }
 
-function _interfaceOf(address[] memory path, address factory) view returns (address) {
+function _interfaceOf(address[] memory path, address factory) view returns (IUniswapV2Pair) {
     _onlyValidPath(path);
     return IUniswapV2Pair(_addressOf(path, factory));
 }
@@ -155,12 +153,12 @@ function _decimals1(address[] memory path) view returns (uint8) {
     return IERC20Metadata(_token1(path)).decimals();
 } 
 
-function _token0(address[] memory path) view returns (address) {
+function _token0(address[] memory path) pure returns (address) {
     _onlyValidPath(path);
     return path[0];
 }
 
-function _token1(address[] memory path) view returns (address) {
+function _token1(address[] memory path) pure returns (address) {
     _onlyValidPath(path);
     return path[path.length - 1];
 }
