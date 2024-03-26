@@ -8,7 +8,7 @@
     "shell": "jinja",
     "module": "prisma",
     "memory": "jinja",
-    "internal": "private",
+    "embedded": "core",
     "engine": "delta",
     "mods": "delta"
   }
