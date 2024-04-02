@@ -3,84 +3,106 @@ import {broadcast} from "../connection/Connection.tsx";
 import {Remote} from "./Remote.tsx";
 import {Link} from "react-router-dom";
 
-export function RemoteButton({name, network, text, width, height, goto, task}: {name: string; network: EventEmitter; text: string; width: string; height: string; goto?: string; task?: Function}) {
-    const butterflyPurpleColor = "#615FFF";
+export function RemoteButton(props: IRemoteButtonProps) {
+    const purple = "#615FFF" as const;
 
-    function onMouseEnter() {
-        broadcast(network, `${name}::render::spring`, {
-            background: butterflyPurpleColor
-        });
-        broadcast(network, `${name}::render::stylesheet`, {
-            cursor: "pointer"
-        });
+    return (
+        <Remote name={props.name} network={props.network} initSpring={initSpring()} initStylesheet={initStylesheet()}>
+            <div onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onClick={onClick} style={innerStylesheet()}>
+                {props.goto ? <Link to={props.goto}>{props.text}</Link> : <div>{props.text}</div>}
+            </div>
+        </Remote>
+    );
+
+    function onClick() {
+        ifTaskIsDefinedPerformIt();
+        return;
+    }
+
+    function ifTaskIsDefinedPerformIt() {
+        if (props.task) props.task();
+        return;
     }
 
     function onMouseLeave() {
-        broadcast(network, `${name}::render::spring`, {
-            background: "transparent"
-        });
-        broadcast(network, `${name}::render::stylesheet`, {
+        contract();
+        setCursorToAuto();
+        return;
+    }
+
+    function setCursorToAuto() {
+        broadcast(props.network, `${props.name}::render::stylesheet`, {
             cursor: "auto"
         });
+        return;
     }
 
-    function onClick() {
-        if (task) task();
-    }
-
-    function onMouseDown() {
-        broadcast(network, `${name}::render::spring`, {
-            background: "rgba(255, 255, 255, 0.5)"
+    function contract() {
+        broadcast(props.network, `${props.name}::render::spring`, {
+            width: props.minWidth,
+            height: props.minHeight
         });
+        return;
     }
 
-    function onMouseUp() {
-        broadcast(network, `${name}::render::spring`, {
-            background: butterflyPurpleColor
+    function onMouseEnter() {
+        expand();
+        setCursorToPointer();
+        return;
+    }
+
+    function setCursorToPointer() {
+        broadcast(props.network, `${props.name}::render::stylesheet`, {
+            cursor: "pointer"
         });
+        return;
     }
 
-    return (
-        <div
+    function expand() {
+        broadcast(props.network, `${props.name}::render::spring`, {
+            width: props.maxWidth,
+            height: props.maxHeight
+        });
+        return;
+    }
 
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            onClick={onClick}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
+    function innerStylesheet() {
+        return {
+            width: "100%",
+            height: "100%",
+            color: purple
+        } as const;
+    }
 
-            style={{
-                width: width,
-                height: height
-            }}>
+    function initSpring() {
+        return {
+            width: props.minWidth,
+            height: props.minHeight,
+            background: "transparent"
+        } as any;
+    }
 
-            <Remote
+    function initStylesheet() {
+        return {
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: purple,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center"
+        } as const;
+    }
+}
 
-                name={name}
-                network={network}
-                
-                initSpring={{
-                    width: "100%",
-                    height: "100%",
-                    background: "transparent"
-                } as any}
-
-                initStylesheet={{
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: butterflyPurpleColor,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "white",
-                    WebkitBoxShadow: "0px 0px 300px 0px rgba(45, 255, 196, 0.9)",
-                    MozBoxShadow: "0px 0px 300px 0px rgba(45, 255, 196, 0.9)",
-                    boxShadow: "0px 0px 300px 0px rgba(45, 255, 196, 0.9)"
-                }}>
-                
-                {goto ? <Link to={goto}>{text}</Link> : <div>text</div>}
-            </Remote>
-        </div>
-    );
+type IRemoteButtonProps = {
+    name: string;
+    network: EventEmitter;
+    text: string;
+    minWidth: string;
+    minHeight: string;
+    maxWidth: string;
+    maxHeight: string;
+    goto?: string;
+    task?: Function;
 }
