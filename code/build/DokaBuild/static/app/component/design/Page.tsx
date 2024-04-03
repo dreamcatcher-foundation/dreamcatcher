@@ -1,4 +1,5 @@
 import Col from "./Col.tsx";
+import React from "react";
 
 export interface IPageProps {
     children?: JSX.Element | (JSX.Element)[];

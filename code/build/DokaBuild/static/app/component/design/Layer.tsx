@@ -10,6 +10,6 @@ export default function Layer(props: ILayerProps) {
     const zIndex = props.zIndex;
     const children = props.children;
     return (
-        <Col width={"100%"} height={"100%"} style={{position: "absolute", zIndex: zIndex}} children={children}/>
+        <Col width={"100%"} height={"100vh"} style={{position: "absolute", zIndex: zIndex}} children={children}/>
     );
 }
