@@ -244,6 +244,13 @@ export default function RemoteCol(props: IRemoteColProps) {
             setOnScreen([...items]);
         }
 
+        function wipe() {
+            const itemsLength = onScreen.length;
+            for (let i = 0; i < itemsLength; i++) {
+                pullBelow();
+            }
+        }
+
         on(`${name} pushBelow`, pushBelow);
         on(`${name} pushAboveLastItem`, pushAboveLastItem);
         on(`${name} pushAbove`, pushAbove);
@@ -251,6 +258,7 @@ export default function RemoteCol(props: IRemoteColProps) {
         on(`${name} pullBelow`, pullBelow);
         on(`${name} pullAbove`, pullAbove);
         on(`${name} pull`, pull);
+        on(`${name} wipe`, wipe);
         return function() {
             off(`${name} pushBelow`);
             off(`${name} pushAboveLastItem`);
@@ -259,6 +267,7 @@ export default function RemoteCol(props: IRemoteColProps) {
             off(`${name} pullBelow`);
             off(`${name} pullAbove`);
             off(`${name} pull`);
+            off(`${name} wipe`);
         }
     }, []);
     return (

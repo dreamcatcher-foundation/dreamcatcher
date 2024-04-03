@@ -1,6 +1,6 @@
 import Remote, {type IRemoteProps, broadcast, on, off} from "./Remote.tsx";
 import RemoteCol from "./RemoteCol.tsx";
-import React from "react";
+import React, {type CSSProperties} from "react";
 
 export interface IWindowProps extends IRemoteProps {
     width: string;
@@ -14,11 +14,11 @@ export default function Window(props: IWindowProps) {
     const children = props.children;
     const initSpring = props.initSpring ?? {};
     const initStyle = props.initStyle ?? {};
-    const spring = {
+    const spring: CSSProperties = {
         background: "#171717",
         padding: "40px",
         overflowX: "hidden",
-        overflowY: "scroll",
+        overflowY: "auto",
         width: width,
         height: height,
         ...initSpring

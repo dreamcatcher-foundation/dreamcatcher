@@ -31078,6 +31078,9 @@ function on(event, listener, context) {
 function off(event) {
   return network().removeAllListeners(event);
 }
+function once2(event, listener, context) {
+  return network().once(event, listener, context);
+}
 function broadcast(event, ...params) {
   return network().emit(event, ...params);
 }
@@ -31097,6 +31100,7 @@ function Remote(props) {
   const initSpring = props.initSpring ?? {};
   const initStyle = props.initStyle ?? {};
   const children = props.children;
+  const initialClassName = props.initialClassName ?? "";
   const onAbort = props.onAbort ?? doNothing;
   const onAbortCapture = props.onAbort ?? doNothing;
   const onAnimationEnd = props.onAnimationEnd ?? doNothing;
@@ -31259,7 +31263,7 @@ function Remote(props) {
   const onWheelCapture = props.onWheelCapture ?? doNothing;
   const [spring, setSpring] = import_react16.useState([{}, {}]);
   const [style, setStyle] = import_react16.useState({});
-  const [className, setClassName] = import_react16.useState("");
+  const [className, setClassName] = import_react16.useState(initialClassName);
   import_react16.useEffect(function() {
     on(`${name} render spring`, (to2) => setSpring((currentSpring) => [currentSpring[1], { ...currentSpring[1], ...to2 }]));
     on(`${name} render style`, (to2) => setStyle((currentStyle) => ({ ...currentStyle, ...to2 })));
@@ -31272,7 +31276,6 @@ function Remote(props) {
       broadcast(`${name} render style`, initStyle);
     }
     on(`${name} setClassName`, (className2) => setClassName(className2));
-    broadcast("steve setClassName", "flicker-in-1");
     return function() {
       off(`${name} render spring`);
       off(`${name} render style`);
@@ -31683,6 +31686,12 @@ function RemoteCol(props) {
       items.splice(position, 1);
       setOnScreen([...items]);
     }
+    function wipe() {
+      const itemsLength = onScreen.length;
+      for (let i = 0;i < itemsLength; i++) {
+        pullBelow();
+      }
+    }
     on(`${name} pushBelow`, pushBelow);
     on(`${name} pushAboveLastItem`, pushAboveLastItem);
     on(`${name} pushAbove`, pushAbove);
@@ -31690,6 +31699,7 @@ function RemoteCol(props) {
     on(`${name} pullBelow`, pullBelow);
     on(`${name} pullAbove`, pullAbove);
     on(`${name} pull`, pull);
+    on(`${name} wipe`, wipe);
     return function() {
       off(`${name} pushBelow`);
       off(`${name} pushAboveLastItem`);
@@ -31698,6 +31708,7 @@ function RemoteCol(props) {
       off(`${name} pullBelow`);
       off(`${name} pullAbove`);
       off(`${name} pull`);
+      off(`${name} wipe`);
     };
   }, []);
   return jsx_dev_runtime3.jsxDEV(Remote, {
@@ -31868,8 +31879,545 @@ function RemoteCol(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/DokaBuild/static/app/component/design/Window.tsx
+// code/build/DokaBuild/static/app/component/design/RemotePage.tsx
+var import_react18 = __toESM(require_react(), 1);
 var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+function RemotePage(props) {
+  const initialPages = props.initialPages;
+  const initialPagesValue = `${initialPages * 100}vh`;
+  const [pagesValue, setPagesValue] = import_react18.useState(initialPagesValue);
+  import_react18.useEffect(function() {
+    function changePagesValue(input) {
+      const value = `${input * 100}vh`;
+      setPagesValue(value);
+    }
+    on("page setPages", changePagesValue);
+    return function() {
+      off("page setPages");
+    };
+  }, []);
+  return jsx_dev_runtime4.jsxDEV(RemoteCol, {
+    name: "page",
+    width: "100vw",
+    height: pagesValue
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/Col.tsx
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+function Col(props) {
+  const width = props.width;
+  const height = props.height;
+  const initStyle = props.style ?? {};
+  const children = props.children;
+  const style = {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width,
+    height,
+    ...initStyle
+  };
+  return jsx_dev_runtime5.jsxDEV("div", {
+    style,
+    children
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/Layer.tsx
+var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+function Layer(props) {
+  const zIndex = props.zIndex;
+  const children = props.children;
+  return jsx_dev_runtime6.jsxDEV(Col, {
+    width: "100%",
+    height: "100vh",
+    style: { position: "absolute", zIndex },
+    children
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/Background.tsx
+var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
+function Background(props) {
+  return jsx_dev_runtime7.jsxDEV(Layer, {
+    zIndex: "1000",
+    children: jsx_dev_runtime7.jsxDEV("div", {
+      style: { width: "100%", height: "100%", background: "#161616" }
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/RemoteRow.tsx
+var import_react19 = __toESM(require_react(), 1);
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
+function RemoteRow(props) {
+  const name = props.name;
+  const width = props.width;
+  const height = props.height;
+  const initSpring = props.initSpring ?? {};
+  const initStyle = props.initStyle ?? {};
+  function doNothing() {
+  }
+  const children = props.children;
+  const onAbort = props.onAbort ?? doNothing;
+  const onAbortCapture = props.onAbort ?? doNothing;
+  const onAnimationEnd = props.onAnimationEnd ?? doNothing;
+  const onAnimationEndCapture = props.onAnimationEndCapture ?? doNothing;
+  const onAnimationIteration = props.onAnimationIteration ?? doNothing;
+  const onAnimationIterationCapture = props.onAnimationIterationCapture ?? doNothing;
+  const onAnimationStart = props.onAnimationStart ?? doNothing;
+  const onAnimationStartCapture = props.onAnimationStartCapture ?? doNothing;
+  const onAuxClick = props.onAuxClick ?? doNothing;
+  const onAuxClickCapture = props.onAuxClickCapture ?? doNothing;
+  const onBeforeInput = props.onBeforeInput ?? doNothing;
+  const onBeforeInputCapture = props.onBeforeInputCapture ?? doNothing;
+  const onBlur = props.onBlur ?? doNothing;
+  const onBlurCapture = props.onBlurCapture ?? doNothing;
+  const onCanPlay = props.onCanPlay ?? doNothing;
+  const onCanPlayCapture = props.onCanPlayCapture ?? doNothing;
+  const onCanPlayThrough = props.onCanPlayThrough ?? doNothing;
+  const onCanPlayThroughCapture = props.onCanPlayThroughCapture ?? doNothing;
+  const onChange = props.onChange ?? doNothing;
+  const onChangeCapture = props.onChangeCapture ?? doNothing;
+  const onClick = props.onClick ?? doNothing;
+  const onClickCapture = props.onClickCapture ?? doNothing;
+  const onCompositionEnd = props.onCompositionEnd ?? doNothing;
+  const onCompositionEndCapture = props.onCompositionEndCapture ?? doNothing;
+  const onCompositionStart = props.onCompositionStart ?? doNothing;
+  const onCompositionStartCapture = props.onCompositionStartCapture ?? doNothing;
+  const onCompositionUpdate = props.onCompositionUpdate ?? doNothing;
+  const onCompositionUpdateCapture = props.onCompositionUpdateCapture ?? doNothing;
+  const onContextMenu = props.onContextMenu ?? doNothing;
+  const onContextMenuCapture = props.onContextMenuCapture ?? doNothing;
+  const onCopy = props.onCopy ?? doNothing;
+  const onCopyCapture = props.onCopyCapture ?? doNothing;
+  const onCut = props.onCut ?? doNothing;
+  const onCutCapture = props.onCutCapture ?? doNothing;
+  const onDoubleClick = props.onDoubleClick ?? doNothing;
+  const onDoubleClickCapture = props.onDoubleClickCapture ?? doNothing;
+  const onDrag = props.onDrag ?? doNothing;
+  const onDragCapture = props.onDragCapture ?? doNothing;
+  const onDragEnd = props.onDragEnd ?? doNothing;
+  const onDragEndCapture = props.onDragEndCapture ?? doNothing;
+  const onDragEnter = props.onDragEnter ?? doNothing;
+  const onDragEnterCapture = props.onDragEnterCapture ?? doNothing;
+  const onDragExit = props.onDragExit ?? doNothing;
+  const onDragExitCapture = props.onDragExitCapture ?? doNothing;
+  const onDragLeave = props.onDragLeave ?? doNothing;
+  const onDragLeaveCapture = props.onDragLeaveCapture ?? doNothing;
+  const onDragOver = props.onDragOver ?? doNothing;
+  const onDragOverCapture = props.onDragOverCapture ?? doNothing;
+  const onDragStart = props.onDragStart ?? doNothing;
+  const onDragStartCapture = props.onDragStartCapture ?? doNothing;
+  const onDrop = props.onDrop ?? doNothing;
+  const onDropCapture = props.onDropCapture ?? doNothing;
+  const onDurationChange = props.onDurationChange ?? doNothing;
+  const onDurationChangeCapture = props.onDurationChangeCapture ?? doNothing;
+  const onEmptied = props.onEmptied ?? doNothing;
+  const onEmptiedCapture = props.onEmptiedCapture ?? doNothing;
+  const onEncrypted = props.onEncrypted ?? doNothing;
+  const onEncryptedCapture = props.onEncryptedCapture ?? doNothing;
+  const onEnded = props.onEnded ?? doNothing;
+  const onEndedCapture = props.onEndedCapture ?? doNothing;
+  const onError = props.onError ?? doNothing;
+  const onErrorCapture = props.onErrorCapture ?? doNothing;
+  const onFocus = props.onFocus ?? doNothing;
+  const onFocusCapture = props.onFocusCapture ?? doNothing;
+  const onGotPointerCapture = props.onGotPointerCapture ?? doNothing;
+  const onGotPointerCaptureCapture = props.onGotPointerCaptureCapture ?? doNothing;
+  const onInput = props.onInput ?? doNothing;
+  const onInputCapture = props.onInputCapture ?? doNothing;
+  const onInvalid = props.onInvalid ?? doNothing;
+  const onInvalidCapture = props.onInvalidCapture ?? doNothing;
+  const onKeyDown = props.onKeyDown ?? doNothing;
+  const onKeyDownCapture = props.onKeyDownCapture ?? doNothing;
+  const onKeyUp = props.onKeyUp ?? doNothing;
+  const onKeyUpCapture = props.onKeyUpCapture ?? doNothing;
+  const onLoad = props.onLoad ?? doNothing;
+  const onLoadCapture = props.onLoadCapture ?? doNothing;
+  const onLoadStart = props.onLoadStart ?? doNothing;
+  const onLoadStartCapture = props.onLoadStartCapture ?? doNothing;
+  const onLoadedData = props.onLoadedData ?? doNothing;
+  const onLoadedDataCapture = props.onLoadedDataCapture ?? doNothing;
+  const onLoadedMetadata = props.onLoadedMetadata ?? doNothing;
+  const onLoadedMetadataCapture = props.onLoadedMetadataCapture ?? doNothing;
+  const onLostPointerCapture = props.onLostPointerCapture ?? doNothing;
+  const onLostPointerCaptureCapture = props.onLostPointerCaptureCapture ?? doNothing;
+  const onMouseDown = props.onMouseDown ?? doNothing;
+  const onMouseDownCapture = props.onMouseDownCapture ?? doNothing;
+  const onMouseEnter = props.onMouseEnter ?? doNothing;
+  const onMouseLeave = props.onMouseLeave ?? doNothing;
+  const onMouseMove = props.onMouseMove ?? doNothing;
+  const onMouseMoveCapture = props.onMouseMoveCapture ?? doNothing;
+  const onMouseOut = props.onMouseOut ?? doNothing;
+  const onMouseOutCapture = props.onMouseOutCapture ?? doNothing;
+  const onMouseOver = props.onMouseOver ?? doNothing;
+  const onMouseOverCapture = props.onMouseOverCapture ?? doNothing;
+  const onMouseUp = props.onMouseUp ?? doNothing;
+  const onMouseUpCapture = props.onMouseUpCapture ?? doNothing;
+  const onPaste = props.onPaste ?? doNothing;
+  const onPasteCapture = props.onPasteCapture ?? doNothing;
+  const onPause = props.onPause ?? doNothing;
+  const onPauseCapture = props.onPauseCapture ?? doNothing;
+  const onPlay = props.onPlay ?? doNothing;
+  const onPlayCapture = props.onPlayCapture ?? doNothing;
+  const onPlaying = props.onPlaying ?? doNothing;
+  const onPlayingCapture = props.onPlayingCapture ?? doNothing;
+  const onPointerCancel = props.onPointerCancel ?? doNothing;
+  const onPointerCancelCapture = props.onPointerCancelCapture ?? doNothing;
+  const onPointerDown = props.onPointerDown ?? doNothing;
+  const onPointerDownCapture = props.onPointerDownCapture ?? doNothing;
+  const onPointerEnter = props.onPointerEnter ?? doNothing;
+  const onPointerEnterCapture = props.onPointerEnterCapture ?? doNothing;
+  const onPointerLeave = props.onPointerLeave ?? doNothing;
+  const onPointerLeaveCapture = props.onPointerLeaveCapture ?? doNothing;
+  const onPointerMove = props.onPointerMove ?? doNothing;
+  const onPointerMoveCapture = props.onPointerMoveCapture ?? doNothing;
+  const onPointerOut = props.onPointerOut ?? doNothing;
+  const onPointerOutCapture = props.onPointerOutCapture ?? doNothing;
+  const onPointerOver = props.onPointerOver ?? doNothing;
+  const onPointerOverCapture = props.onPointerOverCapture ?? doNothing;
+  const onPointerUp = props.onPointerUp ?? doNothing;
+  const onPointerUpCapture = props.onPointerUpCapture ?? doNothing;
+  const onProgress = props.onProgress ?? doNothing;
+  const onProgressCapture = props.onProgressCapture ?? doNothing;
+  const onRateChange = props.onRateChange ?? doNothing;
+  const onRateChangeCapture = props.onRateChangeCapture ?? doNothing;
+  const onReset = props.onReset ?? doNothing;
+  const onResetCapture = props.onResetCapture ?? doNothing;
+  const onResize2 = props.onResize ?? doNothing;
+  const onResizeCapture = props.onResizeCapture ?? doNothing;
+  const onScroll2 = props.onScroll ?? doNothing;
+  const onScrollCapture = props.onScrollCapture ?? doNothing;
+  const onSeeked = props.onSeeked ?? doNothing;
+  const onSeekedCapture = props.onSeekedCapture ?? doNothing;
+  const onSeeking = props.onSeeking ?? doNothing;
+  const onSeekingCapture = props.onSeekingCapture ?? doNothing;
+  const onSelect = props.onSelect ?? doNothing;
+  const onSelectCapture = props.onSelectCapture ?? doNothing;
+  const onStalled = props.onStalled ?? doNothing;
+  const onStalledCapture = props.onStalledCapture ?? doNothing;
+  const onSubmit = props.onSubmit ?? doNothing;
+  const onSubmitCapture = props.onSubmitCapture ?? doNothing;
+  const onSuspend = props.onSuspend ?? doNothing;
+  const onSuspendCapture = props.onSuspendCapture ?? doNothing;
+  const onTimeUpdate = props.onTimeUpdate ?? doNothing;
+  const onTimeUpdateCapture = props.onTimeUpdateCapture ?? doNothing;
+  const onTouchCancel = props.onTouchCancel ?? doNothing;
+  const onTouchCancelCapture = props.onTouchCancelCapture ?? doNothing;
+  const onTouchEnd = props.onTouchEnd ?? doNothing;
+  const onTouchEndCapture = props.onTouchEnd ?? doNothing;
+  const onTouchMove = props.onTouchMove ?? doNothing;
+  const onTouchMoveCapture = props.onTouchMoveCapture ?? doNothing;
+  const onTouchStart = props.onTouchStart ?? doNothing;
+  const onTouchStartCapture = props.onTouchStartCapture ?? doNothing;
+  const onTransitionEnd = props.onTransitionEnd ?? doNothing;
+  const onTransitionEndCapture = props.onTransitionEndCapture ?? doNothing;
+  const onVolumeChange = props.onVolumeChange ?? doNothing;
+  const onVolumeChangeCapture = props.onVolumeChangeCapture ?? doNothing;
+  const onWaiting = props.onWaiting ?? doNothing;
+  const onWaitingCapture = props.onWaitingCapture ?? doNothing;
+  const onWheel = props.onWheel ?? doNothing;
+  const onWheelCapture = props.onWheelCapture ?? doNothing;
+  const spring = {
+    width,
+    height,
+    ...initSpring
+  };
+  const style = {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    ...initStyle
+  };
+  const [onScreen, setOnScreen] = import_react19.useState([]);
+  import_react19.useEffect(function() {
+    function pushBelow(item) {
+      const items = onScreen;
+      items.push(item);
+      setOnScreen([...items]);
+    }
+    function pushAboveLastItem(item) {
+      const items = onScreen;
+      const lastItem = items[items.length - 1];
+      items[items.length - 1] = item;
+      items.push(lastItem);
+      setOnScreen([...items]);
+    }
+    function pushAbove(item) {
+      const items = onScreen;
+      let copy = [];
+      copy.push(item);
+      copy = copy.concat(items);
+      setOnScreen([...copy]);
+    }
+    function pushBetween(item, position) {
+      const items = onScreen;
+      const copy = [];
+      for (let i = 0;i < position; i++) {
+        const copiedItem = items[i];
+        copy.push(copiedItem);
+      }
+      copy.push(item);
+      const itemsLength = items.length;
+      for (let i = position;i < itemsLength; i++) {
+        const copiedItem = items[i];
+        copy.push(copiedItem);
+      }
+      setOnScreen(copy);
+    }
+    function pullBelow() {
+      const items = onScreen;
+      items.pop();
+      setOnScreen([...items]);
+    }
+    function pullAbove() {
+      const items = onScreen;
+      items.shift();
+      setOnScreen([...items]);
+    }
+    function pull(position) {
+      const items = onScreen;
+      items.splice(position, 1);
+      setOnScreen([...items]);
+    }
+    function wipe() {
+      const itemsLength = onScreen.length;
+      for (let i = 0;i < itemsLength; i++) {
+        pullBelow();
+      }
+    }
+    on(`${name} pushBelow`, pushBelow);
+    on(`${name} pushAboveLastItem`, pushAboveLastItem);
+    on(`${name} pushAbove`, pushAbove);
+    on(`${name} pushBetween`, pushBetween);
+    on(`${name} pullBelow`, pullBelow);
+    on(`${name} pullAbove`, pullAbove);
+    on(`${name} pull`, pull);
+    on(`${name} wipe`, wipe);
+    return function() {
+      off(`${name} pushBelow`);
+      off(`${name} pushAboveLastItem`);
+      off(`${name} pushAbove`);
+      off(`${name} pushBetween`);
+      off(`${name} pullBelow`);
+      off(`${name} pullAbove`);
+      off(`${name} pull`);
+      off(`${name} wipe`);
+    };
+  }, []);
+  return jsx_dev_runtime8.jsxDEV(Remote, {
+    name,
+    initSpring: spring,
+    initStyle: style,
+    children: onScreen,
+    onAbort,
+    onAbortCapture,
+    onAnimationEnd,
+    onAnimationEndCapture,
+    onAnimationIteration,
+    onAnimationIterationCapture,
+    onAnimationStart,
+    onAnimationStartCapture,
+    onAuxClick,
+    onAuxClickCapture,
+    onBeforeInput,
+    onBeforeInputCapture,
+    onBlur,
+    onBlurCapture,
+    onCanPlay,
+    onCanPlayCapture,
+    onCanPlayThrough,
+    onCanPlayThroughCapture,
+    onChange,
+    onChangeCapture,
+    onClick,
+    onClickCapture,
+    onCompositionEnd,
+    onCompositionEndCapture,
+    onCompositionStart,
+    onCompositionStartCapture,
+    onCompositionUpdate,
+    onCompositionUpdateCapture,
+    onContextMenu,
+    onContextMenuCapture,
+    onCopy,
+    onCopyCapture,
+    onCut,
+    onCutCapture,
+    onDoubleClick,
+    onDoubleClickCapture,
+    onDrag,
+    onDragCapture,
+    onDragEnd,
+    onDragEndCapture,
+    onDragEnter,
+    onDragEnterCapture,
+    onDragExit,
+    onDragExitCapture,
+    onDragLeave,
+    onDragLeaveCapture,
+    onDragOver,
+    onDragOverCapture,
+    onDragStart,
+    onDragStartCapture,
+    onDrop,
+    onDropCapture,
+    onDurationChange,
+    onDurationChangeCapture,
+    onEmptied,
+    onEmptiedCapture,
+    onEncrypted,
+    onEncryptedCapture,
+    onEnded,
+    onEndedCapture,
+    onError,
+    onErrorCapture,
+    onFocus,
+    onFocusCapture,
+    onGotPointerCapture,
+    onGotPointerCaptureCapture,
+    onInput,
+    onInputCapture,
+    onInvalid,
+    onInvalidCapture,
+    onKeyDown,
+    onKeyDownCapture,
+    onKeyUp,
+    onKeyUpCapture,
+    onLoad,
+    onLoadCapture,
+    onLoadStart,
+    onLoadStartCapture,
+    onLoadedData,
+    onLoadedDataCapture,
+    onLoadedMetadata,
+    onLoadedMetadataCapture,
+    onLostPointerCapture,
+    onLostPointerCaptureCapture,
+    onMouseDown,
+    onMouseDownCapture,
+    onMouseEnter,
+    onMouseLeave,
+    onMouseMove,
+    onMouseMoveCapture,
+    onMouseOut,
+    onMouseOutCapture,
+    onMouseOver,
+    onMouseOverCapture,
+    onMouseUp,
+    onMouseUpCapture,
+    onPaste,
+    onPasteCapture,
+    onPause,
+    onPauseCapture,
+    onPlay,
+    onPlayCapture,
+    onPlaying,
+    onPlayingCapture,
+    onPointerCancel,
+    onPointerCancelCapture,
+    onPointerDown,
+    onPointerDownCapture,
+    onPointerEnter,
+    onPointerEnterCapture,
+    onPointerLeave,
+    onPointerLeaveCapture,
+    onPointerMove,
+    onPointerMoveCapture,
+    onPointerOut,
+    onPointerOutCapture,
+    onPointerOver,
+    onPointerOverCapture,
+    onPointerUp,
+    onPointerUpCapture,
+    onProgress,
+    onProgressCapture,
+    onRateChange,
+    onRateChangeCapture,
+    onReset,
+    onResetCapture,
+    onResize: onResize2,
+    onResizeCapture,
+    onScroll: onScroll2,
+    onScrollCapture,
+    onSeeked,
+    onSeekedCapture,
+    onSeeking,
+    onSeekingCapture,
+    onSelect,
+    onSelectCapture,
+    onStalled,
+    onStalledCapture,
+    onSubmit,
+    onSubmitCapture,
+    onSuspend,
+    onSuspendCapture,
+    onTimeUpdate,
+    onTimeUpdateCapture,
+    onTouchCancel,
+    onTouchCancelCapture,
+    onTouchEnd,
+    onTouchEndCapture,
+    onTouchMove,
+    onTouchMoveCapture,
+    onTouchStart,
+    onTouchStartCapture,
+    onTransitionEnd,
+    onTransitionEndCapture,
+    onVolumeChange,
+    onVolumeChangeCapture,
+    onWaiting,
+    onWaitingCapture,
+    onWheel,
+    onWheelCapture
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/SteelText.tsx
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+function SteelText(props) {
+  const initStyle = props.style ?? {};
+  const text = props.text;
+  const style = {
+    fontSize: "8px",
+    fontFamily: "roboto mono",
+    fontWeight: "bold",
+    color: "white",
+    background: "-webkit-linear-gradient(#FFFFFF, #A4A2A1)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    ...initStyle
+  };
+  return jsx_dev_runtime9.jsxDEV("div", {
+    style,
+    children: text
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/SteelTextHeading.tsx
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+function SteelTextHeading(props) {
+  return jsx_dev_runtime10.jsxDEV(SteelText, {
+    text: props.text,
+    style: { ...{ fontSize: "40px" }, ...props.style }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/PurpleTextHeading.tsx
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+function PurpleTextHeading(props) {
+  return jsx_dev_runtime11.jsxDEV(SteelTextHeading, {
+    text: props.text,
+    style: { ...{ background: "#615FFF" }, ...props.style }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/Window.tsx
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 function Window(props) {
   const name = props.name;
   const width = props.width;
@@ -31881,7 +32429,7 @@ function Window(props) {
     background: "#171717",
     padding: "40px",
     overflowX: "hidden",
-    overflowY: "scroll",
+    overflowY: "auto",
     width,
     height,
     ...initSpring
@@ -31896,7 +32444,7 @@ function Window(props) {
     alignItems: "center",
     ...initStyle
   };
-  return jsx_dev_runtime4.jsxDEV(RemoteCol, {
+  return jsx_dev_runtime12.jsxDEV(RemoteCol, {
     name,
     width,
     height,
@@ -31905,16 +32453,439 @@ function Window(props) {
   }, undefined, false, undefined, this);
 }
 
+// code/build/DokaBuild/static/app/component/design/SteelTextSubHeading.tsx
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+function SteelTextSubHeading(props) {
+  return jsx_dev_runtime13.jsxDEV(SteelText, {
+    text: props.text,
+    style: { ...{ fontSize: "20px" }, ...props.style }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/RemoteButton1.tsx
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+function RemoteButton1(props) {
+  const name = props.name;
+  const text = props.text;
+  const width = props.width ?? "200px";
+  const height = props.height ?? "50px";
+  const color = props.color ?? "#171717";
+  const initialClassName = props.initialClassName ?? "";
+  const buttonInitialSpring = {
+    width,
+    height,
+    background: "#615FFF",
+    boxShadow: "0px 0px 32px 2px #615FFF"
+  };
+  const buttonInitialStyle = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  };
+  const textStyle = {
+    background: color,
+    fontSize: "15px"
+  };
+  function onMouseEnter() {
+    const spring = {
+      background: "#6C69FF",
+      boxShadow: "0px 0px 32px 8px #6C69FF",
+      cursor: "pointer"
+    };
+    broadcast(`${name} render spring`, spring);
+  }
+  function onMouseLeave() {
+    const spring = {
+      background: "#615FFF",
+      boxShadow: "0px 0px 32px 2px #615FFF",
+      cursor: "auto"
+    };
+    broadcast(`${name} render spring`, spring);
+  }
+  function onClick() {
+    broadcast(`${name} clicked`);
+  }
+  return jsx_dev_runtime14.jsxDEV(Remote, {
+    name,
+    initSpring: buttonInitialSpring,
+    initStyle: buttonInitialStyle,
+    onMouseEnter,
+    onMouseLeave,
+    onClick,
+    initialClassName,
+    children: jsx_dev_runtime14.jsxDEV(SteelText, {
+      text,
+      style: textStyle
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/RemoteButton2.tsx
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+function RemoteButton2(props) {
+  const name = props.name;
+  const text = props.text;
+  const width = props.width ?? "200px";
+  const height = props.height ?? "50px";
+  const initialClassName = props.initialClassName ?? "";
+  const buttonInitialSpring = {
+    width,
+    height,
+    background: "transparent",
+    boxShadow: "0px 0px 32px 2px #615FFF",
+    borderColor: "#615FFF",
+    borderWidth: "1px"
+  };
+  const buttonInitialStyle = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    borderStyle: "solid"
+  };
+  const textStyle = {
+    fontSize: "15px"
+  };
+  function onMouseEnter() {
+    const spring = {
+      boxShadow: "0px 0px 32px 8px #6C69FF",
+      borderColor: "#6C69FF",
+      cursor: "pointer"
+    };
+    broadcast(`${name} render spring`, spring);
+  }
+  function onMouseLeave() {
+    const spring = {
+      boxShadow: "0px 0px 32px 2px #615FFF",
+      borderColor: "#615FFF",
+      cursor: "auto"
+    };
+    broadcast(`${name} render spring`, spring);
+  }
+  function onClick() {
+    broadcast(`${name} clicked`);
+  }
+  return jsx_dev_runtime15.jsxDEV(Remote, {
+    name,
+    initSpring: buttonInitialSpring,
+    initStyle: buttonInitialStyle,
+    onMouseEnter,
+    onMouseLeave,
+    onClick,
+    initialClassName,
+    children: jsx_dev_runtime15.jsxDEV(SteelText, {
+      text,
+      style: textStyle
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/Row.tsx
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+function Row(props) {
+  const width = props.width;
+  const height = props.height;
+  const initStyle = props.style ?? {};
+  const children = props.children;
+  const style = {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width,
+    height,
+    ...initStyle
+  };
+  return jsx_dev_runtime16.jsxDEV("div", {
+    style,
+    children
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/Operator.tsx
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+async function execute(name, fns, cooldown) {
+  const fnLength = fns.length;
+  let wait = 0n;
+  for (let i = 0;i < fnLength; i++) {
+    const fn = fns[i];
+    await new Promise((resolve) => {
+      setTimeout(function() {
+        fn();
+        resolve(null);
+      }, Number(wait));
+    });
+    wait += cooldown;
+  }
+  await new Promise((resolve) => {
+    setTimeout(function() {
+      broadcast(`${name} transition done`);
+      resolve(null);
+    }, Number(wait));
+  });
+}
+var WindowState;
+(function(WindowState2) {
+  WindowState2[WindowState2["NONE"] = 0] = "NONE";
+  WindowState2[WindowState2["IDLE"] = 1] = "IDLE";
+  WindowState2[WindowState2["COLLECTING_DEPLOYMENT_DATA"] = 2] = "COLLECTING_DEPLOYMENT_DATA";
+  WindowState2[WindowState2["DEPLOYING"] = 3] = "DEPLOYING";
+  WindowState2[WindowState2["INSTALLATION"] = 4] = "INSTALLATION";
+  WindowState2[WindowState2["YOU_ARE_ALL_SET_TO_GO"] = 5] = "YOU_ARE_ALL_SET_TO_GO";
+})(WindowState || (WindowState = {}));
+var browser = function() {
+  let instance;
+  function save(k, v) {
+    return localStorage.setItem(k, v);
+  }
+  function load(k) {
+    return localStorage.getItem(k);
+  }
+  return function() {
+    if (!instance) {
+      instance = {
+        save,
+        load
+      };
+    }
+    return instance;
+  };
+}();
+var animation = function() {
+  let animationInstance;
+  function intro() {
+    return "swing-in-top-fwd";
+  }
+  function outro() {
+    return "swing-out-top-bck";
+  }
+  return function() {
+    if (!animationInstance)
+      animationInstance = {
+        intro,
+        outro
+      };
+    return animationInstance;
+  };
+}();
+var window2 = function() {
+  let instance;
+  async function goto(to2) {
+    const from = await _loadState();
+    switch (to2) {
+      case WindowState.IDLE:
+        _onDone(_toIdle);
+        _saveState(WindowState.IDLE);
+        break;
+      case WindowState.COLLECTING_DEPLOYMENT_DATA:
+        _onDone(_toCollectingDeploymentData);
+        _saveState(WindowState.COLLECTING_DEPLOYMENT_DATA);
+        break;
+    }
+    switch (from) {
+      case WindowState.NONE:
+        _done();
+        break;
+      case WindowState.IDLE:
+        _fromIdle();
+        break;
+      default:
+        _done();
+        break;
+    }
+  }
+  async function _fromIdle() {
+    execute("window", [
+      function() {
+        off("getStartedButton clicked");
+        off("learnMoreButton clicked");
+        broadcast("header setClassName", animation().outro());
+      },
+      function() {
+        broadcast("subHeader setClassName", animation().outro());
+      },
+      function() {
+        broadcast("getStartedButton setClassName", animation().outro());
+      },
+      function() {
+        broadcast("learnMoreButton setClassName", animation().outro());
+      },
+      function() {
+        broadcast("window wipe");
+      }
+    ], 100n);
+  }
+  async function _toIdle() {
+    function randomSubHeading() {
+      const subHeadings = [
+        "You won't need accountants where we are going",
+        "Do your client's trust you? They shouldn't have to",
+        "Finance is broken, help us fix it",
+        "68% of fund managers hate paying expensive operation costs",
+        "Web3 is much more than meme coins and monkey pics ... or is it?",
+        "Please leave us feedback : ) it helps us a lot",
+        "You look familiar, have we seen you here before?",
+        "It's time to empower the little guy",
+        "Access global liquidity in seconds",
+        "Rug proof",
+        "Our community drives us",
+        "Hate VC? We do too, that's why we are 100% public",
+        "How can you trust your money is safe? Open-source!",
+        "Let us, help you, change the world.",
+        "Entepreneurs wanted!"
+      ];
+      const subHeadingsLength = subHeadings.length;
+      const randomSubHeadingIndex = Math.floor(Math.random() * subHeadingsLength);
+      const randomSubHeading2 = subHeadings[randomSubHeadingIndex];
+      return randomSubHeading2;
+    }
+    execute("window", [
+      function() {
+        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Remote, {
+          name: "header",
+          initialClassName: animation().intro(),
+          children: jsx_dev_runtime17.jsxDEV(PurpleTextHeading, {
+            text: "Scaling Dreams, Crafting Possibilities",
+            style: {}
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this));
+      },
+      function() {
+        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Remote, {
+          name: "subHeader",
+          initialClassName: animation().intro(),
+          initStyle: { marginTop: "10px" },
+          children: jsx_dev_runtime17.jsxDEV(SteelTextSubHeading, {
+            text: randomSubHeading(),
+            style: { fontSize: "15px" }
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this));
+      },
+      function() {
+        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Row, {
+          width: "100%",
+          height: "150px"
+        }, undefined, false, undefined, this));
+      },
+      function() {
+        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(RemoteRow, {
+          name: "buttonsSection",
+          width: "100%",
+          height: "auto",
+          initStyle: { gap: "20px" }
+        }, undefined, false, undefined, this));
+      },
+      function() {
+        broadcast("buttonsSection pushBelow", jsx_dev_runtime17.jsxDEV(RemoteButton1, {
+          name: "getStartedButton",
+          text: "Get Started",
+          initialClassName: animation().intro()
+        }, undefined, false, undefined, this));
+      },
+      function() {
+        broadcast("buttonsSection pushBelow", jsx_dev_runtime17.jsxDEV(RemoteButton2, {
+          name: "learnMoreButton",
+          text: "Learn More",
+          initialClassName: animation().intro()
+        }, undefined, false, undefined, this));
+      },
+      function() {
+        on("getStartedButton clicked", function() {
+          window2().goto(WindowState.COLLECTING_DEPLOYMENT_DATA);
+        });
+        on("learnMoreButton clicked", function() {
+          const url = "https://dreamcatcher-1.gitbook.io/dreamcatcher/";
+          window2?.open(url);
+        });
+      }
+    ], 100n);
+  }
+  async function _toCollectingDeploymentData() {
+    execute("window", [
+      function() {
+        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Remote, {
+          name: "collectingDeploymentDataHeader",
+          initialClassName: animation().intro(),
+          children: jsx_dev_runtime17.jsxDEV(PurpleTextHeading, {
+            text: "Let's Get Some Details",
+            style: {}
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this));
+      },
+      function() {
+        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Remote, {
+          name: "collectingDeploymentDataDiamondName"
+        }, undefined, false, undefined, this));
+      }
+    ], 100n);
+  }
+  async function _done() {
+    broadcast("window transition done");
+  }
+  async function _onDone(fn) {
+    once2("window transition done", fn);
+  }
+  async function _saveState(state) {
+    return browser().save("windowState", state.toString());
+  }
+  async function _loadState() {
+    const loadedState = browser().load("windowState");
+    const from = Number(loadedState ?? WindowState.NONE);
+    return from;
+  }
+  return function() {
+    if (!instance) {
+      instance = {
+        goto
+      };
+    }
+    return instance;
+  };
+}();
+var operator = function() {
+  let instance;
+  let _delay = 50;
+  _enterHomePageSubProcess();
+  function _enterHomePageSubProcess() {
+    _exec(function() {
+      broadcast("page pushBelow", jsx_dev_runtime17.jsxDEV(Background, {}, undefined, false, undefined, this));
+      broadcast("page pushBelow", jsx_dev_runtime17.jsxDEV(Layer, {
+        zIndex: "2000",
+        children: jsx_dev_runtime17.jsxDEV(RemoteCol, {
+          name: "layer",
+          width: "100%",
+          height: "100%"
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this));
+    });
+    _exec(function() {
+      broadcast("layer pushBelow", jsx_dev_runtime17.jsxDEV(Window, {
+        name: "window",
+        width: "450px",
+        height: "450px"
+      }, undefined, false, undefined, this));
+    });
+    _exec(() => window2().goto(WindowState.IDLE));
+  }
+  function _exec(fn) {
+    setTimeout(fn, _delay);
+    _delay += 20;
+  }
+  return function() {
+    if (!instance) {
+      instance = {};
+    }
+    return instance;
+  };
+}();
+
 // code/build/DokaBuild/static/app/App.tsx
-var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+operator();
 render(createBrowserRouter([{
   path: "/",
-  element: jsx_dev_runtime5.jsxDEV("div", {
-    style: { width: "100vw", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" },
-    children: jsx_dev_runtime5.jsxDEV(Window, {
-      name: "steve",
-      width: "500px",
-      height: "500px"
-    }, undefined, false, undefined, this)
+  element: jsx_dev_runtime18.jsxDEV(RemotePage, {
+    initialPages: 1
   }, undefined, false, undefined, this)
 }]));

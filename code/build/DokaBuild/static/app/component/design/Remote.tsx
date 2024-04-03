@@ -20,6 +20,10 @@ export function off(event: string) {
     return network().removeAllListeners(event);
 }
 
+export function once(event: string, listener: Function, context?: any) {
+    return network().once(event, listener, context);
+}
+
 export function broadcast(event: string, ...params: any[]) {
     return network().emit(event, ...params);
 }
@@ -53,6 +57,7 @@ export interface IRemoteProps {
     initSpring?: SpringProps;
     initStyle?: CSSProperties;
     children?: JSX.Element | (JSX.Element)[];
+    initialClassName?: string;
     onAbort?: Function;
     onAbortCapture?: Function;
     onAnimationEnd?: Function;
@@ -221,6 +226,7 @@ export default function Remote(props: IRemoteProps) {
     const initSpring = props.initSpring ?? {};
     const initStyle = props.initStyle ?? {};
     const children = props.children;
+    const initialClassName = props.initialClassName ?? "";
     const onAbort = props.onAbort ?? doNothing;
     const onAbortCapture = props.onAbort ?? doNothing;
     const onAnimationEnd = props.onAnimationEnd ?? doNothing;
@@ -383,7 +389,7 @@ export default function Remote(props: IRemoteProps) {
     const onWheelCapture = props.onWheelCapture ?? doNothing;
     const [spring, setSpring] = useState([{}, {}]);
     const [style, setStyle] = useState({});
-    const [className, setClassName] = useState("");
+    const [className, setClassName] = useState(initialClassName);
     useEffect(function() {
         on(`${name} render spring`, (to: SpringProps) => setSpring(currentSpring => [currentSpring[1], {...currentSpring[1], ...to}]));
         on(`${name} render style`, (to: CSSProperties) => setStyle(currentStyle => ({...currentStyle, ...to})));
