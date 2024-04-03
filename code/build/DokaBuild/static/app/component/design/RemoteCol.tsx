@@ -1,225 +1,18 @@
-import {type CSSProperties, useEffect, useState} from "react";
-import {type SpringProps, animated, useSpring} from "react-spring";
-import {EventEmitter} from "fbemitter";
+import Remote, {type IRemoteProps, on, off} from "./Remote.tsx";
+import React, {useEffect, useState} from "react";
 
-export const network = (function() {
-    let self: EventEmitter;
-    return function() {
-        if (!self) {
-            self = new EventEmitter();
-        }
-        return self;
-    }
-})();
-
-export function on(event: string, listener: Function, context?: any) {
-    return network().addListener(event, listener, context);
+export interface IRemoteColProps extends IRemoteProps {
+    width: string;
+    height: string;
 }
 
-export function off(event: string) {
-    return network().removeAllListeners(event);
-}
-
-export function broadcast(event: string, ...params: any[]) {
-    return network().emit(event, ...params);
-}
-
-
-
-/**
- * -> A dynamic component that can render based on events on a selected
- *    network. If the network is declared globally or a singleton
- *    then any component can use the network to communicate across
- *    the application.
- * 
- * -> The key event structure is:
- *  
- *          1) ${name} render spring
- *          2) ${name} render style
- *          3) ${name} get spring
- *          4) ${name} get style
- *          5) ${name} spring
- *          6) ${name} stylesheet
- * 
- * -> Remote uses react spring for natural transitions. When a new
- *    spring is given, it will smoothly transition to the new targets which
- *    may be position, color, or more.
- * 
- * -> For properties which are not supported by spring, a stylesheet can be
- *    used to do the same.
- */
-export interface IRemoteProps {
-    name: string;
-    initSpring?: SpringProps;
-    initStyle?: CSSProperties;
-    children?: JSX.Element | (JSX.Element)[];
-    onAbort?: Function;
-    onAbortCapture?: Function;
-    onAnimationEnd?: Function;
-    onAnimationEndCapture?: Function;
-    onAnimationIteration?: Function;
-    onAnimationIterationCapture?: Function;
-    onAnimationStart?: Function;
-    onAnimationStartCapture?: Function;
-    onAuxClick?: Function;
-    onAuxClickCapture?: Function;
-    onBeforeInput?: Function;
-    onBeforeInputCapture?: Function;
-    onBlur?: Function;
-    onBlurCapture?: Function;
-    onCanPlay?: Function;
-    onCanPlayCapture?: Function;
-    onCanPlayThrough?: Function;
-    onCanPlayThroughCapture?: Function;
-    onChange?: Function;
-    onChangeCapture?: Function;
-    onClick?: Function;
-    onClickCapture?: Function;
-    onCompositionEnd?: Function;
-    onCompositionEndCapture?: Function;
-    onCompositionStart?: Function;
-    onCompositionStartCapture?: Function;
-    onCompositionUpdate?: Function;
-    onCompositionUpdateCapture?: Function;
-    onContextMenu?: Function;
-    onContextMenuCapture?: Function;
-    onCopy?: Function;
-    onCopyCapture?: Function;
-    onCut?: Function;
-    onCutCapture?: Function;
-    onDoubleClick?: Function;
-    onDoubleClickCapture?: Function;
-    onDrag?: Function;
-    onDragCapture?: Function;
-    onDragEnd?: Function;
-    onDragEndCapture?: Function;
-    onDragEnter?: Function;
-    onDragEnterCapture?: Function;
-    onDragExit?: Function;
-    onDragExitCapture?: Function;
-    onDragLeave?: Function;
-    onDragLeaveCapture?: Function;
-    onDragOver?: Function;
-    onDragOverCapture?: Function;
-    onDragStart?: Function;
-    onDragStartCapture?: Function;
-    onDrop?: Function;
-    onDropCapture?: Function;
-    onDurationChange?: Function;
-    onDurationChangeCapture?: Function;
-    onEmptied?: Function;
-    onEmptiedCapture?: Function;
-    onEncrypted?: Function;
-    onEncryptedCapture?: Function;
-    onEnded?: Function;
-    onEndedCapture?: Function;
-    onError?: Function;
-    onErrorCapture?: Function;
-    onFocus?: Function;
-    onFocusCapture?: Function;
-    onGotPointerCapture?: Function;
-    onGotPointerCaptureCapture?: Function;
-    onInput?: Function;
-    onInputCapture?: Function;
-    onInvalid?: Function;
-    onInvalidCapture?: Function;
-    onKeyDown?: Function;
-    onKeyDownCapture?: Function;
-    onKeyUp?: Function;
-    onKeyUpCapture?: Function;
-    onLoad?: Function;
-    onLoadCapture?: Function;
-    onLoadStart?: Function;
-    onLoadStartCapture?: Function;
-    onLoadedData?: Function;
-    onLoadedDataCapture?: Function;
-    onLoadedMetadata?: Function;
-    onLoadedMetadataCapture?: Function;
-    onLostPointerCapture?: Function;
-    onLostPointerCaptureCapture?: Function;
-    onMouseDown?: Function;
-    onMouseDownCapture?: Function;
-    onMouseEnter?: Function;
-    onMouseLeave?: Function;
-    onMouseMove?: Function;
-    onMouseMoveCapture?: Function;
-    onMouseOut?: Function;
-    onMouseOutCapture?: Function;
-    onMouseOver?: Function;
-    onMouseOverCapture?: Function;
-    onMouseUp?: Function;
-    onMouseUpCapture?: Function;
-    onPaste?: Function;
-    onPasteCapture?: Function;
-    onPause?: Function;
-    onPauseCapture?: Function;
-    onPlay?: Function;
-    onPlayCapture?: Function;
-    onPlaying?: Function;
-    onPlayingCapture?: Function;
-    onPointerCancel?: Function;
-    onPointerCancelCapture?: Function;
-    onPointerDown?: Function;
-    onPointerDownCapture?: Function;
-    onPointerEnter?: Function;
-    onPointerEnterCapture?: Function;
-    onPointerLeave?: Function;
-    onPointerLeaveCapture?: Function;
-    onPointerMove?: Function;
-    onPointerMoveCapture?: Function;
-    onPointerOut?: Function;
-    onPointerOutCapture?: Function;
-    onPointerOver?: Function;
-    onPointerOverCapture?: Function;
-    onPointerUp?: Function;
-    onPointerUpCapture?: Function;
-    onProgress?: Function;
-    onProgressCapture?: Function;
-    onRateChange?: Function;
-    onRateChangeCapture?: Function;
-    onReset?: Function;
-    onResetCapture?: Function;
-    onResize?: Function;
-    onResizeCapture?: Function;
-    onScroll?: Function;
-    onScrollCapture?: Function;
-    onSeeked?: Function;
-    onSeekedCapture?: Function;
-    onSeeking?: Function;
-    onSeekingCapture?: Function;
-    onSelect?: Function;
-    onSelectCapture?: Function;
-    onStalled?: Function;
-    onStalledCapture?: Function;
-    onSubmit?: Function;
-    onSubmitCapture?: Function;
-    onSuspend?: Function;
-    onSuspendCapture?: Function;
-    onTimeUpdate?: Function;
-    onTimeUpdateCapture?: Function;
-    onTouchCancel?: Function;
-    onTouchCancelCapture?: Function;
-    onTouchEnd?: Function;
-    onTouchEndCapture?: Function;
-    onTouchMove?: Function;
-    onTouchMoveCapture?: Function;
-    onTouchStart?: Function;
-    onTouchStartCapture?: Function;
-    onTransitionEnd?: Function;
-    onTransitionEndCapture?: Function;
-    onVolumeChange?: Function;
-    onVolumeChangeCapture?: Function;
-    onWaiting?: Function;
-    onWaitingCapture?: Function;
-    onWheel?: Function;
-    onWheelCapture?: Function;
-}
-
-export default function Remote(props: IRemoteProps) {
-    function doNothing() {}
+export default function RemoteCol(props: IRemoteColProps) {
     const name = props.name;
+    const width = props.width;
+    const height = props.height;
     const initSpring = props.initSpring ?? {};
     const initStyle = props.initStyle ?? {};
+    function doNothing() {}
     const children = props.children;
     const onAbort = props.onAbort ?? doNothing;
     const onAbortCapture = props.onAbort ?? doNothing;
@@ -381,33 +174,99 @@ export default function Remote(props: IRemoteProps) {
     const onWaitingCapture = props.onWaitingCapture ?? doNothing;
     const onWheel = props.onWheel ?? doNothing;
     const onWheelCapture = props.onWheelCapture ?? doNothing;
-    const [spring, setSpring] = useState([{}, {}]);
-    const [style, setStyle] = useState({});
-    const [className, setClassName] = useState("");
+    const spring = {
+        width: width,
+        height: height,
+        ...initSpring
+    };
+    const style = {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        ...initStyle
+    };
+    const [onScreen, setOnScreen] = useState([] as (JSX.Element)[]);
     useEffect(function() {
-        on(`${name} render spring`, (to: SpringProps) => setSpring(currentSpring => [currentSpring[1], {...currentSpring[1], ...to}]));
-        on(`${name} render style`, (to: CSSProperties) => setStyle(currentStyle => ({...currentStyle, ...to})));
-        on(`${name} get spring`, () => broadcast(`${name} spring`, spring));
-        on(`${name} get style`, () => broadcast(`${name} style`, style));
-        if (initSpring) {
-            broadcast(`${name} render spring`, initSpring);
+        function pushBelow(item: JSX.Element) {
+            const items = onScreen;
+            items.push(item);
+            setOnScreen([...items]);
         }
-        if (initStyle) {
-            broadcast(`${name} render style`, initStyle);
+
+        function pushAboveLastItem(item: JSX.Element) {
+            const items = onScreen;
+            const lastItem = items[items.length - 1];
+            items[items.length - 1] = item;
+            items.push(lastItem);
+            setOnScreen([...items]);
         }
-        on(`${name} setClassName`, (className: string) => setClassName(className));
+
+        function pushAbove(item: JSX.Element) {
+            const items = onScreen;
+            let copy = [] as (JSX.Element)[];
+            copy.push(item);
+            copy = copy.concat(items);
+            setOnScreen([...copy]);
+        }
+
+        function pushBetween(item: JSX.Element, position: number) {
+            const items = onScreen;
+            const copy = [] as (JSX.Element)[];
+            for (let i = 0; i < position; i++) {
+                const copiedItem = items[i];
+                copy.push(copiedItem);
+            }
+            copy.push(item);
+            const itemsLength = items.length;
+            for (let i = position; i < itemsLength; i++) {
+                const copiedItem = items[i];
+                copy.push(copiedItem);
+            }
+            setOnScreen(copy);
+        }
+
+        function pullBelow() {
+            const items = onScreen;
+            items.pop();
+            setOnScreen([...items]);
+        }
+
+        function pullAbove() {
+            const items = onScreen;
+            items.shift();
+            setOnScreen([...items]);
+        }
+
+        function pull(position: number) {
+            const items = onScreen;
+            items.splice(position, 1);
+            setOnScreen([...items]);
+        }
+
+        on(`${name} pushBelow`, pushBelow);
+        on(`${name} pushAboveLastItem`, pushAboveLastItem);
+        on(`${name} pushAbove`, pushAbove);
+        on(`${name} pushBetween`, pushBetween);
+        on(`${name} pullBelow`, pullBelow);
+        on(`${name} pullAbove`, pullAbove);
+        on(`${name} pull`, pull);
         return function() {
-            off(`${name} render spring`);
-            off(`${name} render style`);
-            off(`${name} get spring`);
-            off(`${name} get style`);
-            off(`${name} setClassName`);
+            off(`${name} pushBelow`);
+            off(`${name} pushAboveLastItem`);
+            off(`${name} pushAbove`);
+            off(`${name} pushBetween`);
+            off(`${name} pullBelow`);
+            off(`${name} pullAbove`);
+            off(`${name} pull`);
         }
     }, []);
     return (
-        <animated.div
-        className={className}
-        style={{...useSpring({from: spring[0], to: spring[1]}), ...style}}
+        <Remote 
+        name={name} 
+        initSpring={spring} 
+        initStyle={style as any} 
+        children={onScreen}
         onAbort={onAbort as any}
         onAbortCapture={onAbortCapture as any}
         onAnimationEnd={onAnimationEnd as any}
@@ -567,8 +426,6 @@ export default function Remote(props: IRemoteProps) {
         onWaiting={onWaiting as any}
         onWaitingCapture={onWaitingCapture as any}
         onWheel={onWheel as any}
-        onWheelCapture={onWheelCapture as any}>
-            {children}
-        </animated.div>
+        onWheelCapture={onWheelCapture as any}/>
     );
 }

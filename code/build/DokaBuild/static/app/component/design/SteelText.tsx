@@ -6,7 +6,8 @@ export interface ISteelTextProps {
 }
 
 export default function SteelText(props: ISteelTextProps) {
-    props.style = props.style ?? {};
+    const initStyle = props.style ?? {};
+    const text = props.text;
     const style = {
         fontSize: "8px",
         fontFamily: "roboto mono",
@@ -14,9 +15,10 @@ export default function SteelText(props: ISteelTextProps) {
         color: "white",
         background: "-webkit-linear-gradient(#FFFFFF, #A4A2A1)",
         WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent"
+        WebkitTextFillColor: "transparent",
+        ...initStyle
     };
     return (
-        <div style={{...style, ...props.style}}>{props.text}</div>
+        <div style={style}>{text}</div>
     );
 }

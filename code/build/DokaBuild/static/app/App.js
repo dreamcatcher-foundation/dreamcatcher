@@ -31075,6 +31075,9 @@ var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
 function on(event, listener, context) {
   return network().addListener(event, listener, context);
 }
+function off(event) {
+  return network().removeAllListeners(event);
+}
 function broadcast(event, ...params) {
   return network().emit(event, ...params);
 }
@@ -31087,13 +31090,176 @@ var network = function() {
     return self;
   };
 }();
-function Remote(p) {
-  let name = p.name;
-  let initSpring = p.initSpring ?? {};
-  let initStyle = p.initStyle ?? {};
-  let children = p.children;
+function Remote(props) {
+  function doNothing() {
+  }
+  const name = props.name;
+  const initSpring = props.initSpring ?? {};
+  const initStyle = props.initStyle ?? {};
+  const children = props.children;
+  const onAbort = props.onAbort ?? doNothing;
+  const onAbortCapture = props.onAbort ?? doNothing;
+  const onAnimationEnd = props.onAnimationEnd ?? doNothing;
+  const onAnimationEndCapture = props.onAnimationEndCapture ?? doNothing;
+  const onAnimationIteration = props.onAnimationIteration ?? doNothing;
+  const onAnimationIterationCapture = props.onAnimationIterationCapture ?? doNothing;
+  const onAnimationStart = props.onAnimationStart ?? doNothing;
+  const onAnimationStartCapture = props.onAnimationStartCapture ?? doNothing;
+  const onAuxClick = props.onAuxClick ?? doNothing;
+  const onAuxClickCapture = props.onAuxClickCapture ?? doNothing;
+  const onBeforeInput = props.onBeforeInput ?? doNothing;
+  const onBeforeInputCapture = props.onBeforeInputCapture ?? doNothing;
+  const onBlur = props.onBlur ?? doNothing;
+  const onBlurCapture = props.onBlurCapture ?? doNothing;
+  const onCanPlay = props.onCanPlay ?? doNothing;
+  const onCanPlayCapture = props.onCanPlayCapture ?? doNothing;
+  const onCanPlayThrough = props.onCanPlayThrough ?? doNothing;
+  const onCanPlayThroughCapture = props.onCanPlayThroughCapture ?? doNothing;
+  const onChange = props.onChange ?? doNothing;
+  const onChangeCapture = props.onChangeCapture ?? doNothing;
+  const onClick = props.onClick ?? doNothing;
+  const onClickCapture = props.onClickCapture ?? doNothing;
+  const onCompositionEnd = props.onCompositionEnd ?? doNothing;
+  const onCompositionEndCapture = props.onCompositionEndCapture ?? doNothing;
+  const onCompositionStart = props.onCompositionStart ?? doNothing;
+  const onCompositionStartCapture = props.onCompositionStartCapture ?? doNothing;
+  const onCompositionUpdate = props.onCompositionUpdate ?? doNothing;
+  const onCompositionUpdateCapture = props.onCompositionUpdateCapture ?? doNothing;
+  const onContextMenu = props.onContextMenu ?? doNothing;
+  const onContextMenuCapture = props.onContextMenuCapture ?? doNothing;
+  const onCopy = props.onCopy ?? doNothing;
+  const onCopyCapture = props.onCopyCapture ?? doNothing;
+  const onCut = props.onCut ?? doNothing;
+  const onCutCapture = props.onCutCapture ?? doNothing;
+  const onDoubleClick = props.onDoubleClick ?? doNothing;
+  const onDoubleClickCapture = props.onDoubleClickCapture ?? doNothing;
+  const onDrag = props.onDrag ?? doNothing;
+  const onDragCapture = props.onDragCapture ?? doNothing;
+  const onDragEnd = props.onDragEnd ?? doNothing;
+  const onDragEndCapture = props.onDragEndCapture ?? doNothing;
+  const onDragEnter = props.onDragEnter ?? doNothing;
+  const onDragEnterCapture = props.onDragEnterCapture ?? doNothing;
+  const onDragExit = props.onDragExit ?? doNothing;
+  const onDragExitCapture = props.onDragExitCapture ?? doNothing;
+  const onDragLeave = props.onDragLeave ?? doNothing;
+  const onDragLeaveCapture = props.onDragLeaveCapture ?? doNothing;
+  const onDragOver = props.onDragOver ?? doNothing;
+  const onDragOverCapture = props.onDragOverCapture ?? doNothing;
+  const onDragStart = props.onDragStart ?? doNothing;
+  const onDragStartCapture = props.onDragStartCapture ?? doNothing;
+  const onDrop = props.onDrop ?? doNothing;
+  const onDropCapture = props.onDropCapture ?? doNothing;
+  const onDurationChange = props.onDurationChange ?? doNothing;
+  const onDurationChangeCapture = props.onDurationChangeCapture ?? doNothing;
+  const onEmptied = props.onEmptied ?? doNothing;
+  const onEmptiedCapture = props.onEmptiedCapture ?? doNothing;
+  const onEncrypted = props.onEncrypted ?? doNothing;
+  const onEncryptedCapture = props.onEncryptedCapture ?? doNothing;
+  const onEnded = props.onEnded ?? doNothing;
+  const onEndedCapture = props.onEndedCapture ?? doNothing;
+  const onError = props.onError ?? doNothing;
+  const onErrorCapture = props.onErrorCapture ?? doNothing;
+  const onFocus = props.onFocus ?? doNothing;
+  const onFocusCapture = props.onFocusCapture ?? doNothing;
+  const onGotPointerCapture = props.onGotPointerCapture ?? doNothing;
+  const onGotPointerCaptureCapture = props.onGotPointerCaptureCapture ?? doNothing;
+  const onInput = props.onInput ?? doNothing;
+  const onInputCapture = props.onInputCapture ?? doNothing;
+  const onInvalid = props.onInvalid ?? doNothing;
+  const onInvalidCapture = props.onInvalidCapture ?? doNothing;
+  const onKeyDown = props.onKeyDown ?? doNothing;
+  const onKeyDownCapture = props.onKeyDownCapture ?? doNothing;
+  const onKeyUp = props.onKeyUp ?? doNothing;
+  const onKeyUpCapture = props.onKeyUpCapture ?? doNothing;
+  const onLoad = props.onLoad ?? doNothing;
+  const onLoadCapture = props.onLoadCapture ?? doNothing;
+  const onLoadStart = props.onLoadStart ?? doNothing;
+  const onLoadStartCapture = props.onLoadStartCapture ?? doNothing;
+  const onLoadedData = props.onLoadedData ?? doNothing;
+  const onLoadedDataCapture = props.onLoadedDataCapture ?? doNothing;
+  const onLoadedMetadata = props.onLoadedMetadata ?? doNothing;
+  const onLoadedMetadataCapture = props.onLoadedMetadataCapture ?? doNothing;
+  const onLostPointerCapture = props.onLostPointerCapture ?? doNothing;
+  const onLostPointerCaptureCapture = props.onLostPointerCaptureCapture ?? doNothing;
+  const onMouseDown = props.onMouseDown ?? doNothing;
+  const onMouseDownCapture = props.onMouseDownCapture ?? doNothing;
+  const onMouseEnter = props.onMouseEnter ?? doNothing;
+  const onMouseLeave = props.onMouseLeave ?? doNothing;
+  const onMouseMove = props.onMouseMove ?? doNothing;
+  const onMouseMoveCapture = props.onMouseMoveCapture ?? doNothing;
+  const onMouseOut = props.onMouseOut ?? doNothing;
+  const onMouseOutCapture = props.onMouseOutCapture ?? doNothing;
+  const onMouseOver = props.onMouseOver ?? doNothing;
+  const onMouseOverCapture = props.onMouseOverCapture ?? doNothing;
+  const onMouseUp = props.onMouseUp ?? doNothing;
+  const onMouseUpCapture = props.onMouseUpCapture ?? doNothing;
+  const onPaste = props.onPaste ?? doNothing;
+  const onPasteCapture = props.onPasteCapture ?? doNothing;
+  const onPause = props.onPause ?? doNothing;
+  const onPauseCapture = props.onPauseCapture ?? doNothing;
+  const onPlay = props.onPlay ?? doNothing;
+  const onPlayCapture = props.onPlayCapture ?? doNothing;
+  const onPlaying = props.onPlaying ?? doNothing;
+  const onPlayingCapture = props.onPlayingCapture ?? doNothing;
+  const onPointerCancel = props.onPointerCancel ?? doNothing;
+  const onPointerCancelCapture = props.onPointerCancelCapture ?? doNothing;
+  const onPointerDown = props.onPointerDown ?? doNothing;
+  const onPointerDownCapture = props.onPointerDownCapture ?? doNothing;
+  const onPointerEnter = props.onPointerEnter ?? doNothing;
+  const onPointerEnterCapture = props.onPointerEnterCapture ?? doNothing;
+  const onPointerLeave = props.onPointerLeave ?? doNothing;
+  const onPointerLeaveCapture = props.onPointerLeaveCapture ?? doNothing;
+  const onPointerMove = props.onPointerMove ?? doNothing;
+  const onPointerMoveCapture = props.onPointerMoveCapture ?? doNothing;
+  const onPointerOut = props.onPointerOut ?? doNothing;
+  const onPointerOutCapture = props.onPointerOutCapture ?? doNothing;
+  const onPointerOver = props.onPointerOver ?? doNothing;
+  const onPointerOverCapture = props.onPointerOverCapture ?? doNothing;
+  const onPointerUp = props.onPointerUp ?? doNothing;
+  const onPointerUpCapture = props.onPointerUpCapture ?? doNothing;
+  const onProgress = props.onProgress ?? doNothing;
+  const onProgressCapture = props.onProgressCapture ?? doNothing;
+  const onRateChange = props.onRateChange ?? doNothing;
+  const onRateChangeCapture = props.onRateChangeCapture ?? doNothing;
+  const onReset = props.onReset ?? doNothing;
+  const onResetCapture = props.onResetCapture ?? doNothing;
+  const onResize2 = props.onResize ?? doNothing;
+  const onResizeCapture = props.onResizeCapture ?? doNothing;
+  const onScroll2 = props.onScroll ?? doNothing;
+  const onScrollCapture = props.onScrollCapture ?? doNothing;
+  const onSeeked = props.onSeeked ?? doNothing;
+  const onSeekedCapture = props.onSeekedCapture ?? doNothing;
+  const onSeeking = props.onSeeking ?? doNothing;
+  const onSeekingCapture = props.onSeekingCapture ?? doNothing;
+  const onSelect = props.onSelect ?? doNothing;
+  const onSelectCapture = props.onSelectCapture ?? doNothing;
+  const onStalled = props.onStalled ?? doNothing;
+  const onStalledCapture = props.onStalledCapture ?? doNothing;
+  const onSubmit = props.onSubmit ?? doNothing;
+  const onSubmitCapture = props.onSubmitCapture ?? doNothing;
+  const onSuspend = props.onSuspend ?? doNothing;
+  const onSuspendCapture = props.onSuspendCapture ?? doNothing;
+  const onTimeUpdate = props.onTimeUpdate ?? doNothing;
+  const onTimeUpdateCapture = props.onTimeUpdateCapture ?? doNothing;
+  const onTouchCancel = props.onTouchCancel ?? doNothing;
+  const onTouchCancelCapture = props.onTouchCancelCapture ?? doNothing;
+  const onTouchEnd = props.onTouchEnd ?? doNothing;
+  const onTouchEndCapture = props.onTouchEnd ?? doNothing;
+  const onTouchMove = props.onTouchMove ?? doNothing;
+  const onTouchMoveCapture = props.onTouchMoveCapture ?? doNothing;
+  const onTouchStart = props.onTouchStart ?? doNothing;
+  const onTouchStartCapture = props.onTouchStartCapture ?? doNothing;
+  const onTransitionEnd = props.onTransitionEnd ?? doNothing;
+  const onTransitionEndCapture = props.onTransitionEndCapture ?? doNothing;
+  const onVolumeChange = props.onVolumeChange ?? doNothing;
+  const onVolumeChangeCapture = props.onVolumeChangeCapture ?? doNothing;
+  const onWaiting = props.onWaiting ?? doNothing;
+  const onWaitingCapture = props.onWaitingCapture ?? doNothing;
+  const onWheel = props.onWheel ?? doNothing;
+  const onWheelCapture = props.onWheelCapture ?? doNothing;
   const [spring, setSpring] = import_react16.useState([{}, {}]);
   const [style, setStyle] = import_react16.useState({});
+  const [className, setClassName] = import_react16.useState("");
   import_react16.useEffect(function() {
     on(`${name} render spring`, (to2) => setSpring((currentSpring) => [currentSpring[1], { ...currentSpring[1], ...to2 }]));
     on(`${name} render style`, (to2) => setStyle((currentStyle) => ({ ...currentStyle, ...to2 })));
@@ -31105,75 +31271,650 @@ function Remote(p) {
     if (initStyle) {
       broadcast(`${name} render style`, initStyle);
     }
+    on(`${name} setClassName`, (className2) => setClassName(className2));
+    broadcast("steve setClassName", "flicker-in-1");
+    return function() {
+      off(`${name} render spring`);
+      off(`${name} render style`);
+      off(`${name} get spring`);
+      off(`${name} get style`);
+      off(`${name} setClassName`);
+    };
   }, []);
   return jsx_dev_runtime2.jsxDEV(animated6.div, {
+    className,
     style: { ...useSpring({ from: spring[0], to: spring[1] }), ...style },
+    onAbort,
+    onAbortCapture,
+    onAnimationEnd,
+    onAnimationEndCapture,
+    onAnimationIteration,
+    onAnimationIterationCapture,
+    onAnimationStart,
+    onAnimationStartCapture,
+    onAuxClick,
+    onAuxClickCapture,
+    onBeforeInput,
+    onBeforeInputCapture,
+    onBlur,
+    onBlurCapture,
+    onCanPlay,
+    onCanPlayCapture,
+    onCanPlayThrough,
+    onCanPlayThroughCapture,
+    onChange,
+    onChangeCapture,
+    onClick,
+    onClickCapture,
+    onCompositionEnd,
+    onCompositionEndCapture,
+    onCompositionStart,
+    onCompositionStartCapture,
+    onCompositionUpdate,
+    onCompositionUpdateCapture,
+    onContextMenu,
+    onContextMenuCapture,
+    onCopy,
+    onCopyCapture,
+    onCut,
+    onCutCapture,
+    onDoubleClick,
+    onDoubleClickCapture,
+    onDrag,
+    onDragCapture,
+    onDragEnd,
+    onDragEndCapture,
+    onDragEnter,
+    onDragEnterCapture,
+    onDragExit,
+    onDragExitCapture,
+    onDragLeave,
+    onDragLeaveCapture,
+    onDragOver,
+    onDragOverCapture,
+    onDragStart,
+    onDragStartCapture,
+    onDrop,
+    onDropCapture,
+    onDurationChange,
+    onDurationChangeCapture,
+    onEmptied,
+    onEmptiedCapture,
+    onEncrypted,
+    onEncryptedCapture,
+    onEnded,
+    onEndedCapture,
+    onError,
+    onErrorCapture,
+    onFocus,
+    onFocusCapture,
+    onGotPointerCapture,
+    onGotPointerCaptureCapture,
+    onInput,
+    onInputCapture,
+    onInvalid,
+    onInvalidCapture,
+    onKeyDown,
+    onKeyDownCapture,
+    onKeyUp,
+    onKeyUpCapture,
+    onLoad,
+    onLoadCapture,
+    onLoadStart,
+    onLoadStartCapture,
+    onLoadedData,
+    onLoadedDataCapture,
+    onLoadedMetadata,
+    onLoadedMetadataCapture,
+    onLostPointerCapture,
+    onLostPointerCaptureCapture,
+    onMouseDown,
+    onMouseDownCapture,
+    onMouseEnter,
+    onMouseLeave,
+    onMouseMove,
+    onMouseMoveCapture,
+    onMouseOut,
+    onMouseOutCapture,
+    onMouseOver,
+    onMouseOverCapture,
+    onMouseUp,
+    onMouseUpCapture,
+    onPaste,
+    onPasteCapture,
+    onPause,
+    onPauseCapture,
+    onPlay,
+    onPlayCapture,
+    onPlaying,
+    onPlayingCapture,
+    onPointerCancel,
+    onPointerCancelCapture,
+    onPointerDown,
+    onPointerDownCapture,
+    onPointerEnter,
+    onPointerEnterCapture,
+    onPointerLeave,
+    onPointerLeaveCapture,
+    onPointerMove,
+    onPointerMoveCapture,
+    onPointerOut,
+    onPointerOutCapture,
+    onPointerOver,
+    onPointerOverCapture,
+    onPointerUp,
+    onPointerUpCapture,
+    onProgress,
+    onProgressCapture,
+    onRateChange,
+    onRateChangeCapture,
+    onReset,
+    onResetCapture,
+    onResize: onResize2,
+    onResizeCapture,
+    onScroll: onScroll2,
+    onScrollCapture,
+    onSeeked,
+    onSeekedCapture,
+    onSeeking,
+    onSeekingCapture,
+    onSelect,
+    onSelectCapture,
+    onStalled,
+    onStalledCapture,
+    onSubmit,
+    onSubmitCapture,
+    onSuspend,
+    onSuspendCapture,
+    onTimeUpdate,
+    onTimeUpdateCapture,
+    onTouchCancel,
+    onTouchCancelCapture,
+    onTouchEnd,
+    onTouchEndCapture,
+    onTouchMove,
+    onTouchMoveCapture,
+    onTouchStart,
+    onTouchStartCapture,
+    onTransitionEnd,
+    onTransitionEndCapture,
+    onVolumeChange,
+    onVolumeChangeCapture,
+    onWaiting,
+    onWaitingCapture,
+    onWheel,
+    onWheelCapture,
     children
   }, undefined, false, undefined, this);
 }
 
-// code/build/DokaBuild/static/app/component/design/Window.tsx
+// code/build/DokaBuild/static/app/component/design/RemoteCol.tsx
+var import_react17 = __toESM(require_react(), 1);
 var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
-function Window(p) {
-  let name = p.name;
-  let hasSteelFrameBorder = p.hasSteelFrameBorder ?? false;
-  let width = p.width;
-  let height = p.height;
-  let initSpring = p.initSpring ?? {};
-  let initStyle = p.initStyle ?? {};
-  let children = p.children;
-  initStyle = {
-    ...initStyle,
+function RemoteCol(props) {
+  const name = props.name;
+  const width = props.width;
+  const height = props.height;
+  const initSpring = props.initSpring ?? {};
+  const initStyle = props.initStyle ?? {};
+  function doNothing() {
+  }
+  const children = props.children;
+  const onAbort = props.onAbort ?? doNothing;
+  const onAbortCapture = props.onAbort ?? doNothing;
+  const onAnimationEnd = props.onAnimationEnd ?? doNothing;
+  const onAnimationEndCapture = props.onAnimationEndCapture ?? doNothing;
+  const onAnimationIteration = props.onAnimationIteration ?? doNothing;
+  const onAnimationIterationCapture = props.onAnimationIterationCapture ?? doNothing;
+  const onAnimationStart = props.onAnimationStart ?? doNothing;
+  const onAnimationStartCapture = props.onAnimationStartCapture ?? doNothing;
+  const onAuxClick = props.onAuxClick ?? doNothing;
+  const onAuxClickCapture = props.onAuxClickCapture ?? doNothing;
+  const onBeforeInput = props.onBeforeInput ?? doNothing;
+  const onBeforeInputCapture = props.onBeforeInputCapture ?? doNothing;
+  const onBlur = props.onBlur ?? doNothing;
+  const onBlurCapture = props.onBlurCapture ?? doNothing;
+  const onCanPlay = props.onCanPlay ?? doNothing;
+  const onCanPlayCapture = props.onCanPlayCapture ?? doNothing;
+  const onCanPlayThrough = props.onCanPlayThrough ?? doNothing;
+  const onCanPlayThroughCapture = props.onCanPlayThroughCapture ?? doNothing;
+  const onChange = props.onChange ?? doNothing;
+  const onChangeCapture = props.onChangeCapture ?? doNothing;
+  const onClick = props.onClick ?? doNothing;
+  const onClickCapture = props.onClickCapture ?? doNothing;
+  const onCompositionEnd = props.onCompositionEnd ?? doNothing;
+  const onCompositionEndCapture = props.onCompositionEndCapture ?? doNothing;
+  const onCompositionStart = props.onCompositionStart ?? doNothing;
+  const onCompositionStartCapture = props.onCompositionStartCapture ?? doNothing;
+  const onCompositionUpdate = props.onCompositionUpdate ?? doNothing;
+  const onCompositionUpdateCapture = props.onCompositionUpdateCapture ?? doNothing;
+  const onContextMenu = props.onContextMenu ?? doNothing;
+  const onContextMenuCapture = props.onContextMenuCapture ?? doNothing;
+  const onCopy = props.onCopy ?? doNothing;
+  const onCopyCapture = props.onCopyCapture ?? doNothing;
+  const onCut = props.onCut ?? doNothing;
+  const onCutCapture = props.onCutCapture ?? doNothing;
+  const onDoubleClick = props.onDoubleClick ?? doNothing;
+  const onDoubleClickCapture = props.onDoubleClickCapture ?? doNothing;
+  const onDrag = props.onDrag ?? doNothing;
+  const onDragCapture = props.onDragCapture ?? doNothing;
+  const onDragEnd = props.onDragEnd ?? doNothing;
+  const onDragEndCapture = props.onDragEndCapture ?? doNothing;
+  const onDragEnter = props.onDragEnter ?? doNothing;
+  const onDragEnterCapture = props.onDragEnterCapture ?? doNothing;
+  const onDragExit = props.onDragExit ?? doNothing;
+  const onDragExitCapture = props.onDragExitCapture ?? doNothing;
+  const onDragLeave = props.onDragLeave ?? doNothing;
+  const onDragLeaveCapture = props.onDragLeaveCapture ?? doNothing;
+  const onDragOver = props.onDragOver ?? doNothing;
+  const onDragOverCapture = props.onDragOverCapture ?? doNothing;
+  const onDragStart = props.onDragStart ?? doNothing;
+  const onDragStartCapture = props.onDragStartCapture ?? doNothing;
+  const onDrop = props.onDrop ?? doNothing;
+  const onDropCapture = props.onDropCapture ?? doNothing;
+  const onDurationChange = props.onDurationChange ?? doNothing;
+  const onDurationChangeCapture = props.onDurationChangeCapture ?? doNothing;
+  const onEmptied = props.onEmptied ?? doNothing;
+  const onEmptiedCapture = props.onEmptiedCapture ?? doNothing;
+  const onEncrypted = props.onEncrypted ?? doNothing;
+  const onEncryptedCapture = props.onEncryptedCapture ?? doNothing;
+  const onEnded = props.onEnded ?? doNothing;
+  const onEndedCapture = props.onEndedCapture ?? doNothing;
+  const onError = props.onError ?? doNothing;
+  const onErrorCapture = props.onErrorCapture ?? doNothing;
+  const onFocus = props.onFocus ?? doNothing;
+  const onFocusCapture = props.onFocusCapture ?? doNothing;
+  const onGotPointerCapture = props.onGotPointerCapture ?? doNothing;
+  const onGotPointerCaptureCapture = props.onGotPointerCaptureCapture ?? doNothing;
+  const onInput = props.onInput ?? doNothing;
+  const onInputCapture = props.onInputCapture ?? doNothing;
+  const onInvalid = props.onInvalid ?? doNothing;
+  const onInvalidCapture = props.onInvalidCapture ?? doNothing;
+  const onKeyDown = props.onKeyDown ?? doNothing;
+  const onKeyDownCapture = props.onKeyDownCapture ?? doNothing;
+  const onKeyUp = props.onKeyUp ?? doNothing;
+  const onKeyUpCapture = props.onKeyUpCapture ?? doNothing;
+  const onLoad = props.onLoad ?? doNothing;
+  const onLoadCapture = props.onLoadCapture ?? doNothing;
+  const onLoadStart = props.onLoadStart ?? doNothing;
+  const onLoadStartCapture = props.onLoadStartCapture ?? doNothing;
+  const onLoadedData = props.onLoadedData ?? doNothing;
+  const onLoadedDataCapture = props.onLoadedDataCapture ?? doNothing;
+  const onLoadedMetadata = props.onLoadedMetadata ?? doNothing;
+  const onLoadedMetadataCapture = props.onLoadedMetadataCapture ?? doNothing;
+  const onLostPointerCapture = props.onLostPointerCapture ?? doNothing;
+  const onLostPointerCaptureCapture = props.onLostPointerCaptureCapture ?? doNothing;
+  const onMouseDown = props.onMouseDown ?? doNothing;
+  const onMouseDownCapture = props.onMouseDownCapture ?? doNothing;
+  const onMouseEnter = props.onMouseEnter ?? doNothing;
+  const onMouseLeave = props.onMouseLeave ?? doNothing;
+  const onMouseMove = props.onMouseMove ?? doNothing;
+  const onMouseMoveCapture = props.onMouseMoveCapture ?? doNothing;
+  const onMouseOut = props.onMouseOut ?? doNothing;
+  const onMouseOutCapture = props.onMouseOutCapture ?? doNothing;
+  const onMouseOver = props.onMouseOver ?? doNothing;
+  const onMouseOverCapture = props.onMouseOverCapture ?? doNothing;
+  const onMouseUp = props.onMouseUp ?? doNothing;
+  const onMouseUpCapture = props.onMouseUpCapture ?? doNothing;
+  const onPaste = props.onPaste ?? doNothing;
+  const onPasteCapture = props.onPasteCapture ?? doNothing;
+  const onPause = props.onPause ?? doNothing;
+  const onPauseCapture = props.onPauseCapture ?? doNothing;
+  const onPlay = props.onPlay ?? doNothing;
+  const onPlayCapture = props.onPlayCapture ?? doNothing;
+  const onPlaying = props.onPlaying ?? doNothing;
+  const onPlayingCapture = props.onPlayingCapture ?? doNothing;
+  const onPointerCancel = props.onPointerCancel ?? doNothing;
+  const onPointerCancelCapture = props.onPointerCancelCapture ?? doNothing;
+  const onPointerDown = props.onPointerDown ?? doNothing;
+  const onPointerDownCapture = props.onPointerDownCapture ?? doNothing;
+  const onPointerEnter = props.onPointerEnter ?? doNothing;
+  const onPointerEnterCapture = props.onPointerEnterCapture ?? doNothing;
+  const onPointerLeave = props.onPointerLeave ?? doNothing;
+  const onPointerLeaveCapture = props.onPointerLeaveCapture ?? doNothing;
+  const onPointerMove = props.onPointerMove ?? doNothing;
+  const onPointerMoveCapture = props.onPointerMoveCapture ?? doNothing;
+  const onPointerOut = props.onPointerOut ?? doNothing;
+  const onPointerOutCapture = props.onPointerOutCapture ?? doNothing;
+  const onPointerOver = props.onPointerOver ?? doNothing;
+  const onPointerOverCapture = props.onPointerOverCapture ?? doNothing;
+  const onPointerUp = props.onPointerUp ?? doNothing;
+  const onPointerUpCapture = props.onPointerUpCapture ?? doNothing;
+  const onProgress = props.onProgress ?? doNothing;
+  const onProgressCapture = props.onProgressCapture ?? doNothing;
+  const onRateChange = props.onRateChange ?? doNothing;
+  const onRateChangeCapture = props.onRateChangeCapture ?? doNothing;
+  const onReset = props.onReset ?? doNothing;
+  const onResetCapture = props.onResetCapture ?? doNothing;
+  const onResize2 = props.onResize ?? doNothing;
+  const onResizeCapture = props.onResizeCapture ?? doNothing;
+  const onScroll2 = props.onScroll ?? doNothing;
+  const onScrollCapture = props.onScrollCapture ?? doNothing;
+  const onSeeked = props.onSeeked ?? doNothing;
+  const onSeekedCapture = props.onSeekedCapture ?? doNothing;
+  const onSeeking = props.onSeeking ?? doNothing;
+  const onSeekingCapture = props.onSeekingCapture ?? doNothing;
+  const onSelect = props.onSelect ?? doNothing;
+  const onSelectCapture = props.onSelectCapture ?? doNothing;
+  const onStalled = props.onStalled ?? doNothing;
+  const onStalledCapture = props.onStalledCapture ?? doNothing;
+  const onSubmit = props.onSubmit ?? doNothing;
+  const onSubmitCapture = props.onSubmitCapture ?? doNothing;
+  const onSuspend = props.onSuspend ?? doNothing;
+  const onSuspendCapture = props.onSuspendCapture ?? doNothing;
+  const onTimeUpdate = props.onTimeUpdate ?? doNothing;
+  const onTimeUpdateCapture = props.onTimeUpdateCapture ?? doNothing;
+  const onTouchCancel = props.onTouchCancel ?? doNothing;
+  const onTouchCancelCapture = props.onTouchCancelCapture ?? doNothing;
+  const onTouchEnd = props.onTouchEnd ?? doNothing;
+  const onTouchEndCapture = props.onTouchEnd ?? doNothing;
+  const onTouchMove = props.onTouchMove ?? doNothing;
+  const onTouchMoveCapture = props.onTouchMoveCapture ?? doNothing;
+  const onTouchStart = props.onTouchStart ?? doNothing;
+  const onTouchStartCapture = props.onTouchStartCapture ?? doNothing;
+  const onTransitionEnd = props.onTransitionEnd ?? doNothing;
+  const onTransitionEndCapture = props.onTransitionEndCapture ?? doNothing;
+  const onVolumeChange = props.onVolumeChange ?? doNothing;
+  const onVolumeChangeCapture = props.onVolumeChangeCapture ?? doNothing;
+  const onWaiting = props.onWaiting ?? doNothing;
+  const onWaitingCapture = props.onWaitingCapture ?? doNothing;
+  const onWheel = props.onWheel ?? doNothing;
+  const onWheelCapture = props.onWheelCapture ?? doNothing;
+  const spring = {
+    width,
+    height,
+    ...initSpring
+  };
+  const style = {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    ...initStyle
+  };
+  const [onScreen, setOnScreen] = import_react17.useState([]);
+  import_react17.useEffect(function() {
+    function pushBelow(item) {
+      const items = onScreen;
+      items.push(item);
+      setOnScreen([...items]);
+    }
+    function pushAboveLastItem(item) {
+      const items = onScreen;
+      const lastItem = items[items.length - 1];
+      items[items.length - 1] = item;
+      items.push(lastItem);
+      setOnScreen([...items]);
+    }
+    function pushAbove(item) {
+      const items = onScreen;
+      let copy = [];
+      copy.push(item);
+      copy = copy.concat(items);
+      setOnScreen([...copy]);
+    }
+    function pushBetween(item, position) {
+      const items = onScreen;
+      const copy = [];
+      for (let i = 0;i < position; i++) {
+        const copiedItem = items[i];
+        copy.push(copiedItem);
+      }
+      copy.push(item);
+      const itemsLength = items.length;
+      for (let i = position;i < itemsLength; i++) {
+        const copiedItem = items[i];
+        copy.push(copiedItem);
+      }
+      setOnScreen(copy);
+    }
+    function pullBelow() {
+      const items = onScreen;
+      items.pop();
+      setOnScreen([...items]);
+    }
+    function pullAbove() {
+      const items = onScreen;
+      items.shift();
+      setOnScreen([...items]);
+    }
+    function pull(position) {
+      const items = onScreen;
+      items.splice(position, 1);
+      setOnScreen([...items]);
+    }
+    on(`${name} pushBelow`, pushBelow);
+    on(`${name} pushAboveLastItem`, pushAboveLastItem);
+    on(`${name} pushAbove`, pushAbove);
+    on(`${name} pushBetween`, pushBetween);
+    on(`${name} pullBelow`, pullBelow);
+    on(`${name} pullAbove`, pullAbove);
+    on(`${name} pull`, pull);
+    return function() {
+      off(`${name} pushBelow`);
+      off(`${name} pushAboveLastItem`);
+      off(`${name} pushAbove`);
+      off(`${name} pushBetween`);
+      off(`${name} pullBelow`);
+      off(`${name} pullAbove`);
+      off(`${name} pull`);
+    };
+  }, []);
+  return jsx_dev_runtime3.jsxDEV(Remote, {
+    name,
+    initSpring: spring,
+    initStyle: style,
+    children: onScreen,
+    onAbort,
+    onAbortCapture,
+    onAnimationEnd,
+    onAnimationEndCapture,
+    onAnimationIteration,
+    onAnimationIterationCapture,
+    onAnimationStart,
+    onAnimationStartCapture,
+    onAuxClick,
+    onAuxClickCapture,
+    onBeforeInput,
+    onBeforeInputCapture,
+    onBlur,
+    onBlurCapture,
+    onCanPlay,
+    onCanPlayCapture,
+    onCanPlayThrough,
+    onCanPlayThroughCapture,
+    onChange,
+    onChangeCapture,
+    onClick,
+    onClickCapture,
+    onCompositionEnd,
+    onCompositionEndCapture,
+    onCompositionStart,
+    onCompositionStartCapture,
+    onCompositionUpdate,
+    onCompositionUpdateCapture,
+    onContextMenu,
+    onContextMenuCapture,
+    onCopy,
+    onCopyCapture,
+    onCut,
+    onCutCapture,
+    onDoubleClick,
+    onDoubleClickCapture,
+    onDrag,
+    onDragCapture,
+    onDragEnd,
+    onDragEndCapture,
+    onDragEnter,
+    onDragEnterCapture,
+    onDragExit,
+    onDragExitCapture,
+    onDragLeave,
+    onDragLeaveCapture,
+    onDragOver,
+    onDragOverCapture,
+    onDragStart,
+    onDragStartCapture,
+    onDrop,
+    onDropCapture,
+    onDurationChange,
+    onDurationChangeCapture,
+    onEmptied,
+    onEmptiedCapture,
+    onEncrypted,
+    onEncryptedCapture,
+    onEnded,
+    onEndedCapture,
+    onError,
+    onErrorCapture,
+    onFocus,
+    onFocusCapture,
+    onGotPointerCapture,
+    onGotPointerCaptureCapture,
+    onInput,
+    onInputCapture,
+    onInvalid,
+    onInvalidCapture,
+    onKeyDown,
+    onKeyDownCapture,
+    onKeyUp,
+    onKeyUpCapture,
+    onLoad,
+    onLoadCapture,
+    onLoadStart,
+    onLoadStartCapture,
+    onLoadedData,
+    onLoadedDataCapture,
+    onLoadedMetadata,
+    onLoadedMetadataCapture,
+    onLostPointerCapture,
+    onLostPointerCaptureCapture,
+    onMouseDown,
+    onMouseDownCapture,
+    onMouseEnter,
+    onMouseLeave,
+    onMouseMove,
+    onMouseMoveCapture,
+    onMouseOut,
+    onMouseOutCapture,
+    onMouseOver,
+    onMouseOverCapture,
+    onMouseUp,
+    onMouseUpCapture,
+    onPaste,
+    onPasteCapture,
+    onPause,
+    onPauseCapture,
+    onPlay,
+    onPlayCapture,
+    onPlaying,
+    onPlayingCapture,
+    onPointerCancel,
+    onPointerCancelCapture,
+    onPointerDown,
+    onPointerDownCapture,
+    onPointerEnter,
+    onPointerEnterCapture,
+    onPointerLeave,
+    onPointerLeaveCapture,
+    onPointerMove,
+    onPointerMoveCapture,
+    onPointerOut,
+    onPointerOutCapture,
+    onPointerOver,
+    onPointerOverCapture,
+    onPointerUp,
+    onPointerUpCapture,
+    onProgress,
+    onProgressCapture,
+    onRateChange,
+    onRateChangeCapture,
+    onReset,
+    onResetCapture,
+    onResize: onResize2,
+    onResizeCapture,
+    onScroll: onScroll2,
+    onScrollCapture,
+    onSeeked,
+    onSeekedCapture,
+    onSeeking,
+    onSeekingCapture,
+    onSelect,
+    onSelectCapture,
+    onStalled,
+    onStalledCapture,
+    onSubmit,
+    onSubmitCapture,
+    onSuspend,
+    onSuspendCapture,
+    onTimeUpdate,
+    onTimeUpdateCapture,
+    onTouchCancel,
+    onTouchCancelCapture,
+    onTouchEnd,
+    onTouchEndCapture,
+    onTouchMove,
+    onTouchMoveCapture,
+    onTouchStart,
+    onTouchStartCapture,
+    onTransitionEnd,
+    onTransitionEndCapture,
+    onVolumeChange,
+    onVolumeChangeCapture,
+    onWaiting,
+    onWaitingCapture,
+    onWheel,
+    onWheelCapture
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/design/Window.tsx
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+function Window(props) {
+  const name = props.name;
+  const width = props.width;
+  const height = props.height;
+  const children = props.children;
+  const initSpring = props.initSpring ?? {};
+  const initStyle = props.initStyle ?? {};
+  const spring = {
     background: "#171717",
     padding: "40px",
     overflowX: "hidden",
     overflowY: "scroll",
-    minWidth: "256px",
     width,
-    height
+    height,
+    ...initSpring
   };
-  if (hasSteelFrameBorder) {
-    initStyle = {
-      ...initStyle,
-      borderWidth: "1px",
-      borderStyle: "solid",
-      borderImage: "linear-gradient(to bottom, transparent, #474647) 1"
-    };
-  }
-  function onmouseenter() {
-    const spring = {
-      width: "400px"
-    };
-    broadcast(`${name} render spring`, spring);
-  }
-  function onmouseleave() {
-    const spring = {};
-    broadcast(`${name} render spring`, spring);
-  }
-  return jsx_dev_runtime3.jsxDEV("div", {
-    style: { width: "auto", height: "auto" },
-    onMouseEnter: onmouseenter,
-    onMouseLeave: onmouseleave,
-    children: jsx_dev_runtime3.jsxDEV(Remote, {
-      name,
-      initSpring,
-      initStyle,
-      children
-    }, undefined, false, undefined, this)
+  const style = {
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderImage: "linear-gradient(to bottom, transparent, #474647) 1",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "start",
+    alignItems: "center",
+    ...initStyle
+  };
+  return jsx_dev_runtime4.jsxDEV(RemoteCol, {
+    name,
+    width,
+    height,
+    initSpring: spring,
+    initStyle: style
   }, undefined, false, undefined, this);
 }
 
 // code/build/DokaBuild/static/app/App.tsx
-var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
 render(createBrowserRouter([{
   path: "/",
-  element: jsx_dev_runtime4.jsxDEV("div", {
-    style: { width: "100vw", height: "100vh" },
-    children: jsx_dev_runtime4.jsxDEV(Window, {
+  element: jsx_dev_runtime5.jsxDEV("div", {
+    style: { width: "100vw", height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" },
+    children: jsx_dev_runtime5.jsxDEV(Window, {
       name: "steve",
-      width: "25px",
-      height: "50px",
-      hasSteelFrameBorder: true
+      width: "500px",
+      height: "500px"
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this)
 }]));
