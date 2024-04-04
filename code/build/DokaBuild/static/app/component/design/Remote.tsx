@@ -28,7 +28,66 @@ export function broadcast(event: string, ...params: any[]) {
     return network().emit(event, ...params);
 }
 
+namespace events {
+    export const network = (function() {
+        let self: EventEmitter;
+        return function() {
+            return self = self ?? new EventEmitter();
+        }
+    })();
 
+    export const ticket = (function() {
+        let self: {
+            next: typeof next;
+        };
+        let _next = 0n;
+        function next() {
+            _next += 1n;
+            return _next;
+        }
+        return function() {
+            return self = self ?? {next};
+        }
+    })();
+
+    // Graphic
+    export function renderSpring(id: string, spring: object) {
+        post(`${id} render spring`, spring);
+    }
+
+    export function renderStyle(id: string, style: CSSProperties) {
+        post(`${id} render style`, style);
+    }
+
+    export async function requestSpring(id: string) {
+        return new Promise(function(resolve) {
+            post(`${id} get spring`);
+
+            once(`${id} spring`, function(spring: object) {
+                resolve(spring);
+            });
+        });
+    }
+
+    // Common Use
+    export function on(signature: string, task: Function, context?: any) {
+        return network().addListener(signature, task, context);
+    }
+
+    export function clear(signature: string) {
+        return network().removeAllListeners(signature);
+    }
+
+    export function post(signature: string, ...args: any[]) {
+        return network().emit(signature, ...args);
+    }
+
+    export async function request(signature: string) {
+        return new Promise(function(resolve) {
+            
+        });
+    }
+}
 
 /**
  * -> A dynamic component that can render based on events on a selected

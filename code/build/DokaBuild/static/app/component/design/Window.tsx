@@ -1,6 +1,6 @@
 import Remote, {type IRemoteProps, broadcast, on, off} from "./Remote.tsx";
 import RemoteCol from "./RemoteCol.tsx";
-import React, {type CSSProperties} from "react";
+import React, {type CSSProperties, useEffect} from "react";
 
 export interface IWindowProps extends IRemoteProps {
     width: string;
@@ -29,12 +29,11 @@ export default function Window(props: IWindowProps) {
         borderImage: "linear-gradient(to bottom, transparent, #474647) 1",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "start",
+        justifyContent: "space-between",
         alignItems: "center",
         ...initStyle
     };
-
     return (
-        <RemoteCol name={name} width={width} height={height} initSpring={spring} initStyle={style as any}/>
+        <RemoteCol name={name} width={width} height={height} initSpring={spring as any} initStyle={style as any}/>
     );
 }

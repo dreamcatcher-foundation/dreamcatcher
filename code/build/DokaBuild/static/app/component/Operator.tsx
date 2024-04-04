@@ -10,128 +10,138 @@ import SteelTextSubHeading from "./design/SteelTextSubHeading.tsx";
 import RemoteButton1 from "./design/RemoteButton1.tsx";
 import RemoteButton2 from "./design/RemoteButton2.tsx";
 import Row from "./design/Row.tsx";
+import Col from "./design/Col.tsx";
+import SteelTextParagraph from "./design/SteelTextParagraph.tsx";
 
 enum WindowState {
     NONE,
     IDLE,
-    COLLECTING_DEPLOYMENT_DATA,
-    DEPLOYING,
+    SETTINGS,
     INSTALLATION,
+    DEPLOYING,
     YOU_ARE_ALL_SET_TO_GO
 }
 
-const browser = (function() {
-    let instance: {
-        save: typeof save;
-        load: typeof load;
-    };
-
-    function save(k: string, v: string) {
-        return localStorage.setItem(k, v);
-    }
-
-    function load(k: string) {
-        return localStorage.getItem(k);
-    }
-
-    return function() {
-        if (!instance) {
-            instance = {
-                save,
-                load
-            };
-        }
-        return instance;
-    }
-})();
-
-const animation = (function() {
-    let animationInstance: {
-        intro: typeof intro;
-        outro: typeof outro;
-    };
-
-    function intro() {
-        return "swing-in-top-fwd";
-    }
-
-    function outro() {
-        return "swing-out-top-bck";
-    }
-
-    return function() {
-        if (!animationInstance) animationInstance = {
-            intro,
-            outro
-        };
-        return animationInstance;
-    }
-})();
 
 
-interface IState {
-    from: Function;
-    to: Function;
+
+
+const introAnimation = "swing-in-top-fwd";
+const outroAnimation = "swing-out-top-bck";
+
+function saveToLocalStorage(k: string, v: string) {
+    return localStorage.setItem(k, v);
 }
 
-interface IStateMachine {
-    goto: (state: unknown) => any;
+function loadFromLocalStorage(k: string) {
+    return localStorage.getItem(k);
 }
+
+async function execute(name: string, fns: Function[], cooldown: bigint) {
+    const fnLength = fns.length;
+    let wait = 0n;
+    for (let i = 0; i < fnLength; i++) {
+        const fn = fns[i];
+        await new Promise(resolve => {
+            setTimeout(function() {
+                fn();
+                resolve(null);
+            }, Number(wait));
+        });
+        wait += cooldown;
+    }
+    await new Promise(resolve => {
+        setTimeout(function() {
+            broadcast(`${name} transition done`);
+            resolve(null);
+        }, Number(wait));
+    });
+}
+
+function push(name: string, component: JSX.Element) {
+    broadcast(`${name} pushBelow`, component);
+}
+
+function outro(name: string) {
+    broadcast(`${name} setClassName`, outroAnimation);
+}
+
+function wipe(name: string) {
+    broadcast(`${name} wipe`);
+}
+
+
+
+
+
+
+
 
 const window = (function() {
     let instance: {
         goto: typeof goto;
     };
+    let _state: WindowState = WindowState.NONE;
+
+    function Header(text: {text: string}) {
+        return (
+            <Remote name={"header"} initialClassName={introAnimation}>
+                <PurpleTextHeading text={"Scaling Dreams, Crafting Possibilities"} style={{}}/>
+            </Remote>
+        );
+    }
+
+    function includeButtonsSection() {
+        push(
+            "window",
+            <RemoteRow name={"buttonsSection"} width={"100%"} height={"auto"} initStyle={{gap: "20px"}}/>
+        );
+    }
+
+    function state() {
+        return _state;
+    }
 
     async function goto(to: WindowState) {
-        const from = await _loadState();
         switch (to) {
             case WindowState.IDLE:
                 _onDone(_toIdle);
-                _saveState(WindowState.IDLE);
                 break;
-            case WindowState.COLLECTING_DEPLOYMENT_DATA:
-                _onDone(_toCollectingDeploymentData);
-                _saveState(WindowState.COLLECTING_DEPLOYMENT_DATA);
-            break;
+            case WindowState.SETTINGS:
+                _onDone(toSettings);
+                break;
+            default:
+                _onDone(_toIdle);
+                break;
         }
-        switch (from) {
+        switch (state()) {
             case WindowState.NONE:
                 _done();
                 break;
             case WindowState.IDLE:
                 _fromIdle();
                 break;
+            case WindowState.SETTINGS:
+                _fromSettings();
+                break;
             default:
                 _done();
                 break;
         }
-    }
-
-    async function _fromIdle() {
-        execute("window", [
-            function() {
-                off("getStartedButton clicked");
-                off("learnMoreButton clicked");
-                broadcast("header setClassName", animation().outro());
-            },
-            function() {
-                broadcast("subHeader setClassName", animation().outro());
-            },
-            function() {
-                broadcast("getStartedButton setClassName", animation().outro());
-            },
-            function() {
-                broadcast("learnMoreButton setClassName", animation().outro());
-            },
-            function() {
-                broadcast("window wipe");
-            }
-        ], 100n);
+        _state = to;
+        console.log(state());
     }
 
     async function _toIdle() {
-        function randomSubHeading() {
+        function Header() {
+            return (
+                <Remote name={"header"} initialClassName={introAnimation}>
+                    <PurpleTextHeading text={"Scaling Dreams, Crafting Possibilities"} style={{}}/>
+                </Remote>
+            );
+        }
+
+        function SubHeader() {
             const subHeadings = [
                 "You won't need accountants where we are going",
                 "Do your client's trust you? They shouldn't have to",
@@ -152,72 +162,177 @@ const window = (function() {
             const subHeadingsLength = subHeadings.length;
             const randomSubHeadingIndex = Math.floor(Math.random() * subHeadingsLength);
             const randomSubHeading = subHeadings[randomSubHeadingIndex];
-            return randomSubHeading;
+            return (
+                <Remote name={"subHeader"} initialClassName={introAnimation} initStyle={{marginTop: "10px"}}>
+                    <SteelTextSubHeading text={randomSubHeading} style={{fontSize: "15px"}}/>
+                </Remote>
+            );
+        }
+        
+        execute("window", [
+            () => push("window", <Header/>),
+            () => push("window", <SubHeader/>),
+            () => push("window", <Row width={"100%"} height={"150px"}/>),
+            () => push("window", <RemoteRow name={"buttonsSection"} width={"100%"} height={"auto"} initStyle={{gap: "20px"}}/>),
+            () => push("buttonsSection", <RemoteButton1 name={"getStartedButton"} text={"Get Started"} initialClassName={introAnimation}/>),
+            () => push("buttonsSection", <RemoteButton2 name={"learnMoreButton"} text={"Learn More"} initialClassName={introAnimation}/>),
+            () => on("getStartedButton clicked", () => window().goto(WindowState.SETTINGS)),
+            () => on("learnMoreButton clicked", () => (window as any)?.open("https://dreamcatcher-1.gitbook.io/dreamcatcher/"))
+        ], 25n);
+    }
+
+    async function _fromIdle() {
+        execute("window", [
+            () => off("getStartedButton clicked"),
+            () => off("learnMoreButton clicked"),
+            () => outro("header"),
+            () => outro("subHeader"),
+            () => outro("getStartedButton"),
+            () => outro("learnMoreButton"),
+            () => wipe("window")
+        ], 25n);
+    }
+
+    type TComponent = JSX.Element | (JSX.Element)[];
+
+    function Settings() {
+        function Wrapper({children}: {children?: TComponent}) {
+            const wrapperWidth = "100%";
+            const wrapperHeight = "100%";
+            return <Col width={wrapperWidth} height={wrapperHeight}>{children}</Col>
+        }
+        function HeadingContainer({children}: {children?: TComponent}) {
+            const remoteName = "headerContainer";
+            return <Remote name={remoteName}>{children}</Remote>
+        }
+        function Heading({children}: {children?: TComponent}) {
+            const text = "Settings";
+            const style = {};
+            return <PurpleTextHeading text={text} style={style}/>
+        }
+        function SubHeadingContainer({children}: {children?: TComponentt}) {
+            
+        }
+        const remoteName = "header";
+        const headerText = "Settings";
+        const purpleTextHeadingStyle = {};
+        return (
+            <Wrapper>
+                <HeadingContainer><Heading/></HeadingContainer>
+            </Wrapper>
+        );
+    }
+
+    async function toSettings() {
+        function inputContainerStyle() {
+            return {
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "start",
+                alignItems: "start"
+            };
+        }
+
+        function inputStyle() {
+            return {
+                outline: "none",
+                background: "transparent"
+            };
+        }
+
+        function includeHeader() {
+            push(
+                "window", 
+                <Remote name={"header"} initialClassName={introAnimation}>
+                    <PurpleTextHeading text={"Settings"} style={{}}/>
+                </Remote>
+            );
+        }
+
+        function includeTokenNameInput() {
+            push(
+                "window",
+                <Remote name={"tokenNameInput"} initialClassName={introAnimation} initStyle={inputContainerStyle() as any}>
+                    <Row width={"100%"} height={"auto"}>
+                        <SteelTextParagraph text={"Token Name: "} style={{}}/>
+                        <input style={inputStyle()}/>
+                    </Row>
+                </Remote>
+            );
+        }
+
+        function includeTokenSymbolInput() {
+            push(
+                "window",
+                <input/>
+            );
+        }
+
+        function includeGap() {
+            push(
+                "window",
+                <Row width={"100%"} height={"150px"}/>
+            );
+        }
+
+        function includeOkButton() {
+            push(
+                "buttonsSection",
+                <RemoteButton1 name={"okButton"} text={"Ok"} initialClassName={introAnimation}/>
+            );
+        }
+
+        function includeImNotReadyYetButton() {
+            push(
+                "buttonsSection",
+                <RemoteButton2 name={"imNotReadyYetButton"} text={"I'm Not Ready Yet"} initialClassName={introAnimation}/>
+            );
+        }
+
+        function handleImNotReadyYetButton() {
+            on("imNotReadyYetButton clicked", () => window().goto(WindowState.IDLE));
+        }
+    
+        execute("window", [
+            includeHeader,
+            includeTokenNameInput,
+            includeTokenSymbolInput,
+            includeGap,
+            includeButtonsSection,
+            includeOkButton,
+            includeImNotReadyYetButton,
+            handleImNotReadyYetButton
+        ], 25n);
+    }
+
+    async function _fromSettings() {
+        function pauseButtonClickEvents() {
+            off("backButton clicked");
+        }
+
+        function outroHeader() {
+            broadcast("header setClassName", outroAnimation);
+        }
+
+        function outroOkButton() {
+            broadcast("okButton setClassName", outroAnimation);
+        }
+
+        function outroBackButton() {
+            broadcast("backButton setClassName", outroAnimation);
+        }
+
+        function wipe() {
+            broadcast("window wipe");
         }
 
         execute("window", [
-            function() {
-                broadcast("window pushBelow",
-                    <Remote name={"header"} initialClassName={animation().intro()}>
-                        <PurpleTextHeading text={"Scaling Dreams, Crafting Possibilities"} style={{}}/>
-                    </Remote>
-                );
-            },
-            function() {
-                broadcast("window pushBelow",
-                    <Remote name={"subHeader"} initialClassName={animation().intro()} initStyle={{marginTop: "10px"}}>
-                        <SteelTextSubHeading text={randomSubHeading()} style={{fontSize: "15px"}}/>
-                    </Remote>
-                );
-            },
-            function() {
-                broadcast("window pushBelow", 
-                    <Row width={"100%"} height={"150px"}/>
-                );
-            },
-            function() {
-                broadcast("window pushBelow",
-                    <RemoteRow name={"buttonsSection"} width={"100%"} height={"auto"} initStyle={{gap: "20px"}}/>
-                );
-            },
-            function() {
-                broadcast("buttonsSection pushBelow", 
-                    <RemoteButton1 name={"getStartedButton"} text={"Get Started"} initialClassName={animation().intro()}/>
-                );
-            },
-            function() {
-                broadcast("buttonsSection pushBelow", 
-                    <RemoteButton2 name={"learnMoreButton"} text={"Learn More"} initialClassName={animation().intro()}/>
-                );
-            },
-            function() {
-                on("getStartedButton clicked", function() {
-                    window().goto(WindowState.COLLECTING_DEPLOYMENT_DATA);
-                });
-                on("learnMoreButton clicked", function() {
-                    const url = "https://dreamcatcher-1.gitbook.io/dreamcatcher/";
-                    (window as any)?.open(url);
-                });
-            }
-        ], 100n);
-    }
-
-    async function _toCollectingDeploymentData() {
-        execute("window", [
-            function() {
-                broadcast("window pushBelow",
-                    <Remote name={"collectingDeploymentDataHeader"} initialClassName={animation().intro()}>
-                        <PurpleTextHeading text={"Let's Get Some Details"} style={{}}/>
-                    </Remote>
-                );
-            },
-            function() {
-                broadcast("window pushBelow",
-                    <Remote name={"collectingDeploymentDataDiamondName"}>
-                    </Remote>
-                );
-            }
-        ], 100n);
+            pauseButtonClickEvents,
+            outroHeader,
+            outroOkButton,
+            outroBackButton,
+            wipe
+        ], 25n);
     }
 
     async function _done() {
@@ -228,14 +343,24 @@ const window = (function() {
         once("window transition done", fn);
     }
 
-    async function _saveState(state: WindowState) {
-        return browser().save("windowState", state.toString());
+    function _pushToWindow(component: JSX.Element) {
+        broadcast("window pushBelow", component);
     }
 
-    async function _loadState() {
-        const loadedState = browser().load("windowState");
-        const from = Number((loadedState ?? WindowState.NONE));
-        return from;
+    function _intro(name: string) {
+        broadcast(`${name} setClassName`, introAnimation);
+    }
+
+    function _outro(name: string) {
+        broadcast(`${name} setClassName`, outroAnimation);
+    }
+
+    function _push(name: string, component: JSX.Element) {
+        broadcast(`${name} pushBelow`, component);
+    }
+
+    function _onClickOf(name: string, fn: Function) {
+        on(`${name} clicked`, fn);
     }
 
     return function() {
@@ -248,6 +373,12 @@ const window = (function() {
     }
 })();
 
+
+
+
+
+
+
 const page = (function() {
     let instance: {};
 
@@ -258,6 +389,13 @@ const page = (function() {
         return instance;
     }
 })();
+
+
+
+
+
+
+
 
 export const operator = (function() {
     let instance: any;
@@ -307,23 +445,3 @@ export const operator = (function() {
     }
 })();
 
-async function execute(name: string, fns: Function[], cooldown: bigint) {
-    const fnLength = fns.length;
-    let wait = 0n;
-    for (let i = 0; i < fnLength; i++) {
-        const fn = fns[i];
-        await new Promise(resolve => {
-            setTimeout(function() {
-                fn();
-                resolve(null);
-            }, Number(wait));
-        });
-        wait += cooldown;
-    }
-    await new Promise(resolve => {
-        setTimeout(function() {
-            broadcast(`${name} transition done`);
-            resolve(null);
-        }, Number(wait));
-    });
-}

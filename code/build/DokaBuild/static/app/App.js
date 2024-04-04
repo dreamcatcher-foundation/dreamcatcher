@@ -32440,7 +32440,7 @@ function Window(props) {
     borderImage: "linear-gradient(to bottom, transparent, #474647) 1",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "start",
+    justifyContent: "space-between",
     alignItems: "center",
     ...initStyle
   };
@@ -32603,8 +32603,17 @@ function Row(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/DokaBuild/static/app/component/Operator.tsx
+// code/build/DokaBuild/static/app/component/design/SteelTextParagraph.tsx
 var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+function SteelTextParagraph(props) {
+  return jsx_dev_runtime17.jsxDEV(SteelText, {
+    text: props.text,
+    style: props.style
+  }, undefined, false, undefined, this);
+}
+
+// code/build/DokaBuild/static/app/component/Operator.tsx
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 async function execute(name, fns, cooldown) {
   const fnLength = fns.length;
   let wait = 0n;
@@ -32625,99 +32634,91 @@ async function execute(name, fns, cooldown) {
     }, Number(wait));
   });
 }
+var push = function(name, component) {
+  broadcast(`${name} pushBelow`, component);
+};
+var outro = function(name) {
+  broadcast(`${name} setClassName`, outroAnimation);
+};
+var wipe = function(name) {
+  broadcast(`${name} wipe`);
+};
 var WindowState;
 (function(WindowState2) {
   WindowState2[WindowState2["NONE"] = 0] = "NONE";
   WindowState2[WindowState2["IDLE"] = 1] = "IDLE";
-  WindowState2[WindowState2["COLLECTING_DEPLOYMENT_DATA"] = 2] = "COLLECTING_DEPLOYMENT_DATA";
-  WindowState2[WindowState2["DEPLOYING"] = 3] = "DEPLOYING";
-  WindowState2[WindowState2["INSTALLATION"] = 4] = "INSTALLATION";
+  WindowState2[WindowState2["SETTINGS"] = 2] = "SETTINGS";
+  WindowState2[WindowState2["INSTALLATION"] = 3] = "INSTALLATION";
+  WindowState2[WindowState2["DEPLOYING"] = 4] = "DEPLOYING";
   WindowState2[WindowState2["YOU_ARE_ALL_SET_TO_GO"] = 5] = "YOU_ARE_ALL_SET_TO_GO";
 })(WindowState || (WindowState = {}));
-var browser = function() {
-  let instance;
-  function save(k, v) {
-    return localStorage.setItem(k, v);
-  }
-  function load(k) {
-    return localStorage.getItem(k);
-  }
-  return function() {
-    if (!instance) {
-      instance = {
-        save,
-        load
-      };
-    }
-    return instance;
-  };
-}();
-var animation = function() {
-  let animationInstance;
-  function intro() {
-    return "swing-in-top-fwd";
-  }
-  function outro() {
-    return "swing-out-top-bck";
-  }
-  return function() {
-    if (!animationInstance)
-      animationInstance = {
-        intro,
-        outro
-      };
-    return animationInstance;
-  };
-}();
+var introAnimation = "swing-in-top-fwd";
+var outroAnimation = "swing-out-top-bck";
 var window2 = function() {
   let instance;
+  let _state = WindowState.NONE;
+  function Header(text) {
+    return jsx_dev_runtime18.jsxDEV(Remote, {
+      name: "header",
+      initialClassName: introAnimation,
+      children: jsx_dev_runtime18.jsxDEV(PurpleTextHeading, {
+        text: "Scaling Dreams, Crafting Possibilities",
+        style: {}
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this);
+  }
+  function includeButtonsSection() {
+    push("window", jsx_dev_runtime18.jsxDEV(RemoteRow, {
+      name: "buttonsSection",
+      width: "100%",
+      height: "auto",
+      initStyle: { gap: "20px" }
+    }, undefined, false, undefined, this));
+  }
+  function state() {
+    return _state;
+  }
   async function goto(to2) {
-    const from = await _loadState();
     switch (to2) {
       case WindowState.IDLE:
         _onDone(_toIdle);
-        _saveState(WindowState.IDLE);
         break;
-      case WindowState.COLLECTING_DEPLOYMENT_DATA:
-        _onDone(_toCollectingDeploymentData);
-        _saveState(WindowState.COLLECTING_DEPLOYMENT_DATA);
+      case WindowState.SETTINGS:
+        _onDone(toSettings);
+        break;
+      default:
+        _onDone(_toIdle);
         break;
     }
-    switch (from) {
+    switch (state()) {
       case WindowState.NONE:
         _done();
         break;
       case WindowState.IDLE:
         _fromIdle();
         break;
+      case WindowState.SETTINGS:
+        _fromSettings();
+        break;
       default:
         _done();
         break;
     }
-  }
-  async function _fromIdle() {
-    execute("window", [
-      function() {
-        off("getStartedButton clicked");
-        off("learnMoreButton clicked");
-        broadcast("header setClassName", animation().outro());
-      },
-      function() {
-        broadcast("subHeader setClassName", animation().outro());
-      },
-      function() {
-        broadcast("getStartedButton setClassName", animation().outro());
-      },
-      function() {
-        broadcast("learnMoreButton setClassName", animation().outro());
-      },
-      function() {
-        broadcast("window wipe");
-      }
-    ], 100n);
+    _state = to2;
+    console.log(state());
   }
   async function _toIdle() {
-    function randomSubHeading() {
+    function Header2() {
+      return jsx_dev_runtime18.jsxDEV(Remote, {
+        name: "header",
+        initialClassName: introAnimation,
+        children: jsx_dev_runtime18.jsxDEV(PurpleTextHeading, {
+          text: "Scaling Dreams, Crafting Possibilities",
+          style: {}
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this);
+    }
+    function SubHeader() {
       const subHeadings = [
         "You won't need accountants where we are going",
         "Do your client's trust you? They shouldn't have to",
@@ -32737,88 +32738,160 @@ var window2 = function() {
       ];
       const subHeadingsLength = subHeadings.length;
       const randomSubHeadingIndex = Math.floor(Math.random() * subHeadingsLength);
-      const randomSubHeading2 = subHeadings[randomSubHeadingIndex];
-      return randomSubHeading2;
+      const randomSubHeading = subHeadings[randomSubHeadingIndex];
+      return jsx_dev_runtime18.jsxDEV(Remote, {
+        name: "subHeader",
+        initialClassName: introAnimation,
+        initStyle: { marginTop: "10px" },
+        children: jsx_dev_runtime18.jsxDEV(SteelTextSubHeading, {
+          text: randomSubHeading,
+          style: { fontSize: "15px" }
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this);
     }
     execute("window", [
-      function() {
-        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Remote, {
-          name: "header",
-          initialClassName: animation().intro(),
-          children: jsx_dev_runtime17.jsxDEV(PurpleTextHeading, {
-            text: "Scaling Dreams, Crafting Possibilities",
-            style: {}
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this));
-      },
-      function() {
-        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Remote, {
-          name: "subHeader",
-          initialClassName: animation().intro(),
-          initStyle: { marginTop: "10px" },
-          children: jsx_dev_runtime17.jsxDEV(SteelTextSubHeading, {
-            text: randomSubHeading(),
-            style: { fontSize: "15px" }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this));
-      },
-      function() {
-        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Row, {
-          width: "100%",
-          height: "150px"
-        }, undefined, false, undefined, this));
-      },
-      function() {
-        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(RemoteRow, {
-          name: "buttonsSection",
+      () => push("window", jsx_dev_runtime18.jsxDEV(Header2, {}, undefined, false, undefined, this)),
+      () => push("window", jsx_dev_runtime18.jsxDEV(SubHeader, {}, undefined, false, undefined, this)),
+      () => push("window", jsx_dev_runtime18.jsxDEV(Row, {
+        width: "100%",
+        height: "150px"
+      }, undefined, false, undefined, this)),
+      () => push("window", jsx_dev_runtime18.jsxDEV(RemoteRow, {
+        name: "buttonsSection",
+        width: "100%",
+        height: "auto",
+        initStyle: { gap: "20px" }
+      }, undefined, false, undefined, this)),
+      () => push("buttonsSection", jsx_dev_runtime18.jsxDEV(RemoteButton1, {
+        name: "getStartedButton",
+        text: "Get Started",
+        initialClassName: introAnimation
+      }, undefined, false, undefined, this)),
+      () => push("buttonsSection", jsx_dev_runtime18.jsxDEV(RemoteButton2, {
+        name: "learnMoreButton",
+        text: "Learn More",
+        initialClassName: introAnimation
+      }, undefined, false, undefined, this)),
+      () => on("getStartedButton clicked", () => window2().goto(WindowState.SETTINGS)),
+      () => on("learnMoreButton clicked", () => window2?.open("https://dreamcatcher-1.gitbook.io/dreamcatcher/"))
+    ], 25n);
+  }
+  async function _fromIdle() {
+    execute("window", [
+      () => off("getStartedButton clicked"),
+      () => off("learnMoreButton clicked"),
+      () => outro("header"),
+      () => outro("subHeader"),
+      () => outro("getStartedButton"),
+      () => outro("learnMoreButton"),
+      () => wipe("window")
+    ], 25n);
+  }
+  async function toSettings() {
+    function inputContainerStyle() {
+      return {
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "start",
+        alignItems: "start"
+      };
+    }
+    function inputStyle() {
+      return {
+        outline: "none",
+        background: "transparent"
+      };
+    }
+    function includeHeader() {
+      push("window", jsx_dev_runtime18.jsxDEV(Remote, {
+        name: "header",
+        initialClassName: introAnimation,
+        children: jsx_dev_runtime18.jsxDEV(PurpleTextHeading, {
+          text: "Settings",
+          style: {}
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this));
+    }
+    function includeTokenNameInput() {
+      push("window", jsx_dev_runtime18.jsxDEV(Remote, {
+        name: "tokenNameInput",
+        initialClassName: introAnimation,
+        initStyle: inputContainerStyle(),
+        children: jsx_dev_runtime18.jsxDEV(Row, {
           width: "100%",
           height: "auto",
-          initStyle: { gap: "20px" }
-        }, undefined, false, undefined, this));
-      },
-      function() {
-        broadcast("buttonsSection pushBelow", jsx_dev_runtime17.jsxDEV(RemoteButton1, {
-          name: "getStartedButton",
-          text: "Get Started",
-          initialClassName: animation().intro()
-        }, undefined, false, undefined, this));
-      },
-      function() {
-        broadcast("buttonsSection pushBelow", jsx_dev_runtime17.jsxDEV(RemoteButton2, {
-          name: "learnMoreButton",
-          text: "Learn More",
-          initialClassName: animation().intro()
-        }, undefined, false, undefined, this));
-      },
-      function() {
-        on("getStartedButton clicked", function() {
-          window2().goto(WindowState.COLLECTING_DEPLOYMENT_DATA);
-        });
-        on("learnMoreButton clicked", function() {
-          const url = "https://dreamcatcher-1.gitbook.io/dreamcatcher/";
-          window2?.open(url);
-        });
-      }
-    ], 100n);
-  }
-  async function _toCollectingDeploymentData() {
+          children: [
+            jsx_dev_runtime18.jsxDEV(SteelTextParagraph, {
+              text: "Token Name: ",
+              style: {}
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime18.jsxDEV("input", {
+              style: inputStyle()
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      }, undefined, false, undefined, this));
+    }
+    function includeTokenSymbolInput() {
+      push("window", jsx_dev_runtime18.jsxDEV("input", {}, undefined, false, undefined, this));
+    }
+    function includeGap() {
+      push("window", jsx_dev_runtime18.jsxDEV(Row, {
+        width: "100%",
+        height: "150px"
+      }, undefined, false, undefined, this));
+    }
+    function includeOkButton() {
+      push("buttonsSection", jsx_dev_runtime18.jsxDEV(RemoteButton1, {
+        name: "okButton",
+        text: "Ok",
+        initialClassName: introAnimation
+      }, undefined, false, undefined, this));
+    }
+    function includeImNotReadyYetButton() {
+      push("buttonsSection", jsx_dev_runtime18.jsxDEV(RemoteButton2, {
+        name: "imNotReadyYetButton",
+        text: "I'm Not Ready Yet",
+        initialClassName: introAnimation
+      }, undefined, false, undefined, this));
+    }
+    function handleImNotReadyYetButton() {
+      on("imNotReadyYetButton clicked", () => window2().goto(WindowState.IDLE));
+    }
     execute("window", [
-      function() {
-        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Remote, {
-          name: "collectingDeploymentDataHeader",
-          initialClassName: animation().intro(),
-          children: jsx_dev_runtime17.jsxDEV(PurpleTextHeading, {
-            text: "Let's Get Some Details",
-            style: {}
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this));
-      },
-      function() {
-        broadcast("window pushBelow", jsx_dev_runtime17.jsxDEV(Remote, {
-          name: "collectingDeploymentDataDiamondName"
-        }, undefined, false, undefined, this));
-      }
-    ], 100n);
+      includeHeader,
+      includeTokenNameInput,
+      includeTokenSymbolInput,
+      includeGap,
+      includeButtonsSection,
+      includeOkButton,
+      includeImNotReadyYetButton,
+      handleImNotReadyYetButton
+    ], 25n);
+  }
+  async function _fromSettings() {
+    function pauseButtonClickEvents() {
+      off("backButton clicked");
+    }
+    function outroHeader() {
+      broadcast("header setClassName", outroAnimation);
+    }
+    function outroOkButton() {
+      broadcast("okButton setClassName", outroAnimation);
+    }
+    function outroBackButton() {
+      broadcast("backButton setClassName", outroAnimation);
+    }
+    function wipe2() {
+      broadcast("window wipe");
+    }
+    execute("window", [
+      pauseButtonClickEvents,
+      outroHeader,
+      outroOkButton,
+      outroBackButton,
+      wipe2
+    ], 25n);
   }
   async function _done() {
     broadcast("window transition done");
@@ -32826,13 +32899,20 @@ var window2 = function() {
   async function _onDone(fn) {
     once2("window transition done", fn);
   }
-  async function _saveState(state) {
-    return browser().save("windowState", state.toString());
+  function _pushToWindow(component) {
+    broadcast("window pushBelow", component);
   }
-  async function _loadState() {
-    const loadedState = browser().load("windowState");
-    const from = Number(loadedState ?? WindowState.NONE);
-    return from;
+  function _intro(name) {
+    broadcast(`${name} setClassName`, introAnimation);
+  }
+  function _outro(name) {
+    broadcast(`${name} setClassName`, outroAnimation);
+  }
+  function _push(name, component) {
+    broadcast(`${name} pushBelow`, component);
+  }
+  function _onClickOf(name, fn) {
+    on(`${name} clicked`, fn);
   }
   return function() {
     if (!instance) {
@@ -32843,16 +32923,25 @@ var window2 = function() {
     return instance;
   };
 }();
+var page = function() {
+  let instance;
+  return function() {
+    if (!instance) {
+      return instance = {};
+    }
+    return instance;
+  };
+}();
 var operator = function() {
   let instance;
   let _delay = 50;
   _enterHomePageSubProcess();
   function _enterHomePageSubProcess() {
     _exec(function() {
-      broadcast("page pushBelow", jsx_dev_runtime17.jsxDEV(Background, {}, undefined, false, undefined, this));
-      broadcast("page pushBelow", jsx_dev_runtime17.jsxDEV(Layer, {
+      broadcast("page pushBelow", jsx_dev_runtime18.jsxDEV(Background, {}, undefined, false, undefined, this));
+      broadcast("page pushBelow", jsx_dev_runtime18.jsxDEV(Layer, {
         zIndex: "2000",
-        children: jsx_dev_runtime17.jsxDEV(RemoteCol, {
+        children: jsx_dev_runtime18.jsxDEV(RemoteCol, {
           name: "layer",
           width: "100%",
           height: "100%"
@@ -32860,7 +32949,7 @@ var operator = function() {
       }, undefined, false, undefined, this));
     });
     _exec(function() {
-      broadcast("layer pushBelow", jsx_dev_runtime17.jsxDEV(Window, {
+      broadcast("layer pushBelow", jsx_dev_runtime18.jsxDEV(Window, {
         name: "window",
         width: "450px",
         height: "450px"
@@ -32881,11 +32970,11 @@ var operator = function() {
 }();
 
 // code/build/DokaBuild/static/app/App.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 operator();
 render(createBrowserRouter([{
   path: "/",
-  element: jsx_dev_runtime18.jsxDEV(RemotePage, {
+  element: jsx_dev_runtime19.jsxDEV(RemotePage, {
     initialPages: 1
   }, undefined, false, undefined, this)
 }]));
