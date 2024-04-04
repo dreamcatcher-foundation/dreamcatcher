@@ -5,10 +5,11 @@ import React, {useEffect, useState} from "react";
 export interface RColProps extends RemoteProps {
     width: string;
     height: string;
+    cooldown?: number;
 }
 
 export default function RCol(props: RColProps) {
-    const {
+    let {
         name,
         spring,
         style,
@@ -16,8 +17,10 @@ export default function RCol(props: RColProps) {
         className,
         width,
         height,
+        cooldown,
         ...other
     } = props;
+    cooldown = cooldown ?? 0;
     const remoteSpring = {
         width: width,
         height: height,
@@ -115,10 +118,33 @@ export default function RCol(props: RColProps) {
                 }
             }
         });
+        if (children) {
+            try {
+                const childrenLength = (children as any).length;
+                let wait = 0;
+                for (let i = 0; i < childrenLength; i++) {
+                    const child = children[i] as JSX.Element;
+                    setTimeout(function() {
+                        stream.post({event: `${name} pushBelow`, data: child});
+                    }, wait);
+                    wait += cooldown!;
+                }
+            }
+            catch {
+                stream.post({event: `${name} pushBelow`, data: children});
+            }
+        }
         return function() {
             stream.wipe({event: `${name} pushBelow`});
             stream.wipe({event: `${name} pushAboveLastItem`});
-            // TODO
+            stream.wipe({event: `${name} pushAbove`});
+            stream.wipe({event: `${name} pushBetween`});
+            stream.wipe({event: `${name} pullBelow`});
+            stream.wipe({event: `${name} pullAbove`});
+            stream.wipe({event: `${name} pull`});
+            stream.wipe({event: `${name} wipe`});
         }
     }, []);
+
+    return <Remote name={name} spring={remoteSpring} style={remoteStyle as any} children={onScreen} {...other}/>
 }
