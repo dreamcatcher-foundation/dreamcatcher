@@ -1,1 +1,0 @@
-Remote components can interact directly with the stream which means that they can be interacted with anywhere on the application by posting or subscribing to the stream.

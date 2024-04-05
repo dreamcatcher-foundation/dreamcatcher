@@ -14,19 +14,14 @@ export default function RemoteContainer({tag, spring = {}, style = {}, direction
     const [pushed, setPushed] = useState([] as number[]);
     useEffect(function() {
         const pushBelowEvent = `${tag} pushBelow`;
-        const pushAboveLastItemEvent = `${tag} pushAboveLastItem`;
         const pushAboveEvent = `${tag} pushAbove`;
-        const pushBetweenEvent = `${tag} pushBetween`;
         const pullBelowEvent = `${tag} pullBelow`;
         const pullAboveEvent = `${tag} pullAbove`;
-        const pullEvent = `${tag} pull`;
         const wipeEvent = `${tag} wipe`;
         function handlePushBelowEvent(item: JSX.Element) {
             setOnScreen(old => [...old, item]);
         }
-        function handlePushAboveLastItemEvent(item: JSX.Element) {}
         function handlePushAboveEvent(item: JSX.Element) {}
-        function handlePushBetweenEvent(item: JSX.Element) {}
         function handlePullBelowEvent() {
             const items = onScreen;
             items.pop();
@@ -35,11 +30,6 @@ export default function RemoteContainer({tag, spring = {}, style = {}, direction
         function handlePullAboveEvent() {
             const items = onScreen;
             items.shift();
-            setOnScreen([...items]);
-        }
-        function handlePullEvent(position: number) {
-            const items = onScreen;
-            items.splice(position, 1);
             setOnScreen([...items]);
         }
         function handleWipeEvent() {
@@ -51,12 +41,9 @@ export default function RemoteContainer({tag, spring = {}, style = {}, direction
             }
         }
         stream.subscribe({event: pushBelowEvent, task: handlePushBelowEvent});
-        stream.subscribe({event: pushAboveLastItemEvent, task: handlePushAboveLastItemEvent});
         stream.subscribe({event: pushAboveEvent, task: handlePushAboveEvent});
-        stream.subscribe({event: pushBetweenEvent, task: handlePushBetweenEvent});
         stream.subscribe({event: pullBelowEvent, task: handlePullBelowEvent});
         stream.subscribe({event: pullAboveEvent, task: handlePullAboveEvent});
-        stream.subscribe({event: pullEvent, task: handlePullEvent});
         stream.subscribe({event: wipeEvent, task: handleWipeEvent});
         setTimeout(function() {
             function hasBeenPushed(position: number) {
@@ -86,12 +73,9 @@ export default function RemoteContainer({tag, spring = {}, style = {}, direction
         }, delay);
         function cleanup() {
             stream.wipe({event: pushBelowEvent});
-            stream.wipe({event: pushAboveLastItemEvent});
             stream.wipe({event: pushAboveEvent});
-            stream.wipe({event: pushBetweenEvent});
             stream.wipe({event: pullBelowEvent});
             stream.wipe({event: pullAboveEvent});
-            stream.wipe({event: pullEvent});
             stream.wipe({event: wipeEvent});
         }
         return cleanup;
