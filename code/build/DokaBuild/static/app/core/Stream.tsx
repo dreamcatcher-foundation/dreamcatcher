@@ -17,7 +17,7 @@ export namespace stream {
     }
     export function swapBelow({tag, item}: {tag: string; item: JSX.Element;}) {
         pullBelow({tag: tag});
-        return pushBelow({tag: tag, item: item});
+        return setTimeout(() => pushBelow({tag: tag, item: item}), 0);
     }
     export function pushAbove({tag, item}: {tag: string; item: JSX.Element;}) {
         return post({event: `${tag} pushAbove`, data: item});
@@ -27,7 +27,7 @@ export namespace stream {
     }
     export function swapAbove({tag, item}: {tag: string; item: JSX.Element;}) {
         pullAbove({tag: tag});
-        return pushAbove({tag: tag, item: item});
+        return setTimeout(() => pushAbove({tag: tag, item: item}), 0);
     }
     export function wipeContainer({tag}: {tag: string;}) {
         post({event: `${tag} wipe`});

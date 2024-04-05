@@ -19,7 +19,10 @@ export default function RemoteContainer({tag, spring = {}, style = {}, direction
         const pullAboveEvent = `${tag} pullAbove`;
         const wipeEvent = `${tag} wipe`;
         function handlePushBelowEvent(item: JSX.Element) {
-            setOnScreen(old => [...old, item]);
+            const items = onScreen;
+            items.push(item);
+            setOnScreen([...items]);
+            console.log(...items);
         }
         function handlePushAboveEvent(item: JSX.Element) {}
         function handlePullBelowEvent() {

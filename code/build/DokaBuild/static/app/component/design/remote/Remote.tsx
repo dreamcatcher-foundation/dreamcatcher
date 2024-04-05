@@ -1,6 +1,6 @@
 import {stream} from "../../../core/Stream.tsx";
 import React, {type CSSProperties, useEffect, useState} from "react";
-import {type SpringProps, animated, useSpring} from "react-spring";
+import {type SpringProps, animated, useSpring, config} from "react-spring";
 export default function Remote({tag, spring = {}, style = {}, classname = "", children = [], ...more}: {tag: string; spring?: SpringProps; style?: CSSProperties; classname?: string; children?: JSX.Element | (JSX.Element)[]; [key: string]: any;}) {
     const [spring_, setSpring] = useState<SpringProps[]>([{}, {}]);
     const [style_, setStyle] = useState<CSSProperties>({});
@@ -32,5 +32,5 @@ export default function Remote({tag, spring = {}, style = {}, classname = "", ch
         }
         return cleanup;
     }, []);
-    return <animated.div className={classname_} style={{...useSpring({from: spring_[0], to: spring_[1]}), ...style_}} {...more} children={children}/>
+    return <animated.div className={classname_} style={{...useSpring({from: spring_[0], to: spring_[1], config: config.default}), ...style_}} {...more} children={children}/>
 }
