@@ -1,14 +1,14 @@
 import {stream} from "../../../core/Stream.tsx";
-import Remote, {type RemoteProps} from "./Remote.tsx";
+import Remote, {type RemoteProps} from "./2.tsx";
 import React, {useEffect, useState} from "react";
 
-export interface RColProps extends RemoteProps {
+export interface RemoteRowProps extends RemoteProps {
     width: string;
     height: string;
     cooldown?: number;
 }
 
-export default function RCol(props: RColProps) {
+export default function RemoteRow(props: RemoteRowProps) {
     let {
         name,
         spring,
@@ -28,12 +28,13 @@ export default function RCol(props: RColProps) {
     };
     const remoteStyle = {
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         ...style
     };
     const [onScreen, setOnScreen] = useState([] as (JSX.Element)[]);
+
     useEffect(function() {
         stream.subscribe({
             event: `${name} pushBelow`,
@@ -43,6 +44,7 @@ export default function RCol(props: RColProps) {
                 setOnScreen([...items]);
             }
         });
+        
         stream.subscribe({
             event: `${name} pushAboveLastItem`,
             task: function(item: JSX.Element) {
@@ -55,6 +57,7 @@ export default function RCol(props: RColProps) {
                 setOnScreen([...items]);
             }
         });
+
         stream.subscribe({
             event: `${name} pushAbove`,
             task: function(item: JSX.Element) {
@@ -65,6 +68,7 @@ export default function RCol(props: RColProps) {
                 setOnScreen([...copy]);
             }
         });
+
         stream.subscribe({
             event: `${name} pushBetween`,
             task: function(item: JSX.Element, position: number) {
@@ -83,6 +87,7 @@ export default function RCol(props: RColProps) {
                 setOnScreen(copy);
             }
         });
+
         stream.subscribe({
             event: `${name} pullBelow`,
             task: function() {
@@ -91,6 +96,7 @@ export default function RCol(props: RColProps) {
                 setOnScreen([...items]);
             }
         });
+
         stream.subscribe({
             event: `${name} pullAbove`,
             task: function() {
@@ -99,6 +105,7 @@ export default function RCol(props: RColProps) {
                 setOnScreen([...items]);
             }
         });
+
         stream.subscribe({
             event: `${name} pull`,
             task: function(position: number) {
@@ -107,6 +114,7 @@ export default function RCol(props: RColProps) {
                 setOnScreen([...items]);
             }
         });
+
         stream.subscribe({
             event: `${name} wipe`,
             task: function() {
@@ -118,6 +126,7 @@ export default function RCol(props: RColProps) {
                 }
             }
         });
+
         if (children) {
             try {
                 const childrenLength = (children as any).length;
@@ -134,6 +143,7 @@ export default function RCol(props: RColProps) {
                 stream.post({event: `${name} pushBelow`, data: children});
             }
         }
+        
         return function() {
             stream.wipe({event: `${name} pushBelow`});
             stream.wipe({event: `${name} pushAboveLastItem`});

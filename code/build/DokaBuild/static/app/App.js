@@ -27970,7 +27970,92 @@ function render(router3) {
   }, undefined, false, undefined, this));
 }
 
-// code/build/DokaBuild/static/app/component/design/Remote.tsx
+// code/build/DokaBuild/static/app/core/Stream.tsx
+var import_fbemitter = __toESM(require_fbemitter(), 1);
+var stream;
+(function(stream) {
+  stream.network = function() {
+    let self;
+    return function() {
+      return self = self ?? new import_fbemitter.EventEmitter;
+    };
+  }();
+  function pushBelow({ tag, item }) {
+    post({ event: `${tag} pushBelow`, data: item });
+  }
+  stream.pushBelow = pushBelow;
+  function pushAboveLastItem({ tag, item }) {
+    post({ event: `${tag} pushAboveLastItem`, data: item });
+  }
+  stream.pushAboveLastItem = pushAboveLastItem;
+  function pushAbove({ tag, item }) {
+    post({ event: `${tag} pushAbove`, data: item });
+  }
+  stream.pushAbove = pushAbove;
+  function pushBetween({ tag, item }) {
+    post({ event: `${tag} pushBetween`, data: item });
+  }
+  stream.pushBetween = pushBetween;
+  function pullBelow({ tag }) {
+    post({ event: `${tag} pullBelow` });
+  }
+  stream.pullBelow = pullBelow;
+  function pullAbove({ tag, item }) {
+    post({ event: `${tag} pullAbove`, data: item });
+  }
+  stream.pullAbove = pullAbove;
+  function pull({ tag, position }) {
+    post({ event: `${tag} pull`, data: position });
+  }
+  stream.pull = pull;
+  function renderSpring({ tag, spring }) {
+    post({ event: `${tag} render spring`, data: spring });
+  }
+  stream.renderSpring = renderSpring;
+  function renderStyle({ tag, style }) {
+    post({ event: `${tag} render style`, data: style });
+  }
+  stream.renderStyle = renderStyle;
+  async function get({ tag, property }) {
+    const requestEvent = `${tag} get ${property}`;
+    const receiveEvent = `${tag} ${property}`;
+    return new Promise(function(resolve) {
+      once({
+        event: receiveEvent,
+        task: function(data) {
+          resolve(data);
+        }
+      });
+      post({ event: requestEvent });
+    });
+  }
+  stream.get = get;
+  async function set({ tag, property, data }) {
+    post({ event: `${tag} set ${property}`, data });
+  }
+  stream.set = set;
+  function subscribe({ event, task, context }) {
+    return stream.network().addListener(event, task, context);
+  }
+  stream.subscribe = subscribe;
+  function once({ event, task, context }) {
+    return stream.network().once(event, task, context);
+  }
+  stream.once = once;
+  function wipe({ event }) {
+    return stream.network().removeAllListeners(event);
+  }
+  stream.wipe = wipe;
+  function post({ event, data }) {
+    return stream.network().emit(event, data);
+  }
+  stream.post = post;
+})(stream || (stream = {}));
+
+// code/build/DokaBuild/static/app/component/design/remote/RemoteContainer.tsx
+var import_react17 = __toESM(require_react(), 1);
+
+// code/build/DokaBuild/static/app/component/design/remote/Remote.tsx
 var import_react16 = __toESM(require_react(), 1);
 
 // node_modules/@react-spring/shared/dist/react-spring_shared.modern.mjs
@@ -31069,1912 +31154,175 @@ var host = createHost(primitives, {
   getComponentProps: ({ scrollTop, scrollLeft, ...props }) => props
 });
 var animated6 = host.animated;
-// code/build/DokaBuild/static/app/component/design/Remote.tsx
-var import_fbemitter = __toESM(require_fbemitter(), 1);
+// code/build/DokaBuild/static/app/component/design/remote/Remote.tsx
 var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
-function on(event, listener, context) {
-  return network().addListener(event, listener, context);
-}
-function off(event) {
-  return network().removeAllListeners(event);
-}
-function once2(event, listener, context) {
-  return network().once(event, listener, context);
-}
-function broadcast(event, ...params) {
-  return network().emit(event, ...params);
-}
-var network = function() {
-  let self;
-  return function() {
-    if (!self) {
-      self = new import_fbemitter.EventEmitter;
-    }
-    return self;
-  };
-}();
-function Remote(props) {
-  function doNothing() {
-  }
-  const name = props.name;
-  const initSpring = props.initSpring ?? {};
-  const initStyle = props.initStyle ?? {};
-  const children = props.children;
-  const initialClassName = props.initialClassName ?? "";
-  const onAbort = props.onAbort ?? doNothing;
-  const onAbortCapture = props.onAbort ?? doNothing;
-  const onAnimationEnd = props.onAnimationEnd ?? doNothing;
-  const onAnimationEndCapture = props.onAnimationEndCapture ?? doNothing;
-  const onAnimationIteration = props.onAnimationIteration ?? doNothing;
-  const onAnimationIterationCapture = props.onAnimationIterationCapture ?? doNothing;
-  const onAnimationStart = props.onAnimationStart ?? doNothing;
-  const onAnimationStartCapture = props.onAnimationStartCapture ?? doNothing;
-  const onAuxClick = props.onAuxClick ?? doNothing;
-  const onAuxClickCapture = props.onAuxClickCapture ?? doNothing;
-  const onBeforeInput = props.onBeforeInput ?? doNothing;
-  const onBeforeInputCapture = props.onBeforeInputCapture ?? doNothing;
-  const onBlur = props.onBlur ?? doNothing;
-  const onBlurCapture = props.onBlurCapture ?? doNothing;
-  const onCanPlay = props.onCanPlay ?? doNothing;
-  const onCanPlayCapture = props.onCanPlayCapture ?? doNothing;
-  const onCanPlayThrough = props.onCanPlayThrough ?? doNothing;
-  const onCanPlayThroughCapture = props.onCanPlayThroughCapture ?? doNothing;
-  const onChange = props.onChange ?? doNothing;
-  const onChangeCapture = props.onChangeCapture ?? doNothing;
-  const onClick = props.onClick ?? doNothing;
-  const onClickCapture = props.onClickCapture ?? doNothing;
-  const onCompositionEnd = props.onCompositionEnd ?? doNothing;
-  const onCompositionEndCapture = props.onCompositionEndCapture ?? doNothing;
-  const onCompositionStart = props.onCompositionStart ?? doNothing;
-  const onCompositionStartCapture = props.onCompositionStartCapture ?? doNothing;
-  const onCompositionUpdate = props.onCompositionUpdate ?? doNothing;
-  const onCompositionUpdateCapture = props.onCompositionUpdateCapture ?? doNothing;
-  const onContextMenu = props.onContextMenu ?? doNothing;
-  const onContextMenuCapture = props.onContextMenuCapture ?? doNothing;
-  const onCopy = props.onCopy ?? doNothing;
-  const onCopyCapture = props.onCopyCapture ?? doNothing;
-  const onCut = props.onCut ?? doNothing;
-  const onCutCapture = props.onCutCapture ?? doNothing;
-  const onDoubleClick = props.onDoubleClick ?? doNothing;
-  const onDoubleClickCapture = props.onDoubleClickCapture ?? doNothing;
-  const onDrag = props.onDrag ?? doNothing;
-  const onDragCapture = props.onDragCapture ?? doNothing;
-  const onDragEnd = props.onDragEnd ?? doNothing;
-  const onDragEndCapture = props.onDragEndCapture ?? doNothing;
-  const onDragEnter = props.onDragEnter ?? doNothing;
-  const onDragEnterCapture = props.onDragEnterCapture ?? doNothing;
-  const onDragExit = props.onDragExit ?? doNothing;
-  const onDragExitCapture = props.onDragExitCapture ?? doNothing;
-  const onDragLeave = props.onDragLeave ?? doNothing;
-  const onDragLeaveCapture = props.onDragLeaveCapture ?? doNothing;
-  const onDragOver = props.onDragOver ?? doNothing;
-  const onDragOverCapture = props.onDragOverCapture ?? doNothing;
-  const onDragStart = props.onDragStart ?? doNothing;
-  const onDragStartCapture = props.onDragStartCapture ?? doNothing;
-  const onDrop = props.onDrop ?? doNothing;
-  const onDropCapture = props.onDropCapture ?? doNothing;
-  const onDurationChange = props.onDurationChange ?? doNothing;
-  const onDurationChangeCapture = props.onDurationChangeCapture ?? doNothing;
-  const onEmptied = props.onEmptied ?? doNothing;
-  const onEmptiedCapture = props.onEmptiedCapture ?? doNothing;
-  const onEncrypted = props.onEncrypted ?? doNothing;
-  const onEncryptedCapture = props.onEncryptedCapture ?? doNothing;
-  const onEnded = props.onEnded ?? doNothing;
-  const onEndedCapture = props.onEndedCapture ?? doNothing;
-  const onError = props.onError ?? doNothing;
-  const onErrorCapture = props.onErrorCapture ?? doNothing;
-  const onFocus = props.onFocus ?? doNothing;
-  const onFocusCapture = props.onFocusCapture ?? doNothing;
-  const onGotPointerCapture = props.onGotPointerCapture ?? doNothing;
-  const onGotPointerCaptureCapture = props.onGotPointerCaptureCapture ?? doNothing;
-  const onInput = props.onInput ?? doNothing;
-  const onInputCapture = props.onInputCapture ?? doNothing;
-  const onInvalid = props.onInvalid ?? doNothing;
-  const onInvalidCapture = props.onInvalidCapture ?? doNothing;
-  const onKeyDown = props.onKeyDown ?? doNothing;
-  const onKeyDownCapture = props.onKeyDownCapture ?? doNothing;
-  const onKeyUp = props.onKeyUp ?? doNothing;
-  const onKeyUpCapture = props.onKeyUpCapture ?? doNothing;
-  const onLoad = props.onLoad ?? doNothing;
-  const onLoadCapture = props.onLoadCapture ?? doNothing;
-  const onLoadStart = props.onLoadStart ?? doNothing;
-  const onLoadStartCapture = props.onLoadStartCapture ?? doNothing;
-  const onLoadedData = props.onLoadedData ?? doNothing;
-  const onLoadedDataCapture = props.onLoadedDataCapture ?? doNothing;
-  const onLoadedMetadata = props.onLoadedMetadata ?? doNothing;
-  const onLoadedMetadataCapture = props.onLoadedMetadataCapture ?? doNothing;
-  const onLostPointerCapture = props.onLostPointerCapture ?? doNothing;
-  const onLostPointerCaptureCapture = props.onLostPointerCaptureCapture ?? doNothing;
-  const onMouseDown = props.onMouseDown ?? doNothing;
-  const onMouseDownCapture = props.onMouseDownCapture ?? doNothing;
-  const onMouseEnter = props.onMouseEnter ?? doNothing;
-  const onMouseLeave = props.onMouseLeave ?? doNothing;
-  const onMouseMove = props.onMouseMove ?? doNothing;
-  const onMouseMoveCapture = props.onMouseMoveCapture ?? doNothing;
-  const onMouseOut = props.onMouseOut ?? doNothing;
-  const onMouseOutCapture = props.onMouseOutCapture ?? doNothing;
-  const onMouseOver = props.onMouseOver ?? doNothing;
-  const onMouseOverCapture = props.onMouseOverCapture ?? doNothing;
-  const onMouseUp = props.onMouseUp ?? doNothing;
-  const onMouseUpCapture = props.onMouseUpCapture ?? doNothing;
-  const onPaste = props.onPaste ?? doNothing;
-  const onPasteCapture = props.onPasteCapture ?? doNothing;
-  const onPause = props.onPause ?? doNothing;
-  const onPauseCapture = props.onPauseCapture ?? doNothing;
-  const onPlay = props.onPlay ?? doNothing;
-  const onPlayCapture = props.onPlayCapture ?? doNothing;
-  const onPlaying = props.onPlaying ?? doNothing;
-  const onPlayingCapture = props.onPlayingCapture ?? doNothing;
-  const onPointerCancel = props.onPointerCancel ?? doNothing;
-  const onPointerCancelCapture = props.onPointerCancelCapture ?? doNothing;
-  const onPointerDown = props.onPointerDown ?? doNothing;
-  const onPointerDownCapture = props.onPointerDownCapture ?? doNothing;
-  const onPointerEnter = props.onPointerEnter ?? doNothing;
-  const onPointerEnterCapture = props.onPointerEnterCapture ?? doNothing;
-  const onPointerLeave = props.onPointerLeave ?? doNothing;
-  const onPointerLeaveCapture = props.onPointerLeaveCapture ?? doNothing;
-  const onPointerMove = props.onPointerMove ?? doNothing;
-  const onPointerMoveCapture = props.onPointerMoveCapture ?? doNothing;
-  const onPointerOut = props.onPointerOut ?? doNothing;
-  const onPointerOutCapture = props.onPointerOutCapture ?? doNothing;
-  const onPointerOver = props.onPointerOver ?? doNothing;
-  const onPointerOverCapture = props.onPointerOverCapture ?? doNothing;
-  const onPointerUp = props.onPointerUp ?? doNothing;
-  const onPointerUpCapture = props.onPointerUpCapture ?? doNothing;
-  const onProgress = props.onProgress ?? doNothing;
-  const onProgressCapture = props.onProgressCapture ?? doNothing;
-  const onRateChange = props.onRateChange ?? doNothing;
-  const onRateChangeCapture = props.onRateChangeCapture ?? doNothing;
-  const onReset = props.onReset ?? doNothing;
-  const onResetCapture = props.onResetCapture ?? doNothing;
-  const onResize2 = props.onResize ?? doNothing;
-  const onResizeCapture = props.onResizeCapture ?? doNothing;
-  const onScroll2 = props.onScroll ?? doNothing;
-  const onScrollCapture = props.onScrollCapture ?? doNothing;
-  const onSeeked = props.onSeeked ?? doNothing;
-  const onSeekedCapture = props.onSeekedCapture ?? doNothing;
-  const onSeeking = props.onSeeking ?? doNothing;
-  const onSeekingCapture = props.onSeekingCapture ?? doNothing;
-  const onSelect = props.onSelect ?? doNothing;
-  const onSelectCapture = props.onSelectCapture ?? doNothing;
-  const onStalled = props.onStalled ?? doNothing;
-  const onStalledCapture = props.onStalledCapture ?? doNothing;
-  const onSubmit = props.onSubmit ?? doNothing;
-  const onSubmitCapture = props.onSubmitCapture ?? doNothing;
-  const onSuspend = props.onSuspend ?? doNothing;
-  const onSuspendCapture = props.onSuspendCapture ?? doNothing;
-  const onTimeUpdate = props.onTimeUpdate ?? doNothing;
-  const onTimeUpdateCapture = props.onTimeUpdateCapture ?? doNothing;
-  const onTouchCancel = props.onTouchCancel ?? doNothing;
-  const onTouchCancelCapture = props.onTouchCancelCapture ?? doNothing;
-  const onTouchEnd = props.onTouchEnd ?? doNothing;
-  const onTouchEndCapture = props.onTouchEnd ?? doNothing;
-  const onTouchMove = props.onTouchMove ?? doNothing;
-  const onTouchMoveCapture = props.onTouchMoveCapture ?? doNothing;
-  const onTouchStart = props.onTouchStart ?? doNothing;
-  const onTouchStartCapture = props.onTouchStartCapture ?? doNothing;
-  const onTransitionEnd = props.onTransitionEnd ?? doNothing;
-  const onTransitionEndCapture = props.onTransitionEndCapture ?? doNothing;
-  const onVolumeChange = props.onVolumeChange ?? doNothing;
-  const onVolumeChangeCapture = props.onVolumeChangeCapture ?? doNothing;
-  const onWaiting = props.onWaiting ?? doNothing;
-  const onWaitingCapture = props.onWaitingCapture ?? doNothing;
-  const onWheel = props.onWheel ?? doNothing;
-  const onWheelCapture = props.onWheelCapture ?? doNothing;
-  const [spring, setSpring] = import_react16.useState([{}, {}]);
-  const [style, setStyle] = import_react16.useState({});
-  const [className, setClassName] = import_react16.useState(initialClassName);
+function Remote({ tag, spring = {}, style = {}, classname = "", children = [], ...more }) {
+  const [spring_, setSpring] = import_react16.useState([{}, {}]);
+  const [style_, setStyle] = import_react16.useState({});
+  const [classname_, setClassname] = import_react16.useState(classname);
   import_react16.useEffect(function() {
-    on(`${name} render spring`, (to2) => setSpring((currentSpring) => [currentSpring[1], { ...currentSpring[1], ...to2 }]));
-    on(`${name} render style`, (to2) => setStyle((currentStyle) => ({ ...currentStyle, ...to2 })));
-    on(`${name} get spring`, () => broadcast(`${name} spring`, spring));
-    on(`${name} get style`, () => broadcast(`${name} style`, style));
-    if (initSpring) {
-      broadcast(`${name} render spring`, initSpring);
+    const renderSpringEvent = `${tag} render spring`;
+    const renderStyleEvent = `${tag} render style`;
+    const getSpringEvent = `${tag} get spring`;
+    const getStyleEvent = `${tag} get style`;
+    const setClassnameEvent = `${tag} set classname`;
+    const handleRenderSpringEvent = (to2) => setSpring((springNow) => [springNow[1], { ...springNow[1], ...to2 }]);
+    const handleRenderStyleEvent = (to2) => setStyle((styleNow) => ({ ...styleNow, ...to2 }));
+    const handleGetSpringEvent = () => stream.post({ event: `${tag} spring`, data: spring_ });
+    const handleGetStyleEvent = () => stream.post({ event: `${tag} style`, data: style_ });
+    const handleSetClassnameEvent = (classname2) => setClassname(classname2);
+    stream.subscribe({ event: renderSpringEvent, task: handleRenderSpringEvent });
+    stream.subscribe({ event: renderStyleEvent, task: handleRenderStyleEvent });
+    stream.subscribe({ event: getSpringEvent, task: handleGetSpringEvent });
+    stream.subscribe({ event: getStyleEvent, task: handleGetStyleEvent });
+    stream.subscribe({ event: setClassnameEvent, task: handleSetClassnameEvent });
+    stream.renderSpring({ tag, spring });
+    stream.renderStyle({ tag, style });
+    function cleanup() {
+      stream.wipe({ event: renderSpringEvent });
+      stream.wipe({ event: renderStyleEvent });
+      stream.wipe({ event: getSpringEvent });
+      stream.wipe({ event: getStyleEvent });
+      stream.wipe({ event: setClassnameEvent });
     }
-    if (initStyle) {
-      broadcast(`${name} render style`, initStyle);
-    }
-    on(`${name} setClassName`, (className2) => setClassName(className2));
-    return function() {
-      off(`${name} render spring`);
-      off(`${name} render style`);
-      off(`${name} get spring`);
-      off(`${name} get style`);
-      off(`${name} setClassName`);
-    };
+    return cleanup;
   }, []);
   return jsx_dev_runtime2.jsxDEV(animated6.div, {
-    className,
-    style: { ...useSpring({ from: spring[0], to: spring[1] }), ...style },
-    onAbort,
-    onAbortCapture,
-    onAnimationEnd,
-    onAnimationEndCapture,
-    onAnimationIteration,
-    onAnimationIterationCapture,
-    onAnimationStart,
-    onAnimationStartCapture,
-    onAuxClick,
-    onAuxClickCapture,
-    onBeforeInput,
-    onBeforeInputCapture,
-    onBlur,
-    onBlurCapture,
-    onCanPlay,
-    onCanPlayCapture,
-    onCanPlayThrough,
-    onCanPlayThroughCapture,
-    onChange,
-    onChangeCapture,
-    onClick,
-    onClickCapture,
-    onCompositionEnd,
-    onCompositionEndCapture,
-    onCompositionStart,
-    onCompositionStartCapture,
-    onCompositionUpdate,
-    onCompositionUpdateCapture,
-    onContextMenu,
-    onContextMenuCapture,
-    onCopy,
-    onCopyCapture,
-    onCut,
-    onCutCapture,
-    onDoubleClick,
-    onDoubleClickCapture,
-    onDrag,
-    onDragCapture,
-    onDragEnd,
-    onDragEndCapture,
-    onDragEnter,
-    onDragEnterCapture,
-    onDragExit,
-    onDragExitCapture,
-    onDragLeave,
-    onDragLeaveCapture,
-    onDragOver,
-    onDragOverCapture,
-    onDragStart,
-    onDragStartCapture,
-    onDrop,
-    onDropCapture,
-    onDurationChange,
-    onDurationChangeCapture,
-    onEmptied,
-    onEmptiedCapture,
-    onEncrypted,
-    onEncryptedCapture,
-    onEnded,
-    onEndedCapture,
-    onError,
-    onErrorCapture,
-    onFocus,
-    onFocusCapture,
-    onGotPointerCapture,
-    onGotPointerCaptureCapture,
-    onInput,
-    onInputCapture,
-    onInvalid,
-    onInvalidCapture,
-    onKeyDown,
-    onKeyDownCapture,
-    onKeyUp,
-    onKeyUpCapture,
-    onLoad,
-    onLoadCapture,
-    onLoadStart,
-    onLoadStartCapture,
-    onLoadedData,
-    onLoadedDataCapture,
-    onLoadedMetadata,
-    onLoadedMetadataCapture,
-    onLostPointerCapture,
-    onLostPointerCaptureCapture,
-    onMouseDown,
-    onMouseDownCapture,
-    onMouseEnter,
-    onMouseLeave,
-    onMouseMove,
-    onMouseMoveCapture,
-    onMouseOut,
-    onMouseOutCapture,
-    onMouseOver,
-    onMouseOverCapture,
-    onMouseUp,
-    onMouseUpCapture,
-    onPaste,
-    onPasteCapture,
-    onPause,
-    onPauseCapture,
-    onPlay,
-    onPlayCapture,
-    onPlaying,
-    onPlayingCapture,
-    onPointerCancel,
-    onPointerCancelCapture,
-    onPointerDown,
-    onPointerDownCapture,
-    onPointerEnter,
-    onPointerEnterCapture,
-    onPointerLeave,
-    onPointerLeaveCapture,
-    onPointerMove,
-    onPointerMoveCapture,
-    onPointerOut,
-    onPointerOutCapture,
-    onPointerOver,
-    onPointerOverCapture,
-    onPointerUp,
-    onPointerUpCapture,
-    onProgress,
-    onProgressCapture,
-    onRateChange,
-    onRateChangeCapture,
-    onReset,
-    onResetCapture,
-    onResize: onResize2,
-    onResizeCapture,
-    onScroll: onScroll2,
-    onScrollCapture,
-    onSeeked,
-    onSeekedCapture,
-    onSeeking,
-    onSeekingCapture,
-    onSelect,
-    onSelectCapture,
-    onStalled,
-    onStalledCapture,
-    onSubmit,
-    onSubmitCapture,
-    onSuspend,
-    onSuspendCapture,
-    onTimeUpdate,
-    onTimeUpdateCapture,
-    onTouchCancel,
-    onTouchCancelCapture,
-    onTouchEnd,
-    onTouchEndCapture,
-    onTouchMove,
-    onTouchMoveCapture,
-    onTouchStart,
-    onTouchStartCapture,
-    onTransitionEnd,
-    onTransitionEndCapture,
-    onVolumeChange,
-    onVolumeChangeCapture,
-    onWaiting,
-    onWaitingCapture,
-    onWheel,
-    onWheelCapture,
+    className: classname_,
+    style: { ...useSpring({ from: spring_[0], to: spring_[1] }), ...style_ },
+    ...more,
     children
   }, undefined, false, undefined, this);
 }
 
-// code/build/DokaBuild/static/app/component/design/RemoteCol.tsx
-var import_react17 = __toESM(require_react(), 1);
+// code/build/DokaBuild/static/app/component/design/remote/RemoteContainer.tsx
 var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
-function RemoteCol(props) {
-  const name = props.name;
-  const width = props.width;
-  const height = props.height;
-  const initSpring = props.initSpring ?? {};
-  const initStyle = props.initStyle ?? {};
-  function doNothing() {
-  }
-  const children = props.children;
-  const onAbort = props.onAbort ?? doNothing;
-  const onAbortCapture = props.onAbort ?? doNothing;
-  const onAnimationEnd = props.onAnimationEnd ?? doNothing;
-  const onAnimationEndCapture = props.onAnimationEndCapture ?? doNothing;
-  const onAnimationIteration = props.onAnimationIteration ?? doNothing;
-  const onAnimationIterationCapture = props.onAnimationIterationCapture ?? doNothing;
-  const onAnimationStart = props.onAnimationStart ?? doNothing;
-  const onAnimationStartCapture = props.onAnimationStartCapture ?? doNothing;
-  const onAuxClick = props.onAuxClick ?? doNothing;
-  const onAuxClickCapture = props.onAuxClickCapture ?? doNothing;
-  const onBeforeInput = props.onBeforeInput ?? doNothing;
-  const onBeforeInputCapture = props.onBeforeInputCapture ?? doNothing;
-  const onBlur = props.onBlur ?? doNothing;
-  const onBlurCapture = props.onBlurCapture ?? doNothing;
-  const onCanPlay = props.onCanPlay ?? doNothing;
-  const onCanPlayCapture = props.onCanPlayCapture ?? doNothing;
-  const onCanPlayThrough = props.onCanPlayThrough ?? doNothing;
-  const onCanPlayThroughCapture = props.onCanPlayThroughCapture ?? doNothing;
-  const onChange = props.onChange ?? doNothing;
-  const onChangeCapture = props.onChangeCapture ?? doNothing;
-  const onClick = props.onClick ?? doNothing;
-  const onClickCapture = props.onClickCapture ?? doNothing;
-  const onCompositionEnd = props.onCompositionEnd ?? doNothing;
-  const onCompositionEndCapture = props.onCompositionEndCapture ?? doNothing;
-  const onCompositionStart = props.onCompositionStart ?? doNothing;
-  const onCompositionStartCapture = props.onCompositionStartCapture ?? doNothing;
-  const onCompositionUpdate = props.onCompositionUpdate ?? doNothing;
-  const onCompositionUpdateCapture = props.onCompositionUpdateCapture ?? doNothing;
-  const onContextMenu = props.onContextMenu ?? doNothing;
-  const onContextMenuCapture = props.onContextMenuCapture ?? doNothing;
-  const onCopy = props.onCopy ?? doNothing;
-  const onCopyCapture = props.onCopyCapture ?? doNothing;
-  const onCut = props.onCut ?? doNothing;
-  const onCutCapture = props.onCutCapture ?? doNothing;
-  const onDoubleClick = props.onDoubleClick ?? doNothing;
-  const onDoubleClickCapture = props.onDoubleClickCapture ?? doNothing;
-  const onDrag = props.onDrag ?? doNothing;
-  const onDragCapture = props.onDragCapture ?? doNothing;
-  const onDragEnd = props.onDragEnd ?? doNothing;
-  const onDragEndCapture = props.onDragEndCapture ?? doNothing;
-  const onDragEnter = props.onDragEnter ?? doNothing;
-  const onDragEnterCapture = props.onDragEnterCapture ?? doNothing;
-  const onDragExit = props.onDragExit ?? doNothing;
-  const onDragExitCapture = props.onDragExitCapture ?? doNothing;
-  const onDragLeave = props.onDragLeave ?? doNothing;
-  const onDragLeaveCapture = props.onDragLeaveCapture ?? doNothing;
-  const onDragOver = props.onDragOver ?? doNothing;
-  const onDragOverCapture = props.onDragOverCapture ?? doNothing;
-  const onDragStart = props.onDragStart ?? doNothing;
-  const onDragStartCapture = props.onDragStartCapture ?? doNothing;
-  const onDrop = props.onDrop ?? doNothing;
-  const onDropCapture = props.onDropCapture ?? doNothing;
-  const onDurationChange = props.onDurationChange ?? doNothing;
-  const onDurationChangeCapture = props.onDurationChangeCapture ?? doNothing;
-  const onEmptied = props.onEmptied ?? doNothing;
-  const onEmptiedCapture = props.onEmptiedCapture ?? doNothing;
-  const onEncrypted = props.onEncrypted ?? doNothing;
-  const onEncryptedCapture = props.onEncryptedCapture ?? doNothing;
-  const onEnded = props.onEnded ?? doNothing;
-  const onEndedCapture = props.onEndedCapture ?? doNothing;
-  const onError = props.onError ?? doNothing;
-  const onErrorCapture = props.onErrorCapture ?? doNothing;
-  const onFocus = props.onFocus ?? doNothing;
-  const onFocusCapture = props.onFocusCapture ?? doNothing;
-  const onGotPointerCapture = props.onGotPointerCapture ?? doNothing;
-  const onGotPointerCaptureCapture = props.onGotPointerCaptureCapture ?? doNothing;
-  const onInput = props.onInput ?? doNothing;
-  const onInputCapture = props.onInputCapture ?? doNothing;
-  const onInvalid = props.onInvalid ?? doNothing;
-  const onInvalidCapture = props.onInvalidCapture ?? doNothing;
-  const onKeyDown = props.onKeyDown ?? doNothing;
-  const onKeyDownCapture = props.onKeyDownCapture ?? doNothing;
-  const onKeyUp = props.onKeyUp ?? doNothing;
-  const onKeyUpCapture = props.onKeyUpCapture ?? doNothing;
-  const onLoad = props.onLoad ?? doNothing;
-  const onLoadCapture = props.onLoadCapture ?? doNothing;
-  const onLoadStart = props.onLoadStart ?? doNothing;
-  const onLoadStartCapture = props.onLoadStartCapture ?? doNothing;
-  const onLoadedData = props.onLoadedData ?? doNothing;
-  const onLoadedDataCapture = props.onLoadedDataCapture ?? doNothing;
-  const onLoadedMetadata = props.onLoadedMetadata ?? doNothing;
-  const onLoadedMetadataCapture = props.onLoadedMetadataCapture ?? doNothing;
-  const onLostPointerCapture = props.onLostPointerCapture ?? doNothing;
-  const onLostPointerCaptureCapture = props.onLostPointerCaptureCapture ?? doNothing;
-  const onMouseDown = props.onMouseDown ?? doNothing;
-  const onMouseDownCapture = props.onMouseDownCapture ?? doNothing;
-  const onMouseEnter = props.onMouseEnter ?? doNothing;
-  const onMouseLeave = props.onMouseLeave ?? doNothing;
-  const onMouseMove = props.onMouseMove ?? doNothing;
-  const onMouseMoveCapture = props.onMouseMoveCapture ?? doNothing;
-  const onMouseOut = props.onMouseOut ?? doNothing;
-  const onMouseOutCapture = props.onMouseOutCapture ?? doNothing;
-  const onMouseOver = props.onMouseOver ?? doNothing;
-  const onMouseOverCapture = props.onMouseOverCapture ?? doNothing;
-  const onMouseUp = props.onMouseUp ?? doNothing;
-  const onMouseUpCapture = props.onMouseUpCapture ?? doNothing;
-  const onPaste = props.onPaste ?? doNothing;
-  const onPasteCapture = props.onPasteCapture ?? doNothing;
-  const onPause = props.onPause ?? doNothing;
-  const onPauseCapture = props.onPauseCapture ?? doNothing;
-  const onPlay = props.onPlay ?? doNothing;
-  const onPlayCapture = props.onPlayCapture ?? doNothing;
-  const onPlaying = props.onPlaying ?? doNothing;
-  const onPlayingCapture = props.onPlayingCapture ?? doNothing;
-  const onPointerCancel = props.onPointerCancel ?? doNothing;
-  const onPointerCancelCapture = props.onPointerCancelCapture ?? doNothing;
-  const onPointerDown = props.onPointerDown ?? doNothing;
-  const onPointerDownCapture = props.onPointerDownCapture ?? doNothing;
-  const onPointerEnter = props.onPointerEnter ?? doNothing;
-  const onPointerEnterCapture = props.onPointerEnterCapture ?? doNothing;
-  const onPointerLeave = props.onPointerLeave ?? doNothing;
-  const onPointerLeaveCapture = props.onPointerLeaveCapture ?? doNothing;
-  const onPointerMove = props.onPointerMove ?? doNothing;
-  const onPointerMoveCapture = props.onPointerMoveCapture ?? doNothing;
-  const onPointerOut = props.onPointerOut ?? doNothing;
-  const onPointerOutCapture = props.onPointerOutCapture ?? doNothing;
-  const onPointerOver = props.onPointerOver ?? doNothing;
-  const onPointerOverCapture = props.onPointerOverCapture ?? doNothing;
-  const onPointerUp = props.onPointerUp ?? doNothing;
-  const onPointerUpCapture = props.onPointerUpCapture ?? doNothing;
-  const onProgress = props.onProgress ?? doNothing;
-  const onProgressCapture = props.onProgressCapture ?? doNothing;
-  const onRateChange = props.onRateChange ?? doNothing;
-  const onRateChangeCapture = props.onRateChangeCapture ?? doNothing;
-  const onReset = props.onReset ?? doNothing;
-  const onResetCapture = props.onResetCapture ?? doNothing;
-  const onResize2 = props.onResize ?? doNothing;
-  const onResizeCapture = props.onResizeCapture ?? doNothing;
-  const onScroll2 = props.onScroll ?? doNothing;
-  const onScrollCapture = props.onScrollCapture ?? doNothing;
-  const onSeeked = props.onSeeked ?? doNothing;
-  const onSeekedCapture = props.onSeekedCapture ?? doNothing;
-  const onSeeking = props.onSeeking ?? doNothing;
-  const onSeekingCapture = props.onSeekingCapture ?? doNothing;
-  const onSelect = props.onSelect ?? doNothing;
-  const onSelectCapture = props.onSelectCapture ?? doNothing;
-  const onStalled = props.onStalled ?? doNothing;
-  const onStalledCapture = props.onStalledCapture ?? doNothing;
-  const onSubmit = props.onSubmit ?? doNothing;
-  const onSubmitCapture = props.onSubmitCapture ?? doNothing;
-  const onSuspend = props.onSuspend ?? doNothing;
-  const onSuspendCapture = props.onSuspendCapture ?? doNothing;
-  const onTimeUpdate = props.onTimeUpdate ?? doNothing;
-  const onTimeUpdateCapture = props.onTimeUpdateCapture ?? doNothing;
-  const onTouchCancel = props.onTouchCancel ?? doNothing;
-  const onTouchCancelCapture = props.onTouchCancelCapture ?? doNothing;
-  const onTouchEnd = props.onTouchEnd ?? doNothing;
-  const onTouchEndCapture = props.onTouchEnd ?? doNothing;
-  const onTouchMove = props.onTouchMove ?? doNothing;
-  const onTouchMoveCapture = props.onTouchMoveCapture ?? doNothing;
-  const onTouchStart = props.onTouchStart ?? doNothing;
-  const onTouchStartCapture = props.onTouchStartCapture ?? doNothing;
-  const onTransitionEnd = props.onTransitionEnd ?? doNothing;
-  const onTransitionEndCapture = props.onTransitionEndCapture ?? doNothing;
-  const onVolumeChange = props.onVolumeChange ?? doNothing;
-  const onVolumeChangeCapture = props.onVolumeChangeCapture ?? doNothing;
-  const onWaiting = props.onWaiting ?? doNothing;
-  const onWaitingCapture = props.onWaitingCapture ?? doNothing;
-  const onWheel = props.onWheel ?? doNothing;
-  const onWheelCapture = props.onWheelCapture ?? doNothing;
-  const spring = {
-    width,
-    height,
-    ...initSpring
-  };
-  const style = {
+function RemoteContainer({ tag, spring = {}, style = {}, direction = "column", delay = 0, cooldown = 0, children, ...more }) {
+  style = {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: direction,
     justifyContent: "center",
-    alignItems: "center",
-    ...initStyle
+    alignContent: "center",
+    ...style
   };
   const [onScreen, setOnScreen] = import_react17.useState([]);
+  const [pushed, setPushed] = import_react17.useState([]);
   import_react17.useEffect(function() {
-    function pushBelow(item) {
-      const items = onScreen;
-      items.push(item);
-      setOnScreen([...items]);
+    const pushBelowEvent = `${tag} pushBelow`;
+    const pushAboveLastItemEvent = `${tag} pushAboveLastItem`;
+    const pushAboveEvent = `${tag} pushAbove`;
+    const pushBetweenEvent = `${tag} pushBetween`;
+    const pullBelowEvent = `${tag} pullBelow`;
+    const pullAboveEvent = `${tag} pullAbove`;
+    const pullEvent = `${tag} pull`;
+    const wipeEvent = `${tag} wipe`;
+    function handlePushBelowEvent(item) {
+      setOnScreen((old) => [...old, item]);
     }
-    function pushAboveLastItem(item) {
-      const items = onScreen;
-      const lastItem = items[items.length - 1];
-      items[items.length - 1] = item;
-      items.push(lastItem);
-      setOnScreen([...items]);
+    function handlePushAboveLastItemEvent(item) {
     }
-    function pushAbove(item) {
-      const items = onScreen;
-      let copy = [];
-      copy.push(item);
-      copy = copy.concat(items);
-      setOnScreen([...copy]);
+    function handlePushAboveEvent(item) {
     }
-    function pushBetween(item, position) {
-      const items = onScreen;
-      const copy = [];
-      for (let i = 0;i < position; i++) {
-        const copiedItem = items[i];
-        copy.push(copiedItem);
-      }
-      copy.push(item);
-      const itemsLength = items.length;
-      for (let i = position;i < itemsLength; i++) {
-        const copiedItem = items[i];
-        copy.push(copiedItem);
-      }
-      setOnScreen(copy);
+    function handlePushBetweenEvent(item) {
     }
-    function pullBelow() {
+    function handlePullBelowEvent() {
       const items = onScreen;
       items.pop();
       setOnScreen([...items]);
     }
-    function pullAbove() {
+    function handlePullAboveEvent() {
       const items = onScreen;
       items.shift();
       setOnScreen([...items]);
     }
-    function pull(position) {
+    function handlePullEvent(position) {
       const items = onScreen;
       items.splice(position, 1);
       setOnScreen([...items]);
     }
-    function wipe() {
+    function handleWipeEvent() {
       const itemsLength = onScreen.length;
       for (let i = 0;i < itemsLength; i++) {
-        pullBelow();
+        const items = onScreen;
+        items.pop();
+        setOnScreen([...items]);
       }
     }
-    on(`${name} pushBelow`, pushBelow);
-    on(`${name} pushAboveLastItem`, pushAboveLastItem);
-    on(`${name} pushAbove`, pushAbove);
-    on(`${name} pushBetween`, pushBetween);
-    on(`${name} pullBelow`, pullBelow);
-    on(`${name} pullAbove`, pullAbove);
-    on(`${name} pull`, pull);
-    on(`${name} wipe`, wipe);
-    return function() {
-      off(`${name} pushBelow`);
-      off(`${name} pushAboveLastItem`);
-      off(`${name} pushAbove`);
-      off(`${name} pushBetween`);
-      off(`${name} pullBelow`);
-      off(`${name} pullAbove`);
-      off(`${name} pull`);
-      off(`${name} wipe`);
-    };
+    stream.subscribe({ event: pushBelowEvent, task: handlePushBelowEvent });
+    stream.subscribe({ event: pushAboveLastItemEvent, task: handlePushAboveLastItemEvent });
+    stream.subscribe({ event: pushAboveEvent, task: handlePushAboveEvent });
+    stream.subscribe({ event: pushBetweenEvent, task: handlePushBetweenEvent });
+    stream.subscribe({ event: pullBelowEvent, task: handlePullBelowEvent });
+    stream.subscribe({ event: pullAboveEvent, task: handlePullAboveEvent });
+    stream.subscribe({ event: pullEvent, task: handlePullEvent });
+    stream.subscribe({ event: wipeEvent, task: handleWipeEvent });
+    setTimeout(function() {
+      function hasBeenPushed(position) {
+        return pushed.includes(position);
+      }
+      function markAsPushed(position) {
+        const items = pushed;
+        items.push(position);
+        setPushed([...items]);
+      }
+      let childrenLength = children.length;
+      childrenLength = childrenLength ?? 1;
+      let wait = cooldown;
+      for (let i = 0;i < childrenLength; i++) {
+        if (!hasBeenPushed(i)) {
+          let child = children[i];
+          child = child ?? children;
+          if (child) {
+            setTimeout(function() {
+              stream.post({ event: `${tag} pushBelow`, data: child });
+            }, wait);
+            wait += cooldown;
+          }
+          markAsPushed(i);
+        }
+      }
+    }, delay);
+    function cleanup() {
+      stream.wipe({ event: pushBelowEvent });
+      stream.wipe({ event: pushAboveLastItemEvent });
+      stream.wipe({ event: pushAboveEvent });
+      stream.wipe({ event: pushBetweenEvent });
+      stream.wipe({ event: pullBelowEvent });
+      stream.wipe({ event: pullAboveEvent });
+      stream.wipe({ event: pullEvent });
+      stream.wipe({ event: wipeEvent });
+    }
+    return cleanup;
   }, []);
   return jsx_dev_runtime3.jsxDEV(Remote, {
-    name,
-    initSpring: spring,
-    initStyle: style,
-    children: onScreen,
-    onAbort,
-    onAbortCapture,
-    onAnimationEnd,
-    onAnimationEndCapture,
-    onAnimationIteration,
-    onAnimationIterationCapture,
-    onAnimationStart,
-    onAnimationStartCapture,
-    onAuxClick,
-    onAuxClickCapture,
-    onBeforeInput,
-    onBeforeInputCapture,
-    onBlur,
-    onBlurCapture,
-    onCanPlay,
-    onCanPlayCapture,
-    onCanPlayThrough,
-    onCanPlayThroughCapture,
-    onChange,
-    onChangeCapture,
-    onClick,
-    onClickCapture,
-    onCompositionEnd,
-    onCompositionEndCapture,
-    onCompositionStart,
-    onCompositionStartCapture,
-    onCompositionUpdate,
-    onCompositionUpdateCapture,
-    onContextMenu,
-    onContextMenuCapture,
-    onCopy,
-    onCopyCapture,
-    onCut,
-    onCutCapture,
-    onDoubleClick,
-    onDoubleClickCapture,
-    onDrag,
-    onDragCapture,
-    onDragEnd,
-    onDragEndCapture,
-    onDragEnter,
-    onDragEnterCapture,
-    onDragExit,
-    onDragExitCapture,
-    onDragLeave,
-    onDragLeaveCapture,
-    onDragOver,
-    onDragOverCapture,
-    onDragStart,
-    onDragStartCapture,
-    onDrop,
-    onDropCapture,
-    onDurationChange,
-    onDurationChangeCapture,
-    onEmptied,
-    onEmptiedCapture,
-    onEncrypted,
-    onEncryptedCapture,
-    onEnded,
-    onEndedCapture,
-    onError,
-    onErrorCapture,
-    onFocus,
-    onFocusCapture,
-    onGotPointerCapture,
-    onGotPointerCaptureCapture,
-    onInput,
-    onInputCapture,
-    onInvalid,
-    onInvalidCapture,
-    onKeyDown,
-    onKeyDownCapture,
-    onKeyUp,
-    onKeyUpCapture,
-    onLoad,
-    onLoadCapture,
-    onLoadStart,
-    onLoadStartCapture,
-    onLoadedData,
-    onLoadedDataCapture,
-    onLoadedMetadata,
-    onLoadedMetadataCapture,
-    onLostPointerCapture,
-    onLostPointerCaptureCapture,
-    onMouseDown,
-    onMouseDownCapture,
-    onMouseEnter,
-    onMouseLeave,
-    onMouseMove,
-    onMouseMoveCapture,
-    onMouseOut,
-    onMouseOutCapture,
-    onMouseOver,
-    onMouseOverCapture,
-    onMouseUp,
-    onMouseUpCapture,
-    onPaste,
-    onPasteCapture,
-    onPause,
-    onPauseCapture,
-    onPlay,
-    onPlayCapture,
-    onPlaying,
-    onPlayingCapture,
-    onPointerCancel,
-    onPointerCancelCapture,
-    onPointerDown,
-    onPointerDownCapture,
-    onPointerEnter,
-    onPointerEnterCapture,
-    onPointerLeave,
-    onPointerLeaveCapture,
-    onPointerMove,
-    onPointerMoveCapture,
-    onPointerOut,
-    onPointerOutCapture,
-    onPointerOver,
-    onPointerOverCapture,
-    onPointerUp,
-    onPointerUpCapture,
-    onProgress,
-    onProgressCapture,
-    onRateChange,
-    onRateChangeCapture,
-    onReset,
-    onResetCapture,
-    onResize: onResize2,
-    onResizeCapture,
-    onScroll: onScroll2,
-    onScrollCapture,
-    onSeeked,
-    onSeekedCapture,
-    onSeeking,
-    onSeekingCapture,
-    onSelect,
-    onSelectCapture,
-    onStalled,
-    onStalledCapture,
-    onSubmit,
-    onSubmitCapture,
-    onSuspend,
-    onSuspendCapture,
-    onTimeUpdate,
-    onTimeUpdateCapture,
-    onTouchCancel,
-    onTouchCancelCapture,
-    onTouchEnd,
-    onTouchEndCapture,
-    onTouchMove,
-    onTouchMoveCapture,
-    onTouchStart,
-    onTouchStartCapture,
-    onTransitionEnd,
-    onTransitionEndCapture,
-    onVolumeChange,
-    onVolumeChangeCapture,
-    onWaiting,
-    onWaitingCapture,
-    onWheel,
-    onWheelCapture
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/RemotePage.tsx
-var import_react18 = __toESM(require_react(), 1);
-var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
-function RemotePage(props) {
-  const initialPages = props.initialPages;
-  const initialPagesValue = `${initialPages * 100}vh`;
-  const [pagesValue, setPagesValue] = import_react18.useState(initialPagesValue);
-  import_react18.useEffect(function() {
-    function changePagesValue(input) {
-      const value = `${input * 100}vh`;
-      setPagesValue(value);
-    }
-    on("page setPages", changePagesValue);
-    return function() {
-      off("page setPages");
-    };
-  }, []);
-  return jsx_dev_runtime4.jsxDEV(RemoteCol, {
-    name: "page",
-    width: "100vw",
-    height: pagesValue
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/Col.tsx
-var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
-function Col(props) {
-  const width = props.width;
-  const height = props.height;
-  const initStyle = props.style ?? {};
-  const children = props.children;
-  const style = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    width,
-    height,
-    ...initStyle
-  };
-  return jsx_dev_runtime5.jsxDEV("div", {
+    tag,
+    spring,
     style,
-    children
+    ...more,
+    children: onScreen
   }, undefined, false, undefined, this);
 }
-
-// code/build/DokaBuild/static/app/component/design/Layer.tsx
-var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
-function Layer(props) {
-  const zIndex = props.zIndex;
-  const children = props.children;
-  return jsx_dev_runtime6.jsxDEV(Col, {
-    width: "100%",
-    height: "100vh",
-    style: { position: "absolute", zIndex },
-    children
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/Background.tsx
-var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
-function Background(props) {
-  return jsx_dev_runtime7.jsxDEV(Layer, {
-    zIndex: "1000",
-    children: jsx_dev_runtime7.jsxDEV("div", {
-      style: { width: "100%", height: "100%", background: "#161616" }
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/RemoteRow.tsx
-var import_react19 = __toESM(require_react(), 1);
-var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
-function RemoteRow(props) {
-  const name = props.name;
-  const width = props.width;
-  const height = props.height;
-  const initSpring = props.initSpring ?? {};
-  const initStyle = props.initStyle ?? {};
-  function doNothing() {
-  }
-  const children = props.children;
-  const onAbort = props.onAbort ?? doNothing;
-  const onAbortCapture = props.onAbort ?? doNothing;
-  const onAnimationEnd = props.onAnimationEnd ?? doNothing;
-  const onAnimationEndCapture = props.onAnimationEndCapture ?? doNothing;
-  const onAnimationIteration = props.onAnimationIteration ?? doNothing;
-  const onAnimationIterationCapture = props.onAnimationIterationCapture ?? doNothing;
-  const onAnimationStart = props.onAnimationStart ?? doNothing;
-  const onAnimationStartCapture = props.onAnimationStartCapture ?? doNothing;
-  const onAuxClick = props.onAuxClick ?? doNothing;
-  const onAuxClickCapture = props.onAuxClickCapture ?? doNothing;
-  const onBeforeInput = props.onBeforeInput ?? doNothing;
-  const onBeforeInputCapture = props.onBeforeInputCapture ?? doNothing;
-  const onBlur = props.onBlur ?? doNothing;
-  const onBlurCapture = props.onBlurCapture ?? doNothing;
-  const onCanPlay = props.onCanPlay ?? doNothing;
-  const onCanPlayCapture = props.onCanPlayCapture ?? doNothing;
-  const onCanPlayThrough = props.onCanPlayThrough ?? doNothing;
-  const onCanPlayThroughCapture = props.onCanPlayThroughCapture ?? doNothing;
-  const onChange = props.onChange ?? doNothing;
-  const onChangeCapture = props.onChangeCapture ?? doNothing;
-  const onClick = props.onClick ?? doNothing;
-  const onClickCapture = props.onClickCapture ?? doNothing;
-  const onCompositionEnd = props.onCompositionEnd ?? doNothing;
-  const onCompositionEndCapture = props.onCompositionEndCapture ?? doNothing;
-  const onCompositionStart = props.onCompositionStart ?? doNothing;
-  const onCompositionStartCapture = props.onCompositionStartCapture ?? doNothing;
-  const onCompositionUpdate = props.onCompositionUpdate ?? doNothing;
-  const onCompositionUpdateCapture = props.onCompositionUpdateCapture ?? doNothing;
-  const onContextMenu = props.onContextMenu ?? doNothing;
-  const onContextMenuCapture = props.onContextMenuCapture ?? doNothing;
-  const onCopy = props.onCopy ?? doNothing;
-  const onCopyCapture = props.onCopyCapture ?? doNothing;
-  const onCut = props.onCut ?? doNothing;
-  const onCutCapture = props.onCutCapture ?? doNothing;
-  const onDoubleClick = props.onDoubleClick ?? doNothing;
-  const onDoubleClickCapture = props.onDoubleClickCapture ?? doNothing;
-  const onDrag = props.onDrag ?? doNothing;
-  const onDragCapture = props.onDragCapture ?? doNothing;
-  const onDragEnd = props.onDragEnd ?? doNothing;
-  const onDragEndCapture = props.onDragEndCapture ?? doNothing;
-  const onDragEnter = props.onDragEnter ?? doNothing;
-  const onDragEnterCapture = props.onDragEnterCapture ?? doNothing;
-  const onDragExit = props.onDragExit ?? doNothing;
-  const onDragExitCapture = props.onDragExitCapture ?? doNothing;
-  const onDragLeave = props.onDragLeave ?? doNothing;
-  const onDragLeaveCapture = props.onDragLeaveCapture ?? doNothing;
-  const onDragOver = props.onDragOver ?? doNothing;
-  const onDragOverCapture = props.onDragOverCapture ?? doNothing;
-  const onDragStart = props.onDragStart ?? doNothing;
-  const onDragStartCapture = props.onDragStartCapture ?? doNothing;
-  const onDrop = props.onDrop ?? doNothing;
-  const onDropCapture = props.onDropCapture ?? doNothing;
-  const onDurationChange = props.onDurationChange ?? doNothing;
-  const onDurationChangeCapture = props.onDurationChangeCapture ?? doNothing;
-  const onEmptied = props.onEmptied ?? doNothing;
-  const onEmptiedCapture = props.onEmptiedCapture ?? doNothing;
-  const onEncrypted = props.onEncrypted ?? doNothing;
-  const onEncryptedCapture = props.onEncryptedCapture ?? doNothing;
-  const onEnded = props.onEnded ?? doNothing;
-  const onEndedCapture = props.onEndedCapture ?? doNothing;
-  const onError = props.onError ?? doNothing;
-  const onErrorCapture = props.onErrorCapture ?? doNothing;
-  const onFocus = props.onFocus ?? doNothing;
-  const onFocusCapture = props.onFocusCapture ?? doNothing;
-  const onGotPointerCapture = props.onGotPointerCapture ?? doNothing;
-  const onGotPointerCaptureCapture = props.onGotPointerCaptureCapture ?? doNothing;
-  const onInput = props.onInput ?? doNothing;
-  const onInputCapture = props.onInputCapture ?? doNothing;
-  const onInvalid = props.onInvalid ?? doNothing;
-  const onInvalidCapture = props.onInvalidCapture ?? doNothing;
-  const onKeyDown = props.onKeyDown ?? doNothing;
-  const onKeyDownCapture = props.onKeyDownCapture ?? doNothing;
-  const onKeyUp = props.onKeyUp ?? doNothing;
-  const onKeyUpCapture = props.onKeyUpCapture ?? doNothing;
-  const onLoad = props.onLoad ?? doNothing;
-  const onLoadCapture = props.onLoadCapture ?? doNothing;
-  const onLoadStart = props.onLoadStart ?? doNothing;
-  const onLoadStartCapture = props.onLoadStartCapture ?? doNothing;
-  const onLoadedData = props.onLoadedData ?? doNothing;
-  const onLoadedDataCapture = props.onLoadedDataCapture ?? doNothing;
-  const onLoadedMetadata = props.onLoadedMetadata ?? doNothing;
-  const onLoadedMetadataCapture = props.onLoadedMetadataCapture ?? doNothing;
-  const onLostPointerCapture = props.onLostPointerCapture ?? doNothing;
-  const onLostPointerCaptureCapture = props.onLostPointerCaptureCapture ?? doNothing;
-  const onMouseDown = props.onMouseDown ?? doNothing;
-  const onMouseDownCapture = props.onMouseDownCapture ?? doNothing;
-  const onMouseEnter = props.onMouseEnter ?? doNothing;
-  const onMouseLeave = props.onMouseLeave ?? doNothing;
-  const onMouseMove = props.onMouseMove ?? doNothing;
-  const onMouseMoveCapture = props.onMouseMoveCapture ?? doNothing;
-  const onMouseOut = props.onMouseOut ?? doNothing;
-  const onMouseOutCapture = props.onMouseOutCapture ?? doNothing;
-  const onMouseOver = props.onMouseOver ?? doNothing;
-  const onMouseOverCapture = props.onMouseOverCapture ?? doNothing;
-  const onMouseUp = props.onMouseUp ?? doNothing;
-  const onMouseUpCapture = props.onMouseUpCapture ?? doNothing;
-  const onPaste = props.onPaste ?? doNothing;
-  const onPasteCapture = props.onPasteCapture ?? doNothing;
-  const onPause = props.onPause ?? doNothing;
-  const onPauseCapture = props.onPauseCapture ?? doNothing;
-  const onPlay = props.onPlay ?? doNothing;
-  const onPlayCapture = props.onPlayCapture ?? doNothing;
-  const onPlaying = props.onPlaying ?? doNothing;
-  const onPlayingCapture = props.onPlayingCapture ?? doNothing;
-  const onPointerCancel = props.onPointerCancel ?? doNothing;
-  const onPointerCancelCapture = props.onPointerCancelCapture ?? doNothing;
-  const onPointerDown = props.onPointerDown ?? doNothing;
-  const onPointerDownCapture = props.onPointerDownCapture ?? doNothing;
-  const onPointerEnter = props.onPointerEnter ?? doNothing;
-  const onPointerEnterCapture = props.onPointerEnterCapture ?? doNothing;
-  const onPointerLeave = props.onPointerLeave ?? doNothing;
-  const onPointerLeaveCapture = props.onPointerLeaveCapture ?? doNothing;
-  const onPointerMove = props.onPointerMove ?? doNothing;
-  const onPointerMoveCapture = props.onPointerMoveCapture ?? doNothing;
-  const onPointerOut = props.onPointerOut ?? doNothing;
-  const onPointerOutCapture = props.onPointerOutCapture ?? doNothing;
-  const onPointerOver = props.onPointerOver ?? doNothing;
-  const onPointerOverCapture = props.onPointerOverCapture ?? doNothing;
-  const onPointerUp = props.onPointerUp ?? doNothing;
-  const onPointerUpCapture = props.onPointerUpCapture ?? doNothing;
-  const onProgress = props.onProgress ?? doNothing;
-  const onProgressCapture = props.onProgressCapture ?? doNothing;
-  const onRateChange = props.onRateChange ?? doNothing;
-  const onRateChangeCapture = props.onRateChangeCapture ?? doNothing;
-  const onReset = props.onReset ?? doNothing;
-  const onResetCapture = props.onResetCapture ?? doNothing;
-  const onResize2 = props.onResize ?? doNothing;
-  const onResizeCapture = props.onResizeCapture ?? doNothing;
-  const onScroll2 = props.onScroll ?? doNothing;
-  const onScrollCapture = props.onScrollCapture ?? doNothing;
-  const onSeeked = props.onSeeked ?? doNothing;
-  const onSeekedCapture = props.onSeekedCapture ?? doNothing;
-  const onSeeking = props.onSeeking ?? doNothing;
-  const onSeekingCapture = props.onSeekingCapture ?? doNothing;
-  const onSelect = props.onSelect ?? doNothing;
-  const onSelectCapture = props.onSelectCapture ?? doNothing;
-  const onStalled = props.onStalled ?? doNothing;
-  const onStalledCapture = props.onStalledCapture ?? doNothing;
-  const onSubmit = props.onSubmit ?? doNothing;
-  const onSubmitCapture = props.onSubmitCapture ?? doNothing;
-  const onSuspend = props.onSuspend ?? doNothing;
-  const onSuspendCapture = props.onSuspendCapture ?? doNothing;
-  const onTimeUpdate = props.onTimeUpdate ?? doNothing;
-  const onTimeUpdateCapture = props.onTimeUpdateCapture ?? doNothing;
-  const onTouchCancel = props.onTouchCancel ?? doNothing;
-  const onTouchCancelCapture = props.onTouchCancelCapture ?? doNothing;
-  const onTouchEnd = props.onTouchEnd ?? doNothing;
-  const onTouchEndCapture = props.onTouchEnd ?? doNothing;
-  const onTouchMove = props.onTouchMove ?? doNothing;
-  const onTouchMoveCapture = props.onTouchMoveCapture ?? doNothing;
-  const onTouchStart = props.onTouchStart ?? doNothing;
-  const onTouchStartCapture = props.onTouchStartCapture ?? doNothing;
-  const onTransitionEnd = props.onTransitionEnd ?? doNothing;
-  const onTransitionEndCapture = props.onTransitionEndCapture ?? doNothing;
-  const onVolumeChange = props.onVolumeChange ?? doNothing;
-  const onVolumeChangeCapture = props.onVolumeChangeCapture ?? doNothing;
-  const onWaiting = props.onWaiting ?? doNothing;
-  const onWaitingCapture = props.onWaitingCapture ?? doNothing;
-  const onWheel = props.onWheel ?? doNothing;
-  const onWheelCapture = props.onWheelCapture ?? doNothing;
-  const spring = {
-    width,
-    height,
-    ...initSpring
-  };
-  const style = {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    ...initStyle
-  };
-  const [onScreen, setOnScreen] = import_react19.useState([]);
-  import_react19.useEffect(function() {
-    function pushBelow(item) {
-      const items = onScreen;
-      items.push(item);
-      setOnScreen([...items]);
-    }
-    function pushAboveLastItem(item) {
-      const items = onScreen;
-      const lastItem = items[items.length - 1];
-      items[items.length - 1] = item;
-      items.push(lastItem);
-      setOnScreen([...items]);
-    }
-    function pushAbove(item) {
-      const items = onScreen;
-      let copy = [];
-      copy.push(item);
-      copy = copy.concat(items);
-      setOnScreen([...copy]);
-    }
-    function pushBetween(item, position) {
-      const items = onScreen;
-      const copy = [];
-      for (let i = 0;i < position; i++) {
-        const copiedItem = items[i];
-        copy.push(copiedItem);
-      }
-      copy.push(item);
-      const itemsLength = items.length;
-      for (let i = position;i < itemsLength; i++) {
-        const copiedItem = items[i];
-        copy.push(copiedItem);
-      }
-      setOnScreen(copy);
-    }
-    function pullBelow() {
-      const items = onScreen;
-      items.pop();
-      setOnScreen([...items]);
-    }
-    function pullAbove() {
-      const items = onScreen;
-      items.shift();
-      setOnScreen([...items]);
-    }
-    function pull(position) {
-      const items = onScreen;
-      items.splice(position, 1);
-      setOnScreen([...items]);
-    }
-    function wipe() {
-      const itemsLength = onScreen.length;
-      for (let i = 0;i < itemsLength; i++) {
-        pullBelow();
-      }
-    }
-    on(`${name} pushBelow`, pushBelow);
-    on(`${name} pushAboveLastItem`, pushAboveLastItem);
-    on(`${name} pushAbove`, pushAbove);
-    on(`${name} pushBetween`, pushBetween);
-    on(`${name} pullBelow`, pullBelow);
-    on(`${name} pullAbove`, pullAbove);
-    on(`${name} pull`, pull);
-    on(`${name} wipe`, wipe);
-    return function() {
-      off(`${name} pushBelow`);
-      off(`${name} pushAboveLastItem`);
-      off(`${name} pushAbove`);
-      off(`${name} pushBetween`);
-      off(`${name} pullBelow`);
-      off(`${name} pullAbove`);
-      off(`${name} pull`);
-      off(`${name} wipe`);
-    };
-  }, []);
-  return jsx_dev_runtime8.jsxDEV(Remote, {
-    name,
-    initSpring: spring,
-    initStyle: style,
-    children: onScreen,
-    onAbort,
-    onAbortCapture,
-    onAnimationEnd,
-    onAnimationEndCapture,
-    onAnimationIteration,
-    onAnimationIterationCapture,
-    onAnimationStart,
-    onAnimationStartCapture,
-    onAuxClick,
-    onAuxClickCapture,
-    onBeforeInput,
-    onBeforeInputCapture,
-    onBlur,
-    onBlurCapture,
-    onCanPlay,
-    onCanPlayCapture,
-    onCanPlayThrough,
-    onCanPlayThroughCapture,
-    onChange,
-    onChangeCapture,
-    onClick,
-    onClickCapture,
-    onCompositionEnd,
-    onCompositionEndCapture,
-    onCompositionStart,
-    onCompositionStartCapture,
-    onCompositionUpdate,
-    onCompositionUpdateCapture,
-    onContextMenu,
-    onContextMenuCapture,
-    onCopy,
-    onCopyCapture,
-    onCut,
-    onCutCapture,
-    onDoubleClick,
-    onDoubleClickCapture,
-    onDrag,
-    onDragCapture,
-    onDragEnd,
-    onDragEndCapture,
-    onDragEnter,
-    onDragEnterCapture,
-    onDragExit,
-    onDragExitCapture,
-    onDragLeave,
-    onDragLeaveCapture,
-    onDragOver,
-    onDragOverCapture,
-    onDragStart,
-    onDragStartCapture,
-    onDrop,
-    onDropCapture,
-    onDurationChange,
-    onDurationChangeCapture,
-    onEmptied,
-    onEmptiedCapture,
-    onEncrypted,
-    onEncryptedCapture,
-    onEnded,
-    onEndedCapture,
-    onError,
-    onErrorCapture,
-    onFocus,
-    onFocusCapture,
-    onGotPointerCapture,
-    onGotPointerCaptureCapture,
-    onInput,
-    onInputCapture,
-    onInvalid,
-    onInvalidCapture,
-    onKeyDown,
-    onKeyDownCapture,
-    onKeyUp,
-    onKeyUpCapture,
-    onLoad,
-    onLoadCapture,
-    onLoadStart,
-    onLoadStartCapture,
-    onLoadedData,
-    onLoadedDataCapture,
-    onLoadedMetadata,
-    onLoadedMetadataCapture,
-    onLostPointerCapture,
-    onLostPointerCaptureCapture,
-    onMouseDown,
-    onMouseDownCapture,
-    onMouseEnter,
-    onMouseLeave,
-    onMouseMove,
-    onMouseMoveCapture,
-    onMouseOut,
-    onMouseOutCapture,
-    onMouseOver,
-    onMouseOverCapture,
-    onMouseUp,
-    onMouseUpCapture,
-    onPaste,
-    onPasteCapture,
-    onPause,
-    onPauseCapture,
-    onPlay,
-    onPlayCapture,
-    onPlaying,
-    onPlayingCapture,
-    onPointerCancel,
-    onPointerCancelCapture,
-    onPointerDown,
-    onPointerDownCapture,
-    onPointerEnter,
-    onPointerEnterCapture,
-    onPointerLeave,
-    onPointerLeaveCapture,
-    onPointerMove,
-    onPointerMoveCapture,
-    onPointerOut,
-    onPointerOutCapture,
-    onPointerOver,
-    onPointerOverCapture,
-    onPointerUp,
-    onPointerUpCapture,
-    onProgress,
-    onProgressCapture,
-    onRateChange,
-    onRateChangeCapture,
-    onReset,
-    onResetCapture,
-    onResize: onResize2,
-    onResizeCapture,
-    onScroll: onScroll2,
-    onScrollCapture,
-    onSeeked,
-    onSeekedCapture,
-    onSeeking,
-    onSeekingCapture,
-    onSelect,
-    onSelectCapture,
-    onStalled,
-    onStalledCapture,
-    onSubmit,
-    onSubmitCapture,
-    onSuspend,
-    onSuspendCapture,
-    onTimeUpdate,
-    onTimeUpdateCapture,
-    onTouchCancel,
-    onTouchCancelCapture,
-    onTouchEnd,
-    onTouchEndCapture,
-    onTouchMove,
-    onTouchMoveCapture,
-    onTouchStart,
-    onTouchStartCapture,
-    onTransitionEnd,
-    onTransitionEndCapture,
-    onVolumeChange,
-    onVolumeChangeCapture,
-    onWaiting,
-    onWaitingCapture,
-    onWheel,
-    onWheelCapture
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/SteelText.tsx
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
-function SteelText(props) {
-  const initStyle = props.style ?? {};
-  const text = props.text;
-  const style = {
-    fontSize: "8px",
-    fontFamily: "roboto mono",
-    fontWeight: "bold",
-    color: "white",
-    background: "-webkit-linear-gradient(#FFFFFF, #A4A2A1)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
-    ...initStyle
-  };
-  return jsx_dev_runtime9.jsxDEV("div", {
-    style,
-    children: text
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/SteelTextHeading.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-function SteelTextHeading(props) {
-  return jsx_dev_runtime10.jsxDEV(SteelText, {
-    text: props.text,
-    style: { ...{ fontSize: "40px" }, ...props.style }
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/PurpleTextHeading.tsx
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
-function PurpleTextHeading(props) {
-  return jsx_dev_runtime11.jsxDEV(SteelTextHeading, {
-    text: props.text,
-    style: { ...{ background: "#615FFF" }, ...props.style }
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/Window.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
-function Window(props) {
-  const name = props.name;
-  const width = props.width;
-  const height = props.height;
-  const children = props.children;
-  const initSpring = props.initSpring ?? {};
-  const initStyle = props.initStyle ?? {};
-  const spring = {
-    background: "#171717",
-    padding: "40px",
-    overflowX: "hidden",
-    overflowY: "auto",
-    width,
-    height,
-    ...initSpring
-  };
-  const style = {
-    borderWidth: "1px",
-    borderStyle: "solid",
-    borderImage: "linear-gradient(to bottom, transparent, #474647) 1",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    ...initStyle
-  };
-  return jsx_dev_runtime12.jsxDEV(RemoteCol, {
-    name,
-    width,
-    height,
-    initSpring: spring,
-    initStyle: style
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/SteelTextSubHeading.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
-function SteelTextSubHeading(props) {
-  return jsx_dev_runtime13.jsxDEV(SteelText, {
-    text: props.text,
-    style: { ...{ fontSize: "20px" }, ...props.style }
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/RemoteButton1.tsx
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
-function RemoteButton1(props) {
-  const name = props.name;
-  const text = props.text;
-  const width = props.width ?? "200px";
-  const height = props.height ?? "50px";
-  const color = props.color ?? "#171717";
-  const initialClassName = props.initialClassName ?? "";
-  const buttonInitialSpring = {
-    width,
-    height,
-    background: "#615FFF",
-    boxShadow: "0px 0px 32px 2px #615FFF"
-  };
-  const buttonInitialStyle = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
-  };
-  const textStyle = {
-    background: color,
-    fontSize: "15px"
-  };
-  function onMouseEnter() {
-    const spring = {
-      background: "#6C69FF",
-      boxShadow: "0px 0px 32px 8px #6C69FF",
-      cursor: "pointer"
-    };
-    broadcast(`${name} render spring`, spring);
-  }
-  function onMouseLeave() {
-    const spring = {
-      background: "#615FFF",
-      boxShadow: "0px 0px 32px 2px #615FFF",
-      cursor: "auto"
-    };
-    broadcast(`${name} render spring`, spring);
-  }
-  function onClick() {
-    broadcast(`${name} clicked`);
-  }
-  return jsx_dev_runtime14.jsxDEV(Remote, {
-    name,
-    initSpring: buttonInitialSpring,
-    initStyle: buttonInitialStyle,
-    onMouseEnter,
-    onMouseLeave,
-    onClick,
-    initialClassName,
-    children: jsx_dev_runtime14.jsxDEV(SteelText, {
-      text,
-      style: textStyle
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/RemoteButton2.tsx
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
-function RemoteButton2(props) {
-  const name = props.name;
-  const text = props.text;
-  const width = props.width ?? "200px";
-  const height = props.height ?? "50px";
-  const initialClassName = props.initialClassName ?? "";
-  const buttonInitialSpring = {
-    width,
-    height,
-    background: "transparent",
-    boxShadow: "0px 0px 32px 2px #615FFF",
-    borderColor: "#615FFF",
-    borderWidth: "1px"
-  };
-  const buttonInitialStyle = {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    borderStyle: "solid"
-  };
-  const textStyle = {
-    fontSize: "15px"
-  };
-  function onMouseEnter() {
-    const spring = {
-      boxShadow: "0px 0px 32px 8px #6C69FF",
-      borderColor: "#6C69FF",
-      cursor: "pointer"
-    };
-    broadcast(`${name} render spring`, spring);
-  }
-  function onMouseLeave() {
-    const spring = {
-      boxShadow: "0px 0px 32px 2px #615FFF",
-      borderColor: "#615FFF",
-      cursor: "auto"
-    };
-    broadcast(`${name} render spring`, spring);
-  }
-  function onClick() {
-    broadcast(`${name} clicked`);
-  }
-  return jsx_dev_runtime15.jsxDEV(Remote, {
-    name,
-    initSpring: buttonInitialSpring,
-    initStyle: buttonInitialStyle,
-    onMouseEnter,
-    onMouseLeave,
-    onClick,
-    initialClassName,
-    children: jsx_dev_runtime15.jsxDEV(SteelText, {
-      text,
-      style: textStyle
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/Row.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
-function Row(props) {
-  const width = props.width;
-  const height = props.height;
-  const initStyle = props.style ?? {};
-  const children = props.children;
-  const style = {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    width,
-    height,
-    ...initStyle
-  };
-  return jsx_dev_runtime16.jsxDEV("div", {
-    style,
-    children
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/design/SteelTextParagraph.tsx
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
-function SteelTextParagraph(props) {
-  return jsx_dev_runtime17.jsxDEV(SteelText, {
-    text: props.text,
-    style: props.style
-  }, undefined, false, undefined, this);
-}
-
-// code/build/DokaBuild/static/app/component/Operator.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
-async function execute(name, fns, cooldown) {
-  const fnLength = fns.length;
-  let wait = 0n;
-  for (let i = 0;i < fnLength; i++) {
-    const fn = fns[i];
-    await new Promise((resolve) => {
-      setTimeout(function() {
-        fn();
-        resolve(null);
-      }, Number(wait));
-    });
-    wait += cooldown;
-  }
-  await new Promise((resolve) => {
-    setTimeout(function() {
-      broadcast(`${name} transition done`);
-      resolve(null);
-    }, Number(wait));
-  });
-}
-var push = function(name, component) {
-  broadcast(`${name} pushBelow`, component);
-};
-var outro = function(name) {
-  broadcast(`${name} setClassName`, outroAnimation);
-};
-var wipe = function(name) {
-  broadcast(`${name} wipe`);
-};
-var WindowState;
-(function(WindowState2) {
-  WindowState2[WindowState2["NONE"] = 0] = "NONE";
-  WindowState2[WindowState2["IDLE"] = 1] = "IDLE";
-  WindowState2[WindowState2["SETTINGS"] = 2] = "SETTINGS";
-  WindowState2[WindowState2["INSTALLATION"] = 3] = "INSTALLATION";
-  WindowState2[WindowState2["DEPLOYING"] = 4] = "DEPLOYING";
-  WindowState2[WindowState2["YOU_ARE_ALL_SET_TO_GO"] = 5] = "YOU_ARE_ALL_SET_TO_GO";
-})(WindowState || (WindowState = {}));
-var introAnimation = "swing-in-top-fwd";
-var outroAnimation = "swing-out-top-bck";
-var window2 = function() {
-  let instance;
-  let _state = WindowState.NONE;
-  function Header(text) {
-    return jsx_dev_runtime18.jsxDEV(Remote, {
-      name: "header",
-      initialClassName: introAnimation,
-      children: jsx_dev_runtime18.jsxDEV(PurpleTextHeading, {
-        text: "Scaling Dreams, Crafting Possibilities",
-        style: {}
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function includeButtonsSection() {
-    push("window", jsx_dev_runtime18.jsxDEV(RemoteRow, {
-      name: "buttonsSection",
-      width: "100%",
-      height: "auto",
-      initStyle: { gap: "20px" }
-    }, undefined, false, undefined, this));
-  }
-  function state() {
-    return _state;
-  }
-  async function goto(to2) {
-    switch (to2) {
-      case WindowState.IDLE:
-        _onDone(_toIdle);
-        break;
-      case WindowState.SETTINGS:
-        _onDone(toSettings);
-        break;
-      default:
-        _onDone(_toIdle);
-        break;
-    }
-    switch (state()) {
-      case WindowState.NONE:
-        _done();
-        break;
-      case WindowState.IDLE:
-        _fromIdle();
-        break;
-      case WindowState.SETTINGS:
-        _fromSettings();
-        break;
-      default:
-        _done();
-        break;
-    }
-    _state = to2;
-    console.log(state());
-  }
-  async function _toIdle() {
-    function Header2() {
-      return jsx_dev_runtime18.jsxDEV(Remote, {
-        name: "header",
-        initialClassName: introAnimation,
-        children: jsx_dev_runtime18.jsxDEV(PurpleTextHeading, {
-          text: "Scaling Dreams, Crafting Possibilities",
-          style: {}
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this);
-    }
-    function SubHeader() {
-      const subHeadings = [
-        "You won't need accountants where we are going",
-        "Do your client's trust you? They shouldn't have to",
-        "Finance is broken, help us fix it",
-        "68% of fund managers hate paying expensive operation costs",
-        "Web3 is much more than meme coins and monkey pics ... or is it?",
-        "Please leave us feedback : ) it helps us a lot",
-        "You look familiar, have we seen you here before?",
-        "It's time to empower the little guy",
-        "Access global liquidity in seconds",
-        "Rug proof",
-        "Our community drives us",
-        "Hate VC? We do too, that's why we are 100% public",
-        "How can you trust your money is safe? Open-source!",
-        "Let us, help you, change the world.",
-        "Entepreneurs wanted!"
-      ];
-      const subHeadingsLength = subHeadings.length;
-      const randomSubHeadingIndex = Math.floor(Math.random() * subHeadingsLength);
-      const randomSubHeading = subHeadings[randomSubHeadingIndex];
-      return jsx_dev_runtime18.jsxDEV(Remote, {
-        name: "subHeader",
-        initialClassName: introAnimation,
-        initStyle: { marginTop: "10px" },
-        children: jsx_dev_runtime18.jsxDEV(SteelTextSubHeading, {
-          text: randomSubHeading,
-          style: { fontSize: "15px" }
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this);
-    }
-    execute("window", [
-      () => push("window", jsx_dev_runtime18.jsxDEV(Header2, {}, undefined, false, undefined, this)),
-      () => push("window", jsx_dev_runtime18.jsxDEV(SubHeader, {}, undefined, false, undefined, this)),
-      () => push("window", jsx_dev_runtime18.jsxDEV(Row, {
-        width: "100%",
-        height: "150px"
-      }, undefined, false, undefined, this)),
-      () => push("window", jsx_dev_runtime18.jsxDEV(RemoteRow, {
-        name: "buttonsSection",
-        width: "100%",
-        height: "auto",
-        initStyle: { gap: "20px" }
-      }, undefined, false, undefined, this)),
-      () => push("buttonsSection", jsx_dev_runtime18.jsxDEV(RemoteButton1, {
-        name: "getStartedButton",
-        text: "Get Started",
-        initialClassName: introAnimation
-      }, undefined, false, undefined, this)),
-      () => push("buttonsSection", jsx_dev_runtime18.jsxDEV(RemoteButton2, {
-        name: "learnMoreButton",
-        text: "Learn More",
-        initialClassName: introAnimation
-      }, undefined, false, undefined, this)),
-      () => on("getStartedButton clicked", () => window2().goto(WindowState.SETTINGS)),
-      () => on("learnMoreButton clicked", () => window2?.open("https://dreamcatcher-1.gitbook.io/dreamcatcher/"))
-    ], 25n);
-  }
-  async function _fromIdle() {
-    execute("window", [
-      () => off("getStartedButton clicked"),
-      () => off("learnMoreButton clicked"),
-      () => outro("header"),
-      () => outro("subHeader"),
-      () => outro("getStartedButton"),
-      () => outro("learnMoreButton"),
-      () => wipe("window")
-    ], 25n);
-  }
-  async function toSettings() {
-    function inputContainerStyle() {
-      return {
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "start",
-        alignItems: "start"
-      };
-    }
-    function inputStyle() {
-      return {
-        outline: "none",
-        background: "transparent"
-      };
-    }
-    function includeHeader() {
-      push("window", jsx_dev_runtime18.jsxDEV(Remote, {
-        name: "header",
-        initialClassName: introAnimation,
-        children: jsx_dev_runtime18.jsxDEV(PurpleTextHeading, {
-          text: "Settings",
-          style: {}
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this));
-    }
-    function includeTokenNameInput() {
-      push("window", jsx_dev_runtime18.jsxDEV(Remote, {
-        name: "tokenNameInput",
-        initialClassName: introAnimation,
-        initStyle: inputContainerStyle(),
-        children: jsx_dev_runtime18.jsxDEV(Row, {
-          width: "100%",
-          height: "auto",
-          children: [
-            jsx_dev_runtime18.jsxDEV(SteelTextParagraph, {
-              text: "Token Name: ",
-              style: {}
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime18.jsxDEV("input", {
-              style: inputStyle()
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
-      }, undefined, false, undefined, this));
-    }
-    function includeTokenSymbolInput() {
-      push("window", jsx_dev_runtime18.jsxDEV("input", {}, undefined, false, undefined, this));
-    }
-    function includeGap() {
-      push("window", jsx_dev_runtime18.jsxDEV(Row, {
-        width: "100%",
-        height: "150px"
-      }, undefined, false, undefined, this));
-    }
-    function includeOkButton() {
-      push("buttonsSection", jsx_dev_runtime18.jsxDEV(RemoteButton1, {
-        name: "okButton",
-        text: "Ok",
-        initialClassName: introAnimation
-      }, undefined, false, undefined, this));
-    }
-    function includeImNotReadyYetButton() {
-      push("buttonsSection", jsx_dev_runtime18.jsxDEV(RemoteButton2, {
-        name: "imNotReadyYetButton",
-        text: "I'm Not Ready Yet",
-        initialClassName: introAnimation
-      }, undefined, false, undefined, this));
-    }
-    function handleImNotReadyYetButton() {
-      on("imNotReadyYetButton clicked", () => window2().goto(WindowState.IDLE));
-    }
-    execute("window", [
-      includeHeader,
-      includeTokenNameInput,
-      includeTokenSymbolInput,
-      includeGap,
-      includeButtonsSection,
-      includeOkButton,
-      includeImNotReadyYetButton,
-      handleImNotReadyYetButton
-    ], 25n);
-  }
-  async function _fromSettings() {
-    function pauseButtonClickEvents() {
-      off("backButton clicked");
-    }
-    function outroHeader() {
-      broadcast("header setClassName", outroAnimation);
-    }
-    function outroOkButton() {
-      broadcast("okButton setClassName", outroAnimation);
-    }
-    function outroBackButton() {
-      broadcast("backButton setClassName", outroAnimation);
-    }
-    function wipe2() {
-      broadcast("window wipe");
-    }
-    execute("window", [
-      pauseButtonClickEvents,
-      outroHeader,
-      outroOkButton,
-      outroBackButton,
-      wipe2
-    ], 25n);
-  }
-  async function _done() {
-    broadcast("window transition done");
-  }
-  async function _onDone(fn) {
-    once2("window transition done", fn);
-  }
-  function _pushToWindow(component) {
-    broadcast("window pushBelow", component);
-  }
-  function _intro(name) {
-    broadcast(`${name} setClassName`, introAnimation);
-  }
-  function _outro(name) {
-    broadcast(`${name} setClassName`, outroAnimation);
-  }
-  function _push(name, component) {
-    broadcast(`${name} pushBelow`, component);
-  }
-  function _onClickOf(name, fn) {
-    on(`${name} clicked`, fn);
-  }
-  return function() {
-    if (!instance) {
-      instance = {
-        goto
-      };
-    }
-    return instance;
-  };
-}();
-var page = function() {
-  let instance;
-  return function() {
-    if (!instance) {
-      return instance = {};
-    }
-    return instance;
-  };
-}();
-var operator = function() {
-  let instance;
-  let _delay = 50;
-  _enterHomePageSubProcess();
-  function _enterHomePageSubProcess() {
-    _exec(function() {
-      broadcast("page pushBelow", jsx_dev_runtime18.jsxDEV(Background, {}, undefined, false, undefined, this));
-      broadcast("page pushBelow", jsx_dev_runtime18.jsxDEV(Layer, {
-        zIndex: "2000",
-        children: jsx_dev_runtime18.jsxDEV(RemoteCol, {
-          name: "layer",
-          width: "100%",
-          height: "100%"
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this));
-    });
-    _exec(function() {
-      broadcast("layer pushBelow", jsx_dev_runtime18.jsxDEV(Window, {
-        name: "window",
-        width: "450px",
-        height: "450px"
-      }, undefined, false, undefined, this));
-    });
-    _exec(() => window2().goto(WindowState.IDLE));
-  }
-  function _exec(fn) {
-    setTimeout(fn, _delay);
-    _delay += 20;
-  }
-  return function() {
-    if (!instance) {
-      instance = {};
-    }
-    return instance;
-  };
-}();
 
 // code/build/DokaBuild/static/app/App.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
-operator();
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+setTimeout(function() {
+  stream.pushBelow({ tag: "test", item: jsx_dev_runtime4.jsxDEV("div", {
+    children: "This is a message"
+  }, undefined, false, undefined, this) });
+}, 2500);
+setTimeout(function() {
+  stream.pullBelow({ tag: "test" });
+  stream.pushBelow({ tag: "test", item: jsx_dev_runtime4.jsxDEV("div", {
+    children: "I just swapped the last message"
+  }, undefined, false, undefined, this) });
+}, 5000);
 render(createBrowserRouter([{
   path: "/",
-  element: jsx_dev_runtime19.jsxDEV(RemotePage, {
-    initialPages: 1
+  element: jsx_dev_runtime4.jsxDEV(RemoteContainer, {
+    tag: "test",
+    style: { width: "100px", height: "100px" },
+    delay: 100,
+    cooldown: 100,
+    direction: "column"
   }, undefined, false, undefined, this)
 }]));

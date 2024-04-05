@@ -1,90 +1,36 @@
 import {stream} from "../../../core/Stream.tsx";
 import React, {type CSSProperties, useEffect, useState} from "react";
-import {animated, useSpring} from "react-spring";
-
-export interface RemoteProps {
-    name: string;
-    spring?: object;
-    style?: CSSProperties;
-    children?: JSX.Element | (JSX.Element)[];
-    className?: string;
-    [key: string]: any;
-}
-
-export default function Remote(props: RemoteProps) {
-    let {
-        name,
-        spring: propsSpring,
-        style: propsStyle,
-        children,
-        className: propsClassName,
-        ...other
-    } = props;
-    propsSpring = propsSpring ?? {};
-    propsStyle = propsStyle ?? {};
-    propsClassName = propsClassName ?? "";
-
-    const [spring, setSpring] = useState([{}, {}]);
-    const [style, setStyle] = useState({});
-    const [className, setClassName] = useState(propsClassName);
-
+import {type SpringProps, animated, useSpring} from "react-spring";
+export default function Remote({tag, spring = {}, style = {}, classname = "", children = [], ...more}: {tag: string; spring?: SpringProps; style?: CSSProperties; classname?: string; children?: JSX.Element | (JSX.Element)[]; [key: string]: any;}) {
+    const [spring_, setSpring] = useState<SpringProps[]>([{}, {}]);
+    const [style_, setStyle] = useState<CSSProperties>({});
+    const [classname_, setClassname] = useState<string>(classname);
     useEffect(function() {
-        stream.subscribe({
-            event: `${name} render spring`,
-            task: function(to: object) {
-                setSpring(currSpring => [currSpring[1], {
-                    ...currSpring[1],
-                    ...to
-                }]);
-            }
-        });
-        stream.subscribe({
-            event: `${name} render style`,
-            task: function(to: object) {
-                setStyle(currStyle => ({
-                    ...currStyle,
-                    ...to
-                }));
-            }
-        });
-        stream.subscribe({
-            event: `${name} get spring`,
-            task: function() {
-                stream.post({
-                    event: `${name} spring`,
-                    data: spring
-                });
-            }
-        });
-        stream.subscribe({
-            event: `${name} get style`,
-            task: function() {
-                stream.post({
-                    event: `${name} style`,
-                    data: style
-                });
-            }
-        });
-        stream.subscribe({
-            event: `${name} set className`,
-            task: function(className: string) {
-                setClassName(className);
-            }
-        });
-        if (propsSpring) {
-            stream.renderSpring({name: name, spring: propsSpring});
+        const renderSpringEvent = `${tag} render spring`;
+        const renderStyleEvent = `${tag} render style`;
+        const getSpringEvent = `${tag} get spring`;
+        const getStyleEvent = `${tag} get style`;
+        const setClassnameEvent = `${tag} set classname`;
+        const handleRenderSpringEvent = (to: SpringProps) => setSpring(springNow => [springNow[1], {...springNow[1], ...to}]);
+        const handleRenderStyleEvent = (to: CSSProperties) => setStyle(styleNow => ({...styleNow, ...to}));
+        const handleGetSpringEvent = () => stream.post({event: `${tag} spring`, data: spring_});
+        const handleGetStyleEvent = () => stream.post({event: `${tag} style`, data: style_});
+        const handleSetClassnameEvent = (classname: string) => setClassname(classname);
+        stream.subscribe({event: renderSpringEvent, task: handleRenderSpringEvent});
+        stream.subscribe({event: renderStyleEvent, task: handleRenderStyleEvent});
+        stream.subscribe({event: getSpringEvent, task: handleGetSpringEvent});
+        stream.subscribe({event: getStyleEvent, task: handleGetStyleEvent});
+        stream.subscribe({event: setClassnameEvent, task: handleSetClassnameEvent});
+        stream.renderSpring({tag: tag, spring: spring});
+        stream.renderStyle({tag: tag, style: style});
+        function cleanup() {
+            stream.wipe({event: renderSpringEvent});
+            stream.wipe({event: renderStyleEvent});
+            stream.wipe({event: getSpringEvent});
+            stream.wipe({event: getStyleEvent});
+            stream.wipe({event: setClassnameEvent});
         }
-        if (propsStyle) {
-            stream.renderStyle({name: name, style: propsStyle});
-        }
-        return function() {
-            stream.wipe({event: `${name} render spring`});
-            stream.wipe({event: `${name} render style`});
-            stream.wipe({event: `${name} get spring`});
-            stream.wipe({event: `${name} get style`});
-            stream.wipe({event: `${name} set className`});
-        }
+        return cleanup;
     }, []);
-
-    return <animated.div className={className} style={{...useSpring({from: spring[0], to: spring[1]}), ...style}} {...other} children={children}/>;
+    return <animated.div className={classname_} style={{...useSpring({from: spring_[0], to: spring_[1]}), ...style_}} {...more} children={children}/>
 }

@@ -9,19 +9,54 @@ export namespace stream {
         }
     })();
 
-    // DOM
-    export function renderSpring({name, spring}: {name: string, spring: object}) {
-        post({event: `${name} render spring`, data: spring});
+    // RemoteDOM
+    export function pushBelow({tag, item}: {tag: string, item: JSX.Element}) {
+        post({event: `${tag} pushBelow`, data: item});
     }
 
-    export function renderStyle({name, style}: {name: string, style: CSSProperties}) {
-        post({event: `${name} render style`, data: style});
+    export function pushAboveLastItem({tag, item}: {tag: string, item: JSX.Element}) {
+        post({event: `${tag} pushAboveLastItem`, data: item});
+    }
+
+    export function pushAbove({tag, item}: {tag: string, item: JSX.Element}) {
+        post({event: `${tag} pushAbove`, data: item});
+    }
+
+    export function pushBetween({tag, item}: {tag: string, item: JSX.Element}) {
+        post({event: `${tag} pushBetween`, data: item});
+    }
+
+    export function swapBelow({tag}: {tag: string}) {
+        /// -> Swaps the last component in a 'RemoteContainer' for 
+        ///    another.
+        
+    }
+
+    export function pullBelow({tag}: {tag: string}) {
+        post({event: `${tag} pullBelow`});
+    }
+
+    export function pullAbove({tag, item}: {tag: string, item: JSX.Element}) {
+        post({event: `${tag} pullAbove`, data: item});
+    }
+
+    export function pull({tag, position}: {tag: string, position: number}) {
+        post({event: `${tag} pull`, data: position});
+    }    
+
+    // DOM
+    export function renderSpring({tag, spring}: {tag: string, spring: object}) {
+        post({event: `${tag} render spring`, data: spring});
+    }
+
+    export function renderStyle({tag, style}: {tag: string, style: CSSProperties}) {
+        post({event: `${tag} render style`, data: style});
     }
 
     // Remote Getter & Setter
-    export async function get({name, property}: {name: string, property: string}) {
-        const requestEvent = `${name} get ${property}`;
-        const receiveEvent = `${name} ${property}`;
+    export async function get({tag, property}: {tag: string, property: string}) {
+        const requestEvent = `${tag} get ${property}`;
+        const receiveEvent = `${tag} ${property}`;
         return new Promise(function(resolve) {
             once({
                 event: receiveEvent,
@@ -33,8 +68,8 @@ export namespace stream {
         });
     }
 
-    export async function set({name, property, data}: {name: string, property: string, data?: any}) {
-        post({event: `${name} set ${property}`, data: data});
+    export async function set({tag, property, data}: {tag: string, property: string, data?: any}) {
+        post({event: `${tag} set ${property}`, data: data});
     }
 
     // Common Use
