@@ -1,8 +1,7 @@
-import type {CSSProperties} from 'react';
-import React from 'react';
-import {Link} from 'react-router-dom';
-import {Row} from './Base.tsx';
-import {RenderedText, RenderedRow} from './Rendered.tsx';
+import type {CSSProperties} from "react";
+import React from "react";
+import {Link} from "react-router-dom";
+import {RenderedText, RenderedRow} from "./Rendered_.tsx";
 
 export type INavbarItemProps = ({
     nodeId: string;
@@ -62,22 +61,22 @@ export function NavbarItem(props: INavbarItemProps) {
 }
 
 export type INavbarProps = ({
-    style?: CSSProperties;
+    initialStyle?: CSSProperties;
     [k: string]: any;
 });
 
 export function Navbar(props: INavbarProps) {
-    const {style, ...more} = props;
+    const {initialStyle, ...more} = props;
 
     const args = ({
         nodeId: "NavbarRow",
-        w: "auto",
+        w: "100%",
         h: "auto",
         childrenMountDelay: 100n,
         childrenMountCooldown: 100n,
         initialStyle: ({
             gap: "30px",
-            ...style ?? ({})
+            ...initialStyle ?? ({})
         }),
         ...more
     }) as const;

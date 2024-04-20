@@ -1,5 +1,5 @@
-import {Col} from './Base.tsx';
-import {RenderedText} from './Rendered.tsx';
+import {Col} from "./Base.tsx";
+import {RenderedText} from "./Rendered_.tsx";
 
 export type ILogoAndBrandProps = ({});
 
@@ -14,7 +14,7 @@ export function LogoAndBrand(props: ILogoAndBrandProps) {
             borderStyle: "solid",
             borderImage: "linear-gradient(to bottom, transparent, #505050) 1"
         }),
-        initialClassName: "swing-in-top-fwd"
+        className: "swing-in-top-fwd"
     }) as const;
 
     const logoArgs = ({

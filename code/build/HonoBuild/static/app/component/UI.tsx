@@ -1,8 +1,8 @@
-import type {CSSProperties} from 'react';
-import React, {useState, useEffect} from 'react';
-import {on, post, render, cleanup, EventSubscription} from '../operator/Cargo.ts';
-import {Rendered, RenderedText} from './Rendered.tsx';
-import {Col, Row} from './Base.tsx';
+import type {CSSProperties} from "react";
+import React, {useState, useEffect} from "react";
+import {on, post, render, cleanup, EventSubscription} from "../operator/Emitter.ts";
+import {Rendered, RenderedText} from "./Rendered_.tsx";
+import {Col, Row} from "./Base.tsx";
 
 export type ICheckBoxProps = ({
     nodeId: string;
@@ -167,7 +167,8 @@ export function Input(props: IInputProps) {
             alignItems: "center",
             fontSize: "8px",
             color: "white"
-        })
+        }),
+        ...more
     }) as const;
 
     const inputArgs = ({

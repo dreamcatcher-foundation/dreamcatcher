@@ -1,5 +1,5 @@
-import {RenderedText, RenderedCol} from './Rendered.tsx';
-import React from 'react';
+import React from "react";
+import {RenderedText, RenderedCol} from "./Rendered_.tsx";
 
 export type IHeaderProps = ({});
 

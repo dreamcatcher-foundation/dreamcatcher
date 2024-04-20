@@ -1,38 +1,48 @@
-import type {Signer, Network} from "ethers";
-import {BrowserProvider} from "ethers";
-import {on, post, render} from "../operator/Cargo.ts";
+import {type Signer, type Network, BrowserProvider} from "ethers";
+import {on, post, render} from "./Emitter.ts";
+import {type EventSubscription} from "fbemitter";
 
-type IStorage = ({
-    provider?: BrowserProvider;
-});
-
-let _storage: IStorage = ({});
-
-export default function bootMetamaskOperator() {
-    on({
-        message: "GET_STORAGE",
-        recipient: "METAMASK",
-        handler: function() {
-            return structuredClone(_storage);
-        }
+export const metamask = (function() {
+    let instance: ({
+        provider: typeof provider;
+        ethereum: typeof ethereum;
+        connect: typeof connect;
     });
+    let _provider: BrowserProvider | undefined;
 
-    on({
-        message: "CLICK",
-        sender: "CONNECT_BUTTON",
-        handler: async function() {
-            let {ethereum} = window as any;
+    (function() {
+        on({
+            socket: "ConnectButton",
+            message: "Click",
+            handler: connect
+        });
+    })();
 
-            if (!ethereum) {
-                render({
-                    recipient: "CONNECT_BUTTON",
-                    text: "Please Install Metamask"
-                });
-            }
+    function provider() {
+        return _provider;
+    }
 
-            _storage.provider = new BrowserProvider(ethereum);
+    function ethereum() {
+        return (window as any).ethereum;
+    }
 
-            return;
-        }
-    });
-}
+    function connect() {
+        if (!ethereum()) render({
+            socket: "ConnectButton",
+            text: "Please Install Metamask"
+        });
+
+        _provider = new BrowserProvider(ethereum());
+        return;
+    }
+
+    return function() {
+        if (!instance) return instance = ({
+            provider,
+            ethereum,
+            connect
+        });
+
+        return instance;
+    }
+})();

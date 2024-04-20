@@ -1,36 +1,35 @@
-import React, {useEffect} from 'react';
-import {Header} from './Header.tsx';
-import {RenderedRESTContainer, RenderedContainer, RenderedRow, RenderedButton0, RenderedButton1, RenderedText} from './Rendered.tsx';
-import {Message, on, post, echo, get, set, render, push, swap, wipe, pop, EventSubscription} from '../operator/Cargo.ts';
-import {Node} from '../operator/BetterCargo.ts';
-import {Input} from './UI.tsx';
+import React, {useEffect} from "react";
+import {Header} from "./Header.tsx";
+import {RenderedRESTContainer, RenderedContainer, RenderedRow, RenderedButton0, RenderedButton1, RenderedText} from "./Rendered_.tsx";
+import {on, post, render, cleanup, EventSubscription} from "../operator/Emitter.ts";
+import {Input} from "./UI.tsx";
 
-type IWelcomeProps = {}
+export type IWelcomeProps = ({});
 
 export function Welcome(props: IWelcomeProps) {
     const {} = props;
 
-    const args = {
-        node: 'WELCOME',
-        initStyle: {
-            width: '450px',
-            height: 'auto',
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderImage: 'linear-gradient(to bottom, transparent, #505050) 1',
-            background: 'rbga(255, 255, 255, 0)',
-            boxShadow: '0 4px 30px  rgba(0, 0, 0, 0.1)',
-            backdropFilter: 'blur(3.2px)',
-            WebkitBackdropFilter: 'blur(3.2px)',
-            display: 'flex',
-            flexDirection: 'column'
-        } as const,
-        containers: [
+    const args = ({
+        nodeId: "Welcome",
+        initialStyle: ({
+            width: "450px",
+            height: "450px",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderImage: "linear-gradient(to bottom, transparent, #505050) 1",
+            background: "rgba(255, 255, 255, 0)",
+            boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(3.2px)",
+            WebkitBackdropFilter: "blur(3.2px)",
+            display: "flex",
+            flexDirection: "column"
+        }) as const,
+        containers: ([
             <WelcomeIdle></WelcomeIdle>,
             <WelcomeSettings></WelcomeSettings>
-        ],
-        initState: 0n
-    };
+        ]),
+        initialState: 0n
+    });
 
     return (
         <RenderedRESTContainer {...args}></RenderedRESTContainer>
@@ -38,71 +37,58 @@ export function Welcome(props: IWelcomeProps) {
 }
 
 export function WelcomeIdle() {
-    const args = {
-        node: 'WELCOME_IDLE',
-        initStyle: {
-            width: '100%',
-            height: '100%',
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '40px'
-        } as const
-    };
-
-    const buttonsContainerArgs = {
-        node: 'WELCOME_IDLE_BUTTON_CONTAINER',
-        w: '100%',
-        h: 'auto',
-        initStyle: {
-            gap: '30px'
-        }
-    };
-
-    const buttonArgs0 = {
-        node: 'WELCOME_IDLE_BUTTON_0',
-        initText: 'Get Started'
-    };
-
-    const buttonArgs1 = {
-        node: 'WELCOME_IDLE_BUTTON_1',
-        initText: 'Learn More'
-    };
-
     useEffect(function() {
-        const subs: EventSubscription[] = [
+        const subs: EventSubscription[] = ([
             on({
-                message: Message({node: 'WELCOME_IDLE_BUTTON_0', action: 'CLICKED'}),
-                handler: function() {
-                    post({
-                        message: Message({node: 'WELCOME', prop: 'STATE', action: 'SET'}),
-                        cargo: 1n
-                    });
-                }
+                sender: "WelcomeIdleButton0",
+                message: "Click",
+                handler: () => render({
+                    recipient: "Welcome",
+                    state: 1n
+                })
             }),
             on({
-                message: Message({node: 'WELCOME_IDLE_BUTTON_1', action: 'CLICKED'}),
-                handler: function() {
-                    const {open} = window as any;
-    
-                    open('https://dreamcatcher-1.gitbook.io/dreamcatcher');
-                    return;
-                }
+                sender: "WelcomeIdleButton1",
+                message: "Click",
+                handler: () => (window as any).open("https://dreamcatcher-1.gitbook.io/dreamcatcher")
             })
-        ];
+        ]);
 
-        return function() {
-            const subsLength: number = subs.length;
-
-            for (let i = 0; i < subsLength; i++) {
-                const sub: EventSubscription = subs[i];
-                sub.remove();
-                return;
-            }
-        }
+        return cleanup(subs);
     }, []);
+
+    const args = ({
+        nodeId: "WelcomeIdle",
+        initialStyle: ({
+            width: "100%",
+            height: "100%",
+            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "40px"
+        }) as const
+    });
+
+    const buttonsContainerArgs = ({
+        nodeId: "WelcomeIdleButtonContainer",
+        w: "100%",
+        h: "auto",
+        initialStyle: ({
+            gap: "30px"
+        }) as const
+    });
+
+    const buttonArgs0 = ({
+        nodeId: "WelcomeIdleButton0",
+        initialText: "Get Started"
+    });
+
+    const buttonArgs1 = ({
+        nodeId: "WelcomeIdleButton1",
+        initialText: "Learn More"
+    });
 
     return (
         <RenderedContainer {...args}>
@@ -116,116 +102,94 @@ export function WelcomeIdle() {
 }
 
 export function WelcomeSettings() {
-    const node = Node({address: 'WELCOME_SETTINGS'});
-
-    const args = {
-        node: 'WELCOME_SETTINGS',
-        initStyle: {
-            width: '100%',
-            height: '100%',
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '40px'
-        } as const
-    };
-
-    const headingArgs = {
-        node: 'WELCOME_SETTINGS_HEADING',
-        initText: 'Settings',
-        initStyle: {
-            fontSize: '2em',
-            background: '#615FFF'
-        }
-    };
-
-    const inputArgs0 = {
-        node: 'WELCOME_SETTINGS_INPUT_0',
-        placeholder: 'Dreamcatcher Capital'
-    };
-
-    const inputArgs1 = {
-        node: 'WELCOME_SETTINGS_INPUT_0',
-        placeholder: 'Dream Token'
-    };
-
-    const inputArgs2 = {
-        node: 'WELCOME_SETTINGS_INPUT_1',
-        placeholder: 'vDREAM'
-    };
-
-    const buttonsContainerArgs = {
-        node: 'WELCOME_SETTINGS_BUTTON_CONTAINER',
-        w: '100%',
-        h: 'auto',
-        initStyle: {
-            gap: '30px'
-        }
-    };
-
-    const buttonArgs0 = {
-        node: 'WELCOME_SETTINGS_BUTTON_0',
-        initText: 'Next'
-    };
-
-    const buttonArgs1 = {
-        node: 'WELCOME_SETTINGS_BUTTON_1',
-        initText: 'Back'
-    };
-
     useEffect(function() {
-        const sub0 = on({
-            message: Message({
-                node: 'WELCOME_SETTINGS_BUTTON_0',
-                action: 'CLICKED'
-            }),
-            handler: async function() {
-                const isOkForPhase2 = await node.call({
-                    address: 'VAULT_DEPLOYMENT',
-                    signature: 'IS_OK_FOR_PHASE_2'
-                }) as any[]
-
-                console.log(isOkForPhase2[0])
-
-                if (isOkForPhase2[0]) {
-                    post({
-                        message: Message({
-                            node: 'WELCOME',
-                            prop: 'STATE',
-                            action: 'SET'
-                        }),
-                        cargo: 2n
+        const subs: EventSubscription[] = ([
+            on({
+                sender: "WelcomeSettingsButton0",
+                message: "Click",
+                handler: async function() {
+                    const ok: boolean = await post({
+                        recipient: "Deployment",
+                        message: "IsOkForPhase2Request"
                     });
+
+                    if (ok) {
+                        render({
+                            recipient: "Welcome",
+                            state: 2n
+                        });
+                    }
                 }
-            }
-        });
-
-        const sub1 = on({
-            message: Message({
-                node: 'WELCOME_SETTINGS_BUTTON_1',
-                action: 'CLICKED'
             }),
-            handler: function() {
+            on({
+                sender: "WelcomeSettingsButton1",
+                message: "Click",
+                handler: () => render({
+                    recipient: "Welcome",
+                    state: 0n
+                })
+            })
+        ]);
 
-                post({
-                    message: Message({
-                        node: 'WELCOME',
-                        prop: 'STATE',
-                        action: 'SET'
-                    }),
-                    cargo: 0n
-                });
-            }
-        })
-
-        return function() {
-            sub0.remove();
-            sub1.remove();
-            return;
-        }
+        return cleanup(subs);
     }, []);
+
+    const args = ({
+        nodeId: "WelcomeSettings",
+        initialStyle: ({
+            width: "100%",
+            height: "100%",
+            padding: "20px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "40px"
+        }) as const
+    });
+
+    const headingArgs = ({
+        nodeId: "WelcomeSettingsHeading",
+        initialText: "Settings",
+        initialStyle: ({
+            fontSize: "2em",
+            background: "#615FFF"
+        })
+    });
+
+    const inputArgs0 = ({
+        nodeId: "WelcomeSettingsInput0",
+        placeholder: "Dreamcatcher Capital"
+    });
+
+    const inputArgs1 = ({
+        nodeId: "WelcomeSettingsInput1",
+        placeholder: "Dream Token"
+    });
+
+    const inputArgs2 = ({
+        nodeId: "WelcomeSettingsInput2",
+        placeholder: "vDREAM"
+    });
+
+    const buttonsContainerArgs = ({
+        nodeId: "WelcomeSettingsButtonContainer",
+        w: "100%",
+        h: "auto",
+        initialStyle: ({
+            gap: "30px"
+        })
+    });
+
+    const buttonArgs0 = ({
+        nodeId: "WelcomeSettingsButton0",
+        initialText: "Next"
+    });
+
+    const buttonArgs1 = ({
+        nodeId: "WelcomeSettingsButton1",
+        initialText: "Back"
+    });
 
     return (
         <RenderedContainer {...args}>

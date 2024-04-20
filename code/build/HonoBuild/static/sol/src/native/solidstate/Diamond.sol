@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 import "../interface/IFacet.sol";
 import "../../non-native/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
 
-contract Chrysalis is SolidStateDiamond {
+contract Diamond is SolidStateDiamond {
     function install(address facet) external virtual onlyOwner() returns (bool) {
         return install_(facet);
     }

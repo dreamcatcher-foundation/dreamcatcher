@@ -1921,7 +1921,7 @@ abstract contract SolidStateDiamond is
 
 // Original license: SPDX_License_Identifier: Apache-2.0
 pragma solidity ^0.8.19;
-contract Chrysalis is SolidStateDiamond {
+contract Diamond is SolidStateDiamond {
     function install(address facet) external virtual onlyOwner() returns (bool) {
         return install_(facet);
     }

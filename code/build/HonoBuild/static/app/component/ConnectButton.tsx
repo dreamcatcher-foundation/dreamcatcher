@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {RenderedText} from './Rendered.tsx';
-import {on, post, render} from '../operator/Cargo.ts';
+import React, {useState, useEffect} from "react";
+import {RenderedText} from "./Rendered_.tsx";
+import {on, post, render} from "../operator/Emitter.ts";
 
 type IConnectButtonProps = ({});
 
