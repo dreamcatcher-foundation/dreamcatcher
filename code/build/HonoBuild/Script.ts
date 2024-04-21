@@ -2,102 +2,8 @@ import {writeFileSync, readFileSync, existsSync} from "fs";
 import {join} from "path";
 import {exec, execSync} from "child_process";
 import express from "express";
-import {ContractFactory, JsonRpcProvider, Wallet, Contract as EthersContract, Interface, BrowserProvider, type Provider} from "ethers";
+import {ContractFactory, JsonRpcProvider, Wallet, Contract, Interface, BrowserProvider, type Provider} from "ethers";
 import solc from "solc";
-
-function ContractBuilder() {
-    let _contract: EthersContract | undefined = undefined;
-    let _caller: Wallet | undefined = undefined;
-    let _provider: Provider | undefined = undefined;
-    let _address: string | undefined = undefined;
-    let _ABI: object[] | undefined = undefined;
-    let _key: string | undefined;
-
-    const instance = ({
-        useEnvVarUrlJsonRpcProvider,
-        useJsonRpcProvider,
-        useBrowserProvider,
-        useProvider,
-        useAddress,
-        useABI,
-        useKey,
-        useEnvVarKey,
-        useWallet
-    });
-
-    function useEnvVarUrlJsonRpcProvider(envKey: string) {
-        const url: string | undefined = process.env?.[envKey];
-        if (!url) throw new Error("ContractBuilder: env key references undefined url");
-        return useJsonRpcProvider(url);
-    }
-
-    function useJsonRpcProvider(url: string) {
-        _provider = new JsonRpcProvider(url);
-        return _build();
-    }
-
-    function useBrowserProvider() {
-        const ethereum: any = (window as any).ethereum;
-        if (!ethereum) throw new Error("ContractBuilder: ethereum is undefined");
-        _provider = new BrowserProvider(ethereum);
-        return _build();
-    }
-
-    function useProvider(provider: Provider) {
-        _provider = provider;
-        return _build();
-    }
-
-    function useAddress(address: string) {
-        _address = address;
-        return _build();
-    }
-
-    function useABI(ABI: object[]) {
-        _ABI = ABI;
-        return _build();
-    }
-
-    function useKey(key: string) {
-        _key = key;
-        return _build();
-    }
-
-    function useEnvVarKey(envKey: string) {
-        const key: string | undefined = process.env?.[envKey];
-        if (!key) return instance;
-        _key = key;
-        return _build();
-    }
-
-    function useWallet(wallet: Wallet) {
-        _caller = wallet;
-        return _build();
-    }
-
-    function _build() {
-        if (_key && _caller) _caller = new Wallet(_key, _provider);
-        if (!_address) return instance;
-        if (!_ABI) return instance;
-        if (_caller && _provider) {
-            _contract = new EthersContract(_address, _ABI, _caller.connect(_provider));
-            return instance;
-        }
-        _contract = new EthersContract(_address, _ABI, _provider);
-        return instance;
-    }
-
-    return instance;
-}
-
-const contract = ContractBuilder()
-    .useABI([])
-
-    .useAddress("")
-
-    .useBrowserProvider()
-
-    .useEnvVarKey("MyKey");
 
 class loader {
     private static _staticPath: string = "";
@@ -465,20 +371,6 @@ class appCompiler {
             
             if (!contract) response.send(({}));
             response.send(({ABI: contract?.ABI}));
-
-            Address()
-                .bindProvider()
-                    .useJsonRpcEnvUrl("polygon")
-                .bindCaller()
-                    .useEnvVarKey("polygonKey")
-                    .bind()
-                .bindContract()
-                    .useABI()
-                    .useAddress()
-                    .bind()
-                
-
-            return;
         })
         .use(express.static(join(__dirname, "/static/app")))
         .get("/", async function(req, res) {

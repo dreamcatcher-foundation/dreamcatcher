@@ -16,7 +16,20 @@
     /* Linting */
     "skipLibCheck": true,
     "strict": true,
+    "noUncheckedIndexedAccess": false,
+    "alwaysStrict": true,
+    "strictNullChecks": true,
     "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "skipDefaultLibCheck": true,
+    "allowUnusedLabels": false,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "noStrictGenericChecks": false,
+    "noImplicitReturns": true,
+    "noImplicitOverride": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true
   }
 }

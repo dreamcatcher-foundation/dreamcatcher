@@ -63,6 +63,7 @@
     "truffle-flattener": "^1.6.0",
     "ts-toolbelt": "^9.6.0",
     "typescript": "^5.3.3",
+    "unique-string": "^3.0.0",
     "web3": "^4.5.0",
     "xstate": "beta",
     "xstate-react": "^0.1.1"

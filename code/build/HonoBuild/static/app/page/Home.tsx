@@ -7,7 +7,6 @@ import {LogoAndBrand} from '../component/LogoAndBrand.tsx';
 import {RenderedRow} from '../component/Rendered_.tsx';
 import {Header} from '../component/Header.tsx';
 import {Welcome} from "../component/Welcome.tsx";
-import {RetroMinimaHeadline, RetroMinimaTaggedContainer} from "../component/RetroMinima.tsx";
 
 export default function Home() {
     return (
@@ -30,7 +29,6 @@ export default function Home() {
                     </Navbar>
                     <ConnectButton></ConnectButton>
                 </RenderedRow>
-                <RetroMinimaTaggedContainer nodeId="" initialText="Headline"/>
             </Layer>
         </Page>
     );

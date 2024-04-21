@@ -10,6 +10,6 @@ const rootReactDOM = createRoot(root);
 rootReactDOM.render(
     <RouterProvider router={createBrowserRouter([{
         path: '/',
-        element: <div>Hello</div>
+        element: <Home/>
     }])}/>
 );

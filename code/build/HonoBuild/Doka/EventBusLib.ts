@@ -132,7 +132,7 @@ export function ValueHook<Value>(tag_: string, initialValue_: Value) {
         lastValue_.push(value);
         post({
             tag: tag_,
-            message: "value-hook-change",
+            message: "ValueHookChange",
             item: {
                 oldValue: oldValue,
                 newValue: newValue,
@@ -143,7 +143,7 @@ export function ValueHook<Value>(tag_: string, initialValue_: Value) {
     function onChange(hook: ValueHookHook<Value>, once?: boolean): Hook {
         return Hook({
             tag: tag_,
-            message: "value-hook-change",
+            message: "ValueHookChange",
             once: once,
             hook: function(value?: {oldValue: Value; newValue: Value}) {
                 return hook(value);
