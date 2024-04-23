@@ -1,3 +1,16 @@
+
+
+export function Maybe<ValueIfSuccessful>(hook: () => ValueIfSuccessful, onSuccessHook: (value: ValueIfSuccessful) => void, onFailHook: (error: unknown) => void) {
+    try {
+        onSuccessHook(hook());
+    }
+    catch {
+        onFailHook(hook())
+    }
+}
+
+
+
 export type Maybe<ValueIfSuccessful> = {
     success: true;
     value: ValueIfSuccessful;
