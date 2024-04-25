@@ -1,0 +1,1 @@
+Ikigai (生きがい) One's reason for being, encompassing the sense of purpose and fulfillment in life
