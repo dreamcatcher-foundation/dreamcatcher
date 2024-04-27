@@ -6,10 +6,6 @@ import Path from "./Path.ts";
 import Timer from "../../Timer.ts";
 
 export default class SolPath extends Path {
-    public constructor(path: string) {
-        super(path);
-    }
-
     public override name(): string  {
         if (!super.name()) {
             throw new Error("SolPath: cannot find the name of its path");
@@ -17,16 +13,12 @@ export default class SolPath extends Path {
         return super.name()!;
     }
 
-    public extension(): string {
-        return "sol";
-    }
-
     public flattenedSolPath(): string {
         return `${__dirname}/${this.name()}.${this.extension()}`;
     }
 
     public parsedContent(): string {
-        exec(`bun hardhat flatten ${this._path} > ${this.flattenedSolPath()}`);
+        exec(`bun hardhat flatten ${this._value} > ${this.flattenedSolPath()}`);
         Timer.sleepSync(500n);
         const content: string = readFileSync(this.flattenedSolPath(), "utf8");
         unlinkSync(this.flattenedSolPath());

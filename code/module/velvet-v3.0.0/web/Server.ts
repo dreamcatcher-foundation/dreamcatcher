@@ -16,7 +16,7 @@ export default class Server {
     }
 
     public static setRootDir(path: Path): typeof Server {
-        this._express.use(express.static(path.get()));
+        this._express.use(express.static(path.value()));
         return Server;
     }
 
@@ -27,7 +27,7 @@ export default class Server {
 
     public static exposePath(url: Url, path: Path): typeof Server {
         return this.expose(url, function(request, response) {
-            response.sendFile(path.get());
+            response.sendFile(path.value());
             return;
         });
     }

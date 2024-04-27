@@ -29,7 +29,7 @@ export default class Url {
 
     public exposePath(path: Path): this {
         return this.expose(function(request, response) {
-            response.sendFile(path.get());
+            response.sendFile(path.value());
             return;
         });
     }
