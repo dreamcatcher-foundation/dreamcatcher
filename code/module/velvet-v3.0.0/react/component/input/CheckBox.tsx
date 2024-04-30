@@ -1,12 +1,53 @@
-import type {CSSProperties} from "react";
+import type {ReactNode} from "react";
+import type {ColRemoteProps} from "../structure/ColRemote.tsx";
 import React from "react";
 import {useState} from "react";
 import {useEffect} from "react";
-import RemoteCol from "../remote/RemoteCol.tsx";
+import ColRemote from "../structure/ColRemote.tsx";
 import {defaultEventsHub} from "../../../event/hub/DefaultEventsHub.ts";
 import type {EventSubscription} from "fbemitter";
+import {Component} from "react";
 
-export function CheckBox({
+class CheckBox extends Component<{
+    color?: string
+}, {
+    text: string
+}> {
+    public override state = {
+        text: ""
+    };
+
+    public override render(): ReactNode {
+        return <div></div>
+    }
+}
+
+export type CheckBoxProps = ColRemoteProps & {
+    dotColor?: string;
+    toggled?: boolean;
+};
+
+export function CheckBoxs(props: CheckBoxProps): ReactNode {
+    const {
+        remoteId,
+        style,
+        toggled,
+        ...more
+    } = props;
+    const {toggledState, setToggledState} = useState<boolean>(toggled ?? false);
+    useEffect(function() {
+        const subscription: EventSubscription = defaultEventsHub.hook(remoteId, "renderRemoteState", function(state: bigint) {
+            const toggled = () => state == 1n ? true : false;
+            if (match()) {
+
+            }
+            
+        });
+    }, []);
+}
+
+
+export function CheckBoxs({
     address,
     initialClassName,
     initialSpring,

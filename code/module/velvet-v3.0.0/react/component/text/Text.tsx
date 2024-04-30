@@ -1,6 +1,5 @@
 import type {ComponentPropsWithoutRef} from "react";
 import type {ReactNode} from "react";
-import React from "react";
 
 export type TextProps = ComponentPropsWithoutRef<"div"> & {
     text: string;

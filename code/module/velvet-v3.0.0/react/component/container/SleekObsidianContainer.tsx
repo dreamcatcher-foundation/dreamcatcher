@@ -1,47 +1,24 @@
-import type {CSSProperties} from "react";
-import React from "react";
-import RemoteCol from "../remote/RemoteCol.tsx";
+import type {ReactNode} from "react";
+import type {RenderedColumnProps} from "../rendered/RenderedColumn.tsx";
+import RenderedColumn from "../rendered/RenderedColumn.tsx";
 
-export default function SleekObsidianContainer({
-    address,
-    initialClassName,
-    initialSpring,
-    initialSpringConfig,
-    initialStyle,
-    childrenMountDelay,
-    childrenMountCooldown,
-    children,
-    ...more
-}: {
-    address: string;
-    initialClassName?: string;
-    initialSpring?: object;
-    initialSpringConfig?: object;
-    initialStyle?: CSSProperties;
-    childrenMountDelay?: bigint;
-    childrenMountCooldown?: bigint;
-    children?: React.JSX.Element | (React.JSX.Element)[];
-    [key: string]: any;
-}): React.JSX.Element {
-    return <RemoteCol {...{
-        "address": address,
-        "initialClassName": initialClassName,
-        "initialSpring": initialSpring,
-        "initialSpringConfig": initialSpringConfig,
-        "initialStyle": {
-            "background": "#171717",
-            "borderWidth": "1px",
-            "borderStyle": "solid",
-            "borderImage": "linear-gradient(to bottom, transparent, #505050) 1",
-            "padding": "2.5%",
-            "justifyContent": "space-between",
-            "overflowX": "hidden",
-            "overflowY": "auto",
-            ...initialStyle ?? {}
+export type SleekObsidianContainerProps = RenderedColumnProps;
+
+export default function SleekObsidianContainer(props: SleekObsidianContainerProps): ReactNode {
+    let {style, ...more} = props;
+    return <RenderedColumn {...{
+        style: {
+            background: "#171717",
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderImage: "linear-gradient(to bottom, transparent, #505050) 1",
+            padding: "2.5%",
+            justifyContent: "space-between",
+            overflowX: "hidden",
+            overflowY: "auto",
+            ...style ?? {}
         },
-        "childrenMountDelay": childrenMountDelay,
-        "childrenMountCooldown": childrenMountCooldown,
-        "children": children,
         ...more
-    }}/>;
+    }}>
+    </RenderedColumn>;
 }
