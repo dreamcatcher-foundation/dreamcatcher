@@ -31466,7 +31466,8 @@ function Row(props) {
   return jsx_dev_runtime16.jsxDEV(Col, {
     name,
     style: {
-      flexDirection: "row"
+      flexDirection: "row",
+      ...style
     },
     ...more
   }, undefined, false, undefined, this);
@@ -31488,55 +31489,125 @@ function Navbar(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/layer/NavUserInterfaceLayer.tsx
+// code/build/haruka/app/component/button/ConnectButton.tsx
 var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+function ConnectButton() {
+  return jsx_dev_runtime18.jsxDEV(Text, {
+    name: "connectButton",
+    text: "Connect",
+    style: {
+      width: "auto",
+      height: "50px",
+      fontSize: "20px",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    onMouseEnter: () => defaultMappedEventEmitter.post("connectButton", "setSpring", { cursor: "pointer" }),
+    onMouseLeave: () => defaultMappedEventEmitter.post("connectButton", "setSpring", { cursor: "auto" }),
+    onClick: () => defaultMappedEventEmitter.postEvent("connectButton", "CLICK"),
+    className: "swing-in-top-fwd"
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/layer/NavUserInterfaceLayer.tsx
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 function NavUserInterfaceLayer() {
-  return jsx_dev_runtime18.jsxDEV(Layer, {
+  return jsx_dev_runtime19.jsxDEV(Layer, {
     name: "navUserInterface",
-    children: jsx_dev_runtime18.jsxDEV(Navbar, {
-      name: "navUserInterfaceNavbar",
+    style: {
+      justifyContent: "start",
+      paddingTop: "20px"
+    },
+    children: jsx_dev_runtime19.jsxDEV(Row, {
+      name: "navUserInterfaceTopRow",
+      style: {
+        width: "100%",
+        height: "auto",
+        justifyContent: "space-between",
+        paddingLeft: "40px",
+        paddingRight: "40px"
+      },
       children: [
-        jsx_dev_runtime18.jsxDEV(NavbarItem, {
-          textName0: "navUserInterfaceNavbarItem0A",
-          textName1: "navUserInterfaceNavbarItem0B",
-          text0: "01",
-          text1: "Whitepaper",
-          link: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime18.jsxDEV(NavbarItem, {
-          textName0: "navUserInterfaceNavbarItem1A",
-          textName1: "navUserInterfaceNavbarItem1B",
-          text0: "02",
-          text1: "Explore",
-          link: ""
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime18.jsxDEV(NavbarItem, {
-          textName0: "navUserInterfaceNavbarItem2A",
-          textName1: "navUserInterfaceNavbarItem2B",
-          text0: "03",
-          text1: "Get Started",
-          link: ""
-        }, undefined, false, undefined, this)
+        jsx_dev_runtime19.jsxDEV(Col, {
+          name: "navUserInterfaceBrand",
+          style: {
+            width: "170px",
+            height: "60px",
+            borderStyle: "solid",
+            borderWidth: "1px",
+            borderImage: "linear-gradient(to bottom, transparent, #505050) 1"
+          },
+          children: [
+            jsx_dev_runtime19.jsxDEV("div", {
+              style: {
+                width: "25px",
+                height: "25px",
+                backgroundImage: "url('../../image/SteelLogo.png')",
+                backgroundSize: "contain",
+                position: "relative",
+                bottom: "12.5px"
+              }
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime19.jsxDEV(Text, {
+              name: "navUserInterfaceBrandName",
+              text: "Dreamcatcher",
+              style: {
+                fontSize: "20px",
+                position: "relative",
+                bottom: "12.5px"
+              }
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime19.jsxDEV(Navbar, {
+          name: "navUserInterfaceNavbar",
+          children: [
+            jsx_dev_runtime19.jsxDEV(NavbarItem, {
+              textName0: "navUserInterfaceNavbarItem0A",
+              textName1: "navUserInterfaceNavbarItem0B",
+              text0: "01",
+              text1: "Whitepaper",
+              link: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime19.jsxDEV(NavbarItem, {
+              textName0: "navUserInterfaceNavbarItem1A",
+              textName1: "navUserInterfaceNavbarItem1B",
+              text0: "02",
+              text1: "Explore",
+              link: ""
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime19.jsxDEV(NavbarItem, {
+              textName0: "navUserInterfaceNavbarItem2A",
+              textName1: "navUserInterfaceNavbarItem2B",
+              text0: "03",
+              text1: "Get Started",
+              link: ""
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime19.jsxDEV(ConnectButton, {}, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
 
 // code/build/haruka/app/page/HomePage.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
 function HomePage() {
-  return jsx_dev_runtime19.jsxDEV(Page, {
+  return jsx_dev_runtime20.jsxDEV(Page, {
     name: "homePage",
     children: [
-      jsx_dev_runtime19.jsxDEV(BackgroundLayer, {}, undefined, false, undefined, this),
-      jsx_dev_runtime19.jsxDEV(NavUserInterfaceLayer, {}, undefined, false, undefined, this)
+      jsx_dev_runtime20.jsxDEV(BackgroundLayer, {}, undefined, false, undefined, this),
+      jsx_dev_runtime20.jsxDEV(NavUserInterfaceLayer, {}, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
 
 // code/build/haruka/app/Index.tsx
-var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 Boilerplate.render([{
   path: "/",
-  element: jsx_dev_runtime20.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime21.jsxDEV(HomePage, {}, undefined, false, undefined, this)
 }]);

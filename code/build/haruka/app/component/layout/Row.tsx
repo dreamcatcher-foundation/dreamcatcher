@@ -9,7 +9,8 @@ export default function Row(props: RowProps): ReactNode {
         <Col {...{
             name: name,
             style: {
-                flexDirection: "row"
+                flexDirection: "row",
+                ...style
             },
             ...more
         }}>

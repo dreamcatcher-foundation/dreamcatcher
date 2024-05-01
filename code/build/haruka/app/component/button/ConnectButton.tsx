@@ -1,5 +1,5 @@
 import React, {type ReactNode} from "react";
-import Text from "../text/Text.ts";
+import Text from "../text/Text.tsx";
 import {defaultMappedEventEmitter} from "../../lib/messenger/DefaultMappedEventEmitter.ts";
 
 export default function ConnectButton(): ReactNode {
