@@ -1,4 +1,4 @@
-import Col, {type ColProps} from "./Col.ts";
+import Col, {type ColProps} from "./Col.tsx";
 import React, {type ReactNode} from "react";
 
 export type RowProps = ColProps;
