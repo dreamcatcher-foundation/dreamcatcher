@@ -1,6 +1,5 @@
 import axios, {type AxiosResponse} from "axios";
 import {type Request, type Response} from "express";
-import type {PathLike} from "../os/path/Path.ts";
 
 type UrlLike = string | Url;
 
@@ -27,7 +26,9 @@ class Url {
 
     public expose(serverListener: ServerListener): void {}
 
-    public exposePath(pathLike: PathLike) {}
+    public exposePath(pathLike: string | Path) {
+
+    }
 
     public exposeItem(item: object | object[]) {
         

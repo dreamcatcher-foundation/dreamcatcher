@@ -1,6 +1,5 @@
 import {TypescriptPath} from "./Lib__Path.ts";
 import {HyperTextMarkupLanguagePath} from "./Lib__Path.ts";
-import {Path} from "./Lib__Path.ts";
 import {Url} from "./Url.ts";
 
 class ReactRoute {
@@ -8,7 +7,6 @@ class ReactRoute {
         private readonly _typescriptPath: TypescriptPath,
         private readonly _hyperTextMarkupLanguagePath: HyperTextMarkupLanguagePath,
         private readonly _url: Url) {
-        const path: Path | null = this._typescriptPath.dir();
         const dir: (string | undefined)[] = [
             this._typescriptPath.dir()?.get(),
             this._hyperTextMarkupLanguagePath.dir()?.get()
@@ -19,9 +17,8 @@ class ReactRoute {
         if (dir[0] == null || dir[1] == null) {
             throw new Error("ReactRoute: Requires both dir paths but failed to get them.");
         }
-        this._typescriptPath.transpile().then(() => {
-            this._hyperTextMarkupLanguagePath.expose(this._url.get());
-        });
+        this._typescriptPath.transpile();
+        this._hyperTextMarkupLanguagePath.expose(this._url.get());
     }
 }
 

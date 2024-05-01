@@ -3,10 +3,8 @@ import {readFileSync} from "fs";
 import {writeFileSync} from "fs";
 import {unlinkSync} from "fs";
 import {join} from "path";
-import {Url} from "../web/Url.ts";
-//import {execSync} from "child_process";
-import {exec} from "child_process";
-import {type ChildProcess} from "child_process";
+import {Url} from "./Url.ts";
+import {exec, execSync} from "child_process";
 import {Timer} from "./Timer.ts";
 import solc from "solc";
 
@@ -136,15 +134,16 @@ class TypescriptPath extends Path {
         }
     }
 
-    public async transpile(outDirPathLike?: string | Path): Promise<ChildProcess> {
+    public transpile(outDirPathLike?: string | Path): void {
         const path: string = Path.toString(outDirPathLike ?? "");
         if (!path) {
             const command: string = `bun build ${this.get()} --outdir ${this.dir()?.get()}`;
-            console.log(command);
-            return exec(command);
+            execSync(command);
+            return;
         }
         const command: string = `bun build ${this.get()} --outdir ${this.get()}`;
-        return exec(command);
+        execSync(command);
+        return;
     }
 }
 
