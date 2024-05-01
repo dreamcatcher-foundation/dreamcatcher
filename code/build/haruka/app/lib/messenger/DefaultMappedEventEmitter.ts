@@ -8,6 +8,7 @@ export type EventsMap = {
     setSpringConfig: [springConfig: SpringConfig],
     setStyle: [style: CSSProperties],
     setClassName: [className: string],
+    toggle: [state: boolean],
     push: [component: ReactNode],
     pull: [],
     wipe: [],
@@ -17,7 +18,8 @@ export type EventsMap = {
     CLICK: [],
     MOUSE_ENTER: [],
     MOUSE_LEAVE: [],
-    INPUT_CHANGE: [input: string]
+    INPUT_CHANGE: [input: string],
+    TOGGLED: [state: boolean]
 };
 
 export const defaultMappedEventEmitter: MappedEventEmitter<EventsMap> = new MappedEventEmitter<EventsMap>();
