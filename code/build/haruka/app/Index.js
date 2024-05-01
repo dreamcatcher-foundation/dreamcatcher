@@ -23674,7 +23674,7 @@ var require_fbemitter = __commonJS((exports, module) => {
   module.exports = fbemitter;
 });
 
-// code/build/Ikigai/app/lib/react/Boilerplate.tsx
+// code/build/haruka/app/lib/react/Boilerplate.tsx
 var client = __toESM(require_client(), 1);
 
 // node_modules/react-router-dom/dist/index.js
@@ -27957,7 +27957,7 @@ var getUniqueFetcherId = () => "__" + String(++fetcherId) + "__";
 var SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
 var savedScrollPositions = {};
 
-// code/build/Ikigai/app/lib/react/Boilerplate.tsx
+// code/build/haruka/app/lib/react/Boilerplate.tsx
 var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
 
 class Boilerplate {
@@ -27970,7 +27970,7 @@ class Boilerplate {
   }
 }
 
-// code/build/Ikigai/app/component/Base.tsx
+// code/build/haruka/app/component/Base.tsx
 var import_react15 = __toESM(require_react(), 1);
 
 // node_modules/@react-spring/shared/dist/react-spring_shared.modern.mjs
@@ -31069,7 +31069,7 @@ var host = createHost(primitives, {
   getComponentProps: ({ scrollTop, scrollLeft, ...props }) => props
 });
 var animated6 = host.animated;
-// code/build/Ikigai/app/lib/messenger/EventEmitter.ts
+// code/build/haruka/app/lib/messenger/EventEmitter.ts
 var import_fbemitter = __toESM(require_fbemitter(), 1);
 
 class EventEmitter {
@@ -31085,7 +31085,7 @@ class EventEmitter {
   }
 }
 
-// code/build/Ikigai/app/lib/messenger/MappedEventEmitter.ts
+// code/build/haruka/app/lib/messenger/MappedEventEmitter.ts
 class MappedEventEmitter {
   _eventEmitterMap = new Map;
   eventEmitter(name) {
@@ -31112,107 +31112,296 @@ class MappedEventEmitter {
   }
 }
 
-// code/build/Ikigai/app/lib/messenger/DefaultMappedEventEmitter.ts
+// code/build/haruka/app/lib/messenger/DefaultMappedEventEmitter.ts
 var defaultMappedEventEmitter = new MappedEventEmitter;
 
-// code/build/Ikigai/app/component/Base.tsx
+// code/build/haruka/app/component/Base.tsx
 var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
-
-class Base {
-  static Component(props) {
-    const { name, className: pClassName, style: pStyle, spring: pSpring, springConfig: pSpringConfig, mountDelay, mountCooldown, children, ...more } = props;
-    const [spring, setSpring] = import_react15.useState([{}, pSpring ?? {}]);
-    const [springConfig, setSpringConfig] = import_react15.useState(pSpringConfig ?? config.default);
-    const [style, setStyle] = import_react15.useState(pStyle ?? {});
-    const [className, setClassName] = import_react15.useState(pClassName ?? "");
-    const [onScreen, setOnScreen] = import_react15.useState([]);
-    import_react15.useEffect(function() {
-      const subscriptions = [
-        defaultMappedEventEmitter.hook(name, "setSpring", (spring2) => setSpring((oldSpring) => [oldSpring[1], { ...oldSpring[1], ...spring2 }])),
-        defaultMappedEventEmitter.hook(name, "setSpringConfig", (springConfig2) => setSpringConfig(springConfig2)),
-        defaultMappedEventEmitter.hook(name, "setStyle", (style2) => setStyle((oldStyle) => ({ ...oldStyle, ...style2 }))),
-        defaultMappedEventEmitter.hook(name, "setClassName", (className2) => setClassName(className2)),
-        defaultMappedEventEmitter.hook(name, "push", function(component) {
-          const components = onScreen;
-          components.push(component);
-          setOnScreen([...components]);
+function Base(props) {
+  const { name, className: pClassName, style: pStyle, spring: pSpring, springConfig: pSpringConfig, mountDelay, mountCooldown, children, ...more } = props;
+  const [spring, setSpring] = import_react15.useState([{}, pSpring ?? {}]);
+  const [springConfig, setSpringConfig] = import_react15.useState(pSpringConfig ?? config.default);
+  const [style, setStyle] = import_react15.useState(pStyle ?? {});
+  const [className, setClassName] = import_react15.useState(pClassName ?? "");
+  const [onScreen, setOnScreen] = import_react15.useState([]);
+  import_react15.useEffect(function() {
+    const subscriptions = [
+      defaultMappedEventEmitter.hook(name, "setSpring", (spring2) => setSpring((oldSpring) => [oldSpring[1], { ...oldSpring[1], ...spring2 }])),
+      defaultMappedEventEmitter.hook(name, "setSpringConfig", (springConfig2) => setSpringConfig(springConfig2)),
+      defaultMappedEventEmitter.hook(name, "setStyle", (style2) => setStyle((oldStyle) => ({ ...oldStyle, ...style2 }))),
+      defaultMappedEventEmitter.hook(name, "setClassName", (className2) => setClassName(className2)),
+      defaultMappedEventEmitter.hook(name, "push", function(component) {
+        const components = onScreen;
+        components.push(component);
+        setOnScreen([...components]);
+        return;
+      }),
+      defaultMappedEventEmitter.hook(name, "pull", function() {
+        const components = onScreen;
+        components.pop();
+        setOnScreen([...components]);
+        return;
+      }),
+      defaultMappedEventEmitter.hook(name, "wipe", function() {
+        const components = onScreen;
+        if (components.length == 0) {
           return;
-        }),
-        defaultMappedEventEmitter.hook(name, "pull", function() {
-          const components = onScreen;
-          components.pop();
-          setOnScreen([...components]);
-          return;
-        }),
-        defaultMappedEventEmitter.hook(name, "wipe", function() {
-          const components = onScreen;
-          if (components.length == 0) {
-            return;
-          }
-          for (let i = 0;i < components.length; i++) {
-            const currentComponents = onScreen;
-            currentComponents.pop();
-            setOnScreen([...currentComponents]);
-          }
-          return;
-        }),
-        defaultMappedEventEmitter.hook(name, "swap", function(component) {
-          const components = onScreen;
-          components.pop();
-          components.push(component);
-          setOnScreen([...components]);
-          return;
-        })
-      ];
-      setTimeout(function() {
-        if (Array.isArray(children)) {
-          let cooldown = 0;
-          children.forEach(function(child) {
-            if (child) {
-              setTimeout(function() {
-                const components = onScreen;
-                components.push(child);
-                setOnScreen([...components]);
-                return;
-              }, cooldown);
-              cooldown += Number(mountCooldown ?? 0n);
-            }
-          });
-        } else {
-          if (children) {
-            const components = onScreen;
-            components.push(children);
-            setOnScreen([...components]);
-          }
         }
-      }, Number(mountDelay ?? 0n));
-      return function() {
-        return subscriptions.forEach((subscription) => subscription.remove());
-      };
-    }, []);
-    return jsx_dev_runtime2.jsxDEV(animated6.div, {
-      className,
-      style: {
-        ...useSpring({ from: spring[0], to: spring[1], config: springConfig }),
-        ...style
-      },
-      children: onScreen,
-      ...more
-    }, undefined, false, undefined, this);
-  }
+        for (let i = 0;i < components.length; i++) {
+          const currentComponents = onScreen;
+          currentComponents.pop();
+          setOnScreen([...currentComponents]);
+        }
+        return;
+      }),
+      defaultMappedEventEmitter.hook(name, "swap", function(component) {
+        const components = onScreen;
+        components.pop();
+        components.push(component);
+        setOnScreen([...components]);
+        return;
+      })
+    ];
+    setTimeout(function() {
+      if (Array.isArray(children)) {
+        let cooldown = 0;
+        children.forEach(function(child) {
+          if (child) {
+            setTimeout(function() {
+              const components = onScreen;
+              components.push(child);
+              setOnScreen([...components]);
+              return;
+            }, cooldown);
+            cooldown += Number(mountCooldown ?? 0n);
+          }
+        });
+      } else {
+        if (children) {
+          const components = onScreen;
+          components.push(children);
+          setOnScreen([...components]);
+        }
+      }
+    }, Number(mountDelay ?? 0n));
+    return function() {
+      return subscriptions.forEach((subscription) => subscription.remove());
+    };
+  }, []);
+  return jsx_dev_runtime2.jsxDEV(animated6.div, {
+    className,
+    style: {
+      ...useSpring({ from: spring[0], to: spring[1], config: springConfig }),
+      ...style
+    },
+    children: onScreen,
+    ...more
+  }, undefined, false, undefined, this);
 }
 
-// code/build/Ikigai/app/Index.tsx
+// code/build/haruka/app/component/layout/Col.tsx
 var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
+function Col(props) {
+  const { name, style, ...more } = props;
+  return jsx_dev_runtime3.jsxDEV(Base, {
+    name,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/layout/Page.tsx
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+function Page(props) {
+  const { name, style, ...more } = props;
+  return jsx_dev_runtime4.jsxDEV(Col, {
+    name,
+    style: {
+      width: "100vw",
+      height: "100vh",
+      overflow: "hidden",
+      background: "#161616",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/layout/Layer.tsx
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+function Layer(props) {
+  const { name, style, ...more } = props;
+  return jsx_dev_runtime5.jsxDEV(Col, {
+    name,
+    style: {
+      width: "100%",
+      height: "100%",
+      position: "absolute",
+      overflow: "hidden",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/effect/PulseLine.tsx
+var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+function PulseLine(props) {
+  const { name, style, ...more } = props;
+  return jsx_dev_runtime6.jsxDEV(Base, {
+    name,
+    style: {
+      width: "100%",
+      height: ".50px",
+      background: "linear-gradient(to right, transparent, rgba(163, 163, 163, 0.25), transparent)",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/effect/Pulse.tsx
+var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
+function Pulse(props) {
+  let { name, delay, reverse, style, ...more } = props;
+  delay = delay ?? 0;
+  reverse = reverse ?? false;
+  const from = reverse ? "-10" : "110%";
+  const to2 = reverse ? "110%" : "-10%";
+  const direction = reverse ? "to right" : "to left";
+  return jsx_dev_runtime7.jsxDEV(PulseLine, {
+    name,
+    style: style ?? {},
+    mountDelay: 10000n,
+    children: jsx_dev_runtime7.jsxDEV(animated6.div, {
+      style: {
+        ...useSpring({
+          from: {
+            left: from
+          },
+          to: {
+            left: to2
+          },
+          delay,
+          config: {
+            tension: 5,
+            friction: 4
+          },
+          loop: true
+        }),
+        ...{
+          width: "40px",
+          height: "2.5px",
+          bottom: "1.25px",
+          background: `linear-gradient(${direction}, transparent, rgba(163, 163, 163, 0.25))`,
+          borderRadius: "25px",
+          position: "relative"
+        }
+      }
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/effect/Pulse0.tsx
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
+function Pulse0() {
+  return jsx_dev_runtime8.jsxDEV(Pulse, {
+    name: "pulse0",
+    delay: 4000,
+    reverse: true,
+    style: {
+      position: "relative",
+      bottom: "200px"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/effect/Pulse1.tsx
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+function Pulse1() {
+  return jsx_dev_runtime9.jsxDEV(Pulse, {
+    name: "pulse1",
+    delay: 8000,
+    style: {
+      position: "relative"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/effect/BlurDot.tsx
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot(props) {
+  const { color0, color1, style, ...more } = props;
+  return jsx_dev_runtime10.jsxDEV(Base, {
+    style: {
+      background: `radial-gradient(closest-side, ${color0}, ${color1})`,
+      opacity: ".10",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/effect/BlurDot0.tsx
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot0() {
+  return jsx_dev_runtime11.jsxDEV(BlurDot, {
+    name: "blurDot0",
+    color0: "#615FFF",
+    color1: "#161616",
+    style: {
+      width: "1000px",
+      height: "1000px",
+      position: "absolute",
+      right: "600px",
+      bottom: "200px"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/effect/BlurDot1.tsx
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot1() {
+  return jsx_dev_runtime12.jsxDEV(BlurDot, {
+    name: "blurDot1",
+    color0: "#0652FE",
+    color1: "#161616",
+    style: {
+      width: "1000px",
+      height: "1000px",
+      position: "absolute",
+      left: "600px",
+      top: "200px"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/HomePage.tsx
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+function HomePage() {
+  return jsx_dev_runtime13.jsxDEV(Page, {
+    name: "homePage",
+    children: jsx_dev_runtime13.jsxDEV(Layer, {
+      name: "homePageBackground",
+      children: [
+        jsx_dev_runtime13.jsxDEV(Pulse0, {}, undefined, false, undefined, this),
+        jsx_dev_runtime13.jsxDEV(Pulse1, {}, undefined, false, undefined, this),
+        jsx_dev_runtime13.jsxDEV(BlurDot0, {}, undefined, false, undefined, this),
+        jsx_dev_runtime13.jsxDEV(BlurDot1, {}, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/Index.tsx
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 Boilerplate.render([{
   path: "/",
-  element: jsx_dev_runtime3.jsxDEV(Base.Component, {
-    name: "Test",
-    spring: {
-      width: "250px",
-      height: "200px",
-      background: "#000"
-    },
-    onMouseEnter: () => defaultMappedEventEmitter.post("Test", "setSpring", { width: "500px" })
-  }, undefined, false, undefined, this)
+  element: jsx_dev_runtime14.jsxDEV(HomePage, {}, undefined, false, undefined, this)
 }]);

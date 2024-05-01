@@ -5,14 +5,14 @@ export default function BlurDot1(): ReactNode {
     return (
         <BlurDot {...{
             name: "blurDot1",
-            color0: "#615FFF",
+            color0: "#0652FE",
             color1: "#161616",
             style: {
                 width: "1000px",
                 height: "1000px",
                 position: "absolute",
-                right: "600px",
-                bottom: "200px"
+                left: "600px",
+                top: "200px"
             }
         }}>
         </BlurDot>

@@ -6,7 +6,7 @@ export default function Pulse0(): ReactNode {
         <Pulse {...{
             name: "pulse0",
             delay: 4000,
-            reverse: false,
+            reverse: true,
             style: {
                 position: "relative",
                 bottom: "200px"
