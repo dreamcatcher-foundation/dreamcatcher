@@ -1,5 +1,5 @@
 import React, {type ReactNode} from "react";
-import Col, {type ColProps} from "./Col.tsx";
+import Col, {type ColProps} from "../HookableAnimatedColumn.tsx";
 
 export type LayerProps = ColProps;
 

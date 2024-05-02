@@ -1,6 +1,6 @@
 import React, {type ReactNode} from "react";
 import PulseLine from "./PulseLine.tsx";
-import {type BaseProps} from "../Base.tsx";
+import {type BaseProps} from "../HookableAnimatedDiv.tsx";
 import {animated, useSpring} from "react-spring";
 
 export type PulseProps = BaseProps & {

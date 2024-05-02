@@ -31216,28 +31216,11 @@ function Col(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/layout/Page.tsx
-var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
-function Page(props) {
-  const { name, style, ...more } = props;
-  return jsx_dev_runtime4.jsxDEV(Col, {
-    name,
-    style: {
-      width: "100vw",
-      height: "100vh",
-      overflow: "hidden",
-      background: "#161616",
-      ...style ?? {}
-    },
-    ...more
-  }, undefined, false, undefined, this);
-}
-
 // code/build/haruka/app/component/layout/Layer.tsx
-var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
 function Layer(props) {
   const { name, style, ...more } = props;
-  return jsx_dev_runtime5.jsxDEV(Col, {
+  return jsx_dev_runtime4.jsxDEV(Col, {
     name,
     style: {
       width: "100%",
@@ -31250,11 +31233,59 @@ function Layer(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/effect/PulseLine.tsx
+// code/build/haruka/app/component/effect/BlurDot.tsx
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot(props) {
+  const { color0, color1, style, ...more } = props;
+  return jsx_dev_runtime5.jsxDEV(Base, {
+    style: {
+      background: `radial-gradient(closest-side, ${color0}, ${color1})`,
+      opacity: ".10",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/item/effect/BlurDot0.tsx
 var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot0() {
+  return jsx_dev_runtime6.jsxDEV(BlurDot, {
+    name: "blurDot0",
+    color0: "#615FFF",
+    color1: "#161616",
+    style: {
+      width: "1000px",
+      height: "1000px",
+      position: "absolute",
+      right: "600px",
+      bottom: "200px"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/item/effect/BlurDot1.tsx
+var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot1() {
+  return jsx_dev_runtime7.jsxDEV(BlurDot, {
+    name: "blurDot1",
+    color0: "#0652FE",
+    color1: "#161616",
+    style: {
+      width: "1000px",
+      height: "1000px",
+      position: "absolute",
+      left: "600px",
+      top: "200px"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/effect/PulseLine.tsx
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 function PulseLine(props) {
   const { name, style, ...more } = props;
-  return jsx_dev_runtime6.jsxDEV(Base, {
+  return jsx_dev_runtime8.jsxDEV(Base, {
     name,
     style: {
       width: "100%",
@@ -31267,7 +31298,7 @@ function PulseLine(props) {
 }
 
 // code/build/haruka/app/component/effect/Pulse.tsx
-var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 function Pulse(props) {
   let { name, delay, reverse, style, ...more } = props;
   delay = delay ?? 0;
@@ -31275,11 +31306,11 @@ function Pulse(props) {
   const from = reverse ? "-10" : "110%";
   const to2 = reverse ? "110%" : "-10%";
   const direction = reverse ? "to right" : "to left";
-  return jsx_dev_runtime7.jsxDEV(PulseLine, {
+  return jsx_dev_runtime9.jsxDEV(PulseLine, {
     name,
     style: style ?? {},
     mountDelay: 10000n,
-    children: jsx_dev_runtime7.jsxDEV(animated6.div, {
+    children: jsx_dev_runtime9.jsxDEV(animated6.div, {
       style: {
         ...useSpring({
           from: {
@@ -31308,24 +31339,24 @@ function Pulse(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/effect/Pulse0.tsx
-var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
+// code/build/haruka/app/component/item/effect/Pulse0.tsx
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
 function Pulse0() {
-  return jsx_dev_runtime8.jsxDEV(Pulse, {
+  return jsx_dev_runtime10.jsxDEV(Pulse, {
     name: "pulse0",
     delay: 4000,
     reverse: true,
     style: {
-      position: "relative",
+      position: "absolute",
       bottom: "200px"
     }
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/effect/Pulse1.tsx
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+// code/build/haruka/app/component/item/effect/Pulse1.tsx
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 function Pulse1() {
-  return jsx_dev_runtime9.jsxDEV(Pulse, {
+  return jsx_dev_runtime11.jsxDEV(Pulse, {
     name: "pulse1",
     delay: 8000,
     style: {
@@ -31334,73 +31365,71 @@ function Pulse1() {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/effect/BlurDot.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-function BlurDot(props) {
-  const { color0, color1, style, ...more } = props;
-  return jsx_dev_runtime10.jsxDEV(Base, {
+// code/build/haruka/app/component/item/BackgroundLayer.tsx
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+function BackgroundLayer() {
+  return jsx_dev_runtime12.jsxDEV(Layer, {
+    name: "backgroundLayer",
+    children: [
+      jsx_dev_runtime12.jsxDEV(Pulse0, {}, undefined, false, undefined, this),
+      jsx_dev_runtime12.jsxDEV(Pulse1, {}, undefined, false, undefined, this),
+      jsx_dev_runtime12.jsxDEV(BlurDot0, {}, undefined, false, undefined, this),
+      jsx_dev_runtime12.jsxDEV(BlurDot1, {}, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/component/layout/container/SleekObsidianContainer.tsx
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+function SleekObsidianContainer(props) {
+  const { name, style, direction, ...more } = props;
+  return jsx_dev_runtime13.jsxDEV(Col, {
+    name,
     style: {
-      background: `radial-gradient(closest-side, ${color0}, ${color1})`,
-      opacity: ".10",
+      background: "#171717",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderImage: `linear-gradient(${direction ?? "to bottom"}, transparent, #505050) 1`,
+      padding: "2.5%",
+      justifyContent: "space-between",
+      overflowX: "hidden",
+      overflowY: "auto",
       ...style ?? {}
     },
     ...more
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/effect/BlurDot0.tsx
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
-function BlurDot0() {
-  return jsx_dev_runtime11.jsxDEV(BlurDot, {
-    name: "blurDot0",
-    color0: "#615FFF",
-    color1: "#161616",
+// code/build/haruka/app/component/layout/container/FancyObsidianContainer.tsx
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+function FancyObsidianContainer(props) {
+  const { name, style, ...more } = props;
+  return jsx_dev_runtime14.jsxDEV(Col, {
+    name: `${name}__steelFrame`,
     style: {
-      width: "1000px",
-      height: "1000px",
-      position: "absolute",
-      right: "600px",
-      bottom: "200px"
-    }
+      width: "500px",
+      height: "512px",
+      borderStyle: "solid",
+      borderWidth: "1px",
+      borderImage: "linear-gradient(to bottom, transparent, #505050) 1"
+    },
+    children: jsx_dev_runtime14.jsxDEV(SleekObsidianContainer, {
+      name,
+      style: {
+        width: "450px",
+        height: "450px",
+        ...style
+      },
+      ...more
+    }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/effect/BlurDot1.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
-function BlurDot1() {
-  return jsx_dev_runtime12.jsxDEV(BlurDot, {
-    name: "blurDot1",
-    color0: "#0652FE",
-    color1: "#161616",
-    style: {
-      width: "1000px",
-      height: "1000px",
-      position: "absolute",
-      left: "600px",
-      top: "200px"
-    }
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/layer/BackgroundLayer.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
-function BackgroundLayer() {
-  return jsx_dev_runtime13.jsxDEV(Layer, {
-    name: "background",
-    children: [
-      jsx_dev_runtime13.jsxDEV(Pulse0, {}, undefined, false, undefined, this),
-      jsx_dev_runtime13.jsxDEV(Pulse1, {}, undefined, false, undefined, this),
-      jsx_dev_runtime13.jsxDEV(BlurDot0, {}, undefined, false, undefined, this),
-      jsx_dev_runtime13.jsxDEV(BlurDot1, {}, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
 }
 
 // code/build/haruka/app/component/text/Text.tsx
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
 function Text(props) {
   const { name, text, style, children, ...more } = props;
-  return jsx_dev_runtime14.jsxDEV(Base, {
+  return jsx_dev_runtime15.jsxDEV(Base, {
     name,
     style: {
       fontSize: "1em",
@@ -31417,47 +31446,8 @@ function Text(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/layout/navbar/NavbarItem.tsx
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
-function NavbarItem(props) {
-  const { textName0, textName1, text0, text1, link } = props;
-  return jsx_dev_runtime15.jsxDEV(Link, {
-    to: link,
-    style: {
-      gap: "10px",
-      textDecoration: "none",
-      color: "white",
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center"
-    },
-    children: [
-      jsx_dev_runtime15.jsxDEV(Text, {
-        name: textName0,
-        text: text0,
-        style: {
-          background: "#615FFF",
-          fontSize: "15px",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center"
-        }
-      }, undefined, false, undefined, this),
-      jsx_dev_runtime15.jsxDEV(Text, {
-        name: textName1,
-        text: text1,
-        style: {
-          fontSize: "15px",
-          display: "15px",
-          flexDirection: "row",
-          alignItems: "center"
-        }
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-}
+// code/build/haruka/app/component/input/Toggle.tsx
+var import_react16 = __toESM(require_react(), 1);
 
 // code/build/haruka/app/component/layout/Row.tsx
 var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
@@ -31473,11 +31463,150 @@ function Row(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/layout/navbar/Navbar.tsx
+// code/build/haruka/app/component/input/Toggle.tsx
 var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+function Toggle({
+  name,
+  isToggled: pIsToggled
+}) {
+  const [isToggled, toggle] = import_react16.useState(pIsToggled ?? false);
+  return jsx_dev_runtime17.jsxDEV(Row, {
+    name,
+    spring: {
+      width: "50px",
+      height: "25px",
+      background: pIsToggled ? "#615FFF" : "#FF1802"
+    },
+    style: {
+      overflowX: "hidden",
+      overflowY: "hidden",
+      justifyContent: "start",
+      padding: "2.5px",
+      borderRadius: "25px"
+    },
+    onMouseEnter: function() {
+      defaultMappedEventEmitter.post(name, "setSpring", {
+        cursor: "pointer"
+      });
+    },
+    onMouseLeave: function() {
+      defaultMappedEventEmitter.post(name, "setSpring", {
+        cursor: "auto"
+      });
+    },
+    onClick: function() {
+      if (isToggled) {
+        toggle(false);
+        defaultMappedEventEmitter.post(`${name}__dot`, "setSpring", {
+          left: "25px"
+        });
+        defaultMappedEventEmitter.post(name, "setSpring", {
+          background: "#615FFF"
+        });
+      } else {
+        toggle(true);
+        defaultMappedEventEmitter.post(`${name}__dot`, "setSpring", {
+          left: "0px"
+        });
+        defaultMappedEventEmitter.post(name, "setSpring", {
+          background: "#FF1802"
+        });
+      }
+    },
+    children: jsx_dev_runtime17.jsxDEV(Col, {
+      name: `${name}__dot`,
+      spring: {
+        width: "20px",
+        height: "20px",
+        borderRadius: "25px",
+        background: "#171717",
+        position: "relative",
+        left: pIsToggled ? "25px" : "0px"
+      },
+      springConfig: config.stiff
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/item/HomePageWindow.tsx
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+function HomePageWindow() {
+  return jsx_dev_runtime18.jsxDEV(FancyObsidianContainer, {
+    name: "homePageWindow",
+    style: {
+      justifyContent: "start"
+    },
+    children: [
+      jsx_dev_runtime18.jsxDEV(Text, {
+        name: "homePageWindowHeading",
+        text: "Scaling Dreams, Crafting Prossibilities",
+        style: {
+          fontSize: "40px",
+          background: "#615FFF"
+        }
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime18.jsxDEV(Text, {
+        name: "homePageWindowSubHeading",
+        text: "Deploy next gen protocols.",
+        style: {
+          fontSize: "20px"
+        }
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime18.jsxDEV(Toggle, {
+        name: "t",
+        isToggled: false
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/component/layout/navbar/NavbarItem.tsx
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+function NavbarItem(props) {
+  const { textName0, textName1, text0, text1, link } = props;
+  return jsx_dev_runtime19.jsxDEV(Link, {
+    to: link,
+    style: {
+      gap: "10px",
+      textDecoration: "none",
+      color: "white",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    children: [
+      jsx_dev_runtime19.jsxDEV(Text, {
+        name: textName0,
+        text: text0,
+        style: {
+          background: "#615FFF",
+          fontSize: "15px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center"
+        }
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime19.jsxDEV(Text, {
+        name: textName1,
+        text: text1,
+        style: {
+          fontSize: "15px",
+          display: "15px",
+          flexDirection: "row",
+          alignItems: "center"
+        }
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/component/layout/navbar/Navbar.tsx
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
 function Navbar(props) {
   const { name, style, ...more } = props;
-  return jsx_dev_runtime17.jsxDEV(Row, {
+  return jsx_dev_runtime20.jsxDEV(Row, {
     name,
     style: {
       width: "auto",
@@ -31489,10 +31618,10 @@ function Navbar(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/button/ConnectButton.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+// code/build/haruka/app/component/item/button/ConnectButton.tsx
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 function ConnectButton() {
-  return jsx_dev_runtime18.jsxDEV(Text, {
+  return jsx_dev_runtime21.jsxDEV(Text, {
     name: "connectButton",
     text: "Connect",
     style: {
@@ -31511,103 +31640,354 @@ function ConnectButton() {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/layer/NavUserInterfaceLayer.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
-function NavUserInterfaceLayer() {
-  return jsx_dev_runtime19.jsxDEV(Layer, {
-    name: "navUserInterface",
+// code/build/haruka/app/component/item/brand/logo/Logo25x25.tsx
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+function Logo25x25() {
+  return jsx_dev_runtime22.jsxDEV("div", {
+    style: {
+      width: "25px",
+      height: "25px",
+      backgroundImage: "url('../../../../image/SteelLogo.png')",
+      backgroundSize: "contain",
+      backgroundRepeat: "no-repeat"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/item/brand/BrandNameAndLogo170x60.tsx
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+function BrandNameAndLogo170x60() {
+  return jsx_dev_runtime23.jsxDEV("div", {
+    style: {
+      width: "170px",
+      height: "60px",
+      borderStyle: "solid",
+      borderWidth: "1px",
+      borderImage: "linear-gradient(to bottom, transparent, #505050) 1"
+    },
+    children: [
+      jsx_dev_runtime23.jsxDEV("div", {
+        style: {
+          width: "auto",
+          height: "auto",
+          position: "relative",
+          bottom: "12.5px"
+        },
+        children: jsx_dev_runtime23.jsxDEV(Logo25x25, {}, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime23.jsxDEV("div", {
+        style: {
+          fontSize: "20px",
+          fontFamily: "roboto mono",
+          fontWeight: "bold",
+          color: "white",
+          background: "#D6D5D4",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          position: "relative",
+          bottom: "12.5px"
+        },
+        children: "Dreamcatcher"
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/component/item/Nav.tsx
+var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
+function Nav() {
+  return jsx_dev_runtime24.jsxDEV("div", {
+    style: {
+      width: "100%",
+      height: "auto",
+      justifyContent: "space-between",
+      paddingLeft: "40px",
+      paddingRight: "40px",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      pointerEvents: "auto"
+    },
+    children: [
+      jsx_dev_runtime24.jsxDEV(BrandNameAndLogo170x60, {}, undefined, false, undefined, this),
+      jsx_dev_runtime24.jsxDEV(Navbar, {
+        name: "navbar",
+        children: [
+          jsx_dev_runtime24.jsxDEV(NavbarItem, {
+            textName0: "navbarItem0A",
+            textName1: "navbarItem0B",
+            text0: "01",
+            text1: "Home",
+            link: "/"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime24.jsxDEV(NavbarItem, {
+            textName0: "navbarItem1A",
+            textName1: "navbarItem1B",
+            text0: "02",
+            text1: "Whitepaper",
+            link: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime24.jsxDEV(NavbarItem, {
+            textName0: "navbarItem2A",
+            textName1: "navbarItem2B",
+            text0: "03",
+            text1: "Explore",
+            link: "/explore"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime24.jsxDEV(NavbarItem, {
+            textName0: "navbarItem3A",
+            textName1: "navbarItem3B",
+            text0: "04",
+            text1: "Get Started",
+            link: "/getStarted"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime24.jsxDEV(NavbarItem, {
+            textName0: "navbarItem4A",
+            textName1: "navbarItem4B",
+            text0: "05",
+            text1: "Account",
+            link: "/account"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      jsx_dev_runtime24.jsxDEV(ConnectButton, {}, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/component/item/NavLayer.tsx
+var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
+function NavLayer() {
+  return jsx_dev_runtime25.jsxDEV(Layer, {
+    name: "navLayer",
     style: {
       justifyContent: "start",
-      paddingTop: "20px"
+      paddingTop: "20px",
+      pointerEvents: "none"
     },
-    children: jsx_dev_runtime19.jsxDEV(Row, {
-      name: "navUserInterfaceTopRow",
-      style: {
-        width: "100%",
-        height: "auto",
-        justifyContent: "space-between",
-        paddingLeft: "40px",
-        paddingRight: "40px"
-      },
-      children: [
-        jsx_dev_runtime19.jsxDEV(Col, {
-          name: "navUserInterfaceBrand",
-          style: {
-            width: "170px",
-            height: "60px",
-            borderStyle: "solid",
-            borderWidth: "1px",
-            borderImage: "linear-gradient(to bottom, transparent, #505050) 1"
-          },
-          children: [
-            jsx_dev_runtime19.jsxDEV("div", {
-              style: {
-                width: "25px",
-                height: "25px",
-                backgroundImage: "url('../../image/SteelLogo.png')",
-                backgroundSize: "contain",
-                position: "relative",
-                bottom: "12.5px"
-              }
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime19.jsxDEV(Text, {
-              name: "navUserInterfaceBrandName",
-              text: "Dreamcatcher",
-              style: {
-                fontSize: "20px",
-                position: "relative",
-                bottom: "12.5px"
-              }
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
-        jsx_dev_runtime19.jsxDEV(Navbar, {
-          name: "navUserInterfaceNavbar",
-          children: [
-            jsx_dev_runtime19.jsxDEV(NavbarItem, {
-              textName0: "navUserInterfaceNavbarItem0A",
-              textName1: "navUserInterfaceNavbarItem0B",
-              text0: "01",
-              text1: "Whitepaper",
-              link: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime19.jsxDEV(NavbarItem, {
-              textName0: "navUserInterfaceNavbarItem1A",
-              textName1: "navUserInterfaceNavbarItem1B",
-              text0: "02",
-              text1: "Explore",
-              link: ""
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime19.jsxDEV(NavbarItem, {
-              textName0: "navUserInterfaceNavbarItem2A",
-              textName1: "navUserInterfaceNavbarItem2B",
-              text0: "03",
-              text1: "Get Started",
-              link: ""
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
-        jsx_dev_runtime19.jsxDEV(ConnectButton, {}, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
+    children: jsx_dev_runtime25.jsxDEV(Nav, {}, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/layout/Page.tsx
+var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
+function Page(props) {
+  const { name, style, ...more } = props;
+  return jsx_dev_runtime26.jsxDEV(Col, {
+    name,
+    style: {
+      width: "100vw",
+      height: "100vh",
+      overflow: "hidden",
+      background: "#161616",
+      ...style ?? {}
+    },
+    ...more
   }, undefined, false, undefined, this);
 }
 
 // code/build/haruka/app/page/HomePage.tsx
-var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
 function HomePage() {
-  return jsx_dev_runtime20.jsxDEV(Page, {
+  return jsx_dev_runtime27.jsxDEV(Page, {
     name: "homePage",
     children: [
-      jsx_dev_runtime20.jsxDEV(BackgroundLayer, {}, undefined, false, undefined, this),
-      jsx_dev_runtime20.jsxDEV(NavUserInterfaceLayer, {}, undefined, false, undefined, this)
+      jsx_dev_runtime27.jsxDEV(BackgroundLayer, {}, undefined, false, undefined, this),
+      jsx_dev_runtime27.jsxDEV(Layer, {
+        name: "homePageContentLayer",
+        children: jsx_dev_runtime27.jsxDEV(HomePageWindow, {}, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime27.jsxDEV(NavLayer, {}, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/component/input/TextInput.tsx
+var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+function TextInput(props) {
+  const { name, placeholder, ...more } = props;
+  return jsx_dev_runtime28.jsxDEV(Row, {
+    name,
+    style: {
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "start",
+      alignItems: "center",
+      fontSize: "8px",
+      color: "white"
+    },
+    ...more,
+    children: jsx_dev_runtime28.jsxDEV("input", {
+      style: {
+        width: "100%",
+        height: "auto",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: "#5B5B5B",
+        background: "#161616",
+        fontSize: "15px",
+        fontFamily: "roboto mono",
+        fontWeight: "bold",
+        color: "white",
+        padding: "12px",
+        textShadow: "4px 4px 64px 8px #FFFFFF"
+      },
+      placeholder,
+      onChange: (event) => defaultMappedEventEmitter.postEvent(name, "INPUT_CHANGE", event.target.value)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/component/item/GetStartedPageTextInputForm.tsx
+var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
+function GetStartedPageTextInputForm() {
+  return jsx_dev_runtime29.jsxDEV(Col, {
+    name: "getStartedPageTextInputForm",
+    children: [
+      jsx_dev_runtime29.jsxDEV(TextInput, {
+        name: "getStartedPageTextInputForm__input0",
+        placeholder: "Community, DAO, or project name"
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime29.jsxDEV(TextInput, {
+        name: "getStartedPageTextInputForm__input1",
+        placeholder: "Token name"
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime29.jsxDEV(TextInput, {
+        name: "getStartedPageTextInputForm__input2",
+        placeholder: "Token symbol"
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/component/item/GetStartedPageInstallationOptionItem.tsx
+var import_react17 = __toESM(require_react(), 1);
+var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
+function GetStartedPageInstallationOptionItem({
+  name,
+  quirkName,
+  isToggled: pIsToggled
+}) {
+  const [isToggled, toggle] = import_react17.useState(pIsToggled ?? false);
+  return jsx_dev_runtime30.jsxDEV(Row, {
+    name: `${name}__wrapper`,
+    style: {
+      width: "400px",
+      height: "25px"
+    },
+    children: [
+      jsx_dev_runtime30.jsxDEV(Row, {
+        name: `${name}__toggleButton`,
+        spring: {
+          width: "50px",
+          height: "25px",
+          background: pIsToggled ? "#615FFF" : "#FF1802"
+        },
+        style: {
+          overflowX: "hidden",
+          overflowY: "hidden",
+          justifyContent: "start",
+          padding: "2.5px",
+          borderRadius: "25px",
+          gap: "20px"
+        },
+        onMouseEnter: function() {
+          defaultMappedEventEmitter.post(`${name}__wrapper`, "setSpring", {
+            cursor: "pointer"
+          });
+        },
+        onMouseLeave: function() {
+          defaultMappedEventEmitter.post(`${name}__wrapper`, "setSpring", {
+            cursor: "auto"
+          });
+        },
+        onClick: function() {
+          if (isToggled) {
+            toggle(false);
+            defaultMappedEventEmitter.post(`${name}__toggleButtonDot`, "setSpring", {
+              left: "25px"
+            });
+            defaultMappedEventEmitter.post(`${name}__toggleButton`, "setSpring", {
+              background: "#615FFF"
+            });
+            defaultMappedEventEmitter.postEvent(name, "TOGGLED", false);
+          } else {
+            toggle(true);
+            defaultMappedEventEmitter.post(`${name}__toggleButtonDot`, "setSpring", {
+              left: "0px"
+            });
+            defaultMappedEventEmitter.post(`${name}__toggleButton`, "setSpring", {
+              background: "#FF1802"
+            });
+            defaultMappedEventEmitter.postEvent(name, "TOGGLED", true);
+          }
+        },
+        children: jsx_dev_runtime30.jsxDEV(Col, {
+          name: `${name}__toggleButtonDot`,
+          spring: {
+            width: "20px",
+            height: "20px",
+            borderRadius: "25px",
+            background: "#171717",
+            position: "relative",
+            left: pIsToggled ? "25px" : "0px"
+          },
+          springConfig: config.stiff
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime30.jsxDEV(Text, {
+        name: `${name}__label`,
+        text: quirkName
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/component/item/GetStartedPageInstallationForm.tsx
+var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
+function GetStartedPageInstallationForm() {
+  return jsx_dev_runtime31.jsxDEV(Col, {
+    name: "installationForm",
+    style: {
+      width: "420px",
+      height: "300px",
+      overflowY: "scroll",
+      overflowX: "hidden",
+      pointerEvents: "auto"
+    },
+    children: jsx_dev_runtime31.jsxDEV(GetStartedPageInstallationOptionItem, {
+      name: "option0",
+      quirkName: "ERC20"
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/GetStartedPage.tsx
+var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
+function GetStartedPage() {
+  return jsx_dev_runtime32.jsxDEV(Page, {
+    name: "getStartedPage",
+    children: [
+      jsx_dev_runtime32.jsxDEV(Page, {
+        name: "getStartedPageContentLayer",
+        children: [
+          jsx_dev_runtime32.jsxDEV(GetStartedPageTextInputForm, {}, undefined, false, undefined, this),
+          jsx_dev_runtime32.jsxDEV(GetStartedPageInstallationForm, {}, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      jsx_dev_runtime32.jsxDEV(NavLayer, {}, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
 
 // code/build/haruka/app/Index.tsx
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime33 = __toESM(require_jsx_dev_runtime(), 1);
 Boilerplate.render([{
   path: "/",
-  element: jsx_dev_runtime21.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime33.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+}, {
+  path: "/getStarted",
+  element: jsx_dev_runtime33.jsxDEV(GetStartedPage, {}, undefined, false, undefined, this)
 }]);

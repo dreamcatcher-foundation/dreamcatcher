@@ -1,4 +1,4 @@
-import Col, {type ColProps} from "./Col.tsx";
+import Col, {type ColProps} from "../HookableAnimatedColumn.tsx";
 import React, {type ReactNode} from "react";
 
 export type RowProps = ColProps;

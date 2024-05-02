@@ -3,16 +3,16 @@ import {type SpringConfig, animated, config, useSpring} from "react-spring";
 import {type EventSubscription} from "fbemitter";
 import {defaultMappedEventEmitter} from "../lib/messenger/DefaultMappedEventEmitter.ts";
 
-export type BaseProps = ComponentPropsWithoutRef<"div"> & {
-    name: string;
+export type HookableAnimatedDivProps = ComponentPropsWithoutRef<"div"> & {
+    uniqueId: string;
     spring?: CSSProperties;
     springConfig?: SpringConfig;
     mountDelay?: bigint;
     mountCooldown?: bigint;
 }
 
-export default function Base(props: BaseProps): ReactNode {
-    const {name, className: pClassName, style: pStyle, spring: pSpring, springConfig: pSpringConfig, mountDelay, mountCooldown, children, ...more} = props;
+export default function HookableAnimatedDiv(props: HookableAnimatedDivProps): ReactNode {
+    const {uniqueId, className: pClassName, style: pStyle, spring: pSpring, springConfig: pSpringConfig, mountDelay, mountCooldown, children, ...more} = props;
     const [spring, setSpring] = useState<CSSProperties[]>([{}, pSpring ?? {}]);
     const [springConfig, setSpringConfig] = useState<SpringConfig>(pSpringConfig ?? config.default);
     const [style, setStyle] = useState<CSSProperties>(pStyle ?? {});
@@ -20,23 +20,23 @@ export default function Base(props: BaseProps): ReactNode {
     const [onScreen, setOnScreen] = useState<ReactNode[]>([]);
     useEffect(function() {
         const subscriptions: EventSubscription[] = [
-            defaultMappedEventEmitter.hook(name, "setSpring", (spring: CSSProperties) => setSpring(oldSpring => [oldSpring[1], {...oldSpring[1], ...spring}])),
-            defaultMappedEventEmitter.hook(name, "setSpringConfig", (springConfig: SpringConfig) => setSpringConfig(springConfig)),
-            defaultMappedEventEmitter.hook(name, "setStyle", (style: CSSProperties) => setStyle(oldStyle => ({...oldStyle, ...style}))),
-            defaultMappedEventEmitter.hook(name, "setClassName", (className: string) => setClassName(className)),
-            defaultMappedEventEmitter.hook(name, "push", function(component: ReactNode) {
+            defaultMappedEventEmitter.hook(uniqueId, "setSpring", (spring: CSSProperties) => setSpring(oldSpring => [oldSpring[1], {...oldSpring[1], ...spring}])),
+            defaultMappedEventEmitter.hook(uniqueId, "setSpringConfig", (springConfig: SpringConfig) => setSpringConfig(springConfig)),
+            defaultMappedEventEmitter.hook(uniqueId, "setStyle", (style: CSSProperties) => setStyle(oldStyle => ({...oldStyle, ...style}))),
+            defaultMappedEventEmitter.hook(uniqueId, "setClassName", (className: string) => setClassName(className)),
+            defaultMappedEventEmitter.hook(uniqueId, "push", function(component: ReactNode) {
                 const components: ReactNode[] = onScreen;
                 components.push(component);
                 setOnScreen([...components]);
                 return;
             }),
-            defaultMappedEventEmitter.hook(name, "pull", function() {
+            defaultMappedEventEmitter.hook(uniqueId, "pull", function() {
                 const components: ReactNode[] = onScreen;
                 components.pop();
                 setOnScreen([...components]);
                 return;
             }),
-            defaultMappedEventEmitter.hook(name, "wipe", function() {
+            defaultMappedEventEmitter.hook(uniqueId, "wipe", function() {
                 const components: ReactNode[] = onScreen;
                 if (components.length == 0) {
                     return;
@@ -48,7 +48,7 @@ export default function Base(props: BaseProps): ReactNode {
                 }
                 return;
             }),
-            defaultMappedEventEmitter.hook(name, "swap", function(component: ReactNode) {
+            defaultMappedEventEmitter.hook(uniqueId, "swap", function(component: ReactNode) {
                 const components: ReactNode[] = onScreen;
                 components.pop();
                 components.push(component);

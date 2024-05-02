@@ -1,5 +1,5 @@
 import React, {type ReactNode} from "react";
-import Base, {type BaseProps} from "../Base.tsx";
+import Base, {type BaseProps} from "../HookableAnimatedDiv.tsx";
 
 export type TextProps = BaseProps & {text: string};
 
