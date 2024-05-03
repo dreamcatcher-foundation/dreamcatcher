@@ -1,7 +1,7 @@
-import Path from "./app/lib/os/path/Path.ts";
-import Url from "./app/lib/web/Url.ts";
-import App from "./app/lib/react/App.ts";
-import FolderRoute from "./app/lib/react/FolderRoute.ts";
+import Path from "./app/library/os/path/Path.ts";
+import Url from "./app/library/web/Url.ts";
+import App from "./app/library/react/App.ts";
+import FolderRoute from "./app/library/react/FolderRoute.ts";
 
 new App(
     [

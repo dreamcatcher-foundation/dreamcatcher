@@ -1,6 +1,6 @@
 import React, {type ReactNode} from "react";
-import TextInput from "../../component/input/TextInput.tsx";
-import Col from "../../component/layout/Col.tsx";
+import TextInput from "../../components/input/TextInput.tsx";
+import Col from "../../components/layout/Col.tsx";
 
 export default function GetStartedPageMetadataForm(): ReactNode {
     return (

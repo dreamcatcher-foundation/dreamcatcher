@@ -23674,7 +23674,7 @@ var require_fbemitter = __commonJS((exports, module) => {
   module.exports = fbemitter;
 });
 
-// code/build/haruka/app/lib/react/Boilerplate.tsx
+// code/build/haruka/app/library/react/Boilerplate.tsx
 var client = __toESM(require_client(), 1);
 
 // node_modules/react-router-dom/dist/index.js
@@ -27957,7 +27957,7 @@ var getUniqueFetcherId = () => "__" + String(++fetcherId) + "__";
 var SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
 var savedScrollPositions = {};
 
-// code/build/haruka/app/lib/react/Boilerplate.tsx
+// code/build/haruka/app/library/react/Boilerplate.tsx
 var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
 
 class Boilerplate {
@@ -27970,7 +27970,55 @@ class Boilerplate {
   }
 }
 
-// code/build/haruka/app/component/Base.tsx
+// code/build/haruka/app/page/shared/components/layout/Column.tsx
+var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
+function Column(_props) {
+  const { style, ...more } = _props;
+  return jsx_dev_runtime2.jsxDEV("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/layout/Page.tsx
+var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
+function Page(_props) {
+  const { style, ...more } = _props;
+  return jsx_dev_runtime3.jsxDEV(Column, {
+    style: {
+      width: "100vw",
+      height: "100vh",
+      overflow: "hidden",
+      background: "#161616",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/layout/Layer.tsx
+var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+function Layer(_props) {
+  const { style, ...more } = _props;
+  return jsx_dev_runtime4.jsxDEV(Column, {
+    style: {
+      width: "100%",
+      height: "100%",
+      position: "absolute",
+      overflow: "hidden",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/Hook.tsx
 var import_react15 = __toESM(require_react(), 1);
 
 // node_modules/@react-spring/shared/dist/react-spring_shared.modern.mjs
@@ -31069,7 +31117,7 @@ var host = createHost(primitives, {
   getComponentProps: ({ scrollTop, scrollLeft, ...props }) => props
 });
 var animated6 = host.animated;
-// code/build/haruka/app/lib/messenger/EventEmitter.ts
+// code/build/haruka/app/library/messenger/EventEmitter.ts
 var import_fbemitter = __toESM(require_fbemitter(), 1);
 
 class EventEmitter {
@@ -31085,7 +31133,7 @@ class EventEmitter {
   }
 }
 
-// code/build/haruka/app/lib/messenger/MappedEventEmitter.ts
+// code/build/haruka/app/library/messenger/MappedEventEmitter.ts
 class MappedEventEmitter {
   _eventEmitterMap = new Map;
   eventEmitter(name) {
@@ -31112,102 +31160,79 @@ class MappedEventEmitter {
   }
 }
 
-// code/build/haruka/app/lib/messenger/DefaultMappedEventEmitter.ts
+// code/build/haruka/app/library/messenger/DefaultMappedEventEmitter.ts
 var defaultMappedEventEmitter = new MappedEventEmitter;
 
-// code/build/haruka/app/component/Base.tsx
-var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
-function Base(props) {
-  const { name, className: pClassName, style: pStyle, spring: pSpring, springConfig: pSpringConfig, mountDelay, mountCooldown, children, ...more } = props;
-  const [spring, setSpring] = import_react15.useState([{}, pSpring ?? {}]);
-  const [springConfig, setSpringConfig] = import_react15.useState(pSpringConfig ?? config.default);
-  const [style, setStyle] = import_react15.useState(pStyle ?? {});
-  const [className, setClassName] = import_react15.useState(pClassName ?? "");
-  const [onScreen, setOnScreen] = import_react15.useState([]);
+// code/build/haruka/app/page/shared/components/Hook.tsx
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+function Hook(_props) {
+  const { uniqueId, className: classNameProp, style: styleProp, spring: springProp, springConfig: springConfigProp, childrenMountDelay, childrenMountCooldown, children, ...more } = _props;
+  const [className, setClassName] = import_react15.useState(classNameProp ?? "");
+  const [style, setStyle] = import_react15.useState(styleProp ?? {});
+  const [spring, setSpring] = import_react15.useState([{}, springProp ?? {}]);
+  const [springConfig, setSpringConfig] = import_react15.useState(springConfigProp ?? config.default);
+  const [mounted, setMounted] = import_react15.useState([]);
   import_react15.useEffect(function() {
+    const childrenMountDelayAsNum = Number(childrenMountDelay ?? 0n);
+    const childrenMountCooldownAsNum = Number(childrenMountCooldown ?? 0n);
     const subscriptions = [
-      defaultMappedEventEmitter.hook(name, "setSpring", (spring2) => setSpring((oldSpring) => [oldSpring[1], { ...oldSpring[1], ...spring2 }])),
-      defaultMappedEventEmitter.hook(name, "setSpringConfig", (springConfig2) => setSpringConfig(springConfig2)),
-      defaultMappedEventEmitter.hook(name, "setStyle", (style2) => setStyle((oldStyle) => ({ ...oldStyle, ...style2 }))),
-      defaultMappedEventEmitter.hook(name, "setClassName", (className2) => setClassName(className2)),
-      defaultMappedEventEmitter.hook(name, "push", function(component) {
-        const components = onScreen;
-        components.push(component);
-        setOnScreen([...components]);
-        return;
-      }),
-      defaultMappedEventEmitter.hook(name, "pull", function() {
-        const components = onScreen;
-        components.pop();
-        setOnScreen([...components]);
-        return;
-      }),
-      defaultMappedEventEmitter.hook(name, "wipe", function() {
-        const components = onScreen;
-        if (components.length == 0) {
-          return;
-        }
-        for (let i = 0;i < components.length; i++) {
-          const currentComponents = onScreen;
-          currentComponents.pop();
-          setOnScreen([...currentComponents]);
-        }
-        return;
-      }),
-      defaultMappedEventEmitter.hook(name, "swap", function(component) {
-        const components = onScreen;
-        components.pop();
-        components.push(component);
-        setOnScreen([...components]);
-        return;
-      })
+      defaultMappedEventEmitter.hook(uniqueId, "setSpring", (spring2) => setSpring((oldSpring) => [oldSpring[1], { ...oldSpring[1], ...spring2 }])),
+      defaultMappedEventEmitter.hook(uniqueId, "setSpringConfig", (springConfig2) => setSpringConfig(springConfig2)),
+      defaultMappedEventEmitter.hook(uniqueId, "setStyle", (style2) => setStyle((oldStyle) => ({ ...oldStyle, ...style2 }))),
+      defaultMappedEventEmitter.hook(uniqueId, "setClassName", (className2) => setClassName(className2)),
+      defaultMappedEventEmitter.hook(uniqueId, "push", (component) => setMounted((currentComponents) => [...currentComponents, component])),
+      defaultMappedEventEmitter.hook(uniqueId, "pull", () => setMounted((currentComponents) => currentComponents.slice(0, -1))),
+      defaultMappedEventEmitter.hook(uniqueId, "wipe", () => setMounted([])),
+      defaultMappedEventEmitter.hook(uniqueId, "swap", (component) => setMounted((currentComponents) => [...currentComponents.slice(0, -1), component]))
     ];
     setTimeout(function() {
-      if (Array.isArray(children)) {
-        let cooldown = 0;
-        children.forEach(function(child) {
-          if (child) {
-            setTimeout(function() {
-              const components = onScreen;
-              components.push(child);
-              setOnScreen([...components]);
-              return;
-            }, cooldown);
-            cooldown += Number(mountCooldown ?? 0n);
-          }
-        });
-      } else {
-        if (children) {
-          const components = onScreen;
-          components.push(children);
-          setOnScreen([...components]);
-        }
+      const hasChildren = !!children;
+      const isAnArrayOfChildren = Array.isArray(children);
+      if (!hasChildren) {
+        return;
       }
-    }, Number(mountDelay ?? 0n));
+      if (isAnArrayOfChildren) {
+        const childrenAsArray = children;
+        let cooldown = 0;
+        childrenAsArray.forEach(function(child) {
+          const isAnEmptyChild = !child;
+          if (isAnEmptyChild) {
+            return;
+          }
+          setTimeout(function() {
+            return setMounted((currentComponents) => [...currentComponents, child]);
+          }, cooldown);
+          cooldown += childrenMountCooldownAsNum;
+          return;
+        });
+        return;
+      }
+      setMounted((currentComponents) => [...currentComponents, children]);
+    }, childrenMountDelayAsNum);
     return function() {
       return subscriptions.forEach((subscription) => subscription.remove());
     };
   }, []);
-  return jsx_dev_runtime2.jsxDEV(animated6.div, {
+  return jsx_dev_runtime5.jsxDEV(animated6.div, {
     className,
     style: {
       ...useSpring({ from: spring[0], to: spring[1], config: springConfig }),
       ...style
     },
-    children: onScreen,
+    children: mounted,
     ...more
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/layout/Col.tsx
-var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
-function Col(props) {
-  const { name, style, ...more } = props;
-  return jsx_dev_runtime3.jsxDEV(Base, {
-    name,
+// code/build/haruka/app/page/shared/components/layout/RowHook.tsx
+var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+function RowHook(_props) {
+  const { uniqueId, style, ...more } = _props;
+  return jsx_dev_runtime6.jsxDEV(Hook, {
+    uniqueId,
     style: {
       display: "flex",
-      flexDirection: "column",
+      flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
       ...style ?? {}
@@ -31216,221 +31241,29 @@ function Col(props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/layout/Layer.tsx
-var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
-function Layer(props) {
-  const { name, style, ...more } = props;
-  return jsx_dev_runtime4.jsxDEV(Col, {
-    name,
-    style: {
-      width: "100%",
-      height: "100%",
-      position: "absolute",
-      overflow: "hidden",
-      ...style ?? {}
-    },
-    ...more
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/effect/BlurDot.tsx
-var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
-function BlurDot(props) {
-  const { color0, color1, style, ...more } = props;
-  return jsx_dev_runtime5.jsxDEV(Base, {
-    style: {
-      background: `radial-gradient(closest-side, ${color0}, ${color1})`,
-      opacity: ".10",
-      ...style ?? {}
-    },
-    ...more
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/item/effect/BlurDot0.tsx
-var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
-function BlurDot0() {
-  return jsx_dev_runtime6.jsxDEV(BlurDot, {
-    name: "blurDot0",
-    color0: "#615FFF",
-    color1: "#161616",
-    style: {
-      width: "1000px",
-      height: "1000px",
-      position: "absolute",
-      right: "600px",
-      bottom: "200px"
-    }
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/item/effect/BlurDot1.tsx
+// code/build/haruka/app/page/shared/components/layout/userInterface/navbar/Navbar.tsx
 var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
-function BlurDot1() {
-  return jsx_dev_runtime7.jsxDEV(BlurDot, {
-    name: "blurDot1",
-    color0: "#0652FE",
-    color1: "#161616",
+function Navbar(_props) {
+  const { uniqueId, style, ...more } = _props;
+  return jsx_dev_runtime7.jsxDEV(RowHook, {
+    uniqueId,
     style: {
-      width: "1000px",
-      height: "1000px",
-      position: "absolute",
-      left: "600px",
-      top: "200px"
-    }
+      width: "auto",
+      height: "auto",
+      gap: "30px",
+      ...style ?? {}
+    },
+    childrenMountDelay: 25n,
+    childrenMountCooldown: 100n,
+    ...more
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/effect/PulseLine.tsx
+// code/build/haruka/app/page/shared/components/text/Text.tsx
 var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
-function PulseLine(props) {
-  const { name, style, ...more } = props;
-  return jsx_dev_runtime8.jsxDEV(Base, {
-    name,
-    style: {
-      width: "100%",
-      height: ".50px",
-      background: "linear-gradient(to right, transparent, rgba(163, 163, 163, 0.25), transparent)",
-      ...style ?? {}
-    },
-    ...more
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/effect/Pulse.tsx
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
-function Pulse(props) {
-  let { name, delay, reverse, style, ...more } = props;
-  delay = delay ?? 0;
-  reverse = reverse ?? false;
-  const from = reverse ? "-10" : "110%";
-  const to2 = reverse ? "110%" : "-10%";
-  const direction = reverse ? "to right" : "to left";
-  return jsx_dev_runtime9.jsxDEV(PulseLine, {
-    name,
-    style: style ?? {},
-    mountDelay: 10000n,
-    children: jsx_dev_runtime9.jsxDEV(animated6.div, {
-      style: {
-        ...useSpring({
-          from: {
-            left: from
-          },
-          to: {
-            left: to2
-          },
-          delay,
-          config: {
-            tension: 5,
-            friction: 4
-          },
-          loop: true
-        }),
-        ...{
-          width: "40px",
-          height: "2.5px",
-          bottom: "1.25px",
-          background: `linear-gradient(${direction}, transparent, rgba(163, 163, 163, 0.25))`,
-          borderRadius: "25px",
-          position: "relative"
-        }
-      }
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/item/effect/Pulse0.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-function Pulse0() {
-  return jsx_dev_runtime10.jsxDEV(Pulse, {
-    name: "pulse0",
-    delay: 4000,
-    reverse: true,
-    style: {
-      position: "absolute",
-      bottom: "200px"
-    }
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/item/effect/Pulse1.tsx
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
-function Pulse1() {
-  return jsx_dev_runtime11.jsxDEV(Pulse, {
-    name: "pulse1",
-    delay: 8000,
-    style: {
-      position: "relative"
-    }
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/item/BackgroundLayer.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
-function BackgroundLayer() {
-  return jsx_dev_runtime12.jsxDEV(Layer, {
-    name: "backgroundLayer",
-    children: [
-      jsx_dev_runtime12.jsxDEV(Pulse0, {}, undefined, false, undefined, this),
-      jsx_dev_runtime12.jsxDEV(Pulse1, {}, undefined, false, undefined, this),
-      jsx_dev_runtime12.jsxDEV(BlurDot0, {}, undefined, false, undefined, this),
-      jsx_dev_runtime12.jsxDEV(BlurDot1, {}, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-}
-
-// code/build/haruka/app/component/layout/container/SleekObsidianContainer.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
-function SleekObsidianContainer(props) {
-  const { name, style, direction, ...more } = props;
-  return jsx_dev_runtime13.jsxDEV(Col, {
-    name,
-    style: {
-      background: "#171717",
-      borderWidth: "1px",
-      borderStyle: "solid",
-      borderImage: `linear-gradient(${direction ?? "to bottom"}, transparent, #505050) 1`,
-      padding: "2.5%",
-      justifyContent: "space-between",
-      overflowX: "hidden",
-      overflowY: "auto",
-      ...style ?? {}
-    },
-    ...more
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/layout/container/FancyObsidianContainer.tsx
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
-function FancyObsidianContainer(props) {
-  const { name, style, ...more } = props;
-  return jsx_dev_runtime14.jsxDEV(Col, {
-    name: `${name}__steelFrame`,
-    style: {
-      width: "500px",
-      height: "512px",
-      borderStyle: "solid",
-      borderWidth: "1px",
-      borderImage: "linear-gradient(to bottom, transparent, #505050) 1"
-    },
-    children: jsx_dev_runtime14.jsxDEV(SleekObsidianContainer, {
-      name,
-      style: {
-        width: "450px",
-        height: "450px",
-        ...style
-      },
-      ...more
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/text/Text.tsx
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
-function Text(props) {
-  const { name, text, style, children, ...more } = props;
-  return jsx_dev_runtime15.jsxDEV(Base, {
-    name,
+function Text(_props) {
+  const { style, text, ...more } = _props;
+  return jsx_dev_runtime8.jsxDEV("div", {
     style: {
       fontSize: "1em",
       fontFamily: "roboto mono",
@@ -31441,130 +31274,16 @@ function Text(props) {
       WebkitTextFillColor: "transparent",
       ...style ?? {}
     },
-    children: text,
-    ...more
+    ...more,
+    children: text
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/input/Toggle.tsx
-var import_react16 = __toESM(require_react(), 1);
-
-// code/build/haruka/app/component/layout/Row.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
-function Row(props) {
-  const { name, style, ...more } = props;
-  return jsx_dev_runtime16.jsxDEV(Col, {
-    name,
-    style: {
-      flexDirection: "row",
-      ...style
-    },
-    ...more
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/input/Toggle.tsx
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
-function Toggle({
-  name,
-  isToggled: pIsToggled
-}) {
-  const [isToggled, toggle] = import_react16.useState(pIsToggled ?? false);
-  return jsx_dev_runtime17.jsxDEV(Row, {
-    name,
-    spring: {
-      width: "50px",
-      height: "25px",
-      background: pIsToggled ? "#615FFF" : "#FF1802"
-    },
-    style: {
-      overflowX: "hidden",
-      overflowY: "hidden",
-      justifyContent: "start",
-      padding: "2.5px",
-      borderRadius: "25px"
-    },
-    onMouseEnter: function() {
-      defaultMappedEventEmitter.post(name, "setSpring", {
-        cursor: "pointer"
-      });
-    },
-    onMouseLeave: function() {
-      defaultMappedEventEmitter.post(name, "setSpring", {
-        cursor: "auto"
-      });
-    },
-    onClick: function() {
-      if (isToggled) {
-        toggle(false);
-        defaultMappedEventEmitter.post(`${name}__dot`, "setSpring", {
-          left: "25px"
-        });
-        defaultMappedEventEmitter.post(name, "setSpring", {
-          background: "#615FFF"
-        });
-      } else {
-        toggle(true);
-        defaultMappedEventEmitter.post(`${name}__dot`, "setSpring", {
-          left: "0px"
-        });
-        defaultMappedEventEmitter.post(name, "setSpring", {
-          background: "#FF1802"
-        });
-      }
-    },
-    children: jsx_dev_runtime17.jsxDEV(Col, {
-      name: `${name}__dot`,
-      spring: {
-        width: "20px",
-        height: "20px",
-        borderRadius: "25px",
-        background: "#171717",
-        position: "relative",
-        left: pIsToggled ? "25px" : "0px"
-      },
-      springConfig: config.stiff
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/item/HomePageWindow.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
-function HomePageWindow() {
-  return jsx_dev_runtime18.jsxDEV(FancyObsidianContainer, {
-    name: "homePageWindow",
-    style: {
-      justifyContent: "start"
-    },
-    children: [
-      jsx_dev_runtime18.jsxDEV(Text, {
-        name: "homePageWindowHeading",
-        text: "Scaling Dreams, Crafting Prossibilities",
-        style: {
-          fontSize: "40px",
-          background: "#615FFF"
-        }
-      }, undefined, false, undefined, this),
-      jsx_dev_runtime18.jsxDEV(Text, {
-        name: "homePageWindowSubHeading",
-        text: "Deploy next gen protocols.",
-        style: {
-          fontSize: "20px"
-        }
-      }, undefined, false, undefined, this),
-      jsx_dev_runtime18.jsxDEV(Toggle, {
-        name: "t",
-        isToggled: false
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-}
-
-// code/build/haruka/app/component/layout/navbar/NavbarItem.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
-function NavbarItem(props) {
-  const { textName0, textName1, text0, text1, link } = props;
-  return jsx_dev_runtime19.jsxDEV(Link, {
+// code/build/haruka/app/page/shared/components/layout/userInterface/navbar/NavbarOption.tsx
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+function NavbarOption(_props) {
+  const { text0, text1, link } = _props;
+  return jsx_dev_runtime9.jsxDEV(Link, {
     to: link,
     style: {
       gap: "10px",
@@ -31575,9 +31294,9 @@ function NavbarItem(props) {
       justifyContent: "center",
       alignItems: "center"
     },
+    className: "swing-in-top-fwd",
     children: [
-      jsx_dev_runtime19.jsxDEV(Text, {
-        name: textName0,
+      jsx_dev_runtime9.jsxDEV(Text, {
         text: text0,
         style: {
           background: "#615FFF",
@@ -31588,8 +31307,7 @@ function NavbarItem(props) {
           alignItems: "center"
         }
       }, undefined, false, undefined, this),
-      jsx_dev_runtime19.jsxDEV(Text, {
-        name: textName1,
+      jsx_dev_runtime9.jsxDEV(Text, {
         text: text1,
         style: {
           fontSize: "15px",
@@ -31602,27 +31320,81 @@ function NavbarItem(props) {
   }, undefined, true, undefined, this);
 }
 
-// code/build/haruka/app/component/layout/navbar/Navbar.tsx
-var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
-function Navbar(props) {
-  const { name, style, ...more } = props;
-  return jsx_dev_runtime20.jsxDEV(Row, {
-    name,
+// code/build/haruka/app/page/shared/design/brand/BrandNameAndLogo.tsx
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+function BrandNameAndLogo() {
+  return jsx_dev_runtime10.jsxDEV(Column, {
     style: {
-      width: "auto",
-      height: "auto",
-      gap: "30px",
+      width: "170px",
+      height: "60px",
+      borderStyle: "solid",
+      borderWidth: "1px",
+      borderImage: "linear-gradient(to bottom, transparent, #505050) 1"
+    },
+    children: [
+      jsx_dev_runtime10.jsxDEV(Column, {
+        style: {
+          width: "25px",
+          height: "25px",
+          backgroundImage: "url('../../../../../image/SteelLogo.png')",
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          position: "relative",
+          bottom: "12.5px"
+        }
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime10.jsxDEV(Text, {
+        text: "Dreamcatcher",
+        style: {
+          fontSize: "20px",
+          fontFamily: "roboto mono",
+          fontWeight: "bold",
+          color: "white",
+          background: "#D6D5D4",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          position: "relative",
+          bottom: "12.5px"
+        }
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/text/TextHook.tsx
+var import_react16 = __toESM(require_react(), 1);
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+function TextHook(_props) {
+  const { uniqueId, text: textProp, style, children, ...more } = _props;
+  const [text, setText] = import_react16.useState(textProp ?? "");
+  import_react16.useEffect(function() {
+    const subscription = defaultMappedEventEmitter.hook(uniqueId, "setText", (text2) => setText(text2));
+    return function() {
+      return subscription.remove();
+    };
+  }, []);
+  return jsx_dev_runtime11.jsxDEV(Hook, {
+    uniqueId,
+    style: {
+      fontSize: "1em",
+      fontFamily: "roboto mono",
+      fontWeight: "bold",
+      color: "white",
+      background: "#D6D5D4",
+      WebkitBackgroundClip: "text",
+      WebkitTextFillColor: "transparent",
       ...style ?? {}
     },
-    ...more
+    ...more,
+    children: text
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/item/button/ConnectButton.tsx
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+// code/build/haruka/app/page/shared/userInterface/input/button/ConnectButton.tsx
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 function ConnectButton() {
-  return jsx_dev_runtime21.jsxDEV(Text, {
-    name: "connectButton",
+  return jsx_dev_runtime12.jsxDEV(TextHook, {
+    uniqueId: "connectButton",
     text: "Connect",
     style: {
       width: "auto",
@@ -31635,359 +31407,628 @@ function ConnectButton() {
     },
     onMouseEnter: () => defaultMappedEventEmitter.post("connectButton", "setSpring", { cursor: "pointer" }),
     onMouseLeave: () => defaultMappedEventEmitter.post("connectButton", "setSpring", { cursor: "auto" }),
-    onClick: () => defaultMappedEventEmitter.postEvent("connectButton", "CLICK"),
-    className: "swing-in-top-fwd"
+    onClick: () => defaultMappedEventEmitter.postEvent("connectButton", "CLICK")
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/item/brand/logo/Logo25x25.tsx
-var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
-function Logo25x25() {
-  return jsx_dev_runtime22.jsxDEV("div", {
-    style: {
-      width: "25px",
-      height: "25px",
-      backgroundImage: "url('../../../../image/SteelLogo.png')",
-      backgroundSize: "contain",
-      backgroundRepeat: "no-repeat"
-    }
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/component/item/brand/BrandNameAndLogo170x60.tsx
-var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
-function BrandNameAndLogo170x60() {
-  return jsx_dev_runtime23.jsxDEV("div", {
-    style: {
-      width: "170px",
-      height: "60px",
-      borderStyle: "solid",
-      borderWidth: "1px",
-      borderImage: "linear-gradient(to bottom, transparent, #505050) 1"
-    },
-    children: [
-      jsx_dev_runtime23.jsxDEV("div", {
-        style: {
-          width: "auto",
-          height: "auto",
-          position: "relative",
-          bottom: "12.5px"
-        },
-        children: jsx_dev_runtime23.jsxDEV(Logo25x25, {}, undefined, false, undefined, this)
-      }, undefined, false, undefined, this),
-      jsx_dev_runtime23.jsxDEV("div", {
-        style: {
-          fontSize: "20px",
-          fontFamily: "roboto mono",
-          fontWeight: "bold",
-          color: "white",
-          background: "#D6D5D4",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          position: "relative",
-          bottom: "12.5px"
-        },
-        children: "Dreamcatcher"
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-}
-
-// code/build/haruka/app/component/item/Nav.tsx
-var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
-function Nav() {
-  return jsx_dev_runtime24.jsxDEV("div", {
-    style: {
-      width: "100%",
-      height: "auto",
-      justifyContent: "space-between",
-      paddingLeft: "40px",
-      paddingRight: "40px",
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      pointerEvents: "auto"
-    },
-    children: [
-      jsx_dev_runtime24.jsxDEV(BrandNameAndLogo170x60, {}, undefined, false, undefined, this),
-      jsx_dev_runtime24.jsxDEV(Navbar, {
-        name: "navbar",
-        children: [
-          jsx_dev_runtime24.jsxDEV(NavbarItem, {
-            textName0: "navbarItem0A",
-            textName1: "navbarItem0B",
-            text0: "01",
-            text1: "Home",
-            link: "/"
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime24.jsxDEV(NavbarItem, {
-            textName0: "navbarItem1A",
-            textName1: "navbarItem1B",
-            text0: "02",
-            text1: "Whitepaper",
-            link: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime24.jsxDEV(NavbarItem, {
-            textName0: "navbarItem2A",
-            textName1: "navbarItem2B",
-            text0: "03",
-            text1: "Explore",
-            link: "/explore"
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime24.jsxDEV(NavbarItem, {
-            textName0: "navbarItem3A",
-            textName1: "navbarItem3B",
-            text0: "04",
-            text1: "Get Started",
-            link: "/getStarted"
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime24.jsxDEV(NavbarItem, {
-            textName0: "navbarItem4A",
-            textName1: "navbarItem4B",
-            text0: "05",
-            text1: "Account",
-            link: "/account"
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      jsx_dev_runtime24.jsxDEV(ConnectButton, {}, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-}
-
-// code/build/haruka/app/component/item/NavLayer.tsx
-var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
-function NavLayer() {
-  return jsx_dev_runtime25.jsxDEV(Layer, {
-    name: "navLayer",
+// code/build/haruka/app/page/shared/layer/NavigationLayer.tsx
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+function NavigationLayer() {
+  return jsx_dev_runtime13.jsxDEV(Layer, {
     style: {
       justifyContent: "start",
       paddingTop: "20px",
       pointerEvents: "none"
     },
-    children: jsx_dev_runtime25.jsxDEV(Nav, {}, undefined, false, undefined, this)
+    children: jsx_dev_runtime13.jsxDEV(RowHook, {
+      uniqueId: "navigationLayer.topRow",
+      style: {
+        width: "100%",
+        height: "auto",
+        justifyContent: "space-between",
+        paddingLeft: "40px",
+        paddingRight: "40px",
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        pointerEvents: "auto"
+      },
+      children: [
+        jsx_dev_runtime13.jsxDEV(BrandNameAndLogo, {}, undefined, false, undefined, this),
+        jsx_dev_runtime13.jsxDEV(Navbar, {
+          uniqueId: "navigationLayer.navbar",
+          style: {
+            gap: "20px"
+          },
+          children: [
+            jsx_dev_runtime13.jsxDEV(NavbarOption, {
+              text0: "01",
+              text1: "Home",
+              link: "/"
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime13.jsxDEV(NavbarOption, {
+              text0: "02",
+              text1: "Whitepaper",
+              link: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime13.jsxDEV(NavbarOption, {
+              text0: "03",
+              text1: "Explore",
+              link: "/explore"
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime13.jsxDEV(NavbarOption, {
+              text0: "04",
+              text1: "Get Started",
+              link: "/getStarted"
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime13.jsxDEV(NavbarOption, {
+              text0: "05",
+              text1: "Account",
+              link: "/account"
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime13.jsxDEV(ConnectButton, {}, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/layout/Page.tsx
-var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
-function Page(props) {
-  const { name, style, ...more } = props;
-  return jsx_dev_runtime26.jsxDEV(Col, {
-    name,
+// code/build/haruka/app/page/shared/components/design/PhantomSteelHorizontalLine.tsx
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+function PhantomSteelHorizontalLine(_props) {
+  const { style, ...more } = _props;
+  return jsx_dev_runtime14.jsxDEV("div", {
     style: {
-      width: "100vw",
-      height: "100vh",
-      overflow: "hidden",
-      background: "#161616",
+      width: "100%",
+      height: ".50px",
+      background: "linear-gradient(to right, transparent, rgba(163, 163, 163, 0.25), transparent)",
       ...style ?? {}
     },
     ...more
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/page/HomePage.tsx
-var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
-function HomePage() {
-  return jsx_dev_runtime27.jsxDEV(Page, {
-    name: "homePage",
-    children: [
-      jsx_dev_runtime27.jsxDEV(BackgroundLayer, {}, undefined, false, undefined, this),
-      jsx_dev_runtime27.jsxDEV(Layer, {
-        name: "homePageContentLayer",
-        children: jsx_dev_runtime27.jsxDEV(HomePageWindow, {}, undefined, false, undefined, this)
-      }, undefined, false, undefined, this),
-      jsx_dev_runtime27.jsxDEV(NavLayer, {}, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
+// code/build/haruka/app/page/shared/components/design/animation/Pulse.tsx
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+function Pulse(_props) {
+  const { delay, reverse, style } = _props;
+  return jsx_dev_runtime15.jsxDEV(PhantomSteelHorizontalLine, {
+    style: style ?? {},
+    children: jsx_dev_runtime15.jsxDEV(animated6.div, {
+      style: {
+        ...useSpring({
+          from: {
+            left: reverse ?? false ? "-10%" : "110%"
+          },
+          to: {
+            left: reverse ?? false ? "110%" : "-10%"
+          },
+          delay,
+          config: {
+            tension: 5,
+            friction: 4
+          },
+          loop: true
+        }),
+        ...{
+          width: "40px",
+          height: "2.5px",
+          bottom: "1.25px",
+          background: `linear-gradient(${reverse ?? false ? "to right" : "to left"}, transparent, rgba(163, 163, 163, 0.25))`,
+          borderRadius: "25px",
+          position: "relative"
+        }
+      }
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/input/TextInput.tsx
-var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
-function TextInput(props) {
-  const { name, placeholder, ...more } = props;
-  return jsx_dev_runtime28.jsxDEV(Row, {
-    name,
+// code/build/haruka/app/page/shared/design/animation/Pulse0.tsx
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+function Pulse0() {
+  return jsx_dev_runtime16.jsxDEV(Pulse, {
+    delay: 4000,
+    reverse: true,
+    style: {
+      position: "absolute",
+      bottom: "200px"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/design/animation/Pulse1.tsx
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+function Pulse1() {
+  return jsx_dev_runtime17.jsxDEV(Pulse, {
+    delay: 8000,
+    style: {
+      position: "relative"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/design/BlurDot.tsx
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot(_props) {
+  const { color0, color1, style, ...more } = _props;
+  return jsx_dev_runtime18.jsxDEV(Column, {
+    style: {
+      background: `radial-gradient(closest-side, ${color0}, ${color1})`,
+      opacity: ".10",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/design/BlurDot0.tsx
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot0() {
+  return jsx_dev_runtime19.jsxDEV(BlurDot, {
+    color0: "#615FFF",
+    color1: "#161616",
+    style: {
+      width: "1000px",
+      height: "1000px",
+      position: "absolute",
+      right: "600px",
+      bottom: "200px"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/design/BlurDot1.tsx
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+function BlurDot1() {
+  return jsx_dev_runtime20.jsxDEV(BlurDot, {
+    color0: "#0652FE",
+    color1: "#161616",
+    style: {
+      width: "1000px",
+      height: "1000px",
+      position: "absolute",
+      left: "600px",
+      top: "200px"
+    }
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/layout/ColumnHook.tsx
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+function ColumnHook(_props) {
+  const { uniqueId, style, ...more } = _props;
+  return jsx_dev_runtime21.jsxDEV(Hook, {
+    uniqueId,
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/layout/container/PhantomSteelFrameHook.tsx
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+function PhantomSteelFrameHook(_props) {
+  const { uniqueId, phantomSteelFrameDirection, style, ...more } = _props;
+  return jsx_dev_runtime22.jsxDEV(ColumnHook, {
+    uniqueId,
+    style: {
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderImage: `linear-gradient(${phantomSteelFrameDirection ?? "to bottom"}, transparent, #505050) 1`,
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/layout/container/ObsidianContainerWithPhantomSteelFrameHook.tsx
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+function ObsidianContainerWithPhantomSteelFrameHook(_props) {
+  const { uniqueId, phantomSteelFrameDirection, style, ...more } = _props;
+  return jsx_dev_runtime23.jsxDEV(ColumnHook, {
+    uniqueId,
+    style: {
+      background: "#171717",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderImage: `linear-gradient(${phantomSteelFrameDirection ?? "to bottom"}, transparent, #505050) 1`,
+      padding: "2.5%",
+      justifyContent: "space-between",
+      overflowX: "hidden",
+      overflowY: "auto",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/homePage/window/slide/Slide.tsx
+var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
+function Slide(_props) {
+  const { uniqueId, style, children, ...more } = _props;
+  return jsx_dev_runtime24.jsxDEV(ColumnHook, {
+    uniqueId,
     style: {
       width: "100%",
       height: "100%",
+      overflowX: "hidden",
+      overflowY: "auto",
+      padding: "20px",
+      justifyContent: "space-between",
+      gap: "5px",
+      ...style ?? {}
+    },
+    childrenMountCooldown: 100n,
+    ...more,
+    children
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/input/ButtonHook.tsx
+var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
+function ButtonHook(_props) {
+  const { uniqueId, text, textStyle, style, spring, color, ...more } = _props;
+  return jsx_dev_runtime25.jsxDEV(RowHook, {
+    uniqueId,
+    style: {
+      width: "150px",
+      height: "40px",
       display: "flex",
       flexDirection: "row",
-      justifyContent: "start",
+      justifyContent: "center",
       alignItems: "center",
-      fontSize: "8px",
-      color: "white"
+      borderStyle: "solid",
+      borderWidth: "1px",
+      borderColor: color,
+      ...style ?? {}
+    },
+    onMouseEnter: function() {
+      defaultMappedEventEmitter.post(uniqueId, "setSpring", {
+        cursor: "pointer"
+      });
+    },
+    onMouseLeave: function() {
+      defaultMappedEventEmitter.post(uniqueId, "setSpring", {
+        cursor: "auto"
+      });
+    },
+    onClick: () => defaultMappedEventEmitter.postEvent(uniqueId, "CLICK"),
+    ...more,
+    children: jsx_dev_runtime25.jsxDEV(TextHook, {
+      uniqueId: `${uniqueId}.text`,
+      text,
+      style: {
+        background: color,
+        ...textStyle ?? {}
+      }
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/input/ButtonLink.tsx
+var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
+function ButtonLink(_props) {
+  const { uniqueId, color, link, ...more } = _props;
+  return jsx_dev_runtime26.jsxDEV(Link, {
+    to: link,
+    style: {
+      textDecoration: "none"
+    },
+    children: jsx_dev_runtime26.jsxDEV(ButtonHook, {
+      uniqueId,
+      color,
+      ...more
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/homePage/window/slide/GetStartedSlide.tsx
+var import_react18 = __toESM(require_react(), 1);
+
+// code/build/haruka/app/page/homePage/window/slide/MetadataFormSlide.tsx
+var import_react17 = __toESM(require_react(), 1);
+
+// code/build/haruka/app/page/shared/components/input/TextFieldHook.tsx
+var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
+function TextFieldHook(_props) {
+  const { uniqueId, placeholder } = _props;
+  return jsx_dev_runtime27.jsxDEV("input", {
+    style: {
+      width: "100%",
+      height: "auto",
+      display: "flex",
+      flexDirection: "row",
+      justifySelf: "start",
+      alignSelf: "start",
+      fontSize: "1em",
+      fontFamily: "roboto mono",
+      fontWeight: "bold",
+      color: "white",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#D6D5D4",
+      background: "transparent",
+      padding: "0.5em"
+    },
+    placeholder,
+    onChange: (event) => defaultMappedEventEmitter.postEvent(uniqueId, "INPUT_CHANGE", event.target.value)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/homePage/window/slide/slot/TwoButtonSlot.tsx
+var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+function TwoButtonSlot(_props) {
+  const { uniqueId, children, ...more } = _props;
+  return jsx_dev_runtime28.jsxDEV(RowHook, {
+    uniqueId,
+    childrenMountCooldown: 100n,
+    style: {
+      width: "100%",
+      height: "auto",
+      gap: "10px"
     },
     ...more,
-    children: jsx_dev_runtime28.jsxDEV("input", {
-      style: {
-        width: "100%",
-        height: "auto",
-        borderWidth: "1px",
-        borderStyle: "solid",
-        borderColor: "#5B5B5B",
-        background: "#161616",
-        fontSize: "15px",
-        fontFamily: "roboto mono",
-        fontWeight: "bold",
-        color: "white",
-        padding: "12px",
-        textShadow: "4px 4px 64px 8px #FFFFFF"
-      },
-      placeholder,
-      onChange: (event) => defaultMappedEventEmitter.postEvent(name, "INPUT_CHANGE", event.target.value)
-    }, undefined, false, undefined, this)
+    children
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/component/item/GetStartedPageTextInputForm.tsx
+// code/build/haruka/app/page/shared/node/DeployerNode.tsx
+class DeployerNode {
+  static _DAONameField;
+  static _DAOTokenNameField;
+  static _DAOTokenSymbolField;
+  static DAONameField() {
+    return this._DAONameField;
+  }
+  static DAOTokenNameField() {
+    return this._DAOTokenNameField;
+  }
+  static DAOTokenSymbolField() {
+    return this._DAOTokenSymbolField;
+  }
+  static setDAONameField(DAONameField) {
+    this._DAONameField = DAONameField;
+    return this;
+  }
+  static setDAOTokenNameField(DAOTokenNameField) {
+    this._DAOTokenNameField = DAOTokenNameField;
+    return this;
+  }
+  static setDAOTokenSymbolField(DAOTokenSymbolField) {
+    this._DAOTokenSymbolField = DAOTokenSymbolField;
+    return this;
+  }
+}
+
+// code/build/haruka/app/page/homePage/window/slide/MetadataFormSlide.tsx
 var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
-function GetStartedPageTextInputForm() {
-  return jsx_dev_runtime29.jsxDEV(Col, {
-    name: "getStartedPageTextInputForm",
+function MetadataFormSlide() {
+  let _DAONameField;
+  let _DAOTokenNameField;
+  let _DAOTokenSymbolField;
+  import_react17.useEffect(function() {
+    const subscriptions = [
+      defaultMappedEventEmitter.hookEvent("metadataFormSlide.DAONameField", "INPUT_CHANGE", (input) => _DAONameField = input),
+      defaultMappedEventEmitter.hookEvent("metadataFormSlide.DAOTokenNameField", "INPUT_CHANGE", (input) => _DAOTokenNameField = input),
+      defaultMappedEventEmitter.hookEvent("metadataFormSlide.DAOTokenSymbolField", "INPUT_CHANGE", (input) => _DAOTokenSymbolField = input),
+      defaultMappedEventEmitter.hookEvent("metadataFormSlide.nextButton", "CLICK", function() {
+        const formIsValid = !(!_DAONameField || !_DAOTokenNameField || !_DAOTokenSymbolField);
+        if (formIsValid) {
+          DeployerNode.setDAONameField(_DAONameField).setDAOTokenNameField(_DAOTokenNameField).setDAOTokenSymbolField(_DAOTokenSymbolField);
+          defaultMappedEventEmitter.post("homePage.window", "swap", jsx_dev_runtime29.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this));
+          return;
+        } else {
+          defaultMappedEventEmitter.post("metadataFormSlide.formMessage", "swap", jsx_dev_runtime29.jsxDEV(Text, {
+            text: "Please make sure no fields are empty.",
+            style: {
+              background: "red"
+            }
+          }, undefined, false, undefined, this));
+        }
+      })
+    ];
+    return function() {
+      return subscriptions.forEach((subscription) => subscription.remove());
+    };
+  }, []);
+  return jsx_dev_runtime29.jsxDEV(Slide, {
+    uniqueId: "metadataFormSlide",
     children: [
-      jsx_dev_runtime29.jsxDEV(TextInput, {
-        name: "getStartedPageTextInputForm__input0",
-        placeholder: "Community, DAO, or project name"
-      }, undefined, false, undefined, this),
-      jsx_dev_runtime29.jsxDEV(TextInput, {
-        name: "getStartedPageTextInputForm__input1",
-        placeholder: "Token name"
-      }, undefined, false, undefined, this),
-      jsx_dev_runtime29.jsxDEV(TextInput, {
-        name: "getStartedPageTextInputForm__input2",
-        placeholder: "Token symbol"
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-}
-
-// code/build/haruka/app/component/item/GetStartedPageInstallationOptionItem.tsx
-var import_react17 = __toESM(require_react(), 1);
-var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
-function GetStartedPageInstallationOptionItem({
-  name,
-  quirkName,
-  isToggled: pIsToggled
-}) {
-  const [isToggled, toggle] = import_react17.useState(pIsToggled ?? false);
-  return jsx_dev_runtime30.jsxDEV(Row, {
-    name: `${name}__wrapper`,
-    style: {
-      width: "400px",
-      height: "25px"
-    },
-    children: [
-      jsx_dev_runtime30.jsxDEV(Row, {
-        name: `${name}__toggleButton`,
-        spring: {
-          width: "50px",
-          height: "25px",
-          background: pIsToggled ? "#615FFF" : "#FF1802"
-        },
+      jsx_dev_runtime29.jsxDEV(ColumnHook, {
+        uniqueId: "metadataFormSlide.form",
         style: {
-          overflowX: "hidden",
-          overflowY: "hidden",
-          justifyContent: "start",
-          padding: "2.5px",
-          borderRadius: "25px",
-          gap: "20px"
+          width: "100%",
+          height: "auto",
+          gap: "10px"
         },
-        onMouseEnter: function() {
-          defaultMappedEventEmitter.post(`${name}__wrapper`, "setSpring", {
-            cursor: "pointer"
-          });
-        },
-        onMouseLeave: function() {
-          defaultMappedEventEmitter.post(`${name}__wrapper`, "setSpring", {
-            cursor: "auto"
-          });
-        },
-        onClick: function() {
-          if (isToggled) {
-            toggle(false);
-            defaultMappedEventEmitter.post(`${name}__toggleButtonDot`, "setSpring", {
-              left: "25px"
-            });
-            defaultMappedEventEmitter.post(`${name}__toggleButton`, "setSpring", {
-              background: "#615FFF"
-            });
-            defaultMappedEventEmitter.postEvent(name, "TOGGLED", false);
-          } else {
-            toggle(true);
-            defaultMappedEventEmitter.post(`${name}__toggleButtonDot`, "setSpring", {
-              left: "0px"
-            });
-            defaultMappedEventEmitter.post(`${name}__toggleButton`, "setSpring", {
-              background: "#FF1802"
-            });
-            defaultMappedEventEmitter.postEvent(name, "TOGGLED", true);
-          }
-        },
-        children: jsx_dev_runtime30.jsxDEV(Col, {
-          name: `${name}__toggleButtonDot`,
-          spring: {
-            width: "20px",
-            height: "20px",
-            borderRadius: "25px",
-            background: "#171717",
-            position: "relative",
-            left: pIsToggled ? "25px" : "0px"
-          },
-          springConfig: config.stiff
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this),
-      jsx_dev_runtime30.jsxDEV(Text, {
-        name: `${name}__label`,
-        text: quirkName
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-}
-
-// code/build/haruka/app/component/item/GetStartedPageInstallationForm.tsx
-var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
-function GetStartedPageInstallationForm() {
-  return jsx_dev_runtime31.jsxDEV(Col, {
-    name: "installationForm",
-    style: {
-      width: "420px",
-      height: "300px",
-      overflowY: "scroll",
-      overflowX: "hidden",
-      pointerEvents: "auto"
-    },
-    children: jsx_dev_runtime31.jsxDEV(GetStartedPageInstallationOptionItem, {
-      name: "option0",
-      quirkName: "ERC20"
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// code/build/haruka/app/page/GetStartedPage.tsx
-var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
-function GetStartedPage() {
-  return jsx_dev_runtime32.jsxDEV(Page, {
-    name: "getStartedPage",
-    children: [
-      jsx_dev_runtime32.jsxDEV(Page, {
-        name: "getStartedPageContentLayer",
         children: [
-          jsx_dev_runtime32.jsxDEV(GetStartedPageTextInputForm, {}, undefined, false, undefined, this),
-          jsx_dev_runtime32.jsxDEV(GetStartedPageInstallationForm, {}, undefined, false, undefined, this)
+          jsx_dev_runtime29.jsxDEV(TextFieldHook, {
+            uniqueId: "metadataFormSlide.DAONameField",
+            placeholder: "DAO Name: Sunshine Capital"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime29.jsxDEV(TextFieldHook, {
+            uniqueId: "metadataFormSlide.DAOTokenNameField",
+            placeholder: "Token Name: Sunshine Token"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime29.jsxDEV(TextFieldHook, {
+            uniqueId: "metadataFormSlide.DAOTokenSymbolField",
+            placeholder: "Token Symbol: vSUN"
+          }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      jsx_dev_runtime32.jsxDEV(NavLayer, {}, undefined, false, undefined, this)
+      jsx_dev_runtime29.jsxDEV(ColumnHook, {
+        uniqueId: "metadataFormSlide.formMessage"
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime29.jsxDEV(TwoButtonSlot, {
+        uniqueId: "metadataFormSlide.twoButtonSlot",
+        children: [
+          jsx_dev_runtime29.jsxDEV(ButtonHook, {
+            className: "swing-in-top-fwd",
+            uniqueId: "metadataFormSlide.nextButton",
+            color: "#615FFF",
+            text: "Next"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime29.jsxDEV(ButtonHook, {
+            className: "swing-in-top-fwd",
+            uniqueId: "metadataFormSlide.backButton",
+            color: "#D6D5D4",
+            text: "Back",
+            onClick: () => defaultMappedEventEmitter.post("homePage.window", "swap", jsx_dev_runtime29.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this))
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/page/homePage/window/slide/GetStartedSlide.tsx
+var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
+function GetStartedSlide2() {
+  import_react18.useEffect(function() {
+    console.log(DeployerNode.DAONameField(), DeployerNode.DAOTokenNameField(), DeployerNode.DAOTokenSymbolField());
+    const subscriptions = [
+      defaultMappedEventEmitter.hookEvent("getStartedSlide.nextButton", "CLICK", function() {
+        defaultMappedEventEmitter.post("homePage.window", "swap", jsx_dev_runtime30.jsxDEV(MetadataFormSlide, {}, undefined, false, undefined, this));
+      }),
+      defaultMappedEventEmitter.hookEvent("getStartedSlide.backButton", "CLICK", function() {
+        defaultMappedEventEmitter.post("homePage.window", "swap", jsx_dev_runtime30.jsxDEV(WelcomeSlide2, {}, undefined, false, undefined, this));
+      })
+    ];
+    return function() {
+      return subscriptions.forEach((subscription) => subscription.remove());
+    };
+  }, []);
+  return jsx_dev_runtime30.jsxDEV(Slide, {
+    uniqueId: "getStartedSlide",
+    children: [
+      jsx_dev_runtime30.jsxDEV(Text, {
+        text: "Deploying a contract is easy, and will only set you back less than a cent."
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime30.jsxDEV(TwoButtonSlot, {
+        uniqueId: "getStartedSlide.twoButtonSlot",
+        children: [
+          jsx_dev_runtime30.jsxDEV(ButtonHook, {
+            className: "swing-in-top-fwd",
+            uniqueId: "getStartedSlide.nextButton",
+            color: "#615FFF",
+            text: "Next"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime30.jsxDEV(ButtonHook, {
+            className: "swing-in-top-fwd",
+            uniqueId: "getStartedSlide.backButton",
+            color: "#D6D5D4",
+            text: "Back"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/page/homePage/window/slide/WelcomeSlide.tsx
+var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
+function WelcomeSlide2() {
+  return jsx_dev_runtime31.jsxDEV(Slide, {
+    uniqueId: "welcomeSlide",
+    children: [
+      jsx_dev_runtime31.jsxDEV(ColumnHook, {
+        uniqueId: "welcomeSlide.heroSlot",
+        children: [
+          jsx_dev_runtime31.jsxDEV(Text, {
+            className: "swing-in-top-fwd",
+            text: "Your Gateway Drug To DeFi",
+            style: {
+              fontSize: "30px",
+              background: "#615FFF",
+              alignSelf: "start"
+            }
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime31.jsxDEV(Text, {
+            className: "swing-in-top-fwd",
+            text: "Dreamcatcher is a cross-chain DAO protocol designed to host infinitely scalable, modular, and eternal smart contracts which interact can interact with each other.",
+            style: {
+              fontSize: "15px",
+              alignSelf: "start"
+            }
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      jsx_dev_runtime31.jsxDEV(TwoButtonSlot, {
+        uniqueId: "welcomeSlide.twoButtonSlot",
+        children: [
+          jsx_dev_runtime31.jsxDEV(ButtonHook, {
+            className: "swing-in-top-fwd",
+            uniqueId: "welcomeSlide.getStartedButton",
+            color: "#615FFF",
+            text: "Get Started",
+            onClick: () => defaultMappedEventEmitter.post("homePage.window", "swap", jsx_dev_runtime31.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this))
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime31.jsxDEV(ButtonLink, {
+            className: "swing-in-top-fwd",
+            uniqueId: "welcomeSlide.learnMoreButton",
+            link: "https://dreamcatcher-1.gitbook.io/dreamcatcher",
+            color: "#D6D5D4",
+            text: "Learn More"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/page/homePage/window/Window.tsx
+var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
+function Window() {
+  return jsx_dev_runtime32.jsxDEV(PhantomSteelFrameHook, {
+    uniqueId: "homePage.window.phantomSteelFrame",
+    style: {
+      width: "500px",
+      height: "512px"
+    },
+    children: jsx_dev_runtime32.jsxDEV(ObsidianContainerWithPhantomSteelFrameHook, {
+      uniqueId: "homePage.window",
+      style: {
+        width: "450px",
+        height: "450px"
+      },
+      children: jsx_dev_runtime32.jsxDEV(WelcomeSlide2, {}, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/homePage/HomePage.tsx
+var jsx_dev_runtime33 = __toESM(require_jsx_dev_runtime(), 1);
+function HomePage() {
+  return jsx_dev_runtime33.jsxDEV(Page, {
+    children: [
+      jsx_dev_runtime33.jsxDEV(Layer, {
+        children: [
+          jsx_dev_runtime33.jsxDEV(Pulse0, {}, undefined, false, undefined, this),
+          jsx_dev_runtime33.jsxDEV(Pulse1, {}, undefined, false, undefined, this),
+          jsx_dev_runtime33.jsxDEV(BlurDot0, {}, undefined, false, undefined, this),
+          jsx_dev_runtime33.jsxDEV(BlurDot1, {}, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      jsx_dev_runtime33.jsxDEV(Layer, {
+        children: jsx_dev_runtime33.jsxDEV(RowHook, {
+          uniqueId: "homePage.row",
+          children: jsx_dev_runtime33.jsxDEV(Window, {}, undefined, false, undefined, this)
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime33.jsxDEV(NavigationLayer, {}, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 }
 
 // code/build/haruka/app/Index.tsx
-var jsx_dev_runtime33 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime34 = __toESM(require_jsx_dev_runtime(), 1);
 Boilerplate.render([{
   path: "/",
-  element: jsx_dev_runtime33.jsxDEV(HomePage, {}, undefined, false, undefined, this)
-}, {
-  path: "/getStarted",
-  element: jsx_dev_runtime33.jsxDEV(GetStartedPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime34.jsxDEV(HomePage, {}, undefined, false, undefined, this)
 }]);
