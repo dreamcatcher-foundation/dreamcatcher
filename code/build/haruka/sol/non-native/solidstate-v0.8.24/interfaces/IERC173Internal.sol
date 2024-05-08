@@ -7,7 +7,7 @@ pragma solidity ^0.8.18;
  */
 interface IERC173Internal {
     event OwnershipTransferred(
-        address indexed previousOwner,
+        address indexed oldOwner,
         address indexed newOwner
     );
 }

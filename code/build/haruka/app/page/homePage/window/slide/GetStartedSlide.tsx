@@ -3,7 +3,7 @@ import Slide from "./Slide.tsx";
 import Text from "../../../shared/components/text/Text.tsx";
 import ButtonHook from "../../../shared/components/input/ButtonHook.tsx";
 import {type EventSubscription} from "fbemitter";
-import {defaultMappedEventEmitter} from "../../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 import WelcomeSlide from "./WelcomeSlide.tsx";
 import MetadataFormSlide from "./MetadataFormSlide.tsx";
 import TwoButtonSlot from "./slot/TwoButtonSlot.tsx";

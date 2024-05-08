@@ -1,6 +1,6 @@
 import React, {type ReactNode, useState} from "react";
 import RowHook from "../layout/RowHook.tsx";
-import {defaultMappedEventEmitter} from "../../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 import {config} from "react-spring";
 
 export interface ToggleHookProps {

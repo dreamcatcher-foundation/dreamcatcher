@@ -1,7 +1,7 @@
 import React, {type ReactNode, type CSSProperties, type ComponentPropsWithoutRef, useState, useEffect} from "react";
 import {type SpringConfig, animated, config, useSpring} from "react-spring";
 import {type EventSubscription} from "fbemitter";
-import {defaultMappedEventEmitter} from "../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 
 export interface HookProps extends ComponentPropsWithoutRef<"div"> {
     uniqueId: string;

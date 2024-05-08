@@ -1,7 +1,7 @@
 import React, {type ReactNode, type CSSProperties} from "react";
 import TextHook from "../text/TextHook.tsx";
 import RowHook, {type RowHookProps} from "../layout/RowHook.tsx";
-import {defaultMappedEventEmitter} from "../../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 
 export interface ButtonHookProps extends RowHookProps {
     text?: string;

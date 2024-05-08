@@ -1,6 +1,6 @@
 import React, {type ReactNode} from "react";
 import TextHook from "../../../components/text/TextHook.tsx";
-import {defaultMappedEventEmitter} from "../../../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 
 export default function ConnectButton(): ReactNode {
     return (

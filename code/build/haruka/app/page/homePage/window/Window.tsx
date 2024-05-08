@@ -2,7 +2,7 @@ import React, {type ReactNode, useEffect, useState} from "react";
 import PhantomSteelFrameHook from "../../shared/components/layout/container/PhantomSteelFrameHook.tsx";
 import ObsidianContainerWithPhantomSteelFrameHook from "../../shared/components/layout/container/ObsidianContainerWithPhantomSteelFrameHook.tsx";
 import WelcomeSlide from "./slide/WelcomeSlide.tsx";
-import {defaultMappedEventEmitter} from "../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 import {type EventSubscription} from "fbemitter";
 
 export default function Window(): ReactNode {

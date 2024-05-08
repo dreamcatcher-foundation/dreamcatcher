@@ -1,6 +1,8 @@
 import {statSync, readFileSync} from "fs";
 import {join} from "path";
 
+export class FailedToFetchContentError extends Error {}
+
 export default class Path {
     private _inner: string = "";
 

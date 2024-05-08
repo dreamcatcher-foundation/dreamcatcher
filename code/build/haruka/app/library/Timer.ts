@@ -8,3 +8,4 @@ export default class Timer {
         return new Promise(resolve => setTimeout(resolve, Number(ms)));
     }
 }
+

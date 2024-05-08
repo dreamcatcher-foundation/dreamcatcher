@@ -3,12 +3,12 @@ import Slide from "./Slide.tsx";
 import TextFieldHook from "../../../shared/components/input/TextFieldHook.tsx";
 import TwoButtonSlot from "./slot/TwoButtonSlot.tsx";
 import ButtonHook from "../../../shared/components/input/ButtonHook.tsx";
-import {defaultMappedEventEmitter} from "../../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 import GetStartedSlide from "./GetStartedSlide.tsx";
 import ColumnHook from "../../../shared/components/layout/ColumnHook.tsx";
 import {type EventSubscription} from "fbemitter";
 import Text from "../../../shared/components/text/Text.tsx";
-import DeployerNode from "../../../shared/node/DeployerNode.tsx";
+import Deployer from "../../../shared/node/Deployer.tsx";
 
 export default function MetadataFormSlide(): ReactNode {
     let _DAONameField: string | undefined;
@@ -22,10 +22,9 @@ export default function MetadataFormSlide(): ReactNode {
             defaultMappedEventEmitter.hookEvent("metadataFormSlide.nextButton", "CLICK", function() {
                 const formIsValid: boolean = !(!_DAONameField || !_DAOTokenNameField || !_DAOTokenSymbolField);
                 if (formIsValid) {
-                    DeployerNode
-                        .setDAONameField(_DAONameField!)
-                        .setDAOTokenNameField(_DAOTokenNameField!)
-                        .setDAOTokenSymbolField(_DAOTokenSymbolField!);
+                    Deployer.DAONameField = _DAONameField!;
+                    Deployer.DAOTokenNameField = _DAOTokenNameField!;
+                    Deployer.DAOTokenSymbolField = _DAOTokenSymbolField!;
                     defaultMappedEventEmitter.post("homePage.window", "swap", <GetStartedSlide/>);
                     return;
                 }

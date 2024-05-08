@@ -31778,32 +31778,11 @@ function TwoButtonSlot(_props) {
   }, undefined, false, undefined, this);
 }
 
-// code/build/haruka/app/page/shared/node/DeployerNode.tsx
-class DeployerNode {
-  static _DAONameField;
-  static _DAOTokenNameField;
-  static _DAOTokenSymbolField;
-  static DAONameField() {
-    return this._DAONameField;
-  }
-  static DAOTokenNameField() {
-    return this._DAOTokenNameField;
-  }
-  static DAOTokenSymbolField() {
-    return this._DAOTokenSymbolField;
-  }
-  static setDAONameField(DAONameField) {
-    this._DAONameField = DAONameField;
-    return this;
-  }
-  static setDAOTokenNameField(DAOTokenNameField) {
-    this._DAOTokenNameField = DAOTokenNameField;
-    return this;
-  }
-  static setDAOTokenSymbolField(DAOTokenSymbolField) {
-    this._DAOTokenSymbolField = DAOTokenSymbolField;
-    return this;
-  }
+// code/build/haruka/app/page/shared/node/Deployer.tsx
+class Deployer {
+  static DAONameField;
+  static DAOTokenNameField;
+  static DAOTokenSymbolField;
 }
 
 // code/build/haruka/app/page/homePage/window/slide/MetadataFormSlide.tsx
@@ -31820,7 +31799,9 @@ function MetadataFormSlide() {
       defaultMappedEventEmitter.hookEvent("metadataFormSlide.nextButton", "CLICK", function() {
         const formIsValid = !(!_DAONameField || !_DAOTokenNameField || !_DAOTokenSymbolField);
         if (formIsValid) {
-          DeployerNode.setDAONameField(_DAONameField).setDAOTokenNameField(_DAOTokenNameField).setDAOTokenSymbolField(_DAOTokenSymbolField);
+          Deployer.DAONameField = _DAONameField;
+          Deployer.DAOTokenNameField = _DAOTokenNameField;
+          Deployer.DAOTokenSymbolField = _DAOTokenSymbolField;
           defaultMappedEventEmitter.post("homePage.window", "swap", jsx_dev_runtime29.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this));
           return;
         } else {
@@ -31891,7 +31872,6 @@ function MetadataFormSlide() {
 var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
 function GetStartedSlide2() {
   import_react18.useEffect(function() {
-    console.log(DeployerNode.DAONameField(), DeployerNode.DAOTokenNameField(), DeployerNode.DAOTokenSymbolField());
     const subscriptions = [
       defaultMappedEventEmitter.hookEvent("getStartedSlide.nextButton", "CLICK", function() {
         defaultMappedEventEmitter.post("homePage.window", "swap", jsx_dev_runtime30.jsxDEV(MetadataFormSlide, {}, undefined, false, undefined, this));
@@ -32026,9 +32006,66 @@ function HomePage() {
   }, undefined, true, undefined, this);
 }
 
-// code/build/haruka/app/Index.tsx
+// code/build/haruka/app/page/explorePage/ExplorePage.tsx
+var import_react19 = __toESM(require_react(), 1);
+
+// code/build/haruka/app/page/shared/components/layout/PageHook.tsx
 var jsx_dev_runtime34 = __toESM(require_jsx_dev_runtime(), 1);
+function PageHook(_props) {
+  const { uniqueId, style, ...more } = _props;
+  return jsx_dev_runtime34.jsxDEV(ColumnHook, {
+    uniqueId,
+    style: {
+      width: "100vw",
+      height: "100vh",
+      overflow: "hidden",
+      background: "#161616",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/shared/components/layout/LayerHook.tsx
+var jsx_dev_runtime35 = __toESM(require_jsx_dev_runtime(), 1);
+function LayerHook(_props) {
+  const { uniqueId, style, ...more } = _props;
+  return jsx_dev_runtime35.jsxDEV(ColumnHook, {
+    uniqueId,
+    style: {
+      width: "100%",
+      height: "100%",
+      position: "absolute",
+      overflow: "hidden",
+      ...style ?? {}
+    },
+    ...more
+  }, undefined, false, undefined, this);
+}
+
+// code/build/haruka/app/page/explorePage/ExplorePage.tsx
+var jsx_dev_runtime36 = __toESM(require_jsx_dev_runtime(), 1);
+function ExplorePage() {
+  const [vaults, setVaults] = import_react19.useState();
+  import_react19.useEffect(function() {
+  }, []);
+  return jsx_dev_runtime36.jsxDEV(PageHook, {
+    uniqueId: "explorePage",
+    children: [
+      jsx_dev_runtime36.jsxDEV(LayerHook, {
+        uniqueId: "explorePage.contentLayer"
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime36.jsxDEV(NavigationLayer, {}, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// code/build/haruka/app/Index.tsx
+var jsx_dev_runtime37 = __toESM(require_jsx_dev_runtime(), 1);
 Boilerplate.render([{
   path: "/",
-  element: jsx_dev_runtime34.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime37.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+}, {
+  path: "/explore",
+  element: jsx_dev_runtime37.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
 }]);

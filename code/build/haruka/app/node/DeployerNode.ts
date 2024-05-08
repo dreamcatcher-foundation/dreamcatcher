@@ -1,4 +1,4 @@
-import {defaultMappedEventEmitter} from "../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 
 let DAONameField: string = "";
 let DAOTokenNameField: string = "";

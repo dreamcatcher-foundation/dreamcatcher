@@ -1,6 +1,6 @@
 import React, {type ReactNode, useState, useEffect} from "react";
 import {type EventSubscription} from "fbemitter";
-import {defaultMappedEventEmitter} from "../../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 import Hook, {type HookProps} from "../Hook.tsx";
 
 export interface TextHookProps extends HookProps {

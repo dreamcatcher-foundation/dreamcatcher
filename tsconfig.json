@@ -30,6 +30,11 @@
     "noImplicitReturns": true,
     "noImplicitOverride": true,
     "strictFunctionTypes": true,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": true,
+
+    "baseUrl": "code",
+    "paths": {
+      "=evm/*": ["/haruka/app/library/*"]
+    }
   }
 }

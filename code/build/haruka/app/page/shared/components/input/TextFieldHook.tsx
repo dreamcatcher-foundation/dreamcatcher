@@ -1,5 +1,5 @@
 import React, {type ReactNode} from "react";
-import {defaultMappedEventEmitter} from "../../../../library/messenger/DefaultMappedEventEmitter.ts";
+import {defaultMappedEventEmitter} from "../../../../library/event-driven-architecture/DefaultMappedEventEmitter.ts";
 
 export interface TextFieldHookProps {
     uniqueId: string;

@@ -14,6 +14,7 @@ export type EventsMap = {
     pull: [],
     wipe: [],
     swap: [component: ReactNode],
+    query: []
 
     /** ... Events */
     CLICK: [],
