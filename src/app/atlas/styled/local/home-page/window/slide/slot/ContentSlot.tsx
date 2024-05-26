@@ -3,9 +3,9 @@ import { type IRowHookProps } from "@atlas/component/layout/RowHook.tsx";
 import { RowHook } from "@atlas/component/layout/RowHook.tsx";
 import React from "react";
 
-interface IDoubleButtonSlotProps extends IRowHookProps {}
+interface IContentSlotProps extends IRowHookProps {}
 
-function DoubleButtonSlot(props: IDoubleButtonSlotProps): ReactNode {
+function ContentSlot(props: IContentSlotProps): ReactNode {
     let {node, children, style, ...more} = props;
     return (
         <RowHook
@@ -14,14 +14,12 @@ function DoubleButtonSlot(props: IDoubleButtonSlotProps): ReactNode {
         style={{
             width: "100%",
             height: "auto",
-            gap: "10px",
             ...style ?? {}
-        }}
-        {...more}>
+        }}>
             {children}
         </RowHook>
     );
 }
 
-export { type IDoubleButtonSlotProps };
-export { DoubleButtonSlot };
+export { type IRowHookProps };
+export { ContentSlot };

@@ -16,7 +16,7 @@ function Slide(props: ISlideProps): ReactNode {
             overflowX: "hidden",
             overflowY: "auto",
             padding: "20px",
-            justifyContent: "space-between",
+            justifyContent: "center",
             gap: "5px",
             ...style ?? {}
         }}

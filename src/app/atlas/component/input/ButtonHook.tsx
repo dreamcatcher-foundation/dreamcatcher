@@ -9,25 +9,26 @@ import React from "react";
 interface IButtonHookProps extends IRowHookProps {
     text?: string;
     color: string;
+    textColor?: string;
     textStyle?: CSSProperties;
 }
 
 function ButtonHook(props: IButtonHookProps): ReactNode {
-    let {node, text, textStyle, style, spring, color, ...more} = props;
+    let {node, text, textStyle, style, spring, color, textColor, ...more} = props;
     return (
         <RowHook
         node={node}
         style={{
-            width: "150px",
-            height: "40px",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            borderStyle: "solid",
-            borderWidth: "1px",
-            borderColor: color,
-            ...style ?? {}
+        width: "150px",
+        height: "40px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderColor: color,
+        ...style ?? {}
         }}
         onMouseEnter={() => Stream.dispatch({toNode: node, command: "setSpring", timeout: 0n, item: {cursor: "pointer"}})}
         onMouseLeave={() => Stream.dispatch({toNode: node, command: "setSpring", timeout: 0n, item: {cursor: "auto"}})}
@@ -36,8 +37,8 @@ function ButtonHook(props: IButtonHookProps): ReactNode {
             <TextHook
             node={`${node}.text`}
             text={text}
+            color={textColor}
             style={{
-                background: color,
                 ...textStyle ?? {}
             }}>
             </TextHook>

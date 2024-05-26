@@ -31641,7 +31641,7 @@ var Slide = function(props) {
       overflowX: "hidden",
       overflowY: "auto",
       padding: "20px",
-      justifyContent: "space-between",
+      justifyContent: "center",
       gap: "5px",
       ...style ?? {}
     },
@@ -31653,36 +31653,54 @@ var Slide = function(props) {
 
 // src/app/atlas/component/text/TextHook.tsx
 var import_react17 = __toESM(require_react(), 1);
-var import_react18 = __toESM(require_react(), 1);
 var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
 var TextHook = function(props) {
-  let { node, text: textProp, style, children, ...more } = props;
-  let [text, setText] = import_react17.useState(textProp ?? "");
-  import_react18.useEffect(function() {
-    let subscription = Stream.createSubscription({ atNode: node, command: "setText", hook: (text2) => setText(text2) });
+  let { node, text, textStyle: textStyleProp, color, children, ...more } = props;
+  let textStyle = {
+    fontSize: "1em",
+    fontFamily: "roboto mono",
+    fontWeight: "bold",
+    color: "white",
+    background: color ?? "#D6D5D4",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    ...textStyleProp ?? {}
+  };
+  import_react17.useEffect(function() {
+    Stream.dispatch({
+      toNode: node,
+      command: "push",
+      item: jsx_dev_runtime23.jsxDEV(Text, {
+        text: text ?? "",
+        style: textStyle
+      }, undefined, false, undefined, this)
+    });
+    let subscription = Stream.createSubscription({
+      atNode: node,
+      command: "setText",
+      hook(text2) {
+        Stream.dispatch({
+          toNode: node,
+          command: "swap",
+          item: jsx_dev_runtime23.jsxDEV(Text, {
+            text: text2,
+            style: textStyle
+          }, undefined, false, undefined, this)
+        });
+      }
+    });
     return () => subscription.remove();
   }, []);
   return jsx_dev_runtime23.jsxDEV(Hook, {
     node,
-    style: {
-      fontSize: "1em",
-      fontFamily: "roboto mono",
-      fontWeight: "bold",
-      color: "white",
-      background: "#D6D5D4",
-      WebkitBackgroundClip: "text",
-      WebkitTextFillColor: "transparrent",
-      ...style ?? {}
-    },
-    ...more,
-    children: text
+    ...more
   }, undefined, false, undefined, this);
 };
 
 // src/app/atlas/component/input/ButtonHook.tsx
 var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
 var ButtonHook = function(props) {
-  let { node, text, textStyle, style, spring, color, ...more } = props;
+  let { node, text, textStyle, style, spring, color, textColor, ...more } = props;
   return jsx_dev_runtime24.jsxDEV(RowHook, {
     node,
     style: {
@@ -31704,8 +31722,8 @@ var ButtonHook = function(props) {
     children: jsx_dev_runtime24.jsxDEV(TextHook, {
       node: `${node}.text`,
       text,
+      color: textColor,
       style: {
-        background: color,
         ...textStyle ?? {}
       }
     }, undefined, false, undefined, this)
@@ -31732,47 +31750,424 @@ var LinkedButtonHook = function(props) {
 // src/app/atlas/styled/local/home-page/window/slide/slot/DoubleButtonSlot.tsx
 var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
 var DoubleButtonSlot = function(props) {
-  let { node, children, ...more } = props;
+  let { node, children, style, ...more } = props;
   return jsx_dev_runtime26.jsxDEV(RowHook, {
     node,
     childrenMountCooldown: 100n,
     style: {
       width: "100%",
       height: "auto",
-      gap: "10px"
+      gap: "10px",
+      ...style ?? {}
     },
     ...more,
     children
   }, undefined, false, undefined, this);
 };
 
-// src/app/atlas/styled/local/home-page/window/slide/GetStartedSlide.tsx
+// src/app/atlas/styled/local/home-page/window/slide/slot/ContentSlot.tsx
 var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
-var GetStartedSlide = function() {
-  return jsx_dev_runtime27.jsxDEV(Slide, {
+var ContentSlot = function(props) {
+  let { node, children, style, ...more } = props;
+  return jsx_dev_runtime27.jsxDEV(RowHook, {
+    node,
+    childrenMountCooldown: 100n,
+    style: {
+      width: "100%",
+      height: "auto",
+      ...style ?? {}
+    },
+    children
+  }, undefined, false, undefined, this);
+};
+
+// src/app/atlas/styled/local/home-page/window/slide/GetStartedSlide.tsx
+var import_react20 = __toESM(require_react(), 1);
+
+// src/app/atlas/styled/local/home-page/window/slide/slot/HeadingSlot.tsx
+var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+var HeadingSlot = function(props) {
+  let { node, children, style, ...more } = props;
+  return jsx_dev_runtime28.jsxDEV(RowHook, {
+    node,
+    childrenMountCooldown: 100n,
+    style: {
+      width: "100%",
+      height: "auto",
+      ...style ?? {}
+    },
+    ...more,
+    children
+  }, undefined, false, undefined, this);
+};
+
+// src/app/atlas/component/input/TextFieldHook.tsx
+var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
+var TextFieldHook = function(props) {
+  let { node, placeholder, style, ...more } = props;
+  return jsx_dev_runtime29.jsxDEV("input", {
+    style: {
+      width: "100%",
+      height: "auto",
+      display: "flex",
+      flexDirection: "row",
+      justifySelf: "start",
+      alignSelf: "start",
+      fontSize: "1em",
+      fontFamily: "roboto mono",
+      fontWeight: "bold",
+      color: "white",
+      borderWidth: "1px",
+      borderStyle: "solid",
+      borderColor: "#D6D5D4",
+      background: "transparent",
+      padding: "0.5em",
+      ...style ?? {}
+    },
+    placeholder,
+    onChange: (event) => Stream.dispatchEvent({ fromNode: node, event: "inputChange", item: event.target.value }),
+    ...more
+  }, undefined, false, undefined, this);
+};
+
+// src/app/atlas/styled/local/home-page/window/slide/ExtensionsSlide.tsx
+var import_react19 = __toESM(require_react(), 1);
+
+// src/app/atlas/component/input/ToggleHook.tsx
+var import_react18 = __toESM(require_react(), 1);
+var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
+var ToggleHook = function(props) {
+  let { node, isToggled: isToggledProp } = props;
+  let [isToggled, setToggled] = import_react18.useState(isToggledProp ?? false);
+  return jsx_dev_runtime30.jsxDEV(RowHook, {
+    node,
+    spring: {
+      width: "50px",
+      height: "25px",
+      background: isToggledProp ? "#615FFF" : "#202020"
+    },
+    style: {
+      overflowX: "hidden",
+      overflowY: "hidden",
+      justifyContent: "start",
+      padding: "2.5px",
+      borderRadius: "25px"
+    },
+    onMouseEnter: () => Stream.dispatch({ toNode: node, command: "setSpring", item: { cursor: "pointer" } }),
+    onMouseLeave: () => Stream.dispatch({ toNode: node, command: "setSpring", item: { cursor: "auto" } }),
+    onClick: function() {
+      setToggled(!isToggled);
+      if (isToggled) {
+        Stream.dispatch({ toNode: `${node}.dot`, command: "setSpring", item: { left: "25px" } });
+        Stream.dispatch({ toNode: node, command: "setSpring", item: { background: "#615FFF" } });
+        Stream.dispatchEvent({ fromNode: node, event: "toggle", item: isToggled });
+        return;
+      }
+      Stream.dispatch({ toNode: `${node}.dot`, command: "setSpring", item: { left: "0px" } });
+      Stream.dispatch({ toNode: node, command: "setSpring", item: { background: "#202020" } });
+      Stream.dispatchEvent({ fromNode: node, event: "toggle", item: isToggled });
+      return;
+    },
+    children: jsx_dev_runtime30.jsxDEV(RowHook, {
+      node: `${node}.dot`,
+      spring: {
+        width: "20px",
+        height: "20px",
+        borderRadius: "25px",
+        background: "#171717",
+        position: "relative",
+        left: isToggledProp ? "25px" : "0px"
+      },
+      springConfig: config.stiff
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+};
+
+// src/app/atlas/styled/local/home-page/window/slide/ExtensionsSlide.tsx
+var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
+var ExtensionsSlide = function() {
+  import_react19.useEffect(function() {
+    let subscriptions = [
+      Stream.createEventSubscription({
+        fromNode: "homePage.window.extensionsSlide.contentSlot.extension0.toggle",
+        event: "toggle",
+        hook(state) {
+          if (state) {
+            WindowDeploymentTracker.selectedErc20Extension = true;
+            return;
+          }
+          WindowDeploymentTracker.selectedErc20Extension = false;
+          return;
+        }
+      }),
+      Stream.createEventSubscription({
+        fromNode: "homePage.window.extensionsSlide.contentSlot.extension1.toggle",
+        event: "toggle",
+        hook(state) {
+          if (state) {
+            WindowDeploymentTracker.selectedAuthExtension = true;
+            return;
+          }
+          WindowDeploymentTracker.selectedAuthExtension = false;
+          return;
+        }
+      })
+    ];
+    return () => subscriptions.forEach((subscription) => subscription.remove());
+  }, []);
+  return jsx_dev_runtime31.jsxDEV(Slide, {
+    node: "homePage.window.extensionsSlide",
+    children: [
+      jsx_dev_runtime31.jsxDEV(HeadingSlot, {
+        node: "homePage.window.extensionsSlide.headingSlot",
+        style: {
+          height: "12.5%"
+        },
+        children: jsx_dev_runtime31.jsxDEV(Text, {
+          text: "Extensions",
+          style: {
+            fontSize: "30px",
+            background: "#615FFF",
+            alignSelf: "center"
+          }
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime31.jsxDEV(ContentSlot, {
+        node: "homePage.window.extensionsSlide.contentSlot",
+        style: {
+          height: "70%",
+          overflowX: "hidden",
+          overflowY: "scroll",
+          flexDirection: "column",
+          display: "flex",
+          alignItems: "start",
+          justifyContent: "start"
+        },
+        children: [
+          jsx_dev_runtime31.jsxDEV(RowHook, {
+            node: "homePage.window.extensionsSlide.contentSlot.extension0",
+            style: {
+              width: "100%",
+              height: "50px",
+              gap: "10px",
+              justifyContent: "start"
+            },
+            children: [
+              jsx_dev_runtime31.jsxDEV(ToggleHook, {
+                node: "homePage.window.extensionsSlide.contentSlot.extension0.toggle"
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime31.jsxDEV(Text, {
+                text: "ERC20"
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime31.jsxDEV(Text, {
+                text: "",
+                style: {
+                  background: "#FF1802"
+                }
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          jsx_dev_runtime31.jsxDEV(RowHook, {
+            node: "homePage.window.extensionsSlide.contentSlot.extension1",
+            style: {
+              width: "100%",
+              height: "50px",
+              gap: "10px",
+              justifyContent: "start"
+            },
+            children: [
+              jsx_dev_runtime31.jsxDEV(ToggleHook, {
+                node: "homePage.window.extensionsSlide.contentSlot.extension1.toggle",
+                isToggled: true
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime31.jsxDEV(Text, {
+                text: "Auth"
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime31.jsxDEV(Text, {
+                text: "Recommended",
+                style: {
+                  background: "#FF1802"
+                }
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      jsx_dev_runtime31.jsxDEV(DoubleButtonSlot, {
+        node: "homePage.window.extensionsSlide.doubleButtonSlot",
+        style: {
+          height: "12.5%"
+        },
+        children: [
+          jsx_dev_runtime31.jsxDEV(ButtonHook, {
+            node: "homePage.window.extensionsSlide.doubleButtonSlot.nextButton",
+            className: "swing-in-top-fwd",
+            color: "#615FFF",
+            text: "Deploy",
+            onClick: function() {
+              console.log(WindowDeploymentTracker.daoName, WindowDeploymentTracker.daoTokenName, WindowDeploymentTracker.daoTokenSymbol, WindowDeploymentTracker.selectedAuthExtension, WindowDeploymentTracker.selectedErc20Extension);
+            }
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime31.jsxDEV(ButtonHook, {
+            node: "homePage.window.extensionsSlide.doubleButtonSlot.backButton",
+            className: "swing-in-top-fwd",
+            color: "#615FFF",
+            text: "Back",
+            onClick: function() {
+              Stream.dispatch({
+                toNode: "homePage.window",
+                command: "swap",
+                item: jsx_dev_runtime31.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this)
+              });
+              return;
+            }
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+};
+
+// src/app/atlas/styled/local/home-page/window/slide/GetStartedSlide.tsx
+var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
+var GetStartedSlide2 = function() {
+  import_react20.useEffect(function() {
+    let subscriptions = [
+      Stream.createEventSubscription({
+        fromNode: "homePage.window.getStartedSlide.contentSlot.col.input0",
+        event: "inputChange",
+        hook(name) {
+          WindowDeploymentTracker.daoName = name;
+        }
+      }),
+      Stream.createEventSubscription({
+        fromNode: "homePage.window.getStartedSlide.contentSlot.col.input1",
+        event: "inputChange",
+        hook(tokenName) {
+          WindowDeploymentTracker.daoTokenName = tokenName;
+        }
+      }),
+      Stream.createEventSubscription({
+        fromNode: "homePage.window.getStartedSlide.contentSlot.col.input2",
+        event: "inputChange",
+        hook(symbol) {
+          WindowDeploymentTracker.daoTokenSymbol = symbol;
+        }
+      })
+    ];
+    return () => subscriptions.forEach((subscription) => subscription.remove());
+  }, []);
+  return jsx_dev_runtime32.jsxDEV(Slide, {
     node: "homePage.window.getStartedSlide",
     children: [
-      jsx_dev_runtime27.jsxDEV(Text, {
-        text: "Deploying a contract is easy and will...."
+      jsx_dev_runtime32.jsxDEV(HeadingSlot, {
+        node: "homePage.window.getStartedSlide.headingSlot",
+        style: {
+          height: "12.5%"
+        },
+        children: jsx_dev_runtime32.jsxDEV(Text, {
+          text: "Get Started",
+          style: {
+            fontSize: "30px",
+            background: "#615FFF",
+            alignSelf: "center"
+          }
+        }, undefined, false, undefined, this)
       }, undefined, false, undefined, this),
-      jsx_dev_runtime27.jsxDEV(DoubleButtonSlot, {
-        node: "homePage.window.getStartedSlide.doubledButtonSlot",
+      jsx_dev_runtime32.jsxDEV(ContentSlot, {
+        node: "homePage.window.getStartedSlide.contentSlot",
+        style: {
+          height: "70%"
+        },
+        children: jsx_dev_runtime32.jsxDEV(ColumnHook, {
+          node: "homePage.window.getStartedSlide.contentSlot.col",
+          style: {
+            width: "100%",
+            height: "100%",
+            gap: "10px",
+            justifyContent: "start"
+          },
+          children: [
+            jsx_dev_runtime32.jsxDEV(TextFieldHook, {
+              node: "homePage.window.getStartedSlide.contentSlot.col.input0",
+              placeholder: "Soda Capital",
+              style: {
+                borderColor: "#858585",
+                outline: "none"
+              }
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime32.jsxDEV(TextFieldHook, {
+              node: "homePage.window.getStartedSlide.contentSlot.col.input1",
+              placeholder: "Soda Token",
+              style: {
+                borderColor: "#858585",
+                outline: "none"
+              }
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime32.jsxDEV(TextFieldHook, {
+              node: "homePage.window.getStartedSlide.contentSlot.col.input2",
+              placeholder: "vSODA",
+              style: {
+                borderColor: "#858585",
+                outline: "none"
+              }
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime32.jsxDEV(TextHook, {
+              node: "homePage.window.getStartedSlide.contentSlot.col.feedback",
+              text: "",
+              style: {
+                width: "100%",
+                fontSize: "10px",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center"
+              },
+              color: "#FF1802"
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime32.jsxDEV(DoubleButtonSlot, {
+        node: "homePage.window.getStartedSlide.doubleButtonSlot",
+        style: {
+          height: "12.5%"
+        },
         children: [
-          jsx_dev_runtime27.jsxDEV(ButtonHook, {
+          jsx_dev_runtime32.jsxDEV(ButtonHook, {
+            node: "homePage.window.getStartedSlide.doubleButtonSlot.nextButton",
             className: "swing-in-top-fwd",
-            node: "homePage.window.getStartedSlide.nextButton",
             color: "#615FFF",
             text: "Next",
-            onClick: () => Stream.dispatch({ toNode: "homePage.window", command: "swap", item: jsx_dev_runtime27.jsxDEV("div", {
-              children: "Collect Metadata Slide"
-            }, undefined, false, undefined, this) })
+            onClick: function() {
+              if (WindowDeploymentTracker.daoName === "" || WindowDeploymentTracker.daoTokenName === "" || WindowDeploymentTracker.daoTokenSymbol === "") {
+                Stream.dispatch({
+                  toNode: "homePage.window.getStartedSlide.contentSlot.col.feedback",
+                  command: "setText",
+                  item: "An input field has been left empty."
+                });
+                return;
+              }
+              Stream.dispatch({
+                toNode: "homePage.window",
+                command: "swap",
+                item: jsx_dev_runtime32.jsxDEV(ExtensionsSlide, {}, undefined, false, undefined, this)
+              });
+              return;
+            }
           }, undefined, false, undefined, this),
-          jsx_dev_runtime27.jsxDEV(ButtonHook, {
+          jsx_dev_runtime32.jsxDEV(ButtonHook, {
+            node: "homePage.window.getStartedSlide.doubleButtonSlot.backButton",
             className: "swing-in-top-fwd",
-            node: "homePage.window.getStartedSlide.backButton",
-            color: "#D6D5D4",
+            color: "#615FFF",
             text: "Back",
-            onClick: () => Stream.dispatch({ toNode: "homePage.window", command: "swap", item: jsx_dev_runtime27.jsxDEV(WelcomeSlide2, {}, undefined, false, undefined, this) })
+            onClick: function() {
+              Stream.dispatch({
+                toNode: "homePage.window",
+                command: "swap",
+                item: jsx_dev_runtime32.jsxDEV(WelcomeSlide2, {}, undefined, false, undefined, this)
+              });
+            }
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
@@ -31781,44 +32176,53 @@ var GetStartedSlide = function() {
 };
 
 // src/app/atlas/styled/local/home-page/window/slide/WelcomeSlide.tsx
-var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime33 = __toESM(require_jsx_dev_runtime(), 1);
 var WelcomeSlide2 = function() {
-  return jsx_dev_runtime28.jsxDEV(Slide, {
-    node: "homePage.welcomeSlide",
+  return jsx_dev_runtime33.jsxDEV(Slide, {
+    node: "homePage.window.welcomeSlide",
     children: [
-      jsx_dev_runtime28.jsxDEV(ColumnHook, {
-        node: "homePage.welcomeSlide.heroSlot",
-        children: [
-          jsx_dev_runtime28.jsxDEV(Text, {
-            className: "swing-in-top-fwd",
-            text: "Your Gateway Drug",
-            style: {
-              fontSize: "30px",
-              background: "#615FFF",
-              alignSelf: "start"
-            }
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime28.jsxDEV(Text, {
-            className: "swing-in-top-fwd",
-            text: "Dreamcatcher is a cross-chain DAO protocol designed to host infinitely scalable, modular, and eternal smart contracts which interact can interact with each other.",
-            style: {
-              fontSize: "15px",
-              alignSelf: "start"
-            }
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      jsx_dev_runtime28.jsxDEV(DoubleButtonSlot, {
+      jsx_dev_runtime33.jsxDEV(ContentSlot, {
+        node: "homePage.window.welcomeSlide.contentSlot",
+        style: {
+          height: "400px"
+        },
+        children: jsx_dev_runtime33.jsxDEV(ColumnHook, {
+          node: "homePage.welcomeSlide.contentSlot.hero",
+          children: [
+            jsx_dev_runtime33.jsxDEV(Text, {
+              className: "swing-in-top-fwd",
+              text: "Your Gateway Drug",
+              style: {
+                fontSize: "30px",
+                background: "#615FFF",
+                alignSelf: "start"
+              }
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime33.jsxDEV(Text, {
+              className: "swing-in-top-fwd",
+              text: "Dreamcatcher is a cross-chain DAO protocol designed to host infinitely scalable, modular, and eternal smart contracts which interact can interact with each other.",
+              style: {
+                fontSize: "15px",
+                alignSelf: "start"
+              }
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime33.jsxDEV(DoubleButtonSlot, {
         node: "homePage.welcomeSlide.doubleButtonSlot",
+        style: {
+          height: "50px"
+        },
         children: [
-          jsx_dev_runtime28.jsxDEV(ButtonHook, {
+          jsx_dev_runtime33.jsxDEV(ButtonHook, {
             className: "swing-in-top-fwd",
             node: "homePage.welcomeSlide.getStartedButton",
             color: "#615FFF",
             text: "Get Started",
-            onClick: () => Stream.dispatch({ toNode: "homePage.window", command: "swap", item: jsx_dev_runtime28.jsxDEV(GetStartedSlide, {}, undefined, false, undefined, this) })
+            onClick: () => Stream.dispatch({ toNode: "homePage.window", command: "swap", item: jsx_dev_runtime33.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this) })
           }, undefined, false, undefined, this),
-          jsx_dev_runtime28.jsxDEV(LinkedButtonHook, {
+          jsx_dev_runtime33.jsxDEV(LinkedButtonHook, {
             className: "swing-in-top-fwd",
             node: "homePage.welcomeSlide.learnMoreButton",
             color: "#D6D5D4",
@@ -31832,52 +32236,60 @@ var WelcomeSlide2 = function() {
 };
 
 // src/app/atlas/styled/local/home-page/window/Window.tsx
-var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
-var Window = function() {
-  return jsx_dev_runtime29.jsxDEV(PhantomSteelFrameHook, {
+var jsx_dev_runtime34 = __toESM(require_jsx_dev_runtime(), 1);
+var Window3 = function() {
+  return jsx_dev_runtime34.jsxDEV(PhantomSteelFrameHook, {
     node: "homePage.window.phantomSteelFrame",
     style: {
       width: "500px",
       height: "512px"
     },
-    children: jsx_dev_runtime29.jsxDEV(ObsidianContainerWithPhantomSteelFrameHook, {
+    children: jsx_dev_runtime34.jsxDEV(ObsidianContainerWithPhantomSteelFrameHook, {
       node: "homePage.window",
       style: {
         width: "450px",
         height: "450px"
       },
-      children: jsx_dev_runtime29.jsxDEV(WelcomeSlide2, {}, undefined, false, undefined, this)
+      children: jsx_dev_runtime34.jsxDEV(WelcomeSlide2, {}, undefined, false, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 };
 
+class WindowDeploymentTracker {
+  static daoName;
+  static daoTokenName;
+  static daoTokenSymbol;
+  static selectedErc20Extension;
+  static selectedAuthExtension = true;
+}
+
 // src/app/atlas/page/HomePage.tsx
-var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime35 = __toESM(require_jsx_dev_runtime(), 1);
 var HomePage = function() {
-  return jsx_dev_runtime30.jsxDEV(Page, {
+  return jsx_dev_runtime35.jsxDEV(Page, {
     children: [
-      jsx_dev_runtime30.jsxDEV(Layer, {
+      jsx_dev_runtime35.jsxDEV(Layer, {
         children: [
-          jsx_dev_runtime30.jsxDEV(Pulse0, {}, undefined, false, undefined, this),
-          jsx_dev_runtime30.jsxDEV(Pulse1, {}, undefined, false, undefined, this),
-          jsx_dev_runtime30.jsxDEV(BlurDot0, {}, undefined, false, undefined, this),
-          jsx_dev_runtime30.jsxDEV(BlurDot1, {}, undefined, false, undefined, this)
+          jsx_dev_runtime35.jsxDEV(Pulse0, {}, undefined, false, undefined, this),
+          jsx_dev_runtime35.jsxDEV(Pulse1, {}, undefined, false, undefined, this),
+          jsx_dev_runtime35.jsxDEV(BlurDot0, {}, undefined, false, undefined, this),
+          jsx_dev_runtime35.jsxDEV(BlurDot1, {}, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      jsx_dev_runtime30.jsxDEV(Layer, {
-        children: jsx_dev_runtime30.jsxDEV(RowHook, {
+      jsx_dev_runtime35.jsxDEV(Layer, {
+        children: jsx_dev_runtime35.jsxDEV(RowHook, {
           node: "homePage.row",
-          children: jsx_dev_runtime30.jsxDEV(Window, {}, undefined, false, undefined, this)
+          children: jsx_dev_runtime35.jsxDEV(Window3, {}, undefined, false, undefined, this)
         }, undefined, false, undefined, this)
       }, undefined, false, undefined, this),
-      jsx_dev_runtime30.jsxDEV(NavLayer, {}, undefined, false, undefined, this)
+      jsx_dev_runtime35.jsxDEV(NavLayer, {}, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 
 // src/app/atlas/App.tsx
-var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime36 = __toESM(require_jsx_dev_runtime(), 1);
 ReactBoilerplate.render([{
   path: "/",
-  element: jsx_dev_runtime31.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime36.jsxDEV(HomePage, {}, undefined, false, undefined, this)
 }]);

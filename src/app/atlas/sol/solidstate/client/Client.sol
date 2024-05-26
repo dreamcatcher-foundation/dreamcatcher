@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import "../../interface/IFacet.sol";
-import "../../../non-native/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
+import "../../import/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
 
 contract Client is SolidStateDiamond {
     function reinstall(address facet) external virtual onlyOwner() returns (bool) {

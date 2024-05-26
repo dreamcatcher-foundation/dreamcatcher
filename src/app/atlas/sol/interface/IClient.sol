@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.19;
-import "../non-native/solidstate-v0.8.24/proxy/diamond/ISolidStateDiamond.sol";
+pragma solidity >=0.8.19;
+import "../import/solidstate-v0.8.24/proxy/diamond/ISolidStateDiamond.sol";
 
 /**
 * -> facetAddress
@@ -23,7 +23,7 @@ import "../non-native/solidstate-v0.8.24/proxy/diamond/ISolidStateDiamond.sol";
 *    transferOwnership
 *    uninstall
  */
-interface IDiamond is ISolidStateDiamond {
+interface IClient is ISolidStateDiamond {
     function install(address facet) external returns (bool);
     function reinstall(address facet) external returns (bool);
     function uninstall(address facet) external returns (bool);

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import "../../../../../../non-native/openzeppelin/utils/structs/EnumerableSet.sol";
+import "../../../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
 import "../slot/AuthSlot.sol";
 
 contract AuthSocket is AuthSlot {
