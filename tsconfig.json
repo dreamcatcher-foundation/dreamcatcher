@@ -1,40 +1,42 @@
 {
-  "compilerOptions": {
-    "lib": ["ESNext"],
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
+	"compilerOptions": {
+		"lib": ["ESNext"],
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleDetection": "force",
+		"jsx": "react-jsx",
+		"allowJs": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
+		"verbatimModuleSyntax": true,
+		"noEmit": true,
 
-    /* Linting */
-    "skipLibCheck": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": false,
-    "alwaysStrict": true,
-    "strictNullChecks": true,
-    "noFallthroughCasesInSwitch": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipDefaultLibCheck": true,
-    "allowUnusedLabels": false,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
-    "noImplicitAny": true,
-    "noStrictGenericChecks": false,
-    "noImplicitReturns": true,
-    "noImplicitOverride": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
+		/* Linting */
+		"skipLibCheck": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": false,
+		"alwaysStrict": true,
+		"strictNullChecks": true,
+		"noFallthroughCasesInSwitch": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipDefaultLibCheck": true,
+		"allowUnusedLabels": true,
+		"noUnusedParameters": false,
+		"noUnusedLocals": false,
+		"noImplicitAny": true,
+		"noStrictGenericChecks": false,
+		"noImplicitReturns": true,
+		"noImplicitOverride": true,
+		"strictFunctionTypes": true,
+		"strictPropertyInitialization": true,
 
-    "baseUrl": "code",
-    "paths": {
-      "=evm/*": ["/haruka/app/library/*"]
-    }
-  }
+		"baseUrl": "",
+			"paths": {
+				"@atlas/*": ["src/app/atlas/*"],
+				"@atlas-component/*": ["src/app/atlas/component/*"],
+				"@atlas-client/*": ["src/app/atlas/shared/*"]          
+		}
+	}
 }
