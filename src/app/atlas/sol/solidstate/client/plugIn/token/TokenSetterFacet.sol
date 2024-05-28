@@ -2,12 +2,13 @@
 pragma solidity >=0.8.19;
 import "./TokenSetterSocket.sol";
 import "../auth/AuthSocket.sol";
+import "../../../IFacet.sol";
 
-interface ITokenSetterPlugIn {
+interface ITokenSetterFacet {
     function setTokenSymbol(string memory symbol) external returns (bool);
 }
 
-contract TokenSetterPlugIn is TokenSetterSocket, AuthSocket {
+contract TokenSetterFacet is IFacet, sTokenSetterSocket, AuthSocket {
     function selectors() external pure returns (bytes4[] memory) {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = bytes4(keccak256("setTokenSymbol(string)"));

@@ -2,12 +2,13 @@
 pragma solidity >=0.8.19;
 import "./TokenMintSocket.sol";
 import "../auth/AuthSocket.sol";
+import "../../../IFacet.sol";
 
-interface ITokenMintPlugIn {
+interface ITokenMintFacet {
     function mint(address account, uint256 amount) external returns (bool);
 }
 
-contract TokenMintPlugIn is TokenMintSocket, AuthSocket {
+contract TokenMintFacet is IFacet, TokenMintSocket, AuthSocket {
     function selectors() external pure returns (bytes4[] memory) {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = bytes4(keccak256("mint(address,uint256)"));

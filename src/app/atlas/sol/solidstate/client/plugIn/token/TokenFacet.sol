@@ -2,8 +2,9 @@
 pragma solidity >=0.8.19;
 import "./TokenMetadataSocket.sol";
 import "./TokenSocket.sol";
+import "../../../IFacet.sol";
 
-interface ITokenPlugIn {
+interface ITokenFacet {
     function symbol() external view returns (string memory);
     function decimals() external view returns (uint8);
     function totalSupply() external view returns (uint256);
@@ -16,7 +17,7 @@ interface ITokenPlugIn {
     function decreaseAllowance(address spender, uint256 amount) external returns (bool);
 }
 
-contract TokenPlugIn is TokenMetadataSocket, TokenSocket, AuthSocket {
+contract TokenFacet is IFacet, TokenMetadataSocket, TokenSocket, AuthSocket {
     function selectors() external pure returns (bytes4[] memory) {
         bytes4[] memory selectors = new bytes4[](10);
         selectors[0] = bytes4(keccak256("symbol()"));

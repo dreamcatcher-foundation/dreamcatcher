@@ -1,9 +1,40 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import "../../interface/IFacet.sol";
-import "../../import/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
+import "./IFacet.sol";
+import "../import/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
+import "../import/solidstate-v0.8.24/proxy/diamond/ISolidStateDiamond.sol";
 
-contract Kernel is SolidStateDiamond {
+/**
+*    facetAddress
+*    facetAddresses
+*    facetFunctionSelectors
+*    facets
+*    getFallbackAddress
+*    nomineeOwner
+*    owner
+*    supportsInterface
+*
+*    acceptOwnership
+*    diamondCut
+*    install
+*    pullSelectors
+*    pushSelectors
+*    reinstall
+*    replaceSelectors
+*    setFallbackAddress
+*    transferOwnership
+*    uninstall
+ */
+interface IDiamond is ISolidStateDiamond {
+    function install(address facet) external returns (bool);
+    function reinstall(address facet) external returns (bool);
+    function uninstall(address facet) external returns (bool);
+    function replaceSelectors(address facet, bytes4[] memory selectors) external returns (bool);
+    function pushSelectors(address facet, bytes4[] memory selectors) external returns (bool);
+    function pullSelectors(bytes4[] memory selectors) external returns (bool);   
+}
+
+contract Diamond is SolidStateDiamond {
     function reinstall(address facet) external virtual onlyOwner() returns (bool) {
         return _reinstall(facet);
     }
@@ -31,13 +62,13 @@ contract Kernel is SolidStateDiamond {
     function _reinstall(address facet) private returns (bool) {
         IFacet facetInterface = IFacet(facet);
         bytes4[] memory selectors = facetInterface.selectors();
-        return _replaceSelectors(facet, selectors);
+        return _replaceSelectors(plugIn, selectors);
     }
 
     function _install(address facet) private returns (bool) {
         IFacet facetInterface = IFacet(facet);
         bytes4[] memory selectors = facetInterface.selectors();
-        return _pushSelectors(facet, selectors);
+        return _pushSelectors(plugIn, selectors);
     }
 
     function _uninstall(address facet) private returns (bool) {

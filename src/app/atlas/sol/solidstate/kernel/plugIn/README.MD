@@ -1,4 +1,4 @@
-AuthPlugIn
+AuthFacet
     membersOf(string,uint256)
     membersOf(string)
     membersLengthOf(string)
@@ -7,14 +7,14 @@ AuthPlugIn
     claimOwnership()
     transferRole(address,address,string)
 
-PlugInRouterPlugIn [ AuthSocket ]
+FacetRouterFacet [ AuthSocket ]
     versionsOf(string,uint256)
     versionsOf(string)
     versionsLengthOf(string)
     latestVersionOf(string)
     * commit(string,address)
 
-TokenPlugIn
+TokenFacet
     symbol()
     decimals()
     totalSupply()
@@ -26,11 +26,11 @@ TokenPlugIn
     increaseAllowance(address,uint256)
     decreaseAllowance(address,uint256)
 
-TokenSetterPlugIn [ AuthSocket ]
+TokenSetterFacet [ AuthSocket ]
     * setTokenSymbol(string)
 
-TokenMintPlugIn [ AuthSocket ]
+TokenMintFacet [ AuthSocket ]
     * mint(address,uint256)
 
-TokenBurnPlugIn [ AuthSocket ]
+TokenBurnFacet [ AuthSocket ]
     * burn(address,uint256)
