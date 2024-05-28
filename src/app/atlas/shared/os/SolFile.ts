@@ -1,3 +1,7 @@
+import { type BaseContract } from "ethers";
+import { ContractFactory as LaunchPad } from "ethers";
+import { JsonRpcProvider as Node } from "ethers";
+import { Wallet as Signer } from "ethers";
 import { File } from "@atlas/shared/os/File.ts";
 import { Path } from "@atlas/shared/os/Path.ts";
 import { Result } from "ts-results";
@@ -7,6 +11,8 @@ import { None } from "ts-results";
 import { Ok } from "ts-results";
 import { Err } from "ts-results";
 import { exec } from "child_process";
+import { Url } from "@atlas/shared/web/Url.ts";
+import { Secret } from "@atlas/shared/os/Secret.ts";
 import solc from "solc";
 
 interface ISolcCompilationErrorOrWarning {
@@ -229,6 +235,34 @@ class SolFile extends File {
             ?.evm
             ?.methodIdentifiers;
         return new Ok<object>(result);
+    }
+
+    public async deploy(rpcUrl: Url, signerKey: Secret, ...args: unknown[]): Promise<Result<BaseContract, unknown>> {
+        let abiResult: Result<object[] | string[], unknown> = this.abi();
+        if (abiResult.err) {
+            return abiResult;
+        }
+        let abi: object[] | string[] = abiResult.unwrap();
+        let bytecodeResult: Result<string, unknown> = this.bytecode();
+        if (bytecodeResult.err) {
+            return bytecodeResult;
+        }
+        let bytecode: string = bytecodeResult.unwrap();
+        if (signerKey.fetch().none) {
+            return new Err<string>("SolFile: missing signer key");
+        }
+        return new Ok<BaseContract>(
+            await (new LaunchPad(
+                abi,
+                bytecode,
+                new Signer(
+                    signerKey.fetch().unwrap(),
+                    new Node(
+                        rpcUrl.toString()
+                    )
+                )
+            )).deploy(...args)
+        );
     }
 }
 

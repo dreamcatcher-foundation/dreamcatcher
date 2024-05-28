@@ -11,7 +11,7 @@ contract AuthSocket is AuthSlot {
     error CallerIsMissingRole(address account, bytes32 missingRole);
     error SenderIsMissingRole(address from, address to, bytes32 role);
     error RecipientCannotHaveMoreThanOneInstanceOfTheSameRole(address from, address to, bytes32 role);
-    error RecipientAndSenderAreBothTheZeroAddress(address from, address to, string memory role);
+    error RecipientAndSenderAreBothTheZeroAddress(address from, address to, bytes32 role);
     error OwnershipHasAlreadyBeenClaimed();
 
     function _onlyRole(bytes32 role) internal view returns (bool) {

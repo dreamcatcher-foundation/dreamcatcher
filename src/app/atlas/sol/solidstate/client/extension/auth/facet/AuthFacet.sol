@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import "../../../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
-import "../slot/AdminSlot.sol";
-import "../socket/AdminSocket.sol";
+import "../slot/AuthSlot.sol";
+import "../socket/AuthSocket.sol";
 
-contract AdminFacet is AdminSlot, AdminSocket {
+contract AuthFacet is AuthSlot, AuthSocket {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     function selectors() external pure returns (bytes4[] memory) {
@@ -17,7 +17,7 @@ contract AdminFacet is AdminSlot, AdminSocket {
         return selectors;
     }
 
-    function membersOf(bytes32 memory role) external view returns (address[] memory) {
+    function membersOf(bytes32 role) external view returns (address[] memory) {
         return _membersOf()[role].values();
     }
 
