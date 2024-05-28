@@ -9,7 +9,7 @@ contract FacetRouterStorageSlot {
     bytes32 constant internal _FACET_ROUTER_STORAGE_LOCATION = bytes32(
         uint256(
             keccak256(
-                "eip1976.plugInRouterStorage"
+                "eip1976.facetRouterStorage"
             )
         ) - 1
     );

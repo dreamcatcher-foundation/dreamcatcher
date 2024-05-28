@@ -36,7 +36,9 @@
 			"paths": {
 				"@atlas/*": ["src/app/atlas/*"],
 				"@atlas-component/*": ["src/app/atlas/component/*"],
-				"@atlas-client/*": ["src/app/atlas/shared/*"]          
+				"@atlas-client/*": ["src/app/atlas/shared/*"],
+				
+				"@doka/*": ["doka/*"]
 		}
 	}
 }

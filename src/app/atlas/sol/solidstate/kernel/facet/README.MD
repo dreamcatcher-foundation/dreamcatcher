@@ -7,6 +7,11 @@ AuthFacet
     claimOwnership()
     transferRole(address,address,string)
 
+ClientFactoryFacet [ FacetRouterSocket ]
+    deploy(string)
+    ** installOn(string,string)
+    ** uninstallFrom(string,string)
+
 FacetRouterFacet [ AuthSocket ]
     versionsOf(string,uint256)
     versionsOf(string)

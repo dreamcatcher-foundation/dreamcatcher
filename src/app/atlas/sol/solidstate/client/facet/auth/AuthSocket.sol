@@ -9,7 +9,7 @@ contract AuthSocket is AuthStorageSlot {
     event RoleTransfer(address indexed from, address indexed to, string indexed role);
 
     error CallerIsMissingRole(address account, string missingRole);
-    error SenderIsMissingRole(address from, address to, bytes32 role);
+    error SenderIsMissingRole(address from, address to, string role);
     error RecipientCannotHaveMoreThanOneInstanceOfTheSameRole(address from, address to, string role);
     error RecipientAndSenderAreBothTheZeroAddress(address from, address to, string role);
     error OwnershipHasAlreadyBeenClaimed();

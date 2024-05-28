@@ -12,7 +12,7 @@ interface IFacetRouterFacet {
     function commit(string memory facetId, address facet) external returns (bool);
 }
 
-contract FacetRouterFacet is IFacet, FacetRouterSocket {
+contract FacetRouterFacet is IFacet, FacetRouterSocket, AuthSocket {
     function selectors() external pure returns (bytes4[] memory) {
         bytes4[] memory selectors = new bytes4[](5);
         selectors[0] = bytes4(keccak256("versionsOf(string,uint256)"));
