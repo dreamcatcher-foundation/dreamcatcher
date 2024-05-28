@@ -4,7 +4,11 @@ import "./PlugInRouterSocket.sol";
 import "../auth/AuthSocket.sol";
 
 interface IPlugInRouterPlugIn {
-    
+    function versionsOf(string memory plugInId, uint256 version) external view returns (address);
+    function versionsOf(string memory plugInId) external view returns (address[] memory);
+    function versionsLengthOf(string memory plugInId) external view returns (uint256);
+    function latestVersionOf(string memory plugInId) external view returns (address);
+    function commit(string memory plugInId, address plugIn) external returns (bool);
 }
 
 contract PlugInRouterPlugIn is PlugInRouterSocket {
@@ -14,7 +18,7 @@ contract PlugInRouterPlugIn is PlugInRouterSocket {
         selectors[1] = bytes4(keccak256("versionsOf(string)"));
         selectors[2] = bytes4(keccak256("versionsLengthOf(string)"));
         selectors[3] = bytes4(keccak256("latestVersionOf(string)"));
-        selectors[4] = bytes4(keccak256("commit"));
+        selectors[4] = bytes4(keccak256("commit(string,address)"));
         return selectors;
     }
 
