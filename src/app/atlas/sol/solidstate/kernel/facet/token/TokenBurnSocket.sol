@@ -14,7 +14,7 @@ contract TokenBurnSocket is TokenStorageSlot, TokenSocket {
             revert InsufficientBalance(account, amount);
         }
         _tokenStorageSlot().balances[account] -= amount;
-        _tokenStorageSlot().totalSupply -= amount
+        _tokenStorageSlot().totalSupply -= amount;
         emit Transfer(account, address(0), amount);
         return true;
     }

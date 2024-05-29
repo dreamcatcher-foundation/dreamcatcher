@@ -62,13 +62,13 @@ contract Diamond is SolidStateDiamond {
     function _reinstall(address facet) private returns (bool) {
         IFacet facetInterface = IFacet(facet);
         bytes4[] memory selectors = facetInterface.selectors();
-        return _replaceSelectors(plugIn, selectors);
+        return _replaceSelectors(facet, selectors);
     }
 
     function _install(address facet) private returns (bool) {
         IFacet facetInterface = IFacet(facet);
         bytes4[] memory selectors = facetInterface.selectors();
-        return _pushSelectors(plugIn, selectors);
+        return _pushSelectors(facet, selectors);
     }
 
     function _uninstall(address facet) private returns (bool) {

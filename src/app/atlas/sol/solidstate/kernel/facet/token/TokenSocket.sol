@@ -7,12 +7,12 @@ contract TokenSocket is TokenStorageSlot {
     event Transfer(address indexed from, address indexed to, uint256 amount);
 
     error InsufficientBalance(address account, uint256 amount);
-    error InsufficientAllowanceOnERC20Port(address owner, address spender, uint256 amount);
-    error CannotApproveFromZeroAddressOnERC20Port(address owner, address spender, uint256 amount);
-    error CannotApproveToZeroAddressOnERC20Port(address owner, address spender, uint256 amount);
-    error CannotTransferFromZeroAddressOnERC20Port(address from, address to, uint256 amount);
-    error CannotTransferToZeroAddressOnERC20Port(address from, address to, uint256 amount);
-    error CannotDecreaseAllowanceBelowZeroOnERC20Port(address spender, uint256 currentAllowance, uint256 decreasedAmount);
+    error InsufficientAllowance(address owner, address spender, uint256 amount);
+    error CannotApproveFromZeroAddress(address owner, address spender, uint256 amount);
+    error CannotApproveToZeroAddress(address owner, address spender, uint256 amount);
+    error CannotTransferFromZeroAddress(address from, address to, uint256 amount);
+    error CannotTransferToZeroAddress(address from, address to, uint256 amount);
+    error CannotDecreaseAllowanceBelowZero(address spender, uint256 currentAllowance, uint256 decreasedAmount);
 
     function _totalSupply() internal view returns (uint256) {
         return _tokenStorageSlot().totalSupply;
@@ -31,31 +31,31 @@ contract TokenSocket is TokenStorageSlot {
     }
 
     function _transferFrom(address from, address to, uint256 amount) internal returns (bool) {
-        __spendAllowance(from, spender, amount);
+        __spendAllowance(from, msg.sender, amount);
         return __transfer(from, to, amount);
     }
 
     function _approve(address spender, uint256 amount) internal returns (bool) {
-        return __aprove(owner, spender, amount);
+        return __approve(msg.sender, spender, amount);
     }
 
     function _increaseAllowance(address spender, uint256 amount) internal returns (bool) {
-        return __approve(owner, spender, _allowance(owner, spender) + amount);
+        return __approve(msg.sender, spender, _allowance(msg.sender, spender) + amount);
     }
 
     function _decreaseAllowance(address spender, uint256 amount) internal returns (bool) {
-        if (_allowance(owner, spender) < amount) {
-            revert CannotDecreaseAllowanceBelowZero(spender, _allowance(owner, spender), amount);
+        if (_allowance(msg.sender, spender) < amount) {
+            revert CannotDecreaseAllowanceBelowZero(spender, _allowance(msg.sender, spender), amount);
         }
-        return __approve(owner, spender, _allowance(owner, spender) - amount);
+        return __approve(msg.sender, spender, _allowance(msg.sender, spender) - amount);
     }
 
     function __transfer(address from, address to, uint256 amount) private returns (bool) {
         if (from == address(0)) {
-            revert CannotTransferFromAddressZero(from, to, amount);
+            revert CannotTransferFromZeroAddress(from, to, amount);
         }
         if (to == address(0)) {
-            revert CannotTransferToAddressZero(from, to, amount);
+            revert CannotTransferToZeroAddress(from, to, amount);
         }
         if (_balanceOf(from) < amount) {
             revert InsufficientBalance(from, amount);
@@ -70,10 +70,10 @@ contract TokenSocket is TokenStorageSlot {
 
     function __approve(address owner, address spender, uint256 amount) private returns (bool) {
         if (owner == address(0)) {
-            revert CannotApproveFromAddressZero(owner, spender, amount);
+            revert CannotApproveFromZeroAddress(owner, spender, amount);
         }
         if (spender == address(0)) {
-            revert CannotApproveToAddressZero(owner, spender, amount);
+            revert CannotApproveToZeroAddress(owner, spender, amount);
         }
         _tokenStorageSlot().allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);

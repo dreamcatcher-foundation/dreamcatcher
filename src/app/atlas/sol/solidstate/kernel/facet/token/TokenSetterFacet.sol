@@ -8,7 +8,7 @@ interface ITokenSetterFacet {
     function setTokenSymbol(string memory symbol) external returns (bool);
 }
 
-contract TokenSetterFacet is IFacet, sTokenSetterSocket, AuthSocket {
+contract TokenSetterFacet is IFacet, TokenSetterSocket, AuthSocket {
     function selectors() external pure returns (bytes4[] memory) {
         bytes4[] memory selectors = new bytes4[](1);
         selectors[0] = bytes4(keccak256("setTokenSymbol(string)"));

@@ -1,5 +1,5 @@
 import { type BaseContract } from "ethers";
-import { ContractFactory as LaunchPad } from "ethers";
+import { ContractFactory } from "ethers";
 import { JsonRpcProvider as Node } from "ethers";
 import { Wallet as Signer } from "ethers";
 import { File } from "@atlas/shared/os/File.ts";
@@ -54,7 +54,7 @@ class SolFile extends File {
             return None;
         }
         let extension: string = extensionOption.unwrap();
-        let temporaryPath: Path = new Path(`${__dirname}/${name}.${extension}}`);
+        let temporaryPath: Path = new Path(`${__dirname}/${name}.${extension}`);
         return new Some<Path>(temporaryPath);
     }
 
@@ -72,7 +72,7 @@ class SolFile extends File {
         exec(command);
         let beginTimestamp: number = Date.now();
         let nowTimestamp: number = beginTimestamp;
-        while (nowTimestamp - beginTimestamp < 500) {
+        while (nowTimestamp - beginTimestamp < 2000) {
             nowTimestamp = Date.now();
         }
         let temporaryFile: File = new File(temporaryPath);
@@ -252,7 +252,7 @@ class SolFile extends File {
             return new Err<string>("SolFile: missing signer key");
         }
         return new Ok<BaseContract>(
-            await (new LaunchPad(
+            await (new ContractFactory(
                 abi,
                 bytecode,
                 new Signer(

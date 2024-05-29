@@ -3,6 +3,7 @@ pragma solidity >=0.8.19;
 import "./TokenMetadataSocket.sol";
 import "./TokenSocket.sol";
 import "../../../IFacet.sol";
+import "../auth/AuthSocket.sol";
 
 interface ITokenFacet {
     function symbol() external view returns (string memory);

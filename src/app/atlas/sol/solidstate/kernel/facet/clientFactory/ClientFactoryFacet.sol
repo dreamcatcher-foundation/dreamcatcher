@@ -15,6 +15,7 @@ contract ClientFactoryFacet is IFacet, ClientFactorySocket {
         selectors[0] = bytes4(keccak256("deploy(string)"));
         selectors[1] = bytes4(keccak256("installOn(string,string)"));
         selectors[2] = bytes4(keccak256("uninstallFrom(string,string)"));
+        return selectors;
     }
 
     function deploy(string memory daoId) external returns (address) {

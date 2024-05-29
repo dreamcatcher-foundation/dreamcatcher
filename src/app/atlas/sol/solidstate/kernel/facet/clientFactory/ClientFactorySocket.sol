@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import "../../../Diamond.sol";
-import "../../../client/auth/AuthFacet.sol";
-import "../facetRouter/FacetRouterSocket.sol";
 import "./ClientFactoryStorageSlot.sol";
+import "../facetRouter/FacetRouterSocket.sol";
+import "../../../Diamond.sol";
+import "../../../client/facet/auth/AuthFacet.sol";
 
 contract ClientFactorySocket is ClientFactoryStorageSlot, FacetRouterSocket {
     error DaoIdAlreadyInUse();
@@ -26,7 +26,7 @@ contract ClientFactorySocket is ClientFactoryStorageSlot, FacetRouterSocket {
         if (_clientFactoryStorageSlot().owner[daoId] != msg.sender) {
             revert UnauthorizedOwner();
         }
-        IDiamond(_clientFactoryStorageSlot().deployed[daoId]).install(_latestVersionOf(facetId));
+        IDiamond(payable(_clientFactoryStorageSlot().deployed[daoId])).install(_latestVersionOf(facetId));
         return true;
     }
 
@@ -34,7 +34,7 @@ contract ClientFactorySocket is ClientFactoryStorageSlot, FacetRouterSocket {
         if (_clientFactoryStorageSlot().owner[daoId] != msg.sender) {
             revert UnauthorizedOwner();
         }
-        IDiamond(_clientFactoryStorageSlot().deployed[daoId]).uninstall(_latestVersionOf(facetId));
+        IDiamond(payable(_clientFactoryStorageSlot().deployed[daoId])).uninstall(_latestVersionOf(facetId));
         return true;
     }
 }
