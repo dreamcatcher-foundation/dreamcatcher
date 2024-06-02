@@ -38,7 +38,7 @@
 				"@atlas-component/*": ["src/app/atlas/component/*"],
 				"@atlas-client/*": ["src/app/atlas/shared/*"],
 				
-				"@doka/*": ["doka/*"]
+				"@doka/*": ["cookie/*"]
 		}
 	}
 }
