@@ -8,11 +8,55 @@ import { Contract } from "ethers";
 import { JsonRpcProvider } from "ethers";
 import { Wallet } from "ethers";
 
+import Ethers from "ethers";
+
+class LowLevelCall {
+    declare private _rpcUrl: string;
+    declare private _privateKey: string;
+    declare private _method: {
+        signature: string;
+        args: unknown[];
+    };
+    declare private _address: string;
+    declare private _value: number;
+
+    public constructor(args: {
+        rpcUrl: string;
+        privateKey: string;
+        method: {
+            signature: string;
+            args: unknown[];
+        };
+        address: string;
+        value: number;
+    }) {
+        this._rpcUrl = args.rpcUrl;
+        this._privateKey = args.privateKey;
+        this._method.signature = args.method.signature;
+        this._method.args = args.method.args;
+        this._address = args.address;
+        this._value = args.value;
+    }
+
+    public async receipt(): Promise<Ethers.TransactionReceipt> {
+        let node: Ethers.JsonRpcProvider = new Ethers.JsonRpcProvider(this._rpcUrl);
+        let wallet: Ethers.Wallet = new Ethers.Wallet(this._privateKey, node);
+        let i: Ethers.Interface = new Ethers.Interface([]);
+        let data: string = i.encodeFunctionData(this._method.signature, this._method.args);
+        let response: Ethers.TransactionResponse = await wallet.sendTransaction({
+            to: this._address,
+            data: data,
+            value: Ethers.parseEther(String(this._value))
+        });
+        return (await response.wait())!;
+    }
+}
+
 // test https://rpc.tenderly.co/fork/03e55f5f-556a-4e77-befd-3db0d1761695
 // mainnet https://polygon-rpc.com
 class App {    
     public static async run() {
-        let rpcUrl: Url = new Url("https://rpc.tenderly.co/fork/03e55f5f-556a-4e77-befd-3db0d1761695");
+        let rpcUrl: Url = new Url("https://rpc.tenderly.co/fork/01647918-a14d-414c-8908-35e8772648ad");
         let signer: Secret = new Secret("polygonSigner");
         if (signer.fetch().none) {
             console.error("App: failed to find signer key in '.env'");
@@ -86,19 +130,18 @@ class App {
         await kernelDiamond.getFunction("install")(await tokenMintFacet.getAddress());
         await kernelDiamond.getFunction("install")(await tokenSetterFacet.getAddress());
         
-        /**
-        console.log((await (new Contract(
-            await kernelDiamond.getAddress(), 
-            ["function setTokenSymbol(string memory) external returns (bool)"],
-            new Wallet(
-                signer.fetch().unwrap(),
-                new JsonRpcProvider(
-                    rpcUrl.toString()
-                )
-            )
-        )).getFunction("setTokenSymbol")("vORANGE")));
-        */
+        console.log(await new LowLevelCall({
+            rpcUrl: rpcUrl.toString(),
+            privateKey: signer.fetch().unwrap(),
+            method: {
+                signature: "setTokenSymbol(string)",
+                args: ["vTEST"]
+            },
+            address: await kernelDiamond.getAddress(),
+            value: 0
+        }).receipt());
 
+        /**
         console.log((await (new Contract(
             await kernelDiamond.getAddress(), 
             ["function symbol() external view returns (string memory)"],
@@ -108,7 +151,9 @@ class App {
                     rpcUrl.toString()
                 )
             )
-        )).getFunction("symbol")()));
+        ))
+        .getFunction("symbol")()));
+        */
     }
 }
 

@@ -22,15 +22,15 @@ contract AuthSocket is AuthStorageSlot {
     }
 
     function _membersOf(string memory role, uint256 memberId) internal view returns (address) {
-        _authStorageSlot().membersOf[role].at(memberId);
+        return _authStorageSlot().membersOf[role].at(memberId);
     }
 
     function _membersOf(string memory role) internal view returns (address[] memory) {
-        _authStorageSlot().membersOf[role].values();
+        return _authStorageSlot().membersOf[role].values();
     }
 
     function _membersLengthOf(string memory role) internal view returns (uint256) {
-        _authStorageSlot().membersOf[role].length();
+        return _authStorageSlot().membersOf[role].length();
     }
 
     function _hasRole(address account, string memory role) internal view returns (bool) {

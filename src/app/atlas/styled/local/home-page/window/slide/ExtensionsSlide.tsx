@@ -12,6 +12,7 @@ import { Stream } from "@atlas/shared/com/Stream.ts";
 import { WindowDeploymentTracker } from "@atlas/styled/local/home-page/window/Window.tsx";
 import { ButtonHook } from "@atlas/component/input/ButtonHook.tsx";
 import { GetStartedSlide } from "@atlas/styled/local/home-page/window/slide/GetStartedSlide.tsx";
+import { Transaction } from "../../../../../component/class/evm/Transaction.tsx";
 import React from "react";
 
 function ExtensionsSlide(): ReactNode {
@@ -126,8 +127,15 @@ function ExtensionsSlide(): ReactNode {
                 className="swing-in-top-fwd"
                 color="#615FFF"
                 text="Deploy"
-                onClick={function() {
-                    
+                onClick={async function() {
+                    let result = await new Transaction({
+                        to: "",
+                        rpcUrl: "",
+                        methodName: "",
+                        methodArgs: [],
+                        abi: []
+                    }).receipt();
+                    console.log(result);
                 }}/>
 
                 <ButtonHook

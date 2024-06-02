@@ -2,21 +2,19 @@ import readline from "readline";
 import { readFileSync } from "fs";
 import { writeFileSync } from "fs";
 
-interface IDatabase {
-    get(key: string): void;
-    set(key: string, value: unknown): void;
+abstract class iDatabase {
+    public abstract get(key: string): string;
+    public abstract set(key: string, value: string): void;
 }
 
-
-
-class  {
+class Database implements iDatabase {
     public constructor(private _path: string) {}
 
-    public get(): unknown {
+    public override get(): unknown {
         return JSON.parse(readFileSync(this._path, "utf8"));
     }
 
-    public set(item: unknown): void {
+    public override set(item: unknown): void {
         return writeFileSync(this._path, JSON.stringify(item, null, 4), "utf8");
     }
 }

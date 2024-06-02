@@ -2,6 +2,8 @@ import { type BaseContract } from "ethers";
 import { ContractFactory } from "ethers";
 import { JsonRpcProvider as Node } from "ethers";
 import { Wallet as Signer } from "ethers";
+import { Contract } from "ethers";
+import { ethers as Ethers } from "ethers";
 import { File } from "@atlas/shared/os/File.ts";
 import { Path } from "@atlas/shared/os/Path.ts";
 import { Result } from "ts-results";
@@ -263,6 +265,31 @@ class SolFile extends File {
                 )
             )).deploy(...args)
         );
+    }
+
+    public async call(args: {
+        address: string;
+        method: {
+            name: string;
+            args: unknown[];
+        };
+        signer: {
+            key: Secret;
+        };
+        rpc: {
+            url: Url;
+        }
+    }) {
+        return await (new Ethers.Contract(
+            args.address,
+            this.abi().unwrap(),
+            new Ethers.Wallet(
+                args.signer.key.fetch().unwrap(),
+                new Ethers.JsonRpcProvider(
+                    args.rpc.url.toString()
+                )
+            )
+        )).getFunction(args.method.name)(...args.method.args);
     }
 }
 
