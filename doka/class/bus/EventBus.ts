@@ -1,137 +1,132 @@
-import { type EventSubscription } from "fbemitter";
+import { type EventSubscription as FbEventSubscription } from "fbemitter";
 import { EventEmitter } from "fbemitter";
 
-abstract class IMessageConstructorArgs {
-    public abstract at?: string;
-    public abstract message?: string;
-    public abstract timeout?: bigint;
-    public abstract item?: unknown;
-}
+export namespace EventBus {
+    export abstract class IMessageConstructorArgs {
+        public abstract at?: string;
+        public abstract message?: string;
+        public abstract timeout?: bigint;
+        public abstract item?: unknown;
+    }
+    
+    export abstract class IMessage {
+        public abstract response(): Promise<unknown>;
+    }
+    
+    export abstract class IEventConstructorArgs {
+        public abstract from?: string;
+        public abstract event?: string;
+        public abstract item?: unknown;
+    }
+    
+    export abstract class IMessageSubscriptionConstructorArgs {
+        public abstract at?: string;
+        public abstract message?: string;
+        public abstract handler(item?: unknown): unknown;
+        public abstract once?: boolean;
+    }
+    
+    export abstract class IMessageSubscription {
+        public abstract remove(): void;
+    }
 
-abstract class IMessage {
-    public abstract response(): Promise<unknown>;
-}
+    export abstract class IEventSubscriptionConstructorArgs {
+        public abstract from?: string;
+        public abstract event?: string;
+        public abstract handler(item?: unknown): void;
+        public abstract once?: boolean;
+    }
 
-abstract class IEventConstructorArgs {
-    public abstract from?: string;
-    public abstract event?: string;
-    public abstract item?: unknown;
-}
+    export abstract class IEventSubscription {
+        public abstract remove(): void;
+    }
 
-abstract class IMessageSubscriptionConstructorArgs {
-    public abstract at?: string;
-    public abstract message?: string;
-    public abstract handler(item?: unknown): unknown;
-    public abstract once?: boolean;
-}
+    const _questionEventEmitters: Map<string, undefined | EventEmitter> = new Map();
+    const _responseEventEmitters: Map<string, undefined | EventEmitter> = new Map();
 
-abstract class IMessageSubscription {
-    public abstract remove(): void;
-}
+    export class Message implements IMessage {
+        protected _response: Promise<unknown>;
 
-class EventBus {
-    private constructor() {}
-    private static _questionEventEmitters: {[address: string]: undefined | EventEmitter} = {};
-    private static _responseEventEmitters: {[address: string]: undefined | EventEmitter} = {};
-
-    public static Message(args: IMessageConstructorArgs): IMessage {
-        const parent: typeof EventBus = this;
-
-        class Message implements IMessage {
-            protected _at: string;
-            protected _message: string;
-            protected _timeout: bigint;
-            protected _item?: unknown;
-
-            public constructor(args: IMessageConstructorArgs) {
-                this._at = args.at ?? "anonymous";
-                this._message = args.message ?? "";
-                this._timeout = 0n;
-                this._item = args.item;
-            }
-
-            public async response(): Promise<unknown> {
-                return new Promise(resolve => {
-                    let success: boolean = false;
-                    let subscription: EventSubscription = parent._responseEventEmitter(this._at).once(this._message, (response: unknown) => {
-                        if (!success) {
-                            success = true;
-                            resolve(response);
-                            return;
-                        }
+        public constructor(args: IMessageConstructorArgs) {
+            this._response = new Promise(resolve => {
+                let success: boolean = false;
+                let subscription: FbEventSubscription = _responseEventEmitter(args.at ?? "anonymous").once(args.message ?? "", (response: unknown) => {
+                    if (!success) {
+                        success = true;
+                        resolve(response);
                         return;
-                    });
-                    parent._questionEventEmitter(this._at).emit(this._message, this._item);
-                    setTimeout(() => {
-                        if (!success) {
-                            subscription.remove();
-                            resolve(undefined);
-                            return;
-                        }
-                        return;
-                    }, Number(this._timeout));
+                    }
                     return;
                 });
-            }
+                _questionEventEmitter(args.at ?? "anonymous").emit(args.message ?? "", args.item);
+                setTimeout(() => {
+                    if (!success) {
+                        subscription.remove();
+                        resolve(undefined);
+                        return;
+                    }
+                    return;
+                }, Number(args.timeout ?? 0n));
+                return;
+            });
         }
 
-        return new Message(args);
+        public async response(): Promise<unknown> {
+            return await this._response;
+        }
     }
 
-    public static Event(args: IEventConstructorArgs) {
-        const parent: typeof EventBus = this;
+    export class Event {
+        public constructor(args: IEventConstructorArgs) {
+            _questionEventEmitter(args.from ?? "anonymous").emit(args.event ?? "", args.item);
+        }
+    }
 
-        class Event {
-            public constructor(args: IEventConstructorArgs) {
-                parent._questionEventEmitter(args.from ?? "anonymous").emit(args.event ?? "", args.item);
-            }
+    export class MessageSubscription implements IMessageSubscription {
+        protected _subscription: FbEventSubscription;
+
+        public constructor(args: IMessageSubscriptionConstructorArgs) {
+            this._subscription
+                = !!args.once
+                    ? _questionEventEmitter(args.at ?? "anonymous").once(args.message ?? "", (item?: unknown) => _responseEventEmitter(args.at ?? "anonymous").emit(args.message ?? "", args.handler(item)))
+                    : _questionEventEmitter(args.at ?? "anonymous").addListener(args.message ?? "", (item?: unknown) => _responseEventEmitter(args.at ?? "anonymous").emit(args.message ?? "", args.handler(item)));
         }
 
-        return new Event(args);
+        public remove(): void {
+            return this._subscription.remove();
+        }
     }
 
-    public static MessageSubscription(args: IMessageSubscriptionConstructorArgs): IMessageSubscription {
-        const parent: typeof EventBus = this;
+    export class EventSubscription implements IEventSubscription {
+        protected _subscription: FbEventSubscription
 
-        class MessageSubscription implements IMessageSubscription {
-            protected _subscription: EventSubscription;
-
-            public constructor(args: IMessageSubscriptionConstructorArgs) {
-                this._subscription = 
-                    !!args.once
-                        ? parent._questionEventEmitter(args.at ?? "anonymous").once(args.message ?? "", (item?: unknown) => parent._responseEventEmitter(args.at ?? "anonymous").emit(args.message ?? "", args.handler(item)))
-                        : parent._questionEventEmitter(args.at ?? "anonymous").addListener(args.message ?? "", (item?: unknown) => parent._responseEventEmitter(args.at ?? "anonymous").emit(args.message ?? "", args.handler(item)));
-            }
-
-            public remove(): void {
-                return this._subscription.remove();
-            }
+        public constructor(args: IEventSubscriptionConstructorArgs) {
+            this._subscription
+                = !!args.once
+                    ? _questionEventEmitter(args.from ?? "anonymous").once(args.event ?? "", args.handler)
+                    : _questionEventEmitter(args.from ?? "anynymous").addListener(args.event ?? "", args.handler);
         }
 
-        return new MessageSubscription(args);
-    }
-
-    public static EventSubscription() {
-        // ... TODO
-    }
-
-    protected static _questionEventEmitter(address: string): EventEmitter {
-        if (!this._questionEventEmitters[address]) {
-            return this._questionEventEmitters[address] = new EventEmitter();
+        public remove(): void {
+            return this._subscription.remove();
         }
-        return this._questionEventEmitters[address]!;
     }
 
-    protected static _responseEventEmitter(address: string): EventEmitter {
-        if (!this._responseEventEmitters[address]) {
-            return this._responseEventEmitters[address] = new EventEmitter();
+    function _questionEventEmitter(address: string): EventEmitter {
+        if (!_questionEventEmitters.get(address)) {
+            return _questionEventEmitters
+                .set(address, new EventEmitter())
+                .get(address)!;
         }
-        return this._responseEventEmitters[address]!;
+        return _questionEventEmitters.get(address)!;
+    }
+
+    function _responseEventEmitter(address: string): EventEmitter {
+        if (!_responseEventEmitters.get(address)) {
+            return _responseEventEmitters
+                .set(address, new EventEmitter())
+                .get(address)!;
+        }
+        return _responseEventEmitters.get(address)!;
     }
 }
-
-export { IMessageConstructorArgs };
-export { IMessage };
-export { IEventConstructorArgs };
-export { IMessageSubscription };
-export { EventBus };
