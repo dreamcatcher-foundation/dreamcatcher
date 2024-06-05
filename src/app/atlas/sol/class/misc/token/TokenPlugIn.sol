@@ -1,11 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IPlugIn } from "../../../IPlugIn.sol";
 import { ITokenFacet } from "./ITokenFacet.sol";
 import { TokenMetadataSdk } from "./TokenMetadataSdk.sol";
 import { TokenSdk } from "./TokenSdk.sol";
 import { AuthSdk } from "../auth/AuthSdk.sol";
 
-contract TokenFacet is ITokenFacet, TokenMetadataSdk, TokenSdk, Authdk {
+contract TokenPlugIn is
+    IPlugIn,
+    ITokenFacet, 
+    TokenMetadataSdk, 
+    TokenSdk, 
+    AuthSdk {
     function selectors() external pure returns (bytes4[] memory) {
         bytes4[] memory selectors = new bytes4[](10);
         selectors[0] = bytes4(keccak256("symbol()"));

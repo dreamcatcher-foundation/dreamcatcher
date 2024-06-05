@@ -3,7 +3,9 @@ pragma solidity >=0.8.19;
 import { TokenSlot } from "./TokenSlot.sol";
 import { TokenSdk } from "./TokenSocket.sol";
 
-contract TokenBurnSdk is TokenSlot, TokenSdk {
+contract TokenBurnSdk is 
+    TokenSlot, 
+    TokenSdk {
     error CannotBurnFromZeroAddress(address account, uint256 amount);
 
     function _burn(address account, uint256 amount) internal returns (bool) {

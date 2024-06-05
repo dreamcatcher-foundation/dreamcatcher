@@ -1,55 +1,55 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { IFacet } from "./IFacet.sol";
+import { IPlugIn } from "./IPlugIn.sol";
 import { SolidStateDiamond } from "./import/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
 
-contract Diamond is SolidStateDiamond {
-    function reinstall(address facet) external virtual onlyOwner() returns (bool) {
-        return _reinstall(facet);
+contract Node is SolidStateDiamond {
+    function reinstall(address plugIn) external virtual onlyOwner() returns (bool) {
+        return _reinstall(plugIn);
     }
 
-    function install(address facet) external virtual onlyOwner() returns (bool) {
-        return _install(facet);
+    function install(address plugIn) external virtual onlyOwner() returns (bool) {
+        return _install(plugIn);
     }
 
-    function uninstall(address facet) external virtual onlyOwner() returns (bool) {
-        return _uninstall(facet);
+    function uninstall(address plugIn) external virtual onlyOwner() returns (bool) {
+        return _uninstall(plugIn);
     }
 
-    function replaceSelectors(address facet, bytes4[] memory selectors) external virtual onlyOwner() returns (bool) {
-        return _replaceSelectors(facet, selectors);
+    function replaceSelectors(address plugIn, bytes4[] memory selectors) external virtual onlyOwner() returns (bool) {
+        return _replaceSelectors(plugIn, selectors);
     }
 
-    function pushSelectors(address facet, bytes4[] memory selectors) external virtual onlyOwner() returns (bool) {
-        return _pushSelectors(facet, selectors);
+    function pushSelectors(address plugIn, bytes4[] memory selectors) external virtual onlyOwner() returns (bool) {
+        return _pushSelectors(plugIn, selectors);
     }
 
     function pullSelectors(bytes4[] memory selectors) external virtual onlyOwner() returns (bool) {
         return _pullSelectors(selectors);
     }
 
-    function _reinstall(address facet) private returns (bool) {
-        IFacet facetInterface = IFacet(facet);
-        bytes4[] memory selectors = facetInterface.selectors();
-        return _replaceSelectors(facet, selectors);
+    function _reinstall(address plugIn) private returns (bool) {
+        IPlugIn plugInInterface = IFacet(plugIn);
+        bytes4[] memory selectors = plugInInterface.selectors();
+        return _replaceSelectors(plugIn, selectors);
     }
 
-    function _install(address facet) private returns (bool) {
-        IFacet facetInterface = IFacet(facet);
-        bytes4[] memory selectors = facetInterface.selectors();
-        return _pushSelectors(facet, selectors);
+    function _install(address plugIn) private returns (bool) {
+        IPlugIn plugInInterface = IFacet(plugIn);
+        bytes4[] memory selectors = plugInInterface.selectors();
+        return _pushSelectors(plugIn, selectors);
     }
 
-    function _uninstall(address facet) private returns (bool) {
-        IFacet facetInterface = IFacet(facet);
-        bytes4[] memory selectors = facetInterface.selectors();
+    function _uninstall(address plugIn) private returns (bool) {
+        IPlugIn plugInInterface = IFacet(plugIn);
+        bytes4[] memory selectors = plugInInterface.selectors();
         return _pullSelectors(selectors);
     }
 
-    function _replaceSelectors(address facet, bytes4[] memory selectors) private returns (bool) {
+    function _replaceSelectors(address plugIn, bytes4[] memory selectors) private returns (bool) {
         FacetCutAction action = FacetCutAction.REPLACE;
         FacetCut memory facetCut;
-        facetCut.target = facet;
+        facetCut.target = plugIn;
         facetCut.action = action;
         facetCut.selectors = selectors;
         FacetCut[] memory facetCuts = new FacetCut[](1);
@@ -60,10 +60,10 @@ contract Diamond is SolidStateDiamond {
         return true;
     }
 
-    function _pushSelectors(address facet, bytes4[] memory selectors) private returns (bool) {
+    function _pushSelectors(address plugIn, bytes4[] memory selectors) private returns (bool) {
         FacetCutAction action = FacetCutAction.ADD;
         FacetCut memory facetCut;
-        facetCut.target = facet;
+        facetCut.target = plugIn;
         facetCut.action = action;
         facetCut.selectors = selectors;
         FacetCut[] memory facetCuts = new FacetCut[](1);

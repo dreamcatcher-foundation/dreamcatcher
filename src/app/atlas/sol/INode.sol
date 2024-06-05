@@ -23,11 +23,11 @@ import { ISolidStateDiamond } from "./import/solidstate-v0.8.24/proxy/diamond/IS
 *    transferOwnership
 *    uninstall
  */
-interface IDiamond is ISolidStateDiamond {
-    function install(address facet) external returns (bool);
-    function reinstall(address facet) external returns (bool);
-    function uninstall(address facet) external returns (bool);
-    function replaceSelectors(address facet, bytes4[] memory selectors) external returns (bool);
-    function pushSelectors(address facet, bytes4[] memory selectors) external returns (bool);
+interface INode is ISolidStateDiamond {
+    function install(address plugIn) external returns (bool);
+    function reinstall(address plugIn) external returns (bool);
+    function uninstall(address plugIn) external returns (bool);
+    function replaceSelectors(address plugIn, bytes4[] memory selectors) external returns (bool);
+    function pushSelectors(address plugIn, bytes4[] memory selectors) external returns (bool);
     function pullSelectors(bytes4[] memory selectors) external returns (bool);   
 }

@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { IAuthFacet } from "./IAuthFacet.sol";
+import { IPlugIn } from "../../../IPlugIn.sol":
+import { IAuthPlugIn } from "./IAuthPlugIn.sol";
 import { EnumerableSet } from "../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
 import { AuthSdk } from "./AuthSdk.sol";
 
-contract AuthFacet is IAuthFacet, AuthSdk {
+contract AuthPlugIn is
+    IPlugIn,
+    IAuthPlugIn, 
+    AuthSdk {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     function selectors() external pure returns (bytes4[] memory) {

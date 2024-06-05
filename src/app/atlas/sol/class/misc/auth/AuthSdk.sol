@@ -14,6 +14,11 @@ contract AuthSdk is AuthSlot {
     error RecipientAndSenderAreBothTheZeroAddress(address from, address to, string role);
     error OwnershipHasAlreadyBeenClaimed();
 
+    modifier onlyRole(string memory role) {
+        _onlyRole(role);
+        _;
+    }
+
     function _onlyRole(string memory role) internal view returns (bool) {
         if (!_hasRole(role)) {
             revert CallerIsMissingRole(msg.sender, role);

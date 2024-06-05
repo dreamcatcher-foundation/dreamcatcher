@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { IFacet } from "../../../IFacet.sol";
 
-interface ITokenFacet is IFacet {
+interface ITokenPlugIn {
     function symbol() external view returns (string memory);
     function decimals() external view returns (uint8);
     function totalSupply() external view returns (uint256);
