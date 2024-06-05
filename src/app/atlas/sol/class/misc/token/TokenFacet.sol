@@ -1,24 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import "./TokenMetadataSocket.sol";
-import "./TokenSocket.sol";
-import "../../../IFacet.sol";
-import "../auth/AuthSocket.sol";
+import { ITokenFacet } from "./ITokenFacet.sol";
+import { TokenMetadataSdk } from "./TokenMetadataSdk.sol";
+import { TokenSdk } from "./TokenSdk.sol";
+import { AuthSdk } from "../auth/AuthSdk.sol";
 
-interface ITokenFacet {
-    function symbol() external view returns (string memory);
-    function decimals() external view returns (uint8);
-    function totalSupply() external view returns (uint256);
-    function balanceOf(address account) external view returns (uint256);
-    function allowance(address owner, address spender) external view returns (uint256);
-    function transfer(address to, uint256 amount) external returns (bool);
-    function transferFrom(address from, address to, uint256 amount) external returns (bool);
-    function approve(address spender, uint256 amount) external returns (bool);
-    function increaseAllowance(address spender, uint256 amount) external returns (bool);
-    function decreaseAllowance(address spender, uint256 amount) external returns (bool);
-}
-
-contract TokenFacet is IFacet, TokenMetadataSocket, TokenSocket, AuthSocket {
+contract TokenFacet is ITokenFacet, TokenMetadataSdk, TokenSdk, Authdk {
     function selectors() external pure returns (bytes4[] memory) {
         bytes4[] memory selectors = new bytes4[](10);
         selectors[0] = bytes4(keccak256("symbol()"));
