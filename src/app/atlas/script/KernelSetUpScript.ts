@@ -12,6 +12,17 @@ class KernelSetUpScript {
             return;
         }
         console.log(`Deploying...`);
+        /// NOTE Deploying Diamond Launcher because the inbuilt factory
+        ///      exceeds the size limit.
+        let diamondLauncher: string = ((await new Host.ConstructorTransaction({
+            rpcUrl: rpcUrl,
+            privateKey: privateKey.resolve().unwrap(),
+            gasPrice: "standard",
+            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/auth/DiamondLauncher.sol")),
+            confirmations: 1n,
+            chainId: 137n
+        }).receipt()).unwrap()!).contractAddress!;
+        console.log(`DiamondLauncher ${diamondLauncher}`);
         let authFacet: string = ((await new Host.ConstructorTransaction({
             rpcUrl: rpcUrl,
             privateKey: privateKey.resolve().unwrap(),
@@ -84,7 +95,7 @@ class KernelSetUpScript {
             chainId: 137n
         }).receipt()).unwrap()!).contractAddress!;
         console.log(`Kernel ${kernel}`);
-        console.log(``);
+        console.log(` `);
         console.log(`Installing...`);
         let authFacetInstallationHash: string | undefined = ((await new Host.Transaction({
             rpcUrl: rpcUrl,

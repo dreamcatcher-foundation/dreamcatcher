@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import "./ClientFactorySocket.sol";
-import "../../../IFacet.sol";
+import { ClientFactorySdk } from "./ClientFactorySdk.sol";
+import { IFacet } from "../../../IFacet.sol";
 
 interface IClientFactoryFacet {
     function deploy(string memory daoId) external returns (address);
@@ -9,7 +9,7 @@ interface IClientFactoryFacet {
     function uninstallFrom(string memory daoId, string memory facetId) external returns (bool);
 }
 
-contract ClientFactoryFacet is IFacet, ClientFactorySocket {
+contract ClientFactoryFacet is IFacet, ClientFactorySdk {
     function selectors() external pure returns (bytes4[] memory) {
         bytes4[] memory selectors = new bytes4[](3);
         selectors[0] = bytes4(keccak256("deploy(string)"));

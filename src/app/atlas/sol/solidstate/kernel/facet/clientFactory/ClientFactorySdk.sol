@@ -1,25 +1,25 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import "./ClientFactoryStorageSlot.sol";
-import "../facetRouter/FacetRouterSocket.sol";
-import "../../../Diamond.sol";
-import "../../../client/facet/auth/AuthFacet.sol";
+import { ClientFactoryStorageSlot } from "./ClientFactoryStorageSlot.sol";
+import { FacetRouterSocket } from "../facetRouter/FacetRouterSocket.sol";
+import { IAuthFacet } from "../../../client/facet/auth/AuthFacet.sol";
+import { ILauncher } from "../../../../launcher/ILauncher.sol";
+import { IDiamond } from "../../Diamond.sol";
 
-contract ClientFactorySocket is ClientFactoryStorageSlot, FacetRouterSocket {
+contract ClientFactorySdk is ClientFactoryStorageSlot, FacetRouterSocket {
     error DaoIdAlreadyInUse();
     error UnauthorizedOwner();
 
     function _deploy(string memory daoId) internal returns (address) {
-        Diamond diamond = new Diamond();
+        address client = ILauncher(_latestVersionOf("launcher.diamond")).launch();
+        IDiamond diamond = IDiamond(client);
         diamond.install(_latestVersionOf("auth"));
-        IAuthFacet(address(diamond)).claimOwnership();
-        IAuthFacet(address(diamond)).transferRole(address(this), msg.sender, "owner");
         if (_clientFactoryStorageSlot().deployed[daoId] != address(0)) {
             revert DaoIdAlreadyInUse();
         }
         _clientFactoryStorageSlot().deployed[daoId] = address(diamond);
         _clientFactoryStorageSlot().owner[daoId] = msg.sender;
-        return address(diamond);
+        return client;
     }
 
     function _installOn(string memory daoId, string memory facetId) internal returns (bool) {
