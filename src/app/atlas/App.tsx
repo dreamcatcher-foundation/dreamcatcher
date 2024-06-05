@@ -1,4 +1,4 @@
-import { ReactBoilerplate } from "@atlas/shared/react/ReactBoilerplate.tsx";
+import { ReactBoilerplate } from "@atlas/class/web/react/ReactBoilerplate.tsx";
 import { HomePage } from "@atlas/page/HomePage.tsx";
 import React from "react";
 

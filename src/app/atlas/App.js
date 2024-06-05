@@ -23683,8 +23683,8 @@ var require_fbemitter = __commonJS((exports, module) => {
   module.exports = fbemitter;
 });
 
-// src/app/atlas/shared/react/ReactBoilerplate.tsx
-var client = __toESM(require_client(), 1);
+// src/app/atlas/class/web/react/ReactBoilerplate.tsx
+var ReactDomClient = __toESM(require_client(), 1);
 
 // node_modules/react-router-dom/dist/index.js
 var React2 = __toESM(require_react(), 1);
@@ -27966,13 +27966,13 @@ var getUniqueFetcherId = () => "__" + String(++fetcherId) + "__";
 var SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
 var savedScrollPositions = {};
 
-// src/app/atlas/shared/react/ReactBoilerplate.tsx
+// src/app/atlas/class/web/react/ReactBoilerplate.tsx
 var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
 
 class ReactBoilerplate {
   static render(routes) {
     let root = document.getElementById("root");
-    let rootReactDom = client.createRoot(root);
+    let rootReactDom = ReactDomClient.createRoot(root);
     rootReactDom.render(jsx_dev_runtime.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
@@ -28026,10 +28026,6 @@ var Layer = function(props) {
     ...more
   }, undefined, false, undefined, this);
 };
-
-// src/app/atlas/component/Hook.tsx
-var import_react15 = __toESM(require_react(), 1);
-var import_react16 = __toESM(require_react(), 1);
 
 // node_modules/@react-spring/shared/dist/react-spring_shared.modern.mjs
 var schedule = function(fn, queue) {
@@ -31127,86 +31123,129 @@ var host = createHost(primitives, {
   getComponentProps: ({ scrollTop, scrollLeft, ...props }) => props
 });
 var animated6 = host.animated;
-// src/app/atlas/shared/com/Stream.ts
-var import_fbemitter = __toESM(require_fbemitter(), 1);
+// src/app/atlas/component/Hook.tsx
+var import_react15 = __toESM(require_react(), 1);
 
-class Stream {
-  constructor() {
+// src/app/atlas/class/eventBus/EventBus.ts
+var import_fbemitter = __toESM(require_fbemitter(), 1);
+var EventBus;
+(function(EventBus) {
+
+  class IMessageConstructorPayload {
   }
-  static _eventEmitterMap0 = new Map;
-  static _eventEmitterMap1 = new Map;
-  static async dispatch({
-    toNode = "",
-    command = "",
-    timeout = 0n,
-    item = undefined
-  }) {
-    return new Promise((resolve) => {
-      let success = false;
-      let responseSubscription = this._eventEmitter1(toNode).once(command, (response) => {
-        if (!success) {
-          success = true;
-          resolve(response);
+  EventBus.IMessageConstructorPayload = IMessageConstructorPayload;
+
+  class IMessage {
+  }
+  EventBus.IMessage = IMessage;
+
+  class IEventConstructorPayload {
+  }
+  EventBus.IEventConstructorPayload = IEventConstructorPayload;
+
+  class IEventSubscriptionConstructorPayload {
+  }
+  EventBus.IEventSubscriptionConstructorPayload = IEventSubscriptionConstructorPayload;
+
+  class IMessageSubscriptionConstructorPayload {
+  }
+  EventBus.IMessageSubscriptionConstructorPayload = IMessageSubscriptionConstructorPayload;
+
+  class ISubscription {
+  }
+  EventBus.ISubscription = ISubscription;
+
+  class _State {
+    constructor() {
+    }
+    static _inner = {
+      questionEventEmitters: new Map,
+      responseEventEmitters: new Map
+    };
+    static questionEventEmitterOf(node) {
+      if (!this._inner.questionEventEmitters.get(node)) {
+        return this._inner.questionEventEmitters.set(node, new import_fbemitter.EventEmitter).get(node);
+      }
+      return this._inner.questionEventEmitters.get(node);
+    }
+    static responseEventEmitterOf(node) {
+      if (!this._inner.questionEventEmitters.get(node)) {
+        return this._inner.questionEventEmitters.set(node, new import_fbemitter.EventEmitter).get(node);
+      }
+      return this._inner.questionEventEmitters.get(node);
+    }
+  }
+
+  class Message {
+    _state;
+    constructor(payload) {
+      this._state = {
+        response: new Promise((resolve) => {
+          let success = false;
+          let subscription = _State.responseEventEmitterOf(payload.to ?? "anonymous").once(payload.message ?? "", (response) => {
+            if (!success) {
+              success = true;
+              resolve(response);
+              return;
+            }
+            return;
+          });
+          _State.questionEventEmitterOf(payload.to ?? "anonymous").emit(payload.message ?? "", payload.item);
+          setTimeout(() => {
+            if (!success) {
+              subscription.remove();
+              resolve(undefined);
+              return;
+            }
+            return;
+          }, Number(payload.timeout ?? 0n));
           return;
-        }
-        return;
-      });
-      this._eventEmitter0(toNode).emit(command, item);
-      setTimeout(() => {
-        if (!success) {
-          responseSubscription.remove();
-          resolve(undefined);
-        }
-      }, Number(timeout));
-      return;
-    });
-  }
-  static dispatchEvent({
-    fromNode = "",
-    event = "",
-    item = undefined
-  }) {
-    return this._eventEmitter0(fromNode).emit(event, item);
-  }
-  static createSubscription({
-    atNode = "",
-    command = "",
-    hook,
-    once: once2 = false
-  }) {
-    if (once2) {
-      return this._eventEmitter0(atNode).once(command, (item) => this._eventEmitter1(atNode).emit(command, hook(item)));
+        })
+      };
     }
-    return this._eventEmitter0(atNode).addListener(command, (item) => this._eventEmitter1(atNode).emit(command, hook(item)));
-  }
-  static createEventSubscription({
-    fromNode = "",
-    event = "",
-    hook,
-    once: once2 = false
-  }) {
-    if (once2) {
-      return this._eventEmitter0(fromNode).once(event, hook);
+    async response() {
+      return await this._state.response;
     }
-    return this._eventEmitter0(fromNode).addListener(event, hook);
   }
-  static _eventEmitter0(node) {
-    if (!this._eventEmitterMap0.get(node)) {
-      return this._eventEmitterMap0.set(node, new import_fbemitter.EventEmitter).get(node);
+  EventBus.Message = Message;
+
+  class Event {
+    constructor(payload) {
+      _State.questionEventEmitterOf(payload.from ?? "anonymous").emit(payload.event ?? "", payload.item);
     }
-    return this._eventEmitterMap0.get(node);
   }
-  static _eventEmitter1(node) {
-    if (!this._eventEmitterMap1.get(node)) {
-      return this._eventEmitterMap1.set(node, new import_fbemitter.EventEmitter).get(node);
+  EventBus.Event = Event;
+
+  class MessageSubscription {
+    _state;
+    constructor(payload) {
+      this._state = {
+        subscription: payload.once ? _State.questionEventEmitterOf(payload.at ?? "anonymous").once(payload.message ?? "", (item) => _State.responseEventEmitterOf(payload.at ?? "anonymous").emit(payload.message ?? "", payload.handler(item))) : _State.questionEventEmitterOf(payload.at ?? "anonymous").addListener(payload.message ?? "", (item) => _State.responseEventEmitterOf(payload.at ?? "anonymous").emit(payload.message ?? "", payload.handler(item)))
+      };
     }
-    return this._eventEmitterMap1.get(node);
+    remove() {
+      return this._state.subscription.remove();
+    }
   }
-}
+  EventBus.MessageSubscription = MessageSubscription;
+
+  class EventSubscription {
+    _state;
+    constructor(payload) {
+      this._state = {
+        subscription: payload.once ? _State.questionEventEmitterOf(payload.from ?? "anonymous").once(payload.event ?? "", payload.handler) : _State.questionEventEmitterOf(payload.from ?? "anynymous").addListener(payload.event ?? "", payload.handler)
+      };
+    }
+    remove() {
+      return this._state.subscription.remove();
+    }
+  }
+  EventBus.EventSubscription = EventSubscription;
+})(EventBus || (EventBus = {}));
 
 // src/app/atlas/component/Hook.tsx
 var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
-var Hook = function(props) {
+function Hook(props) {
   let {
     node,
     className: classNameProp,
@@ -31218,21 +31257,97 @@ var Hook = function(props) {
     children,
     ...more
   } = props;
-  let [className, setClassName] = import_react15.useState(classNameProp ?? "");
-  let [style, setStyle] = import_react15.useState(styleProp ?? {});
-  let [spring, setSpring] = import_react15.useState([{}, springProp ?? {}]);
-  let [springConfig, setSpringConfig] = import_react15.useState(springConfigProp ?? config.default);
-  let [mounted, setMounted] = import_react15.useState([]);
-  import_react16.useEffect(function() {
-    let subscriptions = [
-      Stream.createSubscription({ atNode: node, command: "setSpring", hook: (spring2) => setSpring((oldSpring) => [oldSpring[1], { ...oldSpring[1], ...spring2 }]) }),
-      Stream.createSubscription({ atNode: node, command: "setSpringConfig", hook: (springConfig2) => setSpringConfig(springConfig2) }),
-      Stream.createSubscription({ atNode: node, command: "setStyle", hook: (style2) => setStyle((oldStyle) => ({ ...oldStyle, ...style2 })) }),
-      Stream.createSubscription({ atNode: node, command: "setClassName", hook: (className2) => setClassName(className2) }),
-      Stream.createSubscription({ atNode: node, command: "push", hook: (component) => setMounted((currentComponents) => [...currentComponents, component]) }),
-      Stream.createSubscription({ atNode: node, command: "pull", hook: () => setMounted((currentComponents) => currentComponents.slice(0, -1)) }),
-      Stream.createSubscription({ atNode: node, command: "wipe", hook: () => setMounted([]) }),
-      Stream.createSubscription({ atNode: node, command: "swap", hook: (component) => setMounted((currentComponents) => [...currentComponents.slice(0, -1), component]) })
+  let [className, setClassName] = import_react15.default.useState(classNameProp ?? "");
+  let [style, setStyle] = import_react15.default.useState(styleProp ?? {});
+  let [spring, setSpring] = import_react15.default.useState([{}, springProp ?? {}]);
+  let [springConfig, setSpringConfig] = import_react15.default.useState(springConfigProp ?? config.default);
+  let [mounted, setMounted] = import_react15.default.useState([]);
+  import_react15.default.useEffect(function() {
+    const subscriptions = [
+      new EventBus.MessageSubscription({
+        at: node,
+        message: "setSpring",
+        handler(item) {
+          if (!item) {
+            return;
+          }
+          return setSpring((oldSpring) => [oldSpring[1], { ...oldSpring[1], ...item }]);
+        },
+        once: false
+      }),
+      new EventBus.MessageSubscription({
+        at: node,
+        message: "setSpringConfig",
+        handler(item) {
+          if (!item) {
+            return;
+          }
+          return setSpringConfig(item);
+        },
+        once: false
+      }),
+      new EventBus.MessageSubscription({
+        at: node,
+        message: "setStyle",
+        handler(item) {
+          if (!item) {
+            return;
+          }
+          return setStyle((oldStyle) => ({ ...oldStyle, ...item }));
+        },
+        once: false
+      }),
+      new EventBus.MessageSubscription({
+        at: node,
+        message: "setClassName",
+        handler(item) {
+          if (!item) {
+            return;
+          }
+          if (typeof item !== "string") {
+            return;
+          }
+          return setClassName(item);
+        },
+        once: false
+      }),
+      new EventBus.MessageSubscription({
+        at: node,
+        message: "push",
+        handler(item) {
+          if (!item) {
+            return;
+          }
+          return setMounted((components) => [...components, item]);
+        },
+        once: false
+      }),
+      new EventBus.MessageSubscription({
+        at: node,
+        message: "pull",
+        handler() {
+          return setMounted((components) => components.splice(0, -1));
+        },
+        once: false
+      }),
+      new EventBus.MessageSubscription({
+        at: node,
+        message: "wipe",
+        handler() {
+          return setMounted([]);
+        },
+        once: false
+      }),
+      new EventBus.MessageSubscription({
+        at: node,
+        message: "swap",
+        handler(item) {
+          if (!item) {
+            return;
+          }
+          return setMounted((components) => [...components.slice(0, -1), item]);
+        }
+      })
     ];
     setTimeout(function() {
       if (!children) {
@@ -31263,11 +31378,11 @@ var Hook = function(props) {
     children: mounted,
     ...more
   }, undefined, false, undefined, this);
-};
+}
 
 // src/app/atlas/component/layout/RowHook.tsx
 var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
-var RowHook = function(props) {
+function RowHook(props) {
   let { node, style, ...more } = props;
   return jsx_dev_runtime6.jsxDEV(Hook, {
     node,
@@ -31280,7 +31395,7 @@ var RowHook = function(props) {
     },
     ...more
   }, undefined, false, undefined, this);
-};
+}
 
 // src/app/atlas/component/layout/user-interface/navbar/Navbar.tsx
 var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
@@ -31661,10 +31776,17 @@ var Slide = function(props) {
 };
 
 // src/app/atlas/component/text/TextHook.tsx
-var import_react17 = __toESM(require_react(), 1);
+var import_react16 = __toESM(require_react(), 1);
 var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
-var TextHook = function(props) {
-  let { node, text, textStyle: textStyleProp, color, children, ...more } = props;
+function TextHook(props) {
+  let {
+    node,
+    text,
+    textStyle: textStyleProp,
+    color,
+    children,
+    ...more
+  } = props;
   let textStyle = {
     fontSize: "1em",
     fontFamily: "roboto mono",
@@ -31675,24 +31797,30 @@ var TextHook = function(props) {
     WebkitTextFillColor: "transparent",
     ...textStyleProp ?? {}
   };
-  import_react17.useEffect(function() {
-    Stream.dispatch({
-      toNode: node,
-      command: "push",
+  import_react16.default.useEffect(function() {
+    new EventBus.Message({
+      to: node,
+      message: "push",
       item: jsx_dev_runtime23.jsxDEV(Text, {
         text: text ?? "",
         style: textStyle
       }, undefined, false, undefined, this)
     });
-    let subscription = Stream.createSubscription({
-      atNode: node,
-      command: "setText",
-      hook(text2) {
-        Stream.dispatch({
-          toNode: node,
-          command: "swap",
+    const subscription = new EventBus.MessageSubscription({
+      at: node,
+      message: "setText",
+      handler(item) {
+        if (!item) {
+          return;
+        }
+        if (typeof item !== "string") {
+          return;
+        }
+        new EventBus.Message({
+          to: node,
+          message: "swap",
           item: jsx_dev_runtime23.jsxDEV(Text, {
-            text: text2,
+            text: item,
             style: textStyle
           }, undefined, false, undefined, this)
         });
@@ -31704,11 +31832,11 @@ var TextHook = function(props) {
     node,
     ...more
   }, undefined, false, undefined, this);
-};
+}
 
 // src/app/atlas/component/input/ButtonHook.tsx
 var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
-var ButtonHook = function(props) {
+function ButtonHook(props) {
   let { node, text, textStyle, style, spring, color, textColor, ...more } = props;
   return jsx_dev_runtime24.jsxDEV(RowHook, {
     node,
@@ -31724,9 +31852,26 @@ var ButtonHook = function(props) {
       borderColor: color,
       ...style ?? {}
     },
-    onMouseEnter: () => Stream.dispatch({ toNode: node, command: "setSpring", timeout: 0n, item: { cursor: "pointer" } }),
-    onMouseLeave: () => Stream.dispatch({ toNode: node, command: "setSpring", timeout: 0n, item: { cursor: "auto" } }),
-    onClick: () => Stream.dispatchEvent({ fromNode: node, event: "click" }),
+    onMouseEnter: () => new EventBus.Message({
+      to: node,
+      message: "setSpring",
+      timeout: 0n,
+      item: {
+        cursor: "pointer"
+      }
+    }),
+    onMouseLeave: () => new EventBus.Message({
+      to: node,
+      message: "setSpring",
+      timeout: 0n,
+      item: {
+        cursor: "auto"
+      }
+    }),
+    onClick: () => new EventBus.Event({
+      from: node,
+      event: "click"
+    }),
     ...more,
     children: jsx_dev_runtime24.jsxDEV(TextHook, {
       node: `${node}.text`,
@@ -31737,7 +31882,7 @@ var ButtonHook = function(props) {
       }
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
-};
+}
 
 // src/app/atlas/component/input/LinkedButtonHook.tsx
 var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
@@ -31791,7 +31936,7 @@ var ContentSlot = function(props) {
 };
 
 // src/app/atlas/styled/local/home-page/window/slide/GetStartedSlide.tsx
-var import_react20 = __toESM(require_react(), 1);
+var import_react19 = __toESM(require_react(), 1);
 
 // src/app/atlas/styled/local/home-page/window/slide/slot/HeadingSlot.tsx
 var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
@@ -31834,20 +31979,20 @@ var TextFieldHook = function(props) {
       ...style ?? {}
     },
     placeholder,
-    onChange: (event) => Stream.dispatchEvent({ fromNode: node, event: "inputChange", item: event.target.value }),
+    onChange: (event) => new EventBus.Event({ from: node, event: "inputChange", item: event.target.value }),
     ...more
   }, undefined, false, undefined, this);
 };
 
 // src/app/atlas/styled/local/home-page/window/slide/ExtensionsSlide.tsx
-var import_react19 = __toESM(require_react(), 1);
+var import_react18 = __toESM(require_react(), 1);
 
 // src/app/atlas/component/input/ToggleHook.tsx
-var import_react18 = __toESM(require_react(), 1);
+var import_react17 = __toESM(require_react(), 1);
 var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
 var ToggleHook = function(props) {
   let { node, isToggled: isToggledProp } = props;
-  let [isToggled, setToggled] = import_react18.useState(isToggledProp ?? false);
+  let [isToggled, setToggled] = import_react17.useState(isToggledProp ?? false);
   return jsx_dev_runtime30.jsxDEV(RowHook, {
     node,
     spring: {
@@ -31862,19 +32007,19 @@ var ToggleHook = function(props) {
       padding: "2.5px",
       borderRadius: "25px"
     },
-    onMouseEnter: () => Stream.dispatch({ toNode: node, command: "setSpring", item: { cursor: "pointer" } }),
-    onMouseLeave: () => Stream.dispatch({ toNode: node, command: "setSpring", item: { cursor: "auto" } }),
+    onMouseEnter: () => new EventBus.Message({ to: node, message: "setSpring", item: { cursor: "pointer" } }),
+    onMouseLeave: () => new EventBus.Message({ to: node, message: "setSpring", item: { cursor: "auto" } }),
     onClick: function() {
       setToggled(!isToggled);
       if (isToggled) {
-        Stream.dispatch({ toNode: `${node}.dot`, command: "setSpring", item: { left: "25px" } });
-        Stream.dispatch({ toNode: node, command: "setSpring", item: { background: "#615FFF" } });
-        Stream.dispatchEvent({ fromNode: node, event: "toggle", item: isToggled });
+        new EventBus.Message({ to: `${node}.dot`, message: "setSpring", item: { left: "25px" } });
+        new EventBus.Message({ to: node, message: "setSpring", item: { background: "#615FFF" } });
+        new EventBus.Event({ from: node, event: "toggle", item: isToggled });
         return;
       }
-      Stream.dispatch({ toNode: `${node}.dot`, command: "setSpring", item: { left: "0px" } });
-      Stream.dispatch({ toNode: node, command: "setSpring", item: { background: "#202020" } });
-      Stream.dispatchEvent({ fromNode: node, event: "toggle", item: isToggled });
+      new EventBus.Message({ to: `${node}.dot`, message: "setSpring", item: { left: "0px" } });
+      new EventBus.Message({ to: node, message: "setSpring", item: { background: "#202020" } });
+      new EventBus.Event({ from: node, event: "toggle", item: isToggled });
       return;
     },
     children: jsx_dev_runtime30.jsxDEV(RowHook, {
@@ -50763,7 +50908,7 @@ var _encryptKeystore = function(key, kdf, account, options) {
     }
   };
   if (account.mnemonic) {
-    const client2 = options.client != null ? options.client : `ethers/${version}`;
+    const client = options.client != null ? options.client : `ethers/${version}`;
     const path = account.mnemonic.path || defaultPath;
     const locale = account.mnemonic.locale || "en";
     const mnemonicKey = key.slice(32, 64);
@@ -50775,7 +50920,7 @@ var _encryptKeystore = function(key, kdf, account, options) {
     const timestamp = now.getUTCFullYear() + "-" + zpad(now.getUTCMonth() + 1, 2) + "-" + zpad(now.getUTCDate(), 2) + "T" + zpad(now.getUTCHours(), 2) + "-" + zpad(now.getUTCMinutes(), 2) + "-" + zpad(now.getUTCSeconds(), 2) + ".0Z";
     const gethFilename = "UTC--" + timestamp + "--" + data11.address;
     data11["x-ethers"] = {
-      client: client2,
+      client,
       gethFilename,
       path,
       locale,
@@ -51572,51 +51717,80 @@ var Result2;
   }
   Result3.isResult = isResult;
 })(Result2 || (Result2 = {}));
-// src/app/atlas/component/class/evm/Transaction.tsx
-class Transaction2 {
-  _disk;
-  constructor(_disk) {
-    this._disk = _disk;
+// src/app/atlas/class/web/react/ReactWeb3.tsx
+var ReactWeb3;
+(function(ReactWeb3) {
+
+  class ITransaction {
   }
-  async receipt() {
-    try {
-      const metamask = window.ethereum;
-      if (!metamask) {
-        return new Err("Transaction: metamask is not installed");
+  ReactWeb3.ITransaction = ITransaction;
+
+  class ITransactionConstructorPayload {
+  }
+  ReactWeb3.ITransactionConstructorPayload = ITransactionConstructorPayload;
+
+  class Transaction2 {
+    _payload;
+    constructor(_payload) {
+      this._payload = _payload;
+    }
+    async receipt() {
+      try {
+        let metamask = window.ethereum;
+        if (!metamask) {
+          console.error("Metamask not installed, please install metamask??");
+          return new Ok(null);
+        }
+        let node = new exports_ethers.BrowserProvider(metamask);
+        let signer = await node.getSigner();
+        if (this._payload.chainId) {
+          if ((await node.getNetwork()).chainId !== this._payload.chainId) {
+            console.error("ReactWeb3::InvalidChainId");
+            return new Ok(null);
+          }
+        }
+        let contract5 = new exports_ethers.Contract(this._payload.to, [
+          this._payload.methodSignature
+        ], signer);
+        return new Ok(await (await contract5.getFunction(this._payload.methodName)(...this._payload.methodArgs ?? [])).wait());
+      } catch (error) {
+        return new Err(error);
       }
-      return new Ok(new exports_ethers.Contract(this._disk.to, this._disk.abi, new exports_ethers.BrowserProvider(metamask)).getFunction(this._disk.methodName)(this._disk.methodArgs));
-    } catch (error) {
-      return new Err(error);
     }
   }
-}
+  ReactWeb3.Transaction = Transaction2;
+})(ReactWeb3 || (ReactWeb3 = {}));
 
 // src/app/atlas/styled/local/home-page/window/slide/ExtensionsSlide.tsx
 var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
 var ExtensionsSlide = function() {
-  import_react19.useEffect(function() {
+  import_react18.useEffect(function() {
     let subscriptions = [
-      Stream.createEventSubscription({
-        fromNode: "homePage.window.extensionsSlide.contentSlot.extension0.toggle",
+      new EventBus.EventSubscription({
+        from: "homePage.window.extensionsSlide.contentSlot.extension0.toggle",
         event: "toggle",
-        hook(state) {
-          if (state) {
-            WindowDeploymentTracker.selectedErc20Extension = true;
+        handler(item) {
+          if (!item) {
             return;
           }
-          WindowDeploymentTracker.selectedErc20Extension = false;
+          if (typeof item !== "boolean") {
+            return;
+          }
+          WindowDeploymentTracker.selectedErc20Extension = item;
           return;
         }
       }),
-      Stream.createEventSubscription({
-        fromNode: "homePage.window.extensionsSlide.contentSlot.extension1.toggle",
+      new EventBus.EventSubscription({
+        from: "homePage.window.extensionsSlide.contentSlot.extension1.toggle",
         event: "toggle",
-        hook(state) {
-          if (state) {
-            WindowDeploymentTracker.selectedAuthExtension = true;
+        handler(item) {
+          if (!item) {
             return;
           }
-          WindowDeploymentTracker.selectedAuthExtension = false;
+          if (typeof item !== "boolean") {
+            return;
+          }
+          WindowDeploymentTracker.selectedAuthExtension = item;
           return;
         }
       })
@@ -51713,14 +51887,15 @@ var ExtensionsSlide = function() {
             color: "#615FFF",
             text: "Deploy",
             onClick: async function() {
-              let result3 = await new Transaction2({
-                to: "",
-                rpcUrl: "",
-                methodName: "",
-                methodArgs: [],
-                abi: []
+              await new ReactWeb3.Transaction({
+                to: "0x36C27bDb9Bd78E0d077E63495004919C33B6b717",
+                methodSignature: "function deploy(string) external returns (address)",
+                methodName: "deploy",
+                methodArgs: [
+                  WindowDeploymentTracker.daoName
+                ],
+                chainId: 137n
               }).receipt();
-              console.log(result3);
             }
           }, undefined, false, undefined, this),
           jsx_dev_runtime31.jsxDEV(ButtonHook, {
@@ -51729,9 +51904,9 @@ var ExtensionsSlide = function() {
             color: "#615FFF",
             text: "Back",
             onClick: function() {
-              Stream.dispatch({
-                toNode: "homePage.window",
-                command: "swap",
+              new EventBus.Message({
+                to: "homePage.window",
+                message: "swap",
                 item: jsx_dev_runtime31.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this)
               });
               return;
@@ -51746,29 +51921,35 @@ var ExtensionsSlide = function() {
 // src/app/atlas/styled/local/home-page/window/slide/GetStartedSlide.tsx
 var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
 var GetStartedSlide2 = function() {
-  import_react20.useEffect(function() {
+  import_react19.useEffect(function() {
     let subscriptions = [
-      Stream.createEventSubscription({
-        fromNode: "homePage.window.getStartedSlide.contentSlot.col.input0",
-        event: "inputChange",
-        hook(name) {
-          WindowDeploymentTracker.daoName = name;
+      new EventBus.EventSubscription({ from: "homePage.window.getStartedSlide.contentSlot.col.input0", event: "inputChange", handler(item) {
+        if (!item) {
+          return;
         }
-      }),
-      Stream.createEventSubscription({
-        fromNode: "homePage.window.getStartedSlide.contentSlot.col.input1",
-        event: "inputChange",
-        hook(tokenName) {
-          WindowDeploymentTracker.daoTokenName = tokenName;
+        if (typeof item !== "string") {
+          return;
         }
-      }),
-      Stream.createEventSubscription({
-        fromNode: "homePage.window.getStartedSlide.contentSlot.col.input2",
-        event: "inputChange",
-        hook(symbol) {
-          WindowDeploymentTracker.daoTokenSymbol = symbol;
+        WindowDeploymentTracker.daoName = item;
+      } }),
+      new EventBus.EventSubscription({ from: "homePage.window.getStartedSlide.contentSlot.col.input1", event: "inputChange", handler(item) {
+        if (!item) {
+          return;
         }
-      })
+        if (typeof item !== "string") {
+          return;
+        }
+        WindowDeploymentTracker.daoTokenName = item;
+      } }),
+      new EventBus.EventSubscription({ from: "homePage.window.getStartedSlide.contentSlot.col.input2", event: "inputChange", handler(item) {
+        if (!item) {
+          return;
+        }
+        if (typeof item !== "string") {
+          return;
+        }
+        WindowDeploymentTracker.daoTokenSymbol = item;
+      } })
     ];
     return () => subscriptions.forEach((subscription) => subscription.remove());
   }, []);
@@ -51856,16 +52037,16 @@ var GetStartedSlide2 = function() {
             text: "Next",
             onClick: function() {
               if (WindowDeploymentTracker.daoName === "" || WindowDeploymentTracker.daoTokenName === "" || WindowDeploymentTracker.daoTokenSymbol === "") {
-                Stream.dispatch({
-                  toNode: "homePage.window.getStartedSlide.contentSlot.col.feedback",
-                  command: "setText",
-                  item: "An input field has been left empty."
+                new EventBus.Message({
+                  to: "homePage.window.getStartedSlide.contentSlot.col.feedback",
+                  message: "setText",
+                  item: "An input field has been left empty"
                 });
                 return;
               }
-              Stream.dispatch({
-                toNode: "homePage.window",
-                command: "swap",
+              new EventBus.Message({
+                to: "homePage.window",
+                message: "swap",
                 item: jsx_dev_runtime32.jsxDEV(ExtensionsSlide, {}, undefined, false, undefined, this)
               });
               return;
@@ -51877,9 +52058,9 @@ var GetStartedSlide2 = function() {
             color: "#615FFF",
             text: "Back",
             onClick: function() {
-              Stream.dispatch({
-                toNode: "homePage.window",
-                command: "swap",
+              new EventBus.Message({
+                to: "homePage.window",
+                message: "swap",
                 item: jsx_dev_runtime32.jsxDEV(WelcomeSlide2, {}, undefined, false, undefined, this)
               });
             }
@@ -51935,7 +52116,7 @@ var WelcomeSlide2 = function() {
             node: "homePage.welcomeSlide.getStartedButton",
             color: "#615FFF",
             text: "Get Started",
-            onClick: () => Stream.dispatch({ toNode: "homePage.window", command: "swap", item: jsx_dev_runtime33.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this) })
+            onClick: () => new EventBus.Message({ to: "homePage.window", message: "swap", item: jsx_dev_runtime33.jsxDEV(GetStartedSlide2, {}, undefined, false, undefined, this) })
           }, undefined, false, undefined, this),
           jsx_dev_runtime33.jsxDEV(LinkedButtonHook, {
             className: "swing-in-top-fwd",

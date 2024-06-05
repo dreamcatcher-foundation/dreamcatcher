@@ -1,16 +1,15 @@
-import { SolFile } from "@atlas/shared/os/SolFile.ts";
-import { Path } from "@atlas/shared/os/Path.ts";
-import { Host } from "@atlas/shared/web/Host.ts";
-import { Url } from "@atlas/shared/web/Url.ts";
-import { Directory } from "@atlas/shared/os/Directory.ts";
+import { Host } from "./class/host/Host.ts";
 import { join } from "path";
+import { Url } from "./class/web/Url.ts";
 
-interface IContractMaterial {
-    errors: string[];
-    warnings: string[];
-    bytecode: string[];
-    abi: object[] | string[];
-    methods: object;
+abstract class IContractMaterial {
+    public abstract errors: string[];
+    public abstract warnings: string[];
+    public abstract bytecode: string[];
+    public abstract abi:
+        | object[]
+        | string[];
+    public abstract methods: object;
 }
 
 class App {
@@ -18,58 +17,58 @@ class App {
         let contracts: Map<string, IContractMaterial | undefined> = new Map();
 
         (function() {
-            let clientContractFile: SolFile = new SolFile(new Path(join(__dirname, "./sol/solidstate/client/Client.sol")));
-            if (!clientContractFile.isBroken()) {
+            let file: Host.ISolFile = new Host.SolFile(new Host.Path(join(__dirname, "./sol/solidstate/client/Client.sol")));
+            if (!file.isBroken()) {
                 contracts.set("Client", {
-                    errors: clientContractFile.errors().unwrapOr([]),
-                    warnings: clientContractFile.warnings().unwrapOr([]),
-                    bytecode: [clientContractFile.bytecode().unwrapOr("")],
-                    abi: clientContractFile.abi().unwrapOr([]),
-                    methods: clientContractFile.methods().unwrapOr({})
+                    errors: file.errors().unwrapOr([]),
+                    warnings: file.warnings().unwrapOr([]),
+                    bytecode: [file.bytecode().unwrapOr("")],
+                    abi: file.abi().unwrapOr([]),
+                    methods: file.methods().unwrapOr([])
                 });
             }
         })();
 
-        Host.expose(
-            new Url("/material/:contractId"),
-            function(request, response) {
-                switch (request.params.contractId) {
-                    case "client":
-                        let material: IContractMaterial | undefined = contracts.get("Client");
-                        if (!material) {
-                            return response.send("Unable to find contractId");
-                        }
-                        return response.send({
-                            errors: material.errors,
-                            warnings: material.warnings,
-                            bytecode: material.bytecode,
-                            abi: material.abi,
-                            methods: material.methods
-                        });
-                    default:
-                        return response.send("Unable to find contractId");
+        Host.Server
+            .expose(
+                new Url("/material/:contractId"),
+                (request, response) => {
+                    switch (request.params.contractId) {
+                        case "client":
+                            let material: IContractMaterial | undefined = contracts.get("Client");
+                            if (!material) {
+                                return response.send("App::UnableToFindContractId");
+                            }
+                            return response.send({
+                                errors: material.errors,
+                                warnings: material.warnings,
+                                bytecode: material.bytecode,
+                                abi: material.abi,
+                                methods: material.methods
+                            });
+                        default:
+                            return response.send("App::UnableToFindContractId");
+                    }
                 }
-            }
-        )
+            )
 
-        Host.expose(
-            new Url("/supportedChainIds"),
-            function(request, response) {
-                return response.send([
-                    137
-                ]);
-            }
-        )
-        
-        Host.exposeReactApp(
-            new Directory(
-                new Path(__dirname)
-            ),
-            new Url("/")
-        );
-        
-        Host.boot();
-        
+            .expose(
+                new Url("./supportedChainIds"),
+                (request, response) => {
+                    return response.send([
+                        137n
+                    ]);
+                }
+            )
+
+            .exposeReactApp(
+                new Host.Directory(
+                    new Host.Path(__dirname)
+                ),
+                new Url("/")
+            ).unwrap()
+
+            .boot(3000n);
     }
 }
 

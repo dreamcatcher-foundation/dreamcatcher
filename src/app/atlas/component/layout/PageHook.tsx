@@ -1,10 +1,10 @@
-import { type ReactNode } from "react";
 import { type IColumnHookProps } from "@atlas/component/layout/ColumnHook.tsx";
 import { ColumnHook } from "@atlas/component/layout/ColumnHook.tsx";
+import React from "react";
 
 interface IPageHookProps extends IColumnHookProps {}
 
-function PageHook(props: IPageHookProps): ReactNode {
+function PageHook(props: IPageHookProps): React.ReactNode {
     let {node, style, ...more} = props;
     return (
         <ColumnHook

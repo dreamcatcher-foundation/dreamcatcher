@@ -1,24 +1,16 @@
-import { type ReactNode } from "react";
-import { type CSSProperties } from "react";
-import { type ComponentPropsWithoutRef } from "react";
-import { type SpringConfig } from "react-spring";
-import { useState } from "react";
-import { useEffect } from "react";
-import { animated } from "react-spring";
-import { config } from "react-spring";
-import { useSpring } from "react-spring";
-import { Stream } from "@atlas/shared/com/Stream.ts";
-import { EventSubscription } from "fbemitter";
+import * as ReactSpring from "react-spring";
+import React from "react";
+import { EventBus } from "../class/eventBus/EventBus.ts";
 
-interface IHookProps extends ComponentPropsWithoutRef<"div"> {
+export interface IHookProps extends React.ComponentPropsWithoutRef<"div"> {
     node: string;
-    spring?: CSSProperties;
-    springConfig?: SpringConfig;
+    spring?: React.CSSProperties;
+    springConfig?: ReactSpring.SpringConfig;
     childrenMountDelay?: bigint;
     childrenMountCooldown?: bigint;
 }
 
-function Hook(props: IHookProps): ReactNode {
+export function Hook(props: IHookProps): React.ReactNode {
     let {
         node, 
         className: classNameProp, 
@@ -30,24 +22,102 @@ function Hook(props: IHookProps): ReactNode {
         children, 
         ...more
     } = props;
-    let [className, setClassName] = useState<string>(classNameProp ?? "");
-    let [style, setStyle] = useState<CSSProperties>(styleProp ?? {});
-    let [spring, setSpring] = useState<CSSProperties[]>([{}, springProp ?? {}]);
-    let [springConfig, setSpringConfig] = useState<SpringConfig>(springConfigProp ?? config.default);
-    let [mounted, setMounted] = useState<ReactNode[]>([]);
-    useEffect(function() {
-        // WARNING Commands are not typesafe, if a wrong type is
-        //         passed to these methods, bugs and errors will
-        //         occur.
-        let subscriptions: EventSubscription[] = [
-            Stream.createSubscription({atNode: node, command: "setSpring", hook: (spring: CSSProperties) => setSpring(oldSpring => [oldSpring[1], {...oldSpring[1], ...spring}])}),
-            Stream.createSubscription({atNode: node, command: "setSpringConfig", hook: (springConfig: SpringConfig) => setSpringConfig(springConfig)}),
-            Stream.createSubscription({atNode: node, command: "setStyle", hook: (style: CSSProperties) => setStyle(oldStyle => ({...oldStyle, ...style}))}),
-            Stream.createSubscription({atNode: node, command: "setClassName", hook: (className: string) => setClassName(className)}),
-            Stream.createSubscription({atNode: node, command: "push", hook: (component: ReactNode) => setMounted(currentComponents => [...currentComponents, component])}),
-            Stream.createSubscription({atNode: node, command: "pull", hook: () => setMounted(currentComponents => currentComponents.slice(0, -1))}),
-            Stream.createSubscription({atNode: node, command: "wipe", hook: () => setMounted([])}),
-            Stream.createSubscription({atNode: node, command: "swap", hook: (component: ReactNode) => setMounted(currentComponents => [...currentComponents.slice(0, -1), component])})
+    let [className, setClassName] = React.useState<string>(classNameProp ?? "");
+    let [style, setStyle] = React.useState<React.CSSProperties>(styleProp ?? {});
+    let [spring, setSpring] = React.useState<React.CSSProperties[]>([{}, springProp ?? {}]);
+    let [springConfig, setSpringConfig] = React.useState<ReactSpring.SpringConfig>(springConfigProp ?? ReactSpring.config.default);
+    let [mounted, setMounted] = React.useState<React.ReactNode[]>([]);
+    React.useEffect(function() {
+        const subscriptions: EventBus.ISubscription[] = [
+            new EventBus.MessageSubscription({
+                at: node,
+                message: "setSpring",
+                handler(item?: unknown): void {
+                    if (!item) {
+                        return;
+                    }
+                    // @unsafe
+                    return setSpring(oldSpring => [oldSpring[1], {...oldSpring[1], ...(item as React.CSSProperties)}]);
+                },
+                once: false
+            }),
+            new EventBus.MessageSubscription({
+                at: node,
+                message: "setSpringConfig",
+                handler(item?: unknown): void {
+                    if (!item) {
+                        return;
+                    }
+                    // @unsafe
+                    return setSpringConfig((item as ReactSpring.SpringConfig));
+                },
+                once: false
+            }),
+            new EventBus.MessageSubscription({
+                at: node,
+                message: "setStyle",
+                handler(item?: unknown): void {
+                    if (!item) {
+                        return;
+                    }
+                    // @unsafe
+                    return setStyle(oldStyle => ({...oldStyle, ...(item as React.CSSProperties)}));
+                },
+                once: false
+            }),
+            new EventBus.MessageSubscription({
+                at: node,
+                message: "setClassName",
+                handler(item?: unknown): void {
+                    if (!item) {
+                        return;
+                    }
+                    if (typeof item !== "string") {
+                        return;
+                    }
+                    return setClassName(item);
+                },
+                once: false
+            }),
+            new EventBus.MessageSubscription({
+                at: node,
+                message: "push",
+                handler(item?: unknown): void {
+                    if (!item) {
+                        return;
+                    }
+                    // @unsafe
+                    return setMounted(components => [...components, (item as React.ReactNode)]);
+                },
+                once: false
+            }),
+            new EventBus.MessageSubscription({
+                at: node,
+                message: "pull",
+                handler(): void {
+                    return setMounted(components => components.splice(0, -1));
+                },
+                once: false
+            }),
+            new EventBus.MessageSubscription({
+                at: node,
+                message: "wipe",
+                handler(): void {
+                    return setMounted([]);
+                },
+                once: false
+            }),
+            new EventBus.MessageSubscription({
+                at: node,
+                message: "swap",
+                handler(item?: unknown): void {
+                    if (!item) {
+                        return;
+                    }
+                    // @unsafe
+                    return setMounted(components => [...components.slice(0, -1), (item as React.ReactNode)]);
+                }
+            })
         ];
         setTimeout(function() {
             if (!children) {
@@ -55,7 +125,7 @@ function Hook(props: IHookProps): ReactNode {
             }
             if (Array.isArray(children)) {
                 let cooldown: number = 0;
-                (children as (ReactNode | undefined)[]).forEach(child => {
+                (children as (React.ReactNode | undefined)[]).forEach(child => {
                     if (!child) {
                         return;
                     }
@@ -70,17 +140,14 @@ function Hook(props: IHookProps): ReactNode {
         return () => subscriptions.forEach(subscription => subscription.remove());
     }, []);
     return (
-        <animated.div
+        <ReactSpring.animated.div
         className={className}
         style={{
-            ...useSpring({from: spring[0], to: spring[1], config: springConfig}),
+            ...ReactSpring.useSpring({from: spring[0], to: spring[1], config: springConfig}),
             ...style
         }}
         children={mounted}
         {...more}>
-        </animated.div>
+        </ReactSpring.animated.div>
     );
 }
-
-export { type IHookProps };
-export { Hook };

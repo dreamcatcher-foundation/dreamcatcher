@@ -1,10 +1,8 @@
-import { type ReactNode } from "react";
-import { type ComponentPropsWithoutRef } from "react";
 import React from "react";
 
-interface IRowProps extends ComponentPropsWithoutRef<"div"> {}
+export interface IRowProps extends React.ComponentPropsWithoutRef<"div"> {}
 
-function Row(props: IRowProps): ReactNode {
+export function Row(props: IRowProps): React.ReactNode {
     let {style, ...more} = props;
     return (
         <div
@@ -19,6 +17,3 @@ function Row(props: IRowProps): ReactNode {
         </div>
     );
 }
-
-export { type IRowProps };
-export { Row };

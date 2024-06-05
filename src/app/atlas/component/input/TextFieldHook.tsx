@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { type ComponentPropsWithoutRef } from "react";
-import { Stream } from "@atlas/shared/com/Stream.ts";
+import { EventBus } from "@atlas/class/eventBus/EventBus.ts";
 import React from "react";
 
 interface ITextFieldHookProps extends ComponentPropsWithoutRef<"input"> {
@@ -31,7 +31,7 @@ function TextFieldHook(props: ITextFieldHookProps): ReactNode {
             ...style ?? {}
         }}
         placeholder={placeholder}
-        onChange={event => Stream.dispatchEvent({fromNode: node, event: "inputChange", item: event.target.value})}
+        onChange={event => new EventBus.Event({from: node, event: "inputChange", item: event.target.value})}
         {...more}>
         </input>
     );

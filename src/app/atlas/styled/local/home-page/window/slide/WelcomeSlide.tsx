@@ -3,7 +3,7 @@ import { Slide } from "@atlas/styled/local/home-page/window/slide/Slide.tsx";
 import { Text } from "@atlas/component/text/Text.tsx";
 import { ButtonHook } from "@atlas/component/input/ButtonHook.tsx";
 import { LinkedButtonHook } from "@atlas/component/input/LinkedButtonHook.tsx";
-import { Stream } from "@atlas/shared/com/Stream.ts";
+import { EventBus } from "@atlas/class/eventBus/EventBus.ts";
 import { ColumnHook } from "@atlas/component/layout/ColumnHook.tsx";
 import { DoubleButtonSlot } from "@atlas/styled/local/home-page/window/slide/slot/DoubleButtonSlot.tsx";
 import { ContentSlot } from "@atlas/styled/local/home-page/window/slide/slot/ContentSlot.tsx";
@@ -52,7 +52,7 @@ function WelcomeSlide(): ReactNode {
                 node="homePage.welcomeSlide.getStartedButton"
                 color="#615FFF"
                 text="Get Started"
-                onClick={() => Stream.dispatch({toNode: "homePage.window", command: "swap", item: <GetStartedSlide/>})}>
+                onClick={() => new EventBus.Message({to: "homePage.window", message: "swap", item: <GetStartedSlide/>})}>
                 </ButtonHook>
 
                 <LinkedButtonHook

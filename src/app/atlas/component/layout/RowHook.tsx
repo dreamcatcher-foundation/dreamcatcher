@@ -1,11 +1,10 @@
-import { type ReactNode } from "react";
 import { type IHookProps } from "@atlas/component/Hook.tsx";
 import { Hook } from "@atlas/component/Hook.tsx";
 import React from "react";
 
-interface IRowHookProps extends IHookProps {}
+export interface IRowHookProps extends IHookProps {}
 
-function RowHook(props: IRowHookProps): ReactNode {
+export function RowHook(props: IRowHookProps): React.ReactNode {
     let {node, style, ...more} = props;
     return (
         <Hook
@@ -21,6 +20,3 @@ function RowHook(props: IRowHookProps): ReactNode {
         </Hook>
     );
 }
-
-export { type IRowHookProps };
-export { RowHook };

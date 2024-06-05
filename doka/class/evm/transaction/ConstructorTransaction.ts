@@ -1,89 +1,89 @@
 import { ethers as Ethers } from "ethers";
 import * as TsResult from "ts-results";
-import { SolFile } from "@atlas/shared/os/SolFile.ts";
-import { Secret } from "@atlas/shared/os/Secret.ts";
+import { SolFile } from "../../../../src/app/atlas/shared/os/SolFile.ts";
+import { Secret } from "../../../../src/app/atlas/shared/os/Secret.ts";
 
-class Bytecode {
-    public constructor(
-        protected _inner: 
-            | string
-            | SolFile
-    ) {}
-
-    public resolve(): string {
-        return this._inner instanceof SolFile
-            ? this._inner.bytecode().unwrap()
-            : this._inner;
-    }
+export abstract class IConstructorTransactionState {
+    public abstract node: (
+        | string
+        | Ethers.JsonRpcProvider
+    );
+    public abstract key: (
+        | string
+        | Secret  
+    );
+    public abstract gasPrice?: (
+        | bigint
+        | "veryLow"
+        | "low"
+        | "standard"
+        | "fast"
+    );
+    public abstract gasLimit?: bigint;
+    public abstract bytecode: (
+        | string
+        | SolFile
+    );
+    public abstract chainId?: bigint;
+    public abstract confirmations?: bigint;
 }
 
-class GasPrice {
-    public constructor(
-        protected _inner?:
-            | bigint
-            | "veryLow"
-            | "low"
-            | "standard"
-            | "fast"
-    ) {}
-
-    public resolve(): bigint {
-        return (
-            this._inner === "veryLow"
-                ? 20000000000n :
-            this._inner === "low"
-                ? 30000000000n :
-            this._inner === "standard"
-                ? 50000000000n :
-            this._inner === "fast"
-                ? 70000000000n :
-            this._inner === undefined
-                ? 20000000000n :
-            this._inner
-        );
-    }
+export abstract class IConstructorTransaction {
+    public abstract send(): Promise<TsResult.Result<Ethers.TransactionReceipt | null, unknown>>;
 }
 
-class PrivateKey {
-    public constructor(
-        protected _inner:
-            | string
-            | Secret
-    ) {}
+export class ConstructorTransaction implements IConstructorTransaction {
+    public constructor(protected _state: IConstructorTransactionState) {}
 
-    public resolve(): string {
-        return (
-            this._inner instanceof Secret
-                ? this._inner.fetch().unwrap()
-                : this._inner
-        );
-    }
-}
-
-abstract class IConstructorTransactionArgs {
-    public abstract readonly rpcUrl: string;
-    public abstract readonly privateKey: PrivateKey;
-    public abstract readonly gasPrice?: GasPrice;
-    public abstract readonly gasLimit?: bigint;
-    public abstract readonly bytecode: Bytecode;
-    public abstract readonly chainId?: bigint;
-    public abstract readonly confirmations?: bigint;
-}
-
-class ConstructorTransaction {
-    protected _receipt: Promise<TsResult.Result<Ethers.TransactionReceipt, unknown>>;
-
-    public constructor(args: IConstructorTransactionArgs) {
+    public async send(): Promise<TsResult.Result<Ethers.TransactionReceipt | null, unknown>> {
         try {
-            const node: Ethers.JsonRpcProvider = new Ethers.JsonRpcProvider(args.rpcUrl);
-            const wallet: Ethers.Wallet = new Ethers.Wallet(args.privateKey.resolve(), node);
-            return await (await wallet.sendTransaction({
-
-            }))
+            const node: Ethers.JsonRpcProvider = (
+                this._state.node instanceof Ethers.JsonRpcProvider
+                    ? this._state.node 
+                    : new Ethers.JsonRpcProvider(this._state.node)
+            );
+            const wallet: Ethers.Wallet = new Ethers.Wallet(
+                (
+                    this._state.key instanceof Secret
+                        ? this._state.key.fetch().unwrap()
+                        : this._state.key
+                ),
+                node
+            );
+            return new TsResult.Ok<Ethers.TransactionReceipt | null>(await (await wallet.sendTransaction({
+                from: await wallet.getAddress(),
+                to: null,
+                nonce: await wallet.getNonce(),
+                gasPrice: (
+                    this._state.gasPrice === "veryLow"
+                        ? 20000000000n :
+                    this._state.gasPrice === "low"
+                        ? 30000000000n :
+                    this._state.gasPrice === "standard"
+                        ? 50000000000n :
+                    this._state.gasPrice === "fast"
+                        ? 70000000000n :
+                    this._state.gasPrice === undefined
+                        ? 20000000000n :
+                    this._state.gasPrice
+                ),
+                gasLimit: this._state.gasLimit ?? 10000000n,
+                value: 0n,
+                data: (
+                    this._state.bytecode instanceof SolFile
+                        ? `0x${this._state.bytecode.bytecode().unwrap()}` :
+                    this._state.bytecode
+                ),
+                chainId: this._state.chainId ?? (await node.getNetwork()).chainId
+            })).wait(Number(this._state.confirmations ?? 0n)));
+        }
+        catch (error: unknown) {
+            return new TsResult.Err<unknown>(error);
         }
     }
-
-    public async receipt() {
-        
-    }
 }
+
+export { Ethers };
+export { TsResult };
+export { SolFile };
+export { Secret };

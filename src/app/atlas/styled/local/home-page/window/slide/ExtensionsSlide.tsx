@@ -8,37 +8,41 @@ import { ContentSlot } from "@atlas/styled/local/home-page/window/slide/slot/Con
 import { Text } from "@atlas/component/text/Text.tsx";
 import { RowHook } from "@atlas/component/layout/RowHook.tsx";
 import { ToggleHook } from "@atlas/component/input/ToggleHook.tsx";
-import { Stream } from "@atlas/shared/com/Stream.ts";
+import { EventBus } from "@atlas/class/eventBus/EventBus.ts";
 import { WindowDeploymentTracker } from "@atlas/styled/local/home-page/window/Window.tsx";
 import { ButtonHook } from "@atlas/component/input/ButtonHook.tsx";
 import { GetStartedSlide } from "@atlas/styled/local/home-page/window/slide/GetStartedSlide.tsx";
-import { Transaction } from "../../../../../component/class/evm/Transaction.tsx";
+import { ReactWeb3 } from "@atlas/class/web/react/ReactWeb3.tsx";
 import React from "react";
 
 function ExtensionsSlide(): ReactNode {
     useEffect(function() {
-        let subscriptions: EventSubscription[] = [
-            Stream.createEventSubscription({
-                fromNode: "homePage.window.extensionsSlide.contentSlot.extension0.toggle",
+        let subscriptions: EventBus.ISubscription[] = [
+            new EventBus.EventSubscription({
+                from: "homePage.window.extensionsSlide.contentSlot.extension0.toggle",
                 event: "toggle",
-                hook(state: boolean) {
-                    if (state) {
-                        WindowDeploymentTracker.selectedErc20Extension = true;
+                handler(item?: unknown): void {
+                    if (!item) {
                         return;
                     }
-                    WindowDeploymentTracker.selectedErc20Extension = false;
+                    if (typeof item !== "boolean") {
+                        return;
+                    }
+                    WindowDeploymentTracker.selectedErc20Extension = item;
                     return;
-                },
+                }
             }),
-            Stream.createEventSubscription({
-                fromNode: "homePage.window.extensionsSlide.contentSlot.extension1.toggle",
+            new EventBus.EventSubscription({
+                from: "homePage.window.extensionsSlide.contentSlot.extension1.toggle",
                 event: "toggle",
-                hook(state: boolean) {
-                    if (state) {
-                        WindowDeploymentTracker.selectedAuthExtension = true;
+                handler(item?: unknown): void {
+                    if (!item) {
                         return;
                     }
-                    WindowDeploymentTracker.selectedAuthExtension = false;
+                    if (typeof item !== "boolean") {
+                        return;
+                    }
+                    WindowDeploymentTracker.selectedAuthExtension = item;
                     return;
                 },
             })
@@ -128,14 +132,16 @@ function ExtensionsSlide(): ReactNode {
                 color="#615FFF"
                 text="Deploy"
                 onClick={async function() {
-                    let result = await new Transaction({
-                        to: "",
-                        rpcUrl: "",
-                        methodName: "",
-                        methodArgs: [],
-                        abi: []
-                    }).receipt();
-                    console.log(result);
+                    // @deploy-stuffs
+                    await (new ReactWeb3.Transaction({
+                        to: "0x36C27bDb9Bd78E0d077E63495004919C33B6b717",
+                        methodSignature: "function deploy(string) external returns (address)",
+                        methodName: "deploy",
+                        methodArgs: [
+                            WindowDeploymentTracker.daoName
+                        ],
+                        chainId: 137n
+                    }).receipt());
                 }}/>
 
                 <ButtonHook
@@ -144,12 +150,12 @@ function ExtensionsSlide(): ReactNode {
                 color="#615FFF"
                 text="Back"
                 onClick={function() {
-                Stream.dispatch({
-                    toNode: "homePage.window",
-                    command: "swap",
-                    item: <GetStartedSlide/>
-                });
-                return;
+                    new EventBus.Message({
+                        to: "homePage.window",
+                        message: "swap",
+                        item: <GetStartedSlide/>
+                    });
+                    return;
                 }}/>
             </DoubleButtonSlot>
         </Slide>

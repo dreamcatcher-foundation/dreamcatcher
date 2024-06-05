@@ -3,17 +3,17 @@ import { type CSSProperties } from "react";
 import { type IRowHookProps } from "@atlas/component/layout/RowHook.tsx";
 import { RowHook } from "@atlas/component/layout/RowHook.tsx";
 import { TextHook } from "@atlas/component/text/TextHook.tsx";
-import { Stream } from "@atlas/shared/com/Stream.ts";
+import { EventBus } from "@atlas/class/eventBus/EventBus.ts";
 import React from "react";
 
-interface IButtonHookProps extends IRowHookProps {
+export interface IButtonHookProps extends IRowHookProps {
     text?: string;
     color: string;
     textColor?: string;
     textStyle?: CSSProperties;
 }
 
-function ButtonHook(props: IButtonHookProps): ReactNode {
+export function ButtonHook(props: IButtonHookProps): ReactNode {
     let {node, text, textStyle, style, spring, color, textColor, ...more} = props;
     return (
         <RowHook
@@ -30,9 +30,26 @@ function ButtonHook(props: IButtonHookProps): ReactNode {
         borderColor: color,
         ...style ?? {}
         }}
-        onMouseEnter={() => Stream.dispatch({toNode: node, command: "setSpring", timeout: 0n, item: {cursor: "pointer"}})}
-        onMouseLeave={() => Stream.dispatch({toNode: node, command: "setSpring", timeout: 0n, item: {cursor: "auto"}})}
-        onClick={() => Stream.dispatchEvent({fromNode: node, event: "click"})}
+        onMouseEnter={() => new EventBus.Message({
+            to: node, 
+            message: "setSpring", 
+            timeout: 0n, 
+            item: {
+                cursor: "pointer"
+            }
+        })}
+        onMouseLeave={() => new EventBus.Message({
+            to: node,
+            message: "setSpring",
+            timeout: 0n,
+            item: {
+                cursor: "auto"
+            }
+        })}
+        onClick={() => new EventBus.Event({
+            from: node,
+            event: "click"
+        })}
         {...more}>
             <TextHook
             node={`${node}.text`}
@@ -45,6 +62,3 @@ function ButtonHook(props: IButtonHookProps): ReactNode {
         </RowHook>
     );
 }
-
-export { type IButtonHookProps };
-export { ButtonHook };

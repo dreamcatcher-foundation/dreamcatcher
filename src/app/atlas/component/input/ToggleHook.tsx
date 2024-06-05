@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { useState } from "react";
-import { Stream } from "@atlas/shared/com/Stream.ts";
+import { EventBus } from "@atlas/class/eventBus/EventBus.ts";
 import { RowHook } from "@atlas/component/layout/RowHook.tsx";
 import { config } from "react-spring";
 import React from "react";
@@ -28,19 +28,19 @@ function ToggleHook(props: IToggleHookProps): ReactNode {
             padding: "2.5px",
             borderRadius: "25px"
         }}
-        onMouseEnter={() => Stream.dispatch({toNode: node, command: "setSpring", item: {cursor: "pointer"}})}
-        onMouseLeave={() => Stream.dispatch({toNode: node, command: "setSpring", item: {cursor: "auto"}})}
+        onMouseEnter={() => new EventBus.Message({to: node, message: "setSpring", item: {cursor: "pointer"}})}
+        onMouseLeave={() => new EventBus.Message({to: node, message: "setSpring", item: {cursor: "auto"}})}
         onClick={function() {
             setToggled(!isToggled);
             if (isToggled) {
-                Stream.dispatch({toNode: `${node}.dot`, command: "setSpring", item: {left: "25px"}});
-                Stream.dispatch({toNode: node, command: "setSpring", item: {background: "#615FFF"}});
-                Stream.dispatchEvent({fromNode: node, event: "toggle", item: isToggled});
+                new EventBus.Message({to: `${node}.dot`, message: "setSpring", item: {left: "25px"}});
+                new EventBus.Message({to: node, message: "setSpring", item: {background: "#615FFF"}});
+                new EventBus.Event({from: node, event: "toggle", item: isToggled});
                 return;
             }
-            Stream.dispatch({toNode: `${node}.dot`, command: "setSpring", item: {left: "0px"}});
-            Stream.dispatch({toNode: node, command: "setSpring", item: {background: "#202020"}});
-            Stream.dispatchEvent({fromNode: node, event: "toggle", item: isToggled});
+            new EventBus.Message({to: `${node}.dot`, message: "setSpring", item: {left: "0px"}});
+            new EventBus.Message({to: node, message: "setSpring", item: {background: "#202020"}});
+            new EventBus.Event({from: node, event: "toggle", item: isToggled});
             return;
         }}>
             <RowHook

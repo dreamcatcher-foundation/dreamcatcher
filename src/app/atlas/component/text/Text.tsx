@@ -1,12 +1,10 @@
-import { type ReactNode } from "react";
-import { type ComponentPropsWithoutRef } from "react";
 import React from "react";
 
-interface ITextProps extends ComponentPropsWithoutRef<"div"> {
+interface ITextProps extends React.ComponentPropsWithoutRef<"div"> {
     text: string;
 }
 
-function Text(props: ITextProps): ReactNode {
+function Text(props: ITextProps): React.ReactNode {
     let {style, text, ...more} = props;
     return (
         <div

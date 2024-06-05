@@ -5,7 +5,7 @@ import { EventSubscription } from "fbemitter";
 import { Slide } from "@atlas/styled/local/home-page/window/slide/Slide.tsx";
 import { Text } from "@atlas/component/text/Text.tsx";
 import { ButtonHook } from "@atlas/component/input/ButtonHook.tsx";
-import { Stream } from "@atlas/shared/com/Stream.ts";
+import { EventBus } from "@atlas/class/eventBus/EventBus.ts";
 import { WelcomeSlide } from "@atlas/styled/local/home-page/window/slide/WelcomeSlide.tsx";
 import { DoubleButtonSlot } from "@atlas/styled/local/home-page/window/slide/slot/DoubleButtonSlot.tsx";
 import { HeadingSlot } from "@atlas/styled/local/home-page/window/slide/slot/HeadingSlot.tsx";
@@ -19,28 +19,34 @@ import React from "react";
 
 function GetStartedSlide(): ReactNode {
     useEffect(function() {
-        let subscriptions: EventSubscription[] = [
-            Stream.createEventSubscription({
-                fromNode: "homePage.window.getStartedSlide.contentSlot.col.input0",
-                event: "inputChange",
-                hook(name: string) {
-                    WindowDeploymentTracker.daoName = name;
+        let subscriptions: EventBus.ISubscription[] = [
+            new EventBus.EventSubscription({from: "homePage.window.getStartedSlide.contentSlot.col.input0", event: "inputChange", handler(item?: unknown): void {
+                if (!item) {
+                    return;
                 }
-            }),
-            Stream.createEventSubscription({
-                fromNode: "homePage.window.getStartedSlide.contentSlot.col.input1",
-                event: "inputChange",
-                hook(tokenName: string) {
-                    WindowDeploymentTracker.daoTokenName = tokenName;
+                if (typeof item !== "string") {
+                    return;
                 }
-            }),
-            Stream.createEventSubscription({
-                fromNode: "homePage.window.getStartedSlide.contentSlot.col.input2",
-                event: "inputChange",
-                hook(symbol: string) {
-                    WindowDeploymentTracker.daoTokenSymbol = symbol;
-                },
-            })
+                WindowDeploymentTracker.daoName = item;
+            }}),
+            new EventBus.EventSubscription({from: "homePage.window.getStartedSlide.contentSlot.col.input1", event: "inputChange", handler(item?: unknown): void {
+                if (!item) {
+                    return;
+                }
+                if (typeof item !== "string") {
+                    return;
+                }
+                WindowDeploymentTracker.daoTokenName = item;
+            }}),
+            new EventBus.EventSubscription({from: "homePage.window.getStartedSlide.contentSlot.col.input2", event: "inputChange", handler(item?: unknown): void {
+                if (!item) {
+                    return;
+                }
+                if (typeof item !== "string") {
+                    return;
+                }
+                WindowDeploymentTracker.daoTokenSymbol = item;
+            }})
         ];
         return () => subscriptions.forEach(subscription => subscription.remove());
     }, []);
@@ -93,20 +99,20 @@ function GetStartedSlide(): ReactNode {
                     node="homePage.window.getStartedSlide.contentSlot.col.input2"
                     placeholder="vSODA"
                     style={{
-                    borderColor: "#858585",
-                    outline: "none"
+                        borderColor: "#858585",
+                        outline: "none"
                     }}/>
 
                     <TextHook
                     node="homePage.window.getStartedSlide.contentSlot.col.feedback"
                     text=""
                     style={{
-                    width: "100%",
-                    fontSize: "10px",
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center"
+                        width: "100%",
+                        fontSize: "10px",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center"
                     }}
                     color="#FF1802"/>      
                 </ColumnHook>
@@ -115,7 +121,7 @@ function GetStartedSlide(): ReactNode {
             <DoubleButtonSlot
             node="homePage.window.getStartedSlide.doubleButtonSlot"
             style={{
-            height: "12.5%"
+                height: "12.5%"
             }}>
                 <ButtonHook
                 node="homePage.window.getStartedSlide.doubleButtonSlot.nextButton"
@@ -123,20 +129,20 @@ function GetStartedSlide(): ReactNode {
                 color="#615FFF"
                 text="Next"
                 onClick={function() {
-                if (WindowDeploymentTracker.daoName === "" || WindowDeploymentTracker.daoTokenName === "" || WindowDeploymentTracker.daoTokenSymbol === "") {
-                    Stream.dispatch({
-                        toNode: "homePage.window.getStartedSlide.contentSlot.col.feedback",
-                        command: "setText",
-                        item: "An input field has been left empty."
+                    if (WindowDeploymentTracker.daoName === "" || WindowDeploymentTracker.daoTokenName === "" || WindowDeploymentTracker.daoTokenSymbol === "") {
+                        new EventBus.Message({
+                            to: "homePage.window.getStartedSlide.contentSlot.col.feedback",
+                            message: "setText",
+                            item: "An input field has been left empty"
+                        });
+                        return;
+                    }
+                    new EventBus.Message({
+                        to: "homePage.window",
+                        message: "swap",
+                        item: <ExtensionsSlide/>
                     });
                     return;
-                }
-                Stream.dispatch({
-                    toNode: "homePage.window",
-                    command: "swap",
-                    item: <ExtensionsSlide/>
-                });
-                return;
                 }}/>
 
                 <ButtonHook
@@ -145,11 +151,11 @@ function GetStartedSlide(): ReactNode {
                 color="#615FFF"
                 text="Back"
                 onClick={function() {
-                Stream.dispatch({
-                    toNode: "homePage.window",
-                    command: "swap",
-                    item: <WelcomeSlide/>
-                });
+                    new EventBus.Message({
+                        to: "homePage.window",
+                        message: "swap",
+                        item: <WelcomeSlide/>
+                    });
                 }}/>
             </DoubleButtonSlot>
         </Slide>
