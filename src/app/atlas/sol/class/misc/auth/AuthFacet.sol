@@ -1,20 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import "../../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
-import "../../../IFacet.sol";
-import "./AuthSocket.sol";
+import { IAuthFacet } from "./IAuthFacet.sol";
+import { EnumerableSet } from "../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
+import { AuthSdk } from "./AuthSdk.sol";
 
-interface IAuthFacet {
-    function membersOf(string memory role, uint256 memberId) external view returns (address);
-    function membersOf(string memory role) external view returns (address[] memory);
-    function membersLengthOf(string memory role) external view returns (uint256);
-    function hasRole(address account, string memory role) external view returns (bool);
-    function hasRole(string memory role) external view returns (bool);
-    function claimOwnership() external returns (bool);
-    function transferRole(address from, address to, string memory role) external returns (bool);
-}
-
-contract AuthFacet is IFacet, AuthSocket {
+contract AuthFacet is IAuthFacet, AuthSdk {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     function selectors() external pure returns (bytes4[] memory) {

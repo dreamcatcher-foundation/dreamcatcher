@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import "../../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
-import "./AuthStorageSlot.sol";
+import { EnumerableSet } from "../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
+import { AuthSlot } from "./AuthSlot.sol";
 
-contract AuthSocket is AuthStorageSlot {
+contract AuthSdk is AuthSlot {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     event RoleTransfer(address indexed from, address indexed to, string indexed role);
@@ -22,19 +22,19 @@ contract AuthSocket is AuthStorageSlot {
     }
 
     function _membersOf(string memory role, uint256 memberId) internal view returns (address) {
-        _authStorageSlot().membersOf[role].at(memberId);
+        return _membersOf()[role].at(memberId);
     }
 
     function _membersOf(string memory role) internal view returns (address[] memory) {
-        _authStorageSlot().membersOf[role].values();
+        return _membersOf()[role].values();
     }
 
     function _membersLengthOf(string memory role) internal view returns (uint256) {
-        _authStorageSlot().membersOf[role].length();
+        return _membersOf()[role].length();
     }
 
     function _hasRole(address account, string memory role) internal view returns (bool) {
-        return _authStorageSlot().membersOf[role].contains(account);
+        return _membersOf()[role].contains(account);
     }
 
     function _hasRole(string memory role) internal view returns (bool) {
@@ -42,10 +42,10 @@ contract AuthSocket is AuthStorageSlot {
     }
 
     function _claimOwnership() internal returns (bool) {
-        if (_membersLengthOf("owner") >= 1) {
+        if (_membersLengthOf("*") >= 1) {
             revert OwnershipHasAlreadyBeenClaimed();
         }
-        _transferRole(address(0), msg.sender, "owner");
+        _transferRole(address(0), msg.sender, "*");
         return true;
     }
 
@@ -54,7 +54,7 @@ contract AuthSocket is AuthStorageSlot {
             revert RecipientAndSenderAreBothTheZeroAddress(from, to, role);
         }
         if (from == address(0)) {
-            _authStorageSlot().membersOf[role].add(to);
+            _membersOf()[role].add(to);
             emit RoleTransfer(from, to, role);
             return true;
         }
@@ -62,15 +62,15 @@ contract AuthSocket is AuthStorageSlot {
             revert SenderIsMissingRole(from, to, role);
         }
         if (to == address(0)) {
-            _authStorageSlot().membersOf[role].remove(from);
+            _membersOf()[role].remove(from);
             emit RoleTransfer(from, to, role);
             return true;
         }
         if (to != address(0) && _hasRole(to, role)) {
             revert RecipientCannotHaveMoreThanOneInstanceOfTheSameRole(from, to, role);
         }
-        _authStorageSlot().membersOf[role].remove(from);
-        _authStorageSlot().membersOf[role].add(to);
+        _membersOf()[role].remove(from);
+        _membersOf()s[role].add(to);
         emit RoleTransfer(from, to, role);
         return true;
     }
