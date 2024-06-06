@@ -93,7 +93,7 @@ export namespace Host {
             | "standard"
             | "fast";
         public abstract gasLimit?: bigint;
-        public abstract bytecode: ISolFile;
+        public abstract bytecode: string | ISolFile;
         public abstract chainId?: bigint;
         public abstract confirmations?: bigint;
     }
@@ -744,7 +744,10 @@ export namespace Host {
                         this._payload.gasPrice,
                     gasLimit: this._payload.gasLimit ?? 10000000n,
                     value: 0n,
-                    data: `0x${this._payload.bytecode.bytecode().unwrap()}`,
+                    data:
+                        typeof this._payload.bytecode === "string"
+                            ? this._payload.bytecode
+                            : `0x${this._payload.bytecode.bytecode().unwrap()}`,
                     chainId: this._payload.chainId ?? (await node.getNetwork()).chainId
                 })).wait(Number(this._payload.confirmations)));
             }
