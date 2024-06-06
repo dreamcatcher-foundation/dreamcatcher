@@ -3,130 +3,108 @@ import { ethers as Ethers } from "ethers";
 
 class KernelSetUpScript {
     private constructor() {}
+    protected static _rpcUrl: string = "https://polygon-rpc.com";
+    protected static _privateKey: Host.ISecret = new Host.Secret("polygonPrivateKey");
 
     public static async run(): Promise<void> {
-        let rpcUrl: string = "https://polygon-rpc.com";
-        let privateKey: Host.ISecret = new Host.Secret("polygonPrivateKey");
-        if (privateKey.resolve().none) {
+        if (this._privateKey.resolve().none) {
             console.log("KernelSetUpScript::MissingPrivateKey");
             return;
         }
-        console.log(`Deploying...`);
-        /// NOTE Deploying Diamond Launcher because the inbuilt factory
-        ///      exceeds the size limit.
-        let diamondLauncher: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
+        const nodeDeployerAddress: string = await this._deploy("src/app/atlas/sol/deployer/NodeDeployer.sol");
+        const authPlugInAddress: string = await this._deploy("src/app/atlas/sol/class/misc/auth/AuthPlugIn.sol");
+        const tokenPlugInAddress: string = await this._deploy("src/app/atlas/sol/class/misc/token/TokenPlugIn.sol");
+        const tokenSetterPlugInAddress: string = await this._deploy("src/app/atlas/sol/class/misc/token/TokenSetterPlugIn.sol");
+        const tokenMintPlugInAddress: string = await this._deploy("src/app/atlas/sol/class/misc/token/TokenMintPlugIn.sol");
+        const tokenBurnPlugInAddress: string = await this._deploy("src/app/atlas/sol/class/misc/token/TokenBurnPlugIn.sol");
+        const routerPlugInAddress: string = await this._deploy("src/app/atlas/sol/class/kernel/router/RouterPlugIn.sol");
+        const adminNodePlugInAddress: string = await this._deploy("src/app/atlas/sol/class/kernel/adminNode/AdminNodePlugIn.sol");
+        const kernelNodeAddress: string = await this._deploy("src/app/atlas/sol/Node.sol");
+        await this._install(kernelNodeAddress, authPlugInAddress);
+        await this._install(kernelNodeAddress, tokenPlugInAddress);
+        await this._install(kernelNodeAddress, tokenSetterPlugInAddress);
+        await this._install(kernelNodeAddress, tokenMintPlugInAddress);
+        await this._install(kernelNodeAddress, tokenBurnPlugInAddress);
+        await this._install(kernelNodeAddress, routerPlugInAddress);
+        await this._install(kernelNodeAddress, adminNodePlugInAddress);
+        await this._claimOwnership(kernelNodeAddress);
+        await this._commit(kernelNodeAddress, "NodeDeployer", nodeDeployerAddress);
+        await this._commit(kernelNodeAddress, "AuthPlugIn", authPlugInAddress);
+        await this._commit(kernelNodeAddress, "TokenPlugIn", tokenPlugInAddress);
+        await this._commit(kernelNodeAddress, "TokenSetterPlugIn", tokenSetterPlugInAddress);
+        await this._commit(kernelNodeAddress, "TokenMintPlugIn", tokenMintPlugInAddress);
+        await this._commit(kernelNodeAddress, "TokenBurnPlugIn", tokenBurnPlugInAddress);
+        await this._commit(kernelNodeAddress, "RouterPlugIn", routerPlugInAddress);
+        await this._commit(kernelNodeAddress, "AdminNodePlugIn", adminNodePlugInAddress);
+        console.log("NodeDeployer", nodeDeployerAddress);
+        console.log("AuthPlugIn", authPlugInAddress);
+        console.log("TokenPlugIn", tokenPlugInAddress);
+        console.log("TokenSetterPlugIn", tokenSetterPlugInAddress);
+        console.log("TokenMintPlugIn", tokenMintPlugInAddress);
+        console.log("TokenBurnPlugIn", tokenBurnPlugInAddress);
+        console.log("RouterPlugIn", routerPlugInAddress);
+        console.log("AdminNodePlugIn", adminNodePlugInAddress);
+        console.log("KernelNode", kernelNodeAddress);
+    }
+
+    protected static async _deploy(solFilePath: string): Promise<string> {
+        return ((await new Host.ConstructorTransaction({
+            rpcUrl: this._rpcUrl,
+            privateKey: this._privateKey.resolve().unwrap(),
             gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/auth/DiamondLauncher.sol")),
+            bytecode: new Host.SolFile(new Host.Path(solFilePath)),
             confirmations: 1n,
             chainId: 137n
         }).receipt()).unwrap()!).contractAddress!;
-        console.log(`DiamondLauncher ${diamondLauncher}`);
-        let authFacet: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
-            gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/auth/AuthFacet.sol")),
-            confirmations: 1n,
-            chainId: 137n
-        }).receipt()).unwrap()!).contractAddress!;
-        console.log(`AuthFacet ${authFacet}`);
-        let facetRouterFacet: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
-            gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/facetRouter/FacetRouterFacet.sol")),
-            confirmations: 1n,
-            chainId: 137n
-        }).receipt()).unwrap()!).contractAddress!;
-        console.log(`FacetRouterFacet ${facetRouterFacet}`);
-        let tokenFacet: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
-            gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/token/TokenFacet.sol")),
-            confirmations: 1n,
-            chainId: 137n
-        }).receipt()).unwrap()!).contractAddress!;
-        console.log(`TokenFacet ${tokenFacet}`);
-        let tokenMintFacet: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
-            gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/token/TokenMintFacet.sol")),
-            confirmations: 1n,
-            chainId: 137n
-        }).receipt()).unwrap()!).contractAddress!;
-        console.log(`TokenMintFacet ${tokenMintFacet}`);
-        let tokenBurnFacet: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
-            gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/token/TokenBurnFacet.sol")),
-            confirmations: 1n,
-            chainId: 137n
-        }).receipt()).unwrap()!).contractAddress!;
-        console.log(`TokenBurnFacet ${tokenBurnFacet}`);
-        let tokenSetterFacet: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
-            gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/token/TokenSetterFacet.sol")),
-            confirmations: 1n,
-            chainId: 137n
-        }).receipt()).unwrap()!).contractAddress!;
-        console.log(`TokenSetterFacet ${tokenSetterFacet}`);
-        let clientFactoryFacet: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
-            gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/kernel/facet/clientFactory/ClientFactoryFacet.sol")),
-            confirmations: 1n,
-            chainId: 137n
-        }).receipt()).unwrap()!).contractAddress!;
-        console.log(`ClientFactoryFacet ${clientFactoryFacet}`);
-        let kernel: string = ((await new Host.ConstructorTransaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
-            gasPrice: "standard",
-            bytecode: new Host.SolFile(new Host.Path("src/app/atlas/sol/solidstate/Diamond.sol")),
-            confirmations: 1n,
-            chainId: 137n
-        }).receipt()).unwrap()!).contractAddress!;
-        console.log(`Kernel ${kernel}`);
-        console.log(` `);
-        console.log(`Installing...`);
-        let authFacetInstallationHash: string | undefined = ((await new Host.Transaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
+    }
+
+    protected static async _install(kernelNodeAddress: string, plugInAddress: string): Promise<string | undefined> {
+        return ((await new Host.Transaction({
+            rpcUrl: this._rpcUrl,
+            privateKey: this._privateKey.resolve().unwrap(),
             gasPrice: "standard",
             methodSignature: "function install(address) external returns (bool)",
             methodName: "install",
             methodArgs: [
-                authFacet
+                plugInAddress
             ],
-            to: kernel,
+            to: kernelNodeAddress,
             confirmations: 1n,
             chainId: 137n,
             value: 0n
         }).receipt()).unwrap())?.hash;
-        console.log(`AuthFacet installed ${authFacetInstallationHash}`);
-        let facetRouterFacetInstallationHash: string | undefined = ((await new Host.Transaction({
-            rpcUrl: rpcUrl,
-            privateKey: privateKey.resolve().unwrap(),
+    }
+
+    protected static async _commit(kernelNodeAddress: string, repoName: string, implementationAddress: string) {
+        return ((await new Host.Transaction({
+            rpcUrl: this._rpcUrl,
+            privateKey: this._privateKey.resolve().unwrap(),
             gasPrice: "standard",
-            methodSignature: "function install(address) external returns (bool)",
-            methodName: "install",
+            methodSignature: "function commit(string,address) external returns (bool)",
+            methodName: "commit",
             methodArgs: [
-                facetRouterFacet
+                repoName,
+                implementationAddress
             ],
-            to: kernel,
+            to: kernelNodeAddress,
             confirmations: 1n,
             chainId: 137n,
             value: 0n
         }).receipt()).unwrap())?.hash;
-        console.log(`FacetRouterFacet installed ${facetRouterFacetInstallationHash}`);
+    }
+
+    protected static async _claimOwnership(kernelNodeAddress: string) {
+        return ((await new Host.Transaction({
+            rpcUrl: this._rpcUrl,
+            privateKey: this._privateKey.resolve().unwrap(),
+            gasPrice: "standard",
+            methodSignature: "function claimOwnership() external returns (bool)",
+            methodName: "claimOwnership",
+            to: kernelNodeAddress,
+            confirmations: 1n,
+            chainId: 137n,
+            value: 0n
+        }).receipt()).unwrap())?.hash;
     }
 }
 

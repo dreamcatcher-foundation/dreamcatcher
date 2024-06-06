@@ -17,7 +17,7 @@ contract AdminNodeSdk is
         }
         INodeDeployer deployer = INodeDeployer(_latestVersionOf("NodeDeployer"));
         INode node = INode(payable(deployer.deploy()));
-        node.install(_latestVersionOf("AuthFacet"));
+        node.install(_latestVersionOf("AuthPlugIn"));
         _children()[daoName].node = address(node);
         _children()[daoName].owner = msg.sender;
         return _children()[daoName].node;
