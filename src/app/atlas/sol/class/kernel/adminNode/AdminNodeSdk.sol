@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { AdminNodeSlot } from "./AdminNodeSlot.sol";
-import { RouterSdk } from "../router/RouterSdk.sol":
-import { INode } from "../../../INode.sol":
+import { RouterSdk } from "../router/RouterSdk.sol";
+import { INode } from "../../../INode.sol";
 import { INodeDeployer } from "../../../deployer/INodeDeployer.sol";
 
 contract AdminNodeSdk is
@@ -16,7 +16,7 @@ contract AdminNodeSdk is
             revert DaoNameIsAlreadyInUse();
         }
         INodeDeployer deployer = INodeDeployer(_latestVersionOf("NodeDeployer"));
-        INode node = INode(deployer.deploy());
+        INode node = INode(payable(deployer.deploy()));
         node.install(_latestVersionOf("AuthFacet"));
         _children()[daoName].node = address(node);
         _children()[daoName].owner = msg.sender;

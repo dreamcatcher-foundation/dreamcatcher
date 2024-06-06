@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { IPlugIn } from "../../../IPlugIn.sol";
-import { ITokenSetterFacet } from "./ITokenSetterFacet.sol";
+import { ITokenSetterPlugIn } from "./ITokenSetterPlugIn.sol";
 import { TokenSetterSdk } from "./TokenSetterSdk.sol";
 import { AuthSdk } from "../auth/AuthSdk.sol";
 
 contract TokenSetterPlugIn is 
     IPlugIn,
-    ITokenSetterFacet, 
+    ITokenSetterPlugIn, 
     TokenSetterSdk, 
     AuthSdk {
     function selectors() external pure returns (bytes4[] memory) {

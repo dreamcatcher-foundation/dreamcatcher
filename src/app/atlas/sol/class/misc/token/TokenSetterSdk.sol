@@ -2,9 +2,7 @@
 pragma solidity >=0.8.19;
 import { TokenSlot } from "./TokenSlot.sol";
 
-contract TokenSetterSdk is 
-    TokenSlot, 
-    TokenMetadataSdk {
+contract TokenSetterSdk is TokenSlot {
     event TokenSymbolChange(string oldSymbol, string newSymbol);
 
     function _setTokenSymbol(string memory symbol) internal returns (bool) {

@@ -75,7 +75,7 @@ contract AuthSdk is AuthSlot {
             revert RecipientCannotHaveMoreThanOneInstanceOfTheSameRole(from, to, role);
         }
         _membersOf()[role].remove(from);
-        _membersOf()s[role].add(to);
+        _membersOf()[role].add(to);
         emit RoleTransfer(from, to, role);
         return true;
     }

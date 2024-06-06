@@ -36,7 +36,7 @@ contract RouterPlugIn is
         return _latestVersionOf(key);
     }
 
-    function commit(string memory key, address implementation) internal onlyRole("*") returns (bool) {
+    function commit(string memory key, address implementation) external onlyRole("*") returns (bool) {
         return _commit(key, implementation);
     }
 }

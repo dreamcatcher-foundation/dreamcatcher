@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { IPlugIn } from "../../../IPlugIn.sol":
+import { IPlugIn } from "../../../IPlugIn.sol";
 import { IAuthPlugIn } from "./IAuthPlugIn.sol";
 import { EnumerableSet } from "../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
 import { AuthSdk } from "./AuthSdk.sol";

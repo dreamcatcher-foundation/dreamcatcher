@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { IPlugIn } from "../../../IPlugIn.sol";
-import { ITokenFacet } from "./ITokenFacet.sol";
+import { ITokenPlugIn } from "./ITokenPlugIn.sol";
 import { TokenMetadataSdk } from "./TokenMetadataSdk.sol";
 import { TokenSdk } from "./TokenSdk.sol";
 import { AuthSdk } from "../auth/AuthSdk.sol";
 
 contract TokenPlugIn is
     IPlugIn,
-    ITokenFacet, 
+    ITokenPlugIn, 
     TokenMetadataSdk, 
     TokenSdk, 
     AuthSdk {

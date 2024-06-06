@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { TokenSlot } from "./TokenSlot.sol";
-import { TokenSdk } from "./TokenSocket.sol";
+import { TokenSdk } from "./TokenSdk.sol";
 
 contract TokenMintSdk is TokenSlot, TokenSdk {
     error CannotMintToAddressZero(address account, uint256 amount);

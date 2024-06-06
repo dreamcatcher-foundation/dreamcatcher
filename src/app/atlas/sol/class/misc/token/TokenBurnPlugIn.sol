@@ -3,11 +3,11 @@ pragma solidity >=0.8.19;
 import { IPlugIn } from "../../../IPlugIn.sol";
 import { TokenBurnSdk } from "./TokenBurnSdk.sol";
 import { AuthSdk } from "../auth/AuthSdk.sol";
-import { ITokenBurnFacet } from "./ITokenBurnFacet.sol";
+import { ITokenBurnPlugIn } from "./ITokenBurnPlugIn.sol";
 
 contract TokenBurnPlugIn is 
     IPlugIn,
-    ITokenBurnFacet, 
+    ITokenBurnPlugIn, 
     TokenBurnSdk, 
     AuthSdk {
     function selectors() external pure returns (bytes4[] memory) {
