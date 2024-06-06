@@ -29,19 +29,19 @@ contract Node is SolidStateDiamond {
     }
 
     function _reinstall(address plugIn) private returns (bool) {
-        IPlugIn plugInInterface = IFacet(plugIn);
+        IPlugIn plugInInterface = IPlugIn(plugIn);
         bytes4[] memory selectors = plugInInterface.selectors();
         return _replaceSelectors(plugIn, selectors);
     }
 
     function _install(address plugIn) private returns (bool) {
-        IPlugIn plugInInterface = IFacet(plugIn);
+        IPlugIn plugInInterface = IPlugIn(plugIn);
         bytes4[] memory selectors = plugInInterface.selectors();
         return _pushSelectors(plugIn, selectors);
     }
 
     function _uninstall(address plugIn) private returns (bool) {
-        IPlugIn plugInInterface = IFacet(plugIn);
+        IPlugIn plugInInterface = IPlugIn(plugIn);
         bytes4[] memory selectors = plugInInterface.selectors();
         return _pullSelectors(selectors);
     }
