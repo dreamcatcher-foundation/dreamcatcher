@@ -10,3 +10,6 @@
     RouterPlugIn 0x752B7f1E0f05af9F93Fb5f7FDFbe27F1359D74E1
     AdminNodePlugIn 0xBaBFC0199f76084B43Aeb44D018B6ae183b79bC3
     KernelNode 0x4e1e7486b0af43a29598868B7976eD6A45bc40dd
+
+[x] Fix RouterFacet possible arithmetic underflow in RouterSdk
+[x] Upgrade RouterFacet on Kernel

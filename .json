@@ -1,10 +1,25 @@
 {
-    "deployed": {
-        "polygon": {
-            "DiamondLauncher": {
-                "address": "0x10e5C1Ea9B4cd06F332521E3620b347E286da3d1",
-                "owner": "0x36C27bDb9Bd78E0d077E63495004919C33B6b717"
-            }
-        }
+    "0x49dABC96174Ae8Df1b5b6a6823199D029A54aE86": [
+        "address",
+        "polygon",
+        "deployer",
+        "node"
+    ],
+    
+
+    "polygon": {
+        "addressBook": [{
+            "name": "NodeDeployer",
+            "address": "0x49dABC96174Ae8Df1b5b6a6823199D029A54aE86"
+        }, {
+            "name": "AuthPlugIn",
+            "address": "0x35d61ADd71e2BDc869FfcC4d3d479DBd27A8b235"
+        }, {
+            "name": "TokenPlugIn",
+            "address": "0xcE86f0d3aF5d4387B219C0C11BA9Fd62Bb927ADB"
+        }, {
+            "name": "TokenSetterPlugIn",
+            "address": "0x949C460BA8d41737D0c9Ad04A4c4DC02CC3E65bA"
+        }]
     }
 }

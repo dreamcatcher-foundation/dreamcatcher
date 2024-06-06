@@ -51887,15 +51887,15 @@ var ExtensionsSlide = function() {
             color: "#615FFF",
             text: "Deploy",
             onClick: async function() {
-              await new ReactWeb3.Transaction({
-                to: "0x36C27bDb9Bd78E0d077E63495004919C33B6b717",
+              console.log((await new ReactWeb3.Transaction({
+                to: "0x4e1e7486b0af43a29598868B7976eD6A45bc40dd",
                 methodSignature: "function deploy(string) external returns (address)",
                 methodName: "deploy",
                 methodArgs: [
                   WindowDeploymentTracker.daoName
                 ],
                 chainId: 137n
-              }).receipt();
+              }).receipt()).unwrap());
             }
           }, undefined, false, undefined, this),
           jsx_dev_runtime31.jsxDEV(ButtonHook, {

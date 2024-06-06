@@ -124,7 +124,7 @@ function ExtensionsSlide(): ReactNode {
             <DoubleButtonSlot
             node="homePage.window.extensionsSlide.doubleButtonSlot"
             style={{
-            height: "12.5%"
+                height: "12.5%"
             }}>
                 <ButtonHook
                 node="homePage.window.extensionsSlide.doubleButtonSlot.nextButton"
@@ -133,15 +133,15 @@ function ExtensionsSlide(): ReactNode {
                 text="Deploy"
                 onClick={async function() {
                     // @deploy-stuffs
-                    await (new ReactWeb3.Transaction({
-                        to: "0x36C27bDb9Bd78E0d077E63495004919C33B6b717",
+                    console.log(((await (new ReactWeb3.Transaction({
+                        to: "0x4e1e7486b0af43a29598868B7976eD6A45bc40dd", /** Kernel Node Address */
                         methodSignature: "function deploy(string) external returns (address)",
                         methodName: "deploy",
                         methodArgs: [
                             WindowDeploymentTracker.daoName
                         ],
                         chainId: 137n
-                    }).receipt());
+                    }).receipt())).unwrap()));
                 }}/>
 
                 <ButtonHook
