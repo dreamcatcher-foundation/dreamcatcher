@@ -1,7 +1,7 @@
 import { Host } from "@atlas/class/host/Host.ts";
 import { ethers as Ethers } from "ethers";
 
-class KernelSetUpScript {
+class KernelNodeSetUpScript {
     private constructor() {}
     protected static _rpcUrl: string = "https://polygon-rpc.com";
     protected static _privateKey: Host.ISecret = new Host.Secret("polygonPrivateKey");
@@ -13,7 +13,8 @@ class KernelSetUpScript {
         }
         /**
          * @note For one reason or another this does not deploy
-         *       so the bytecode has been pre compiled.
+         *       so the bytecode has been pre compiled and just used here
+         *      
          */
         const nodeDeployerAddress: string = ((await new Host.ConstructorTransaction({
             rpcUrl: this._rpcUrl,
@@ -47,6 +48,20 @@ class KernelSetUpScript {
         await this._commit(kernelNodeAddress, "TokenBurnPlugIn", tokenBurnPlugInAddress);
         await this._commit(kernelNodeAddress, "RouterPlugIn", routerPlugInAddress);
         await this._commit(kernelNodeAddress, "AdminNodePlugIn", adminNodePlugInAddress);
+        ((await new Host.Transaction({
+            rpcUrl: this._rpcUrl,
+            privateKey: this._privateKey.resolve().unwrap(),
+            gasPrice: "standard",
+            methodSignature: "function setTokenSymbol(string) external returns (bool)",
+            methodName: "setTokenSymbol",
+            methodArgs: [
+                "DREAM"
+            ],
+            to: kernelNodeAddress,
+            confirmations: 1n,
+            chainId: 137n,
+            value: 0n
+        }).receipt()).unwrap())?.hash;
         console.log("NodeDeployer", nodeDeployerAddress);
         console.log("AuthPlugIn", authPlugInAddress);
         console.log("TokenPlugIn", tokenPlugInAddress);
@@ -119,4 +134,4 @@ class KernelSetUpScript {
     }
 }
 
-KernelSetUpScript.run();
+KernelNodeSetUpScript.run();
