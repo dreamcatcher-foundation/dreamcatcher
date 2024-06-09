@@ -9,11 +9,21 @@ contract AdminNodePlugIn is
     IAdminNodePlugIn,
     AdminNodeSdk {
     function selectors() external pure returns (bytes4[] memory) {
-        bytes4[] memory selectors = new bytes4[](3);
-        selectors[0] = bytes4(keccak256("deploy(string)"));
-        selectors[1] = bytes4(keccak256("installFor(string,string)"));
-        selectors[2] = bytes4(keccak256("uninstallFor(string,string)"));
+        bytes4[] memory selectors = new bytes4[](5);
+        selectors[0] = bytes4(keccak256("daoNode(string)"));
+        selectors[1] = bytes4(keccak256("daoOwner(string)"));
+        selectors[2] = bytes4(keccak256("deploy(string)"));
+        selectors[3] = bytes4(keccak256("installFor(string,string)"));
+        selectors[4] = bytes4(keccak256("uninstallFor(string,string)"));
         return selectors;
+    }
+
+    function daoNode(string memory daoName) external view returns (address) {
+        return _daoNode(daoName);
+    }
+
+    function daoOwner(string memory daoName) external view returns (address) {
+        return _daoOwner(daoName);
     }
 
     function deploy(string memory daoName) external returns (address) {

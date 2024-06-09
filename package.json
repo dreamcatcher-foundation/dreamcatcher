@@ -30,7 +30,7 @@
     "chakra-ui": "^0.3.9",
     "commander": "^12.1.0",
     "dotenv": "^16.4.5",
-    "ethers": "^6.11.1",
+    "ethers": "^6.13.0",
     "express": "^4.18.2",
     "fbemitter": "^3.0.0",
     "flatsol": "^1.0.2",

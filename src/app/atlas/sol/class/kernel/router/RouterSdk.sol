@@ -3,6 +3,8 @@ pragma solidity >=0.8.19;
 import { RouterSlot } from "./RouterSlot.sol";
 
 contract RouterSdk is RouterSlot {
+    error NoCommitsFound();
+
     function _versionsOf(string memory key, uint256 version) internal view returns (address) {
         return _versions()[key][version];
     }
@@ -16,6 +18,9 @@ contract RouterSdk is RouterSlot {
     }
 
     function _latestVersionOf(string memory key) internal view returns (address) {
+        if (_versionsLengthOf(key) <= 0) {
+            revert NoCommitsFound();
+        }
         return _versions()[key][_versionsLengthOf(key) - 1];
     }
 

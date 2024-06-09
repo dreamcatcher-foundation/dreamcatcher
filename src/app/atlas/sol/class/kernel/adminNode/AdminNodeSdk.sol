@@ -11,13 +11,29 @@ contract AdminNodeSdk is
     error DaoNameIsAlreadyInUse();
     error Unauthorized();
 
+    function _daoNode(string memory daoName) internal view returns (address) {
+        return _children()[daoName].node;
+    }
+
+    function _daoOwner(string memory daoName) internal view returns (address) {
+        return _children()[daoName].owner;
+    }
+
+    function _register(address child) internal returns (bool) {
+        
+    }
+
     function _deploy(string memory daoName) internal returns (address) {
         if (_children()[daoName].node != address(0)) {
             revert DaoNameIsAlreadyInUse();
         }
-        INodeDeployer deployer = INodeDeployer(_latestVersionOf("NodeDeployer"));
-        INode node = INode(payable(deployer.deploy()));
-        node.install(_latestVersionOf("AuthFacet"));
+        address version = _latestVersionOf("NodeDeployer");
+        INodeDeployer deployer = INodeDeployer(version);
+        address deployed = deployer.deploy();
+        INode node = INode(payable(deployed));
+        node.acceptOwnership();
+        address authPlugInVersion = _latestVersionOf("AuthPlugIn");
+        node.install(authPlugInVersion);
         _children()[daoName].node = address(node);
         _children()[daoName].owner = msg.sender;
         return _children()[daoName].node;

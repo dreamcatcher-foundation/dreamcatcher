@@ -1,10 +1,10 @@
-simport Readline from "readline";
+import Readline from "readline";
 import { EventBus } from "../../../../src/app/atlas/class/eventBus/EventBus.ts";
 import { Prompt } from "./Prompt.ts";
 
 export class Console {
     private constructor() {}
-    private static _interface = Readline.createInterface({input: process.stdin, output: process.stdout});
+    private static _interface = Readline.createInterface({ input: process.stdin, output: process.stdout });
 
     public static async poll(): Promise<void> {
         this.prompt("> ", (content: string) => {
@@ -13,9 +13,9 @@ export class Console {
                 console.log("Goodbye.");
             }
             new EventBus.Event({
-                from: "Console",
-                event: "UserInput",
-                item: new Prompt(content)
+                "from": "Console",
+                "event": "UserInput",
+                "item": new Prompt(content)
             });
             this.poll();
             return;

@@ -1,7 +1,7 @@
 import { ethers as Ethers } from "ethers";
 import * as TsResult from "ts-results";
 
-export class ReactWeb3 { 
+export class EthereumVirtualMachine {
     private constructor() {}
     private static _provider: Ethers.BrowserProvider;
 
@@ -54,10 +54,10 @@ export class ReactWeb3 {
         methodSignature,
         methodName,
         methodArgs=[]}: {
-            "to": string;
-            "methodSignature": string;
-            "methodName": string;
-            "methodArgs": unknown[];
+            to: string;
+            methodSignature: string;
+            methodName: string;
+            methodArgs?: unknown[];
     }): Promise<TsResult.Result<unknown, unknown>> {
         try {
             return new TsResult.Ok<unknown>(await (new Ethers.Contract(to, [methodSignature], ((await this.provider()).unwrap())))
@@ -76,78 +76,29 @@ export class ReactWeb3 {
         gasPrice=20000000000n,
         gasLimit=10000000n,
         value=0n,
-        chainId=undefined}: {
-            "to": string;
-            "methodSignature": string;
-            "methodName": string;
-            "methodArgs": unknown[];
-            "gasPrice":
-                | bigint
-                | "verySlow"
-                | "slow"
-                | "normal"
-                | "fast";
-            "gasLimit"?: bigint;
-            "value"?: bigint;
-            "chainId"?: bigint;
-    }): Promise<TsResult.Result<unknown, unknown>> {
-        try {
-            return new TsResult.Ok<string>((await (new Ethers.Contract(to, [methodSignature], (await this.signer()).unwrap()))
-            .getFunction(methodName)(...methodArgs, {
-                "from": (await this.signerAddress()),
-                "nonce": (await this.generateNonce()),
-                "gasPrice": (
-                    gasPrice === "verySlow"
-                        ? 20000000000n :
-                    gasPrice === "slow"
-                        ? 30000000000n :
-                    gasPrice === "normal"
-                        ? 50000000000n :
-                    gasPrice === "fast"
-                        ? 70000000000n :
-                    gasPrice
-                ),
-                "gasLimit": gasLimit,
-                "chainId": chainId,
-                "value": value
-            })));     
-        }
-        catch (error: unknown) {
-            return new TsResult.Err<unknown>(error);
-        }
-    }
-
-    public static async invokeRaw({
-        to,
-        methodSignature,
-        methodName,
-        methodArgs=[],
-        gasPrice=20000000000n,
-        gasLimit=10000000n,
-        value=0n,
         chainId=undefined,
         confirmations=1n}: {
-            "to": string;
-            "methodSignature": string;
-            "methodName": string;
-            "methodArgs": unknown[];
-            "gasPrice"?:
+            to: string;
+            methodSignature: string;
+            methodName: string;
+            methodArgs?: unknown[];
+            gasPrice?:
                 | bigint
                 | "verySlow"
                 | "slow"
                 | "normal"
                 | "fast";
-            "gasLimit"?: bigint;
-            "value"?: bigint;
-            "chainId"?: bigint;
-            "confirmations"?: bigint;
+            gasLimit?: bigint;
+            value?: bigint;
+            chainId?: bigint;
+            confirmations?: bigint;    
     }): Promise<TsResult.Result<Ethers.TransactionReceipt | null, unknown>> {
         try {
             return new TsResult.Ok<Ethers.TransactionReceipt | null>(await (await (await this.signer()).unwrap().sendTransaction({
-                "from": (await this.signerAddress()).unwrap(),
-                "to": to,
-                "nonce": (await this.generateNonce()).unwrap(),
-                "gasPrice": (
+                from: (await this.signerAddress()).unwrap(),
+                to: to,
+                nonce: (await this.generateNonce()).unwrap(),
+                gasPrice: (
                     gasPrice === "verySlow"
                         ? 20000000000n :
                     gasPrice === "slow"
@@ -158,10 +109,10 @@ export class ReactWeb3 {
                         ? 70000000000n :
                     gasPrice
                 ),
-                "gasLimit": gasLimit,
-                "chainId": chainId,
-                "value": value,
-                "data": new Ethers
+                gasLimit: gasLimit,
+                chainId: chainId,
+                value: value,
+                data: new Ethers
                     .Interface([methodSignature])
                     .encodeFunctionData(methodName, methodArgs)
             })).wait(Number(confirmations)))
@@ -172,77 +123,30 @@ export class ReactWeb3 {
     }
 
     public static async deploy({
-        gasPrice=20000000000n,
-        gasLimit=10000000n,
-        bytecode,
-        args=[],
-        value=0n,
-        chainId=undefined}: {
-            "gasPrice":
-                | bigint
-                | "verySlow"
-                | "slow"
-                | "normal"
-                | "fast";
-            "gasLimit": bigint;
-            "bytecode": string;
-            "args": unknown[];
-            "value": bigint;
-            "chainId"?: bigint;
-    }): Promise<TsResult.Result<string, unknown>> {
-        try {
-            return new TsResult.Ok<string>(await (await (await (new Ethers.ContractFactory([], bytecode, (await this.signer()).unwrap()))
-            .deploy(...args, {
-                "from": (await this.signerAddress()),
-                "nonce": (await this.generateNonce()),
-                "gasPrice": (
-                    gasPrice === "verySlow"
-                        ? 20000000000n :
-                    gasPrice === "slow"
-                        ? 30000000000n :
-                    gasPrice === "normal"
-                        ? 50000000000n :
-                    gasPrice === "fast"
-                        ? 70000000000n :
-                    gasPrice
-                ),
-                "gasLimit": gasLimit,
-                "chainId": chainId,
-                "value": value
-            }))
-            .waitForDeployment())
-            .getAddress());
-        }
-        catch (error: unknown) {
-            return new TsResult.Err<unknown>(error);
-        }
-    }
-
-    public static async deployRaw({
         bytecode,
         gasPrice=20000000000n,
         gasLimit=10000000n,
         value=0n,
         chainId=undefined,
         confirmations=1n}: {
-            "bytecode": string;
-            "gasPrice"?:
+            bytecode: string;
+            gasPrice?:
                 | bigint
                 | "verySlow"
                 | "slow"
                 | "normal"
                 | "fast";
-            "gasLimit"?: bigint;
-            "value"?: bigint;
-            "chainId"?: bigint;
-            "confirmations"?: bigint;
+            gasLimit?: bigint;
+            value?: bigint;
+            chainId?: bigint;
+            confirmations?: bigint;
     }): Promise<TsResult.Result<Ethers.TransactionReceipt | null, unknown>> {
         try {
             return new TsResult.Ok<Ethers.TransactionReceipt | null>(await (await (await this.signer()).unwrap().sendTransaction({
-                "from": (await this.signerAddress()).unwrap(),
-                "to": null,
-                "nonce": (await this.generateNonce()).unwrap(),
-                "gasPrice": (
+                from: (await this.signerAddress()).unwrap(),
+                to: null,
+                nonce: (await this.generateNonce()).unwrap(),
+                gasPrice: (
                     gasPrice === "verySlow"
                         ? 20000000000n :
                     gasPrice === "slow"
@@ -253,10 +157,10 @@ export class ReactWeb3 {
                         ? 70000000000n :
                     gasPrice
                 ),
-                "gasLimit": gasLimit,
-                "chainId": chainId,
-                "value": value,
-                "data": "0x" + bytecode
+                gasLimit: gasLimit,
+                chainId: chainId,
+                value: value,
+                data: "0x" + bytecode
             })).wait(Number(confirmations)))
         }
         catch (error: unknown) {

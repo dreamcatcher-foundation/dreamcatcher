@@ -32935,6 +32935,11 @@ __export(exports_ethers, {
       return CloudflareProvider;
     }
   },
+  ChainstackProvider: () => {
+    {
+      return ChainstackProvider;
+    }
+  },
   BrowserProvider: () => {
     {
       return BrowserProvider;
@@ -32983,7 +32988,7 @@ __export(exports_ethers, {
 });
 
 // node_modules/ethers/lib.esm/_version.js
-var version = "6.11.1";
+var version = "6.13.0";
 
 // node_modules/ethers/lib.esm/utils/properties.js
 var checkType = function(value, type, name) {
@@ -33184,7 +33189,7 @@ var _getBytes = function(value, name, copy) {
     }
     return value;
   }
-  if (typeof value === "string" && value.match(/^0x([0-9a-f][0-9a-f])*$/i)) {
+  if (typeof value === "string" && value.match(/^0x(?:[0-9a-f][0-9a-f])*$/i)) {
     const result = new Uint8Array((value.length - 2) / 2);
     let offset = 2;
     for (let i = 0;i < result.length; i++) {
@@ -33659,6 +33664,7 @@ var Utf8ErrorFuncs = Object.freeze({
 // node_modules/ethers/lib.esm/utils/geturl-browser.js
 function createGetUrl(options) {
   async function getUrl(req, _signal) {
+    assert(_signal == null || !_signal.cancelled, "request cancelled before sending", "CANCELLED");
     const protocol = req.url.split(":")[0].toLowerCase();
     assert(protocol === "http" || protocol === "https", `unsupported protocol ${protocol}`, "UNSUPPORTED_OPERATION", {
       info: { protocol },
@@ -33667,11 +33673,15 @@ function createGetUrl(options) {
     assert(protocol === "https" || !req.credentials || req.allowInsecureAuthentication, "insecure authorized connections unsupported", "UNSUPPORTED_OPERATION", {
       operation: "request"
     });
-    let signal = undefined;
+    let error = null;
+    const controller = new AbortController;
+    const timer = setTimeout(() => {
+      error = makeError("request timeout", "TIMEOUT");
+      controller.abort();
+    }, req.timeout);
     if (_signal) {
-      const controller = new AbortController;
-      signal = controller.signal;
       _signal.addListener(() => {
+        error = makeError("request cancelled", "CANCELLED");
         controller.abort();
       });
     }
@@ -33679,9 +33689,19 @@ function createGetUrl(options) {
       method: req.method,
       headers: new Headers(Array.from(req)),
       body: req.body || undefined,
-      signal
+      signal: controller.signal
     };
-    const resp = await fetch(req.url, init);
+    let resp;
+    try {
+      resp = await fetch(req.url, init);
+    } catch (_error) {
+      clearTimeout(timer);
+      if (error) {
+        throw error;
+      }
+      throw _error;
+    }
+    clearTimeout(timer);
     const headers = {};
     resp.headers.forEach((value, key) => {
       headers[key.toLowerCase()] = value;
@@ -34089,6 +34109,7 @@ class FetchRequest {
     clone.#preflight = this.#preflight;
     clone.#process = this.#process;
     clone.#retry = this.#retry;
+    clone.#throttle = Object.assign({}, this.#throttle);
     clone.#getUrlFunc = this.#getUrlFunc;
     return clone;
   }
@@ -34759,10 +34780,36 @@ function uuidV4(randomBytes) {
   ].join("-");
 }
 // node_modules/ethers/lib.esm/abi/coders/abstract-coder.js
+var getNames = function(result) {
+  return resultNames.get(result);
+};
+var setNames = function(result, names2) {
+  resultNames.set(result, names2);
+};
 var throwError = function(name, error) {
   const wrapped = new Error(`deferred error during ABI decoding triggered accessing ${name}`);
   wrapped.error = error;
   throw wrapped;
+};
+var toObject = function(names2, items, deep) {
+  if (names2.indexOf(null) >= 0) {
+    return items.map((item, index) => {
+      if (item instanceof Result) {
+        return toObject(getNames(item), item, deep);
+      }
+      return item;
+    });
+  }
+  return names2.reduce((accum, name, index) => {
+    let item = items.getValue(name);
+    if (!(name in accum)) {
+      if (deep && item instanceof Result) {
+        item = toObject(getNames(item), item, deep);
+      }
+      accum[name] = item;
+    }
+    return accum;
+  }, {});
 };
 function checkResultErrors(result) {
   const errors10 = [];
@@ -34795,6 +34842,7 @@ var WordSize = 32;
 var Padding = new Uint8Array(WordSize);
 var passProperties = ["then"];
 var _guard2 = {};
+var resultNames = new WeakMap;
 
 class Result extends Array {
   #names;
@@ -34818,18 +34866,22 @@ class Result extends Array {
       }
       return accum;
     }, new Map);
-    this.#names = Object.freeze(items.map((item, index) => {
+    setNames(this, Object.freeze(items.map((item, index) => {
       const name = names2[index];
       if (name != null && nameCounts.get(name) === 1) {
         return name;
       }
       return null;
-    }));
+    })));
+    this.#names = [];
+    if (this.#names == null) {
+      this.#names;
+    }
     if (!wrap) {
       return;
     }
     Object.freeze(this);
-    return new Proxy(this, {
+    const proxy = new Proxy(this, {
       get: (target, prop, receiver) => {
         if (typeof prop === "string") {
           if (prop.match(/^[0-9]+$/)) {
@@ -34858,26 +34910,29 @@ class Result extends Array {
         return Reflect.get(target, prop, receiver);
       }
     });
+    setNames(proxy, getNames(this));
+    return proxy;
   }
-  toArray() {
+  toArray(deep) {
     const result = [];
     this.forEach((item, index) => {
       if (item instanceof Error) {
         throwError(`index ${index}`, item);
       }
+      if (deep && item instanceof Result) {
+        item = item.toArray(deep);
+      }
       result.push(item);
     });
     return result;
   }
-  toObject() {
-    return this.#names.reduce((accum, name, index) => {
-      assert(name != null, "value at index ${ index } unnamed", "UNSUPPORTED_OPERATION", {
+  toObject(deep) {
+    const names2 = getNames(this);
+    return names2.reduce((accum, name, index) => {
+      assert(name != null, `value at index ${index} unnamed`, "UNSUPPORTED_OPERATION", {
         operation: "toObject()"
       });
-      if (!(name in accum)) {
-        accum[name] = this.getValue(name);
-      }
-      return accum;
+      return toObject(names2, this, deep);
     }, {});
   }
   slice(start2, end) {
@@ -34902,14 +34957,16 @@ class Result extends Array {
     if (end > this.length) {
       end = this.length;
     }
+    const _names = getNames(this);
     const result = [], names2 = [];
     for (let i = start2;i < end; i++) {
       result.push(this[i]);
-      names2.push(this.#names[i]);
+      names2.push(_names[i]);
     }
     return new Result(_guard2, result, names2);
   }
   filter(callback, thisArg) {
+    const _names = getNames(this);
     const result = [], names2 = [];
     for (let i = 0;i < this.length; i++) {
       const item = this[i];
@@ -34918,7 +34975,7 @@ class Result extends Array {
       }
       if (callback.call(thisArg, item, i, this)) {
         result.push(item);
-        names2.push(this.#names[i]);
+        names2.push(_names[i]);
       }
     }
     return new Result(_guard2, result, names2);
@@ -34935,7 +34992,7 @@ class Result extends Array {
     return result;
   }
   getValue(name) {
-    const index = this.#names.indexOf(name);
+    const index = getNames(this).indexOf(name);
     if (index === -1) {
       return;
     }
@@ -40124,6 +40181,14 @@ function recoverAddress(digest, signature2) {
   return computeAddress(SigningKey.recoverPublicKey(digest, signature2));
 }
 // node_modules/ethers/lib.esm/transaction/transaction.js
+var getVersionedHash = function(version2, hash2) {
+  let versioned = version2.toString(16);
+  while (versioned.length < 2) {
+    versioned = "0" + versioned;
+  }
+  versioned += sha2564(hash2).substring(4);
+  return "0x" + versioned;
+};
 var handleAddress = function(value) {
   if (value === "0x") {
     return null;
@@ -40200,7 +40265,6 @@ var _parseLegacy = function(data11) {
       s: zeroPadValue(fields[8], 32),
       v
     });
-    tx.hash = keccak256(data11);
   }
   return tx;
 };
@@ -40276,7 +40340,6 @@ var _parseEip1559 = function(data11) {
   if (fields.length === 9) {
     return tx;
   }
-  tx.hash = keccak256(data11);
   _parseEipSignature(tx, fields.slice(9));
   return tx;
 };
@@ -40316,7 +40379,6 @@ var _parseEip2930 = function(data11) {
   if (fields.length === 8) {
     return tx;
   }
-  tx.hash = keccak256(data11);
   _parseEipSignature(tx, fields.slice(8));
   return tx;
 };
@@ -40339,8 +40401,28 @@ var _serializeEip2930 = function(tx, sig) {
   return concat(["0x01", encodeRlp(fields)]);
 };
 var _parseEip4844 = function(data11) {
-  const fields = decodeRlp(getBytes(data11).slice(1));
-  assertArgument(Array.isArray(fields) && (fields.length === 11 || fields.length === 14), "invalid field count for transaction type: 3", "data", hexlify(data11));
+  let fields = decodeRlp(getBytes(data11).slice(1));
+  let typeName = "3";
+  let blobs = null;
+  if (fields.length === 4 && Array.isArray(fields[0])) {
+    typeName = "3 (network format)";
+    const fBlobs = fields[1], fCommits = fields[2], fProofs = fields[3];
+    assertArgument(Array.isArray(fBlobs), "invalid network format: blobs not an array", "fields[1]", fBlobs);
+    assertArgument(Array.isArray(fCommits), "invalid network format: commitments not an array", "fields[2]", fCommits);
+    assertArgument(Array.isArray(fProofs), "invalid network format: proofs not an array", "fields[3]", fProofs);
+    assertArgument(fBlobs.length === fCommits.length, "invalid network format: blobs/commitments length mismatch", "fields", fields);
+    assertArgument(fBlobs.length === fProofs.length, "invalid network format: blobs/proofs length mismatch", "fields", fields);
+    blobs = [];
+    for (let i = 0;i < fields[1].length; i++) {
+      blobs.push({
+        data: fBlobs[i],
+        commitment: fCommits[i],
+        proof: fProofs[i]
+      });
+    }
+    fields = fields[0];
+  }
+  assertArgument(Array.isArray(fields) && (fields.length === 11 || fields.length === 14), `invalid field count for transaction type: ${typeName}`, "data", hexlify(data11));
   const tx = {
     type: 3,
     chainId: handleUint(fields[0], "chainId"),
@@ -40356,7 +40438,10 @@ var _parseEip4844 = function(data11) {
     maxFeePerBlobGas: handleUint(fields[9], "maxFeePerBlobGas"),
     blobVersionedHashes: fields[10]
   };
-  assertArgument(tx.to != null, "invalid address for transaction type: 3", "data", data11);
+  if (blobs) {
+    tx.blobs = blobs;
+  }
+  assertArgument(tx.to != null, `invalid address for transaction type: ${typeName}`, "data", data11);
   assertArgument(Array.isArray(tx.blobVersionedHashes), "invalid blobVersionedHashes: must be an array", "data", data11);
   for (let i = 0;i < tx.blobVersionedHashes.length; i++) {
     assertArgument(isHexString(tx.blobVersionedHashes[i], 32), `invalid blobVersionedHash at index ${i}: must be length 32`, "data", data11);
@@ -40364,11 +40449,10 @@ var _parseEip4844 = function(data11) {
   if (fields.length === 11) {
     return tx;
   }
-  tx.hash = keccak256(data11);
   _parseEipSignature(tx, fields.slice(11));
   return tx;
 };
-var _serializeEip4844 = function(tx, sig) {
+var _serializeEip4844 = function(tx, sig, blobs) {
   const fields = [
     formatNumber(tx.chainId, "chainId"),
     formatNumber(tx.nonce, "nonce"),
@@ -40386,6 +40470,17 @@ var _serializeEip4844 = function(tx, sig) {
     fields.push(formatNumber(sig.yParity, "yParity"));
     fields.push(toBeArray(sig.r));
     fields.push(toBeArray(sig.s));
+    if (blobs) {
+      return concat([
+        "0x03",
+        encodeRlp([
+          fields,
+          blobs.map((b2) => b2.data),
+          blobs.map((b2) => b2.commitment),
+          blobs.map((b2) => b2.proof)
+        ])
+      ]);
+    }
   }
   return concat(["0x03", encodeRlp(fields)]);
 };
@@ -40395,6 +40490,7 @@ var BN_272 = BigInt(27);
 var BN_282 = BigInt(28);
 var BN_352 = BigInt(35);
 var BN_MAX_UINT = BigInt("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+var BLOB_SIZE = 4096 * 32;
 
 class Transaction {
   #type;
@@ -40411,6 +40507,8 @@ class Transaction {
   #accessList;
   #maxFeePerBlobGas;
   #blobVersionedHashes;
+  #kzg;
+  #blobs;
   get type() {
     return this.#type;
   }
@@ -40577,6 +40675,59 @@ class Transaction {
     }
     this.#blobVersionedHashes = value;
   }
+  get blobs() {
+    if (this.#blobs == null) {
+      return null;
+    }
+    return this.#blobs.map((b2) => Object.assign({}, b2));
+  }
+  set blobs(_blobs) {
+    if (_blobs == null) {
+      this.#blobs = null;
+      return;
+    }
+    const blobs = [];
+    const versionedHashes = [];
+    for (let i = 0;i < _blobs.length; i++) {
+      const blob = _blobs[i];
+      if (isBytesLike(blob)) {
+        assert(this.#kzg, "adding a raw blob requires a KZG library", "UNSUPPORTED_OPERATION", {
+          operation: "set blobs()"
+        });
+        let data11 = getBytes(blob);
+        assertArgument(data11.length <= BLOB_SIZE, "blob is too large", `blobs[${i}]`, blob);
+        if (data11.length !== BLOB_SIZE) {
+          const padded = new Uint8Array(BLOB_SIZE);
+          padded.set(data11);
+          data11 = padded;
+        }
+        const commit = this.#kzg.blobToKzgCommitment(data11);
+        const proof = hexlify(this.#kzg.computeBlobKzgProof(data11, commit));
+        blobs.push({
+          data: hexlify(data11),
+          commitment: hexlify(commit),
+          proof
+        });
+        versionedHashes.push(getVersionedHash(1, commit));
+      } else {
+        const commit = hexlify(blob.commitment);
+        blobs.push({
+          data: hexlify(blob.data),
+          commitment: commit,
+          proof: hexlify(blob.proof)
+        });
+        versionedHashes.push(getVersionedHash(1, commit));
+      }
+    }
+    this.#blobs = blobs;
+    this.#blobVersionedHashes = versionedHashes;
+  }
+  get kzg() {
+    return this.#kzg;
+  }
+  set kzg(kzg) {
+    this.#kzg = kzg;
+  }
   constructor() {
     this.#type = null;
     this.#to = null;
@@ -40592,12 +40743,14 @@ class Transaction {
     this.#accessList = null;
     this.#maxFeePerBlobGas = null;
     this.#blobVersionedHashes = null;
+    this.#blobs = null;
+    this.#kzg = null;
   }
   get hash() {
     if (this.signature == null) {
       return null;
     }
-    return keccak256(this.serialized);
+    return keccak256(this.#getSerialized(true, false));
   }
   get unsignedHash() {
     return keccak256(this.unsignedSerialized);
@@ -40617,32 +40770,26 @@ class Transaction {
   isSigned() {
     return this.signature != null;
   }
-  get serialized() {
-    assert(this.signature != null, "cannot serialize unsigned transaction; maybe you meant .unsignedSerialized", "UNSUPPORTED_OPERATION", { operation: ".serialized" });
+  #getSerialized(signed2, sidecar) {
+    assert(!signed2 || this.signature != null, "cannot serialize unsigned transaction; maybe you meant .unsignedSerialized", "UNSUPPORTED_OPERATION", { operation: ".serialized" });
+    const sig = signed2 ? this.signature : null;
     switch (this.inferType()) {
       case 0:
-        return _serializeLegacy(this, this.signature);
+        return _serializeLegacy(this, sig);
       case 1:
-        return _serializeEip2930(this, this.signature);
+        return _serializeEip2930(this, sig);
       case 2:
-        return _serializeEip1559(this, this.signature);
+        return _serializeEip1559(this, sig);
       case 3:
-        return _serializeEip4844(this, this.signature);
+        return _serializeEip4844(this, sig, sidecar ? this.blobs : null);
     }
     assert(false, "unsupported transaction type", "UNSUPPORTED_OPERATION", { operation: ".serialized" });
   }
+  get serialized() {
+    return this.#getSerialized(true, true);
+  }
   get unsignedSerialized() {
-    switch (this.inferType()) {
-      case 0:
-        return _serializeLegacy(this);
-      case 1:
-        return _serializeEip2930(this);
-      case 2:
-        return _serializeEip1559(this);
-      case 3:
-        return _serializeEip4844(this);
-    }
-    assert(false, "unsupported transaction type", "UNSUPPORTED_OPERATION", { operation: ".unsignedSerialized" });
+    return this.#getSerialized(false, false);
   }
   inferType() {
     const types2 = this.inferTypes();
@@ -40786,12 +40933,18 @@ class Transaction {
     if (tx.blobVersionedHashes != null) {
       result.blobVersionedHashes = tx.blobVersionedHashes;
     }
+    if (tx.kzg != null) {
+      result.kzg = tx.kzg;
+    }
+    if (tx.blobs != null) {
+      result.blobs = tx.blobs;
+    }
     if (tx.hash != null) {
-      assertArgument(result.isSigned(), "unsigned transaction cannot define hash", "tx", tx);
+      assertArgument(result.isSigned(), "unsigned transaction cannot define '.hash'", "tx", tx);
       assertArgument(result.hash === tx.hash, "hash mismatch", "tx", tx);
     }
     if (tx.from != null) {
-      assertArgument(result.isSigned(), "unsigned transaction cannot define from", "tx", tx);
+      assertArgument(result.isSigned(), "unsigned transaction cannot define '.from'", "tx", tx);
       assertArgument(result.from.toLowerCase() === (tx.from || "").toLowerCase(), "from mismatch", "tx", tx);
     }
     return result;
@@ -43150,6 +43303,9 @@ class Interface {
     if (typeof value === "string") {
       return new Interface(JSON.parse(value));
     }
+    if (typeof value.formatJson === "function") {
+      return new Interface(value.formatJson());
+    }
     if (typeof value.format === "function") {
       return new Interface(value.format("json"));
     }
@@ -43180,7 +43336,7 @@ function copyRequest(req) {
   if (req.data) {
     result.data = hexlify(req.data);
   }
-  const bigIntKeys = "chainId,gasLimit,gasPrice,maxFeePerGas,maxPriorityFeePerGas,value".split(/,/);
+  const bigIntKeys = "chainId,gasLimit,gasPrice,maxFeePerBlobGas,maxFeePerGas,maxPriorityFeePerGas,value".split(/,/);
   for (const key of bigIntKeys) {
     if (!(key in req) || req[key] == null) {
       continue;
@@ -43205,6 +43361,20 @@ function copyRequest(req) {
   }
   if ("customData" in req) {
     result.customData = req.customData;
+  }
+  if ("blobVersionedHashes" in req && req.blobVersionedHashes) {
+    result.blobVersionedHashes = req.blobVersionedHashes.slice();
+  }
+  if ("kzg" in req) {
+    result.kzg = req.kzg;
+  }
+  if ("blobs" in req && req.blobs) {
+    result.blobs = req.blobs.map((b2) => {
+      if (isBytesLike(b2)) {
+        return hexlify(b2);
+      }
+      return Object.assign({}, b2);
+    });
   }
   return result;
 }
@@ -43268,6 +43438,7 @@ class Block {
   blobGasUsed;
   excessBlobGas;
   miner;
+  prevRandao;
   extraData;
   baseFeePerGas;
   #transactions;
@@ -43292,6 +43463,7 @@ class Block {
       blobGasUsed: block.blobGasUsed,
       excessBlobGas: block.excessBlobGas,
       miner: block.miner,
+      prevRandao: getValue2(block.prevRandao),
       extraData: block.extraData,
       baseFeePerGas: getValue2(block.baseFeePerGas),
       stateRoot: block.stateRoot,
@@ -43317,7 +43489,7 @@ class Block {
     return txs;
   }
   toJSON() {
-    const { baseFeePerGas, difficulty, extraData, gasLimit, gasUsed, hash: hash4, miner, nonce, number: number3, parentHash, parentBeaconBlockRoot, stateRoot, receiptsRoot, timestamp, transactions } = this;
+    const { baseFeePerGas, difficulty, extraData, gasLimit, gasUsed, hash: hash4, miner, prevRandao, nonce, number: number3, parentHash, parentBeaconBlockRoot, stateRoot, receiptsRoot, timestamp, transactions } = this;
     return {
       _type: "Block",
       baseFeePerGas: toJson(baseFeePerGas),
@@ -43329,6 +43501,7 @@ class Block {
       excessBlobGas: toJson(this.excessBlobGas),
       hash: hash4,
       miner,
+      prevRandao,
       nonce,
       number: number3,
       parentHash,
@@ -45353,8 +45526,11 @@ var _formatBlock = object({
   blobGasUsed: allowNull(getBigInt, null),
   excessBlobGas: allowNull(getBigInt, null),
   miner: allowNull(getAddress),
+  prevRandao: allowNull(formatHash, null),
   extraData: formatData,
   baseFeePerGas: allowNull(getBigInt)
+}, {
+  prevRandao: ["mixHash"]
 });
 var _formatReceiptLog = object({
   transactionIndex: getNumber,
@@ -45584,12 +45760,14 @@ var injectCommonNetworks = function() {
   registerEth("bnbt", 97, {});
   registerEth("linea", 59144, { ensNetwork: 1 });
   registerEth("linea-goerli", 59140, {});
+  registerEth("linea-sepolia", 59141, {});
   registerEth("matic", 137, {
     ensNetwork: 1,
     plugins: [
       getGasStationPlugin("https://gasstation.polygon.technology/v2")
     ]
   });
+  registerEth("matic-amoy", 80002, {});
   registerEth("matic-mumbai", 80001, {
     altNames: ["maticMumbai", "maticmum"],
     plugins: [
@@ -47247,7 +47425,7 @@ class AbstractSigner {
             operation: "signer.getFeeData"
           });
         }
-      } else if (pop.type === 2) {
+      } else if (pop.type === 2 || pop.type === 3) {
         if (pop.maxFeePerGas == null) {
           pop.maxFeePerGas = feeData.maxFeePerGas;
         }
@@ -47391,6 +47569,9 @@ class FilterIdSubscriber {
     if (filterIdPromise) {
       this.#filterIdPromise = null;
       filterIdPromise.then((filterId) => {
+        if (this.#provider.destroyed) {
+          return;
+        }
         this.#provider.send("eth_uninstallFilter", [filterId]);
       });
     }
@@ -47921,6 +48102,9 @@ class JsonRpcApiProvider extends AbstractProvider {
     if (tx.accessList) {
       result["accessList"] = accessListify(tx.accessList);
     }
+    if (tx.blobVersionedHashes) {
+      result["blobVersionedHashes"] = tx.blobVersionedHashes.map((h) => h.toLowerCase());
+    }
     return result;
   }
   getRpcRequest(req) {
@@ -48138,7 +48322,11 @@ class JsonRpcApiPollingProvider extends JsonRpcApiProvider {
   #pollingInterval;
   constructor(network3, options) {
     super(network3, options);
-    this.#pollingInterval = 4000;
+    let pollingInterval = this._getOption("pollingInterval");
+    if (pollingInterval == null) {
+      pollingInterval = defaultOptions2.pollingInterval;
+    }
+    this.#pollingInterval = pollingInterval;
   }
   _getSubscriber(sub) {
     const subscriber = super._getSubscriber(sub);
@@ -48305,6 +48493,8 @@ var getHost2 = function(name) {
       return "base-sepolia.g.alchemy.com";
     case "matic":
       return "polygon-mainnet.g.alchemy.com";
+    case "matic-amoy":
+      return "polygon-amoy.g.alchemy.com";
     case "matic-mumbai":
       return "polygon-mumbai.g.alchemy.com";
     case "optimism":
@@ -48389,15 +48579,83 @@ class AlchemyProvider extends JsonRpcProvider {
   }
 }
 
+// node_modules/ethers/lib.esm/providers/provider-chainstack.js
+var getApiKey = function(name) {
+  switch (name) {
+    case "mainnet":
+      return "39f1d67cedf8b7831010a665328c9197";
+    case "arbitrum":
+      return "0550c209db33c3abf4cc927e1e18cea1";
+    case "bnb":
+      return "98b5a77e531614387366f6fc5da097f8";
+    case "matic":
+      return "cd9d4d70377471aa7c142ec4a4205249";
+  }
+  assertArgument(false, "unsupported network", "network", name);
+};
+var getHost3 = function(name) {
+  switch (name) {
+    case "mainnet":
+      return "ethereum-mainnet.core.chainstack.com";
+    case "arbitrum":
+      return "arbitrum-mainnet.core.chainstack.com";
+    case "bnb":
+      return "bsc-mainnet.core.chainstack.com";
+    case "matic":
+      return "polygon-mainnet.core.chainstack.com";
+  }
+  assertArgument(false, "unsupported network", "network", name);
+};
+
+class ChainstackProvider extends JsonRpcProvider {
+  apiKey;
+  constructor(_network, apiKey) {
+    if (_network == null) {
+      _network = "mainnet";
+    }
+    const network6 = Network.from(_network);
+    if (apiKey == null) {
+      apiKey = getApiKey(network6.name);
+    }
+    const request = ChainstackProvider.getRequest(network6, apiKey);
+    super(request, network6, { staticNetwork: network6 });
+    defineProperties(this, { apiKey });
+  }
+  _getProvider(chainId) {
+    try {
+      return new ChainstackProvider(chainId, this.apiKey);
+    } catch (error) {
+    }
+    return super._getProvider(chainId);
+  }
+  isCommunityResource() {
+    return this.apiKey === getApiKey(this._network.name);
+  }
+  static getRequest(network6, apiKey) {
+    if (apiKey == null) {
+      apiKey = getApiKey(network6.name);
+    }
+    const request = new FetchRequest(`https://${getHost3(network6.name)}/${apiKey}`);
+    request.allowGzip = true;
+    if (apiKey === getApiKey(network6.name)) {
+      request.retryFunc = async (request2, response, attempt) => {
+        showThrottleMessage("ChainstackProvider");
+        return true;
+      };
+    }
+    return request;
+  }
+}
+
 // node_modules/ethers/lib.esm/providers/provider-cloudflare.js
 class CloudflareProvider extends JsonRpcProvider {
   constructor(_network) {
     if (_network == null) {
       _network = "mainnet";
     }
-    const network6 = Network.from(_network);
-    assertArgument(network6.name === "mainnet", "unsupported network", "network", _network);
-    super("https://cloudflare-eth.com/", network6, { staticNetwork: network6 });
+    const network7 = Network.from(_network);
+    assertArgument(network7.name === "mainnet", "unsupported network", "network", _network);
+    super("https://cloudflare-eth.com/", network7, { staticNetwork: network7 });
   }
 }
 
@@ -48428,9 +48686,9 @@ class EtherscanProvider extends AbstractProvider {
   constructor(_network, _apiKey) {
     const apiKey = _apiKey != null ? _apiKey : null;
     super();
-    const network7 = Network.from(_network);
-    this.#plugin = network7.getPlugin(EtherscanPluginId);
-    defineProperties(this, { apiKey, network: network7 });
+    const network8 = Network.from(_network);
+    this.#plugin = network8.getPlugin(EtherscanPluginId);
+    defineProperties(this, { apiKey, network: network8 });
     this.getBaseUrl();
   }
   getBaseUrl() {
@@ -48450,12 +48708,18 @@ class EtherscanProvider extends AbstractProvider {
         return "https://api.arbiscan.io";
       case "arbitrum-goerli":
         return "https://api-goerli.arbiscan.io";
+      case "base":
+        return "https://api.basescan.org";
+      case "base-sepolia":
+        return "https://api-sepolia.basescan.org";
       case "bnb":
         return "https://api.bscscan.com";
       case "bnbt":
         return "https://api-testnet.bscscan.com";
       case "matic":
         return "https://api.polygonscan.com";
+      case "matic-amoy":
+        return "https://api-amoy.polygonscan.com";
       case "matic-mumbai":
         return "https://api-testnet.polygonscan.com";
       case "optimism":
@@ -48579,6 +48843,14 @@ class EtherscanProvider extends AbstractProvider {
         value = "[" + accessListify(value).map((set) => {
           return `{address:"${set.address}",storageKeys:["${set.storageKeys.join('","')}"]}`;
         }).join(",") + "]";
+      } else if (key === "blobVersionedHashes") {
+        if (value.length === 0) {
+          continue;
+        }
+        assert(false, "Etherscan API does not support blobVersionedHashes", "UNSUPPORTED_OPERATION", {
+          operation: "_getTransactionPostData",
+          info: { transaction: transaction10 }
+        });
       } else {
         value = hexlify(value);
       }
@@ -48811,6 +49083,9 @@ class SocketSubscriber {
   }
   stop() {
     this.#filterId.then((filterId) => {
+      if (this.#provider.destroyed) {
+        return;
+      }
       this.#provider.send("eth_unsubscribe", [filterId]);
     });
     this.#filterId = null;
@@ -48883,14 +49158,14 @@ class SocketProvider extends JsonRpcApiProvider {
   #callbacks;
   #subs;
   #pending;
-  constructor(network7, _options) {
+  constructor(network8, _options) {
     const options = Object.assign({}, _options != null ? _options : {});
     assertArgument(options.batchMaxCount == null || options.batchMaxCount === 1, "sockets-based providers do not support batches", "options.batchMaxCount", _options);
     options.batchMaxCount = 1;
     if (options.staticNetwork == null) {
       options.staticNetwork = true;
     }
-    super(network7, options);
+    super(network8, options);
     this.#callbacks = new Map;
     this.#subs = new Map;
     this.#pending = new Map;
@@ -48980,8 +49255,8 @@ class WebSocketProvider extends SocketProvider {
     }
     return this.#websocket;
   }
-  constructor(url, network7, options) {
-    super(network7, options);
+  constructor(url, network8, options) {
+    super(network8, options);
     if (typeof url === "string") {
       this.#connect = () => {
         return new _WebSocket(url);
@@ -49019,7 +49294,7 @@ class WebSocketProvider extends SocketProvider {
 }
 
 // node_modules/ethers/lib.esm/providers/provider-infura.js
-var getHost3 = function(name) {
+var getHost4 = function(name) {
   switch (name) {
     case "mainnet":
       return "mainnet.infura.io";
@@ -49047,8 +49322,12 @@ var getHost3 = function(name) {
       return "linea-mainnet.infura.io";
     case "linea-goerli":
       return "linea-goerli.infura.io";
+    case "linea-sepolia":
+      return "linea-sepolia.infura.io";
     case "matic":
       return "polygon-mainnet.infura.io";
+    case "matic-amoy":
+      return "polygon-amoy.infura.io";
     case "matic-mumbai":
       return "polygon-mumbai.infura.io";
     case "optimism":
@@ -49065,12 +49344,12 @@ var defaultProjectId = "84842078b09946638c03157f83405213";
 class InfuraWebSocketProvider extends WebSocketProvider {
   projectId;
   projectSecret;
-  constructor(network8, projectId) {
-    const provider5 = new InfuraProvider(network8, projectId);
+  constructor(network9, projectId) {
+    const provider5 = new InfuraProvider(network9, projectId);
     const req = provider5._getConnection();
     assert(!req.credentials, "INFURA WebSocket project secrets unsupported", "UNSUPPORTED_OPERATION", { operation: "InfuraProvider.getWebSocketProvider()" });
     const url = req.url.replace(/^http/i, "ws").replace("/v3/", "/ws/v3/");
-    super(url, network8);
+    super(url, provider5._network);
     defineProperties(this, {
       projectId: provider5.projectId,
       projectSecret: provider5.projectSecret
@@ -49088,15 +49367,15 @@ class InfuraProvider extends JsonRpcProvider {
     if (_network == null) {
       _network = "mainnet";
     }
-    const network8 = Network.from(_network);
+    const network9 = Network.from(_network);
     if (projectId == null) {
       projectId = defaultProjectId;
     }
     if (projectSecret == null) {
       projectSecret = null;
     }
-    const request = InfuraProvider.getRequest(network8, projectId, projectSecret);
-    super(request, network8, { staticNetwork: network8 });
+    const request = InfuraProvider.getRequest(network9, projectId, projectSecret);
+    super(request, network9, { staticNetwork: network9 });
     defineProperties(this, { projectId, projectSecret });
   }
   _getProvider(chainId) {
@@ -49109,17 +49388,17 @@ class InfuraProvider extends JsonRpcProvider {
   isCommunityResource() {
     return this.projectId === defaultProjectId;
   }
-  static getWebSocketProvider(network8, projectId) {
-    return new InfuraWebSocketProvider(network8, projectId);
+  static getWebSocketProvider(network9, projectId) {
+    return new InfuraWebSocketProvider(network9, projectId);
   }
-  static getRequest(network8, projectId, projectSecret) {
+  static getRequest(network9, projectId, projectSecret) {
     if (projectId == null) {
       projectId = defaultProjectId;
     }
     if (projectSecret == null) {
       projectSecret = null;
     }
-    const request = new FetchRequest(`https://${getHost3(network8.name)}/v3/${projectId}`);
+    const request = new FetchRequest(`https://${getHost4(network9.name)}/v3/${projectId}`);
     request.allowGzip = true;
     if (projectSecret) {
       request.setCredentials("", projectSecret);
@@ -49135,7 +49414,7 @@ class InfuraProvider extends JsonRpcProvider {
 }
 
 // node_modules/ethers/lib.esm/providers/provider-quicknode.js
-var getHost4 = function(name) {
+var getHost5 = function(name) {
   switch (name) {
     case "mainnet":
       return "ethers.quiknode.pro";
@@ -49184,12 +49463,12 @@ class QuickNodeProvider extends JsonRpcProvider {
     if (_network == null) {
       _network = "mainnet";
     }
-    const network9 = Network.from(_network);
+    const network10 = Network.from(_network);
     if (token == null) {
       token = defaultToken;
     }
-    const request = QuickNodeProvider.getRequest(network9, token);
-    super(request, network9, { staticNetwork: network9 });
+    const request = QuickNodeProvider.getRequest(network10, token);
+    super(request, network10, { staticNetwork: network10 });
     defineProperties(this, { token });
   }
   _getProvider(chainId) {
@@ -49202,11 +49481,11 @@ class QuickNodeProvider extends JsonRpcProvider {
   isCommunityResource() {
     return this.token === defaultToken;
   }
-  static getRequest(network9, token) {
+  static getRequest(network10, token) {
     if (token == null) {
       token = defaultToken;
     }
-    const request = new FetchRequest(`https://${getHost4(network9.name)}/${token}`);
+    const request = new FetchRequest(`https://${getHost5(network10.name)}/${token}`);
     request.allowGzip = true;
     if (token === defaultToken) {
       request.retryFunc = async (request2, response, attempt) => {
@@ -49416,8 +49695,8 @@ class FallbackProvider extends AbstractProvider {
   #configs;
   #height;
   #initialSyncPromise;
-  constructor(providers, network10, options) {
-    super(network10, options);
+  constructor(providers, network11, options) {
+    super(network11, options);
     this.#configs = providers.map((p) => {
       if (p instanceof AbstractProvider) {
         return Object.assign({ provider: p }, defaultConfig, defaultState);
@@ -49437,7 +49716,7 @@ class FallbackProvider extends AbstractProvider {
     }
     this.eventQuorum = 1;
     this.eventWorkers = 1;
-    assertArgument(this.quorum <= this.#configs.reduce((a, c) => a + c.weight, 0), "quorum exceed provider wieght", "quorum", this.quorum);
+    assertArgument(this.quorum <= this.#configs.reduce((a, c) => a + c.weight, 0), "quorum exceed provider weight", "quorum", this.quorum);
   }
   get providerConfigs() {
     return this.#configs.map((c) => {
@@ -49559,10 +49838,10 @@ class FallbackProvider extends AbstractProvider {
           if (config2._lastFatalError) {
             continue;
           }
-          const network10 = config2._network;
+          const network11 = config2._network;
           if (chainId == null) {
-            chainId = network10.chainId;
-          } else if (network10.chainId !== chainId) {
+            chainId = network11.chainId;
+          } else if (network11.chainId !== chainId) {
             assert(false, "cannot mix providers on different networks", "UNSUPPORTED_OPERATION", {
               operation: "new FallbackProvider"
             });
@@ -49735,7 +50014,7 @@ class FallbackProvider extends AbstractProvider {
 var isWebSocketLike = function(value) {
   return value && typeof value.send === "function" && typeof value.close === "function";
 };
-function getDefaultProvider(network11, options) {
+function getDefaultProvider(network12, options) {
   if (options == null) {
     options = {};
   }
@@ -49751,44 +50030,52 @@ function getDefaultProvider(network11, options) {
     }
     return true;
   };
-  if (typeof network11 === "string" && network11.match(/^https?:/)) {
-    return new JsonRpcProvider(network11);
+  if (typeof network12 === "string" && network12.match(/^https?:/)) {
+    return new JsonRpcProvider(network12);
   }
-  if (typeof network11 === "string" && network11.match(/^wss?:/) || isWebSocketLike(network11)) {
-    return new WebSocketProvider(network11);
+  if (typeof network12 === "string" && network12.match(/^wss?:/) || isWebSocketLike(network12)) {
+    return new WebSocketProvider(network12);
   }
   let staticNetwork = null;
   try {
-    staticNetwork = Network.from(network11);
+    staticNetwork = Network.from(network12);
   } catch (error) {
   }
   const providers = [];
   if (allowService("publicPolygon") && staticNetwork) {
     if (staticNetwork.name === "matic") {
       providers.push(new JsonRpcProvider("https://polygon-rpc.com/", staticNetwork, { staticNetwork }));
+    } else if (staticNetwork.name === "matic-amoy") {
+      providers.push(new JsonRpcProvider("https://rpc-amoy.polygon.technology/", staticNetwork, { staticNetwork }));
     }
   }
   if (allowService("alchemy")) {
     try {
-      providers.push(new AlchemyProvider(network11, options.alchemy));
+      providers.push(new AlchemyProvider(network12, options.alchemy));
     } catch (error) {
     }
   }
   if (allowService("ankr") && options.ankr != null) {
     try {
-      providers.push(new AnkrProvider(network11, options.ankr));
+      providers.push(new AnkrProvider(network12, options.ankr));
+    } catch (error) {
+    }
+  }
+  if (allowService("chainstack")) {
+    try {
+      providers.push(new ChainstackProvider(network12, options.chainstack));
     } catch (error) {
     }
   }
   if (allowService("cloudflare")) {
     try {
-      providers.push(new CloudflareProvider(network11));
+      providers.push(new CloudflareProvider(network12));
     } catch (error) {
     }
   }
   if (allowService("etherscan")) {
     try {
-      providers.push(new EtherscanProvider(network11, options.etherscan));
+      providers.push(new EtherscanProvider(network12, options.etherscan));
     } catch (error) {
     }
   }
@@ -49800,14 +50087,14 @@ function getDefaultProvider(network11, options) {
         projectSecret = projectId.projectSecret;
         projectId = projectId.projectId;
       }
-      providers.push(new InfuraProvider(network11, projectId, projectSecret));
+      providers.push(new InfuraProvider(network12, projectId, projectSecret));
     } catch (error) {
     }
   }
   if (allowService("quicknode")) {
     try {
       let token = options.quicknode;
-      providers.push(new QuickNodeProvider(network11, token));
+      providers.push(new QuickNodeProvider(network12, token));
     } catch (error) {
     }
   }
@@ -49884,9 +50171,10 @@ class NonceManager extends AbstractSigner {
 // node_modules/ethers/lib.esm/providers/provider-browser.js
 class BrowserProvider extends JsonRpcApiPollingProvider {
   #request;
-  constructor(ethereum, network11) {
+  constructor(ethereum, network12, _options) {
+    const options = Object.assign({}, _options != null ? _options : {}, { batchMaxCount: 1 });
     assertArgument(ethereum && ethereum.request, "invalid EIP-1193 provider", "ethereum", ethereum);
-    super(network11, { batchMaxCount: 1 });
+    super(network12, options);
     this.#request = async (method, params) => {
       const payload = { method, params };
       this.emit("debug", { action: "sendEip1193Request", payload });
@@ -49959,7 +50247,7 @@ class BrowserProvider extends JsonRpcApiPollingProvider {
   }
 }
 // node_modules/ethers/lib.esm/providers/provider-pocket.js
-var getHost5 = function(name) {
+var getHost6 = function(name) {
   switch (name) {
     case "mainnet":
       return "eth-mainnet.gateway.pokt.network";
@@ -49981,16 +50269,16 @@ class PocketProvider extends JsonRpcProvider {
     if (_network == null) {
       _network = "mainnet";
     }
-    const network12 = Network.from(_network);
+    const network13 = Network.from(_network);
     if (applicationId == null) {
       applicationId = defaultApplicationId;
     }
     if (applicationSecret == null) {
       applicationSecret = null;
     }
-    const options = { staticNetwork: network12 };
-    const request = PocketProvider.getRequest(network12, applicationId, applicationSecret);
-    super(request, network12, options);
+    const options = { staticNetwork: network13 };
+    const request = PocketProvider.getRequest(network13, applicationId, applicationSecret);
+    super(request, network13, options);
     defineProperties(this, { applicationId, applicationSecret });
   }
   _getProvider(chainId) {
@@ -50000,11 +50288,11 @@ class PocketProvider extends JsonRpcProvider {
     }
     return super._getProvider(chainId);
   }
-  static getRequest(network12, applicationId, applicationSecret) {
+  static getRequest(network13, applicationId, applicationSecret) {
     if (applicationId == null) {
       applicationId = defaultApplicationId;
     }
-    const request = new FetchRequest(`https://${getHost5(network12.name)}/v1/lb/${applicationId}`);
+    const request = new FetchRequest(`https://${getHost6(network13.name)}/v1/lb/${applicationId}`);
     request.allowGzip = true;
     if (applicationSecret) {
       request.setCredentials("", applicationSecret);
@@ -51718,48 +52006,154 @@ var Result2;
   Result3.isResult = isResult;
 })(Result2 || (Result2 = {}));
 // src/app/atlas/class/web/react/ReactWeb3.tsx
-var ReactWeb3;
-(function(ReactWeb3) {
-
-  class ITransaction {
+class ReactWeb3 {
+  constructor() {
   }
-  ReactWeb3.ITransaction = ITransaction;
-
-  class ITransactionConstructorPayload {
-  }
-  ReactWeb3.ITransactionConstructorPayload = ITransactionConstructorPayload;
-
-  class Transaction2 {
-    _payload;
-    constructor(_payload) {
-      this._payload = _payload;
+  static _provider;
+  static async provider() {
+    if (!window) {
+      return new Err("!window");
     }
-    async receipt() {
-      try {
-        let metamask = window.ethereum;
-        if (!metamask) {
-          console.error("Metamask not installed, please install metamask??");
-          return new Ok(null);
-        }
-        let node = new exports_ethers.BrowserProvider(metamask);
-        let signer = await node.getSigner();
-        if (this._payload.chainId) {
-          if ((await node.getNetwork()).chainId !== this._payload.chainId) {
-            console.error("ReactWeb3::InvalidChainId");
-            return new Ok(null);
-          }
-        }
-        let contract5 = new exports_ethers.Contract(this._payload.to, [
-          this._payload.methodSignature
-        ], signer);
-        return new Ok(await (await contract5.getFunction(this._payload.methodName)(...this._payload.methodArgs ?? [])).wait());
-      } catch (error) {
-        return new Err(error);
+    if (!window.ethereum) {
+      return new Err("!window.ethereum");
+    }
+    this._provider = new exports_ethers.BrowserProvider(window.ethereum);
+    try {
+      let accounts = await this._provider.send("eth_accounts", []);
+      if (accounts.length > 0) {
+        return new Ok(this._provider);
+      } else {
+        await this._provider.send("eth_requestAccounts", []);
+        return new Ok(this._provider);
       }
+    } catch (error) {
+      return new Err(error);
     }
   }
-  ReactWeb3.Transaction = Transaction2;
-})(ReactWeb3 || (ReactWeb3 = {}));
+  static async signer() {
+    if ((await this.provider()).err) {
+      return None;
+    }
+    return new Some(await (await this.provider()).unwrap().getSigner());
+  }
+  static async signerAddress() {
+    if ((await this.signer()).none) {
+      return None;
+    }
+    return new Some(await (await this.signer()).unwrap().getAddress());
+  }
+  static async generateNonce() {
+    if ((await this.signer()).none) {
+      return None;
+    }
+    return new Some(await (await this.signer()).unwrap().getNonce());
+  }
+  static async query({
+    to: to2,
+    methodSignature,
+    methodName,
+    methodArgs = []
+  }) {
+    try {
+      return new Ok(await new exports_ethers.Contract(to2, [methodSignature], (await this.provider()).unwrap()).getFunction(methodName)(...methodArgs));
+    } catch (error) {
+      return new Err(error);
+    }
+  }
+  static async invoke({
+    to: to2,
+    methodSignature,
+    methodName,
+    methodArgs = [],
+    gasPrice = 20000000000n,
+    gasLimit = 10000000n,
+    value = 0n,
+    chainId = undefined
+  }) {
+    try {
+      return new Ok(await new exports_ethers.Contract(to2, [methodSignature], (await this.signer()).unwrap()).getFunction(methodName)(...methodArgs, {
+        from: await this.signerAddress(),
+        nonce: await this.generateNonce(),
+        gasPrice: gasPrice === "verySlow" ? 20000000000n : gasPrice === "slow" ? 30000000000n : gasPrice === "normal" ? 50000000000n : gasPrice === "fast" ? 70000000000n : gasPrice,
+        gasLimit,
+        chainId,
+        value
+      }));
+    } catch (error) {
+      return new Err(error);
+    }
+  }
+  static async invokeRaw({
+    to: to2,
+    methodSignature,
+    methodName,
+    methodArgs = [],
+    gasPrice = 20000000000n,
+    gasLimit = 10000000n,
+    value = 0n,
+    chainId = undefined,
+    confirmations = 1n
+  }) {
+    try {
+      return new Ok(await (await (await this.signer()).unwrap().sendTransaction({
+        from: (await this.signerAddress()).unwrap(),
+        to: to2,
+        nonce: (await this.generateNonce()).unwrap(),
+        gasPrice: gasPrice === "verySlow" ? 20000000000n : gasPrice === "slow" ? 30000000000n : gasPrice === "normal" ? 50000000000n : gasPrice === "fast" ? 70000000000n : gasPrice,
+        gasLimit,
+        chainId,
+        value,
+        data: new exports_ethers.Interface([methodSignature]).encodeFunctionData(methodName, methodArgs)
+      })).wait(Number(confirmations)));
+    } catch (error) {
+      return new Err(error);
+    }
+  }
+  static async deploy({
+    gasPrice = 20000000000n,
+    gasLimit = 10000000n,
+    bytecode,
+    args = [],
+    value = 0n,
+    chainId = undefined
+  }) {
+    try {
+      return new Ok(await (await (await new exports_ethers.ContractFactory([], bytecode, (await this.signer()).unwrap()).deploy(...args, {
+        from: await this.signerAddress(),
+        nonce: await this.generateNonce(),
+        gasPrice: gasPrice === "verySlow" ? 20000000000n : gasPrice === "slow" ? 30000000000n : gasPrice === "normal" ? 50000000000n : gasPrice === "fast" ? 70000000000n : gasPrice,
+        gasLimit,
+        chainId,
+        value
+      })).waitForDeployment()).getAddress());
+    } catch (error) {
+      return new Err(error);
+    }
+  }
+  static async deployRaw({
+    bytecode,
+    gasPrice = 20000000000n,
+    gasLimit = 10000000n,
+    value = 0n,
+    chainId = undefined,
+    confirmations = 1n
+  }) {
+    try {
+      return new Ok(await (await (await this.signer()).unwrap().sendTransaction({
+        from: (await this.signerAddress()).unwrap(),
+        to: null,
+        nonce: (await this.generateNonce()).unwrap(),
+        gasPrice: gasPrice === "verySlow" ? 20000000000n : gasPrice === "slow" ? 30000000000n : gasPrice === "normal" ? 50000000000n : gasPrice === "fast" ? 70000000000n : gasPrice,
+        gasLimit,
+        chainId,
+        value,
+        data: "0x" + bytecode
+      })).wait(Number(confirmations)));
+    } catch (error) {
+      return new Err(error);
+    }
+  }
+}
 
 // src/app/atlas/styled/local/home-page/window/slide/ExtensionsSlide.tsx
 var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
@@ -51887,15 +52281,16 @@ var ExtensionsSlide = function() {
             color: "#615FFF",
             text: "Deploy",
             onClick: async function() {
-              console.log((await new ReactWeb3.Transaction({
-                to: "0x4e1e7486b0af43a29598868B7976eD6A45bc40dd",
-                methodSignature: "function deploy(string) external returns (address)",
+              console.log(await ReactWeb3.invokeRaw({
+                chainId: 137n,
+                confirmations: 1n,
+                gasPrice: "normal",
+                methodSignature: "function deploy() external returns (address)",
                 methodName: "deploy",
-                methodArgs: [
-                  WindowDeploymentTracker.daoName
-                ],
-                chainId: 137n
-              }).receipt()).unwrap());
+                methodArgs: [],
+                to: "0x49dABC96174Ae8Df1b5b6a6823199D029A54aE86",
+                value: 0n
+              }));
             }
           }, undefined, false, undefined, this),
           jsx_dev_runtime31.jsxDEV(ButtonHook, {

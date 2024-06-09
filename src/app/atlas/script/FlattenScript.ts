@@ -2,10 +2,10 @@ import { Host } from "@atlas/class/host/Host.ts";
 import * as FileSystem from "fs";
 
 FileSystem.writeFileSync(
-    "F.sol", (
+    "Node.sol", (
         new Host.SolFile(
         new Host.Path(
-            "src/app/atlas/sol/class/kernel/adminNode/AdminNodePlugIn.sol"
+            "src/app/atlas/sol/Node.sol"
         )
     ).content().unwrap().toString("utf8")
 ));

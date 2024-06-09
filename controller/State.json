@@ -1,0 +1,15 @@
+{
+    "currentNetwork": "polygon",
+    "networks": [
+        {
+            "name": "polygon",
+            "url": "https://polygon-rpc.com",
+            "secret": "polygonPrivateKey",
+            "alias": {}
+        }
+    ],
+    "alias": {
+        "0x35d61ADd71e2BDc869FfcC4d3d479DBd27A8b235": "AuthPlugIn"
+    },
+    "node": "AuthPlugIn"
+}

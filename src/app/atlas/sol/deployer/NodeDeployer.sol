@@ -1,16 +1,32 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { INodeDeployer } from "./INodeDeployer.sol";
-import { Ownable } from "../import/openzeppelin/access/Ownable.sol";
 import { Node } from "../Node.sol";
 
-contract NodeDeployer is INodeDeployer, Ownable {
-    constructor() Ownable(msg.sender) {}
+contract NodeDeployer {
+    event NodeDeployment(address);
+    error AlreadyAssignedToControllerNode();
+    error ControllerNodeNotFound();
 
-    function deploy() external onlyOwner() returns (address) {
+    address private _controllerNode;
+
+    function controllerNode() public view returns (address) {
+        return _controllerNode;
+    } 
+
+    function assignToControllerNode(address newControllerNode) external returns (address) {
+        if (controllerNode() != address(0)) {
+            revert AlreadyAssignedToControllerNode();
+        }
+        return _controllerNode = newControllerNode;
+    }
+
+    function deploy() external returns (address) {
+        if (controllerNode() == address(0)) {
+            revert ControllerNodeNotFound();
+        }
         Node node = new Node();
-        node.transferOwnership(owner());
-        emit Deployment(address(node));
+        node.transferOwnership(controllerNode());
+        emit NodeDeployment(address(node));
         return address(node);
     }
 }

@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { ethers as Ethers } from "ethers";
 import { EventSubscription } from "fbemitter";
 import { useEffect } from "react";
 import { Slide } from "@atlas/styled/local/home-page/window/slide/Slide.tsx";
@@ -13,15 +14,16 @@ import { WindowDeploymentTracker } from "@atlas/styled/local/home-page/window/Wi
 import { ButtonHook } from "@atlas/component/input/ButtonHook.tsx";
 import { GetStartedSlide } from "@atlas/styled/local/home-page/window/slide/GetStartedSlide.tsx";
 import { ReactWeb3 } from "@atlas/class/web/react/ReactWeb3.tsx";
+import { Url } from "@atlas/class/web/Url.ts";
 import React from "react";
 
 function ExtensionsSlide(): ReactNode {
     useEffect(function() {
         let subscriptions: EventBus.ISubscription[] = [
             new EventBus.EventSubscription({
-                from: "homePage.window.extensionsSlide.contentSlot.extension0.toggle",
-                event: "toggle",
-                handler(item?: unknown): void {
+                "from": "homePage.window.extensionsSlide.contentSlot.extension0.toggle",
+                "event": "toggle",
+                "handler"(item?: unknown): void {
                     if (!item) {
                         return;
                     }
@@ -33,9 +35,9 @@ function ExtensionsSlide(): ReactNode {
                 }
             }),
             new EventBus.EventSubscription({
-                from: "homePage.window.extensionsSlide.contentSlot.extension1.toggle",
-                event: "toggle",
-                handler(item?: unknown): void {
+                "from": "homePage.window.extensionsSlide.contentSlot.extension1.toggle",
+                "event": "toggle",
+                "handler"(item?: unknown): void {
                     if (!item) {
                         return;
                     }
@@ -55,35 +57,35 @@ function ExtensionsSlide(): ReactNode {
             <HeadingSlot
             node="homePage.window.extensionsSlide.headingSlot"
             style={{
-            height: "12.5%"
+                "height": "12.5%"
             }}>
                 <Text
                 text="Extensions"
                 style={{
-                fontSize: "30px",
-                background: "#615FFF",
-                alignSelf: "center"
+                "fontSize": "30px",
+                "background": "#615FFF",
+                "alignSelf": "center"
                 }}/>
             </HeadingSlot>
             
             <ContentSlot
             node="homePage.window.extensionsSlide.contentSlot"
             style={{
-            height: "70%",
-            overflowX: "hidden",
-            overflowY: "scroll",
-            flexDirection: "column",
-            display: "flex",
-            alignItems: "start",
-            justifyContent: "start",
+                "height": "70%",
+                "overflowX": "hidden",
+                "overflowY": "scroll",
+                "flexDirection": "column",
+                "display": "flex",
+                "alignItems": "start",
+                "justifyContent": "start",
             }}>
                 <RowHook
                 node="homePage.window.extensionsSlide.contentSlot.extension0"
                 style={{
-                    width: "100%",
-                    height: "50px",
-                    gap: "10px",
-                    justifyContent: "start"
+                    "width": "100%",
+                    "height": "50px",
+                    "gap": "10px",
+                    "justifyContent": "start"
                 }}>
                     <ToggleHook
                     node="homePage.window.extensionsSlide.contentSlot.extension0.toggle"/>
@@ -101,10 +103,10 @@ function ExtensionsSlide(): ReactNode {
                 <RowHook
                 node="homePage.window.extensionsSlide.contentSlot.extension1"
                 style={{
-                    width: "100%",
-                    height: "50px",
-                    gap: "10px",
-                    justifyContent: "start"
+                    "width": "100%",
+                    "height": "50px",
+                    "gap": "10px",
+                    "justifyContent": "start"
                 }}>
                     <ToggleHook
                     node="homePage.window.extensionsSlide.contentSlot.extension1.toggle"
@@ -116,7 +118,7 @@ function ExtensionsSlide(): ReactNode {
                     <Text
                     text="Recommended"
                     style={{
-                        background: "#FF1802"
+                        "background": "#FF1802"
                     }}/>
                 </RowHook>
             </ContentSlot>
@@ -124,24 +126,25 @@ function ExtensionsSlide(): ReactNode {
             <DoubleButtonSlot
             node="homePage.window.extensionsSlide.doubleButtonSlot"
             style={{
-                height: "12.5%"
+                "height": "12.5%"
             }}>
                 <ButtonHook
                 node="homePage.window.extensionsSlide.doubleButtonSlot.nextButton"
                 className="swing-in-top-fwd"
                 color="#615FFF"
                 text="Deploy"
-                onClick={async function() {
-                    // @deploy-stuffs
-                    console.log(((await (new ReactWeb3.Transaction({
-                        to: "0x4e1e7486b0af43a29598868B7976eD6A45bc40dd", /** Kernel Node Address */
-                        methodSignature: "function deploy(string) external returns (address)",
-                        methodName: "deploy",
-                        methodArgs: [
-                            WindowDeploymentTracker.daoName
-                        ],
-                        chainId: 137n
-                    }).receipt())).unwrap()));
+                onClick={async function(): Promise<void> {
+
+                    console.log(await ReactWeb3.invokeRaw({
+                        "chainId": 137n,
+                        "confirmations": 1n,
+                        "gasPrice": "normal",
+                        "methodSignature": "function deploy() external returns (address)",
+                        "methodName": "deploy",
+                        "methodArgs": [],
+                        "to": "0x49dABC96174Ae8Df1b5b6a6823199D029A54aE86",
+                        "value": 0n
+                    }));
                 }}/>
 
                 <ButtonHook
@@ -151,9 +154,9 @@ function ExtensionsSlide(): ReactNode {
                 text="Back"
                 onClick={function() {
                     new EventBus.Message({
-                        to: "homePage.window",
-                        message: "swap",
-                        item: <GetStartedSlide/>
+                        "to": "homePage.window",
+                        "message": "swap",
+                        "item": <GetStartedSlide/>
                     });
                     return;
                 }}/>

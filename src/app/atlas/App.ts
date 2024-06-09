@@ -17,9 +17,9 @@ class App {
         let contracts: Map<string, IContractMaterial | undefined> = new Map();
 
         (function() {
-            let file: Host.ISolFile = new Host.SolFile(new Host.Path(join(__dirname, "./sol/solidstate/client/Client.sol")));
+            let file: Host.ISolFile = new Host.SolFile(new Host.Path(join(__dirname, "./sol/Node.sol")));
             if (!file.isBroken()) {
-                contracts.set("Client", {
+                contracts.set("Node", {
                     errors: file.errors().unwrapOr([]),
                     warnings: file.warnings().unwrapOr([]),
                     bytecode: [file.bytecode().unwrapOr("")],
@@ -34,8 +34,8 @@ class App {
                 new Url("/material/:contractId"),
                 (request, response) => {
                     switch (request.params.contractId) {
-                        case "client":
-                            let material: IContractMaterial | undefined = contracts.get("Client");
+                        case "node":
+                            let material: IContractMaterial | undefined = contracts.get("Node");
                             if (!material) {
                                 return response.send("App::UnableToFindContractId");
                             }
