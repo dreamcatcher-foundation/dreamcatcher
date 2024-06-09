@@ -1,7 +1,7 @@
 import { ethers as Ethers } from "ethers";
 import * as TsResult from "ts-results";
-import { SolFile } from "../../../../src/app/atlas/shared/os/SolFile.ts";
-import { Secret } from "../../../../src/app/atlas/shared/os/Secret.ts";
+import { SolFile } from "../../../../app/app/atlas/shared/os/SolFile.ts";
+import { Secret } from "../../../../app/app/atlas/shared/os/Secret.ts";
 
 export abstract class IConstructorTransactionState {
     public abstract node: (

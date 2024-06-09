@@ -1,5 +1,5 @@
 import Readline from "readline";
-import { EventBus } from "../../../../src/app/atlas/class/eventBus/EventBus.ts";
+import { EventBus } from "../../../../app/app/atlas/class/eventBus/EventBus.ts";
 import { Prompt } from "./Prompt.ts";
 
 export class Console {

@@ -1,11 +1,11 @@
-import { EventBus } from "../src/app/atlas/class/eventBus/EventBus.ts";
-import { EthereumVirtualMachine } from "../src/app/atlas/class/evm/EthereumVirtualMachine.ts";
+import { EventBus } from "../app/app/atlas/class/eventBus/EventBus.ts";
+import { EthereumVirtualMachine } from "../app/app/atlas/class/evm/EthereumVirtualMachine.ts";
 import Readline from "readline";
 import * as FileSystem from "fs";
 import * as Path from "path";
 import * as TsResult from "ts-results";
 import { ethers as Ethers } from "ethers";
-import { Host } from "../src/app/atlas/class/host/Host.ts";
+import { Host } from "../app/app/atlas/class/host/Host.ts";
 
 class State {
     private static _path: string = Path.join(__dirname, "State.json");

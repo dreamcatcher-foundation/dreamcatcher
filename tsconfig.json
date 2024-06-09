@@ -34,9 +34,9 @@
 
 		"baseUrl": "",
 			"paths": {
-				"@atlas/*": ["src/app/atlas/*"],
-				"@atlas-component/*": ["src/app/atlas/component/*"],
-				"@atlas-client/*": ["src/app/atlas/shared/*"],
+				"@atlas/*": ["app/app/atlas/*"],
+				"@atlas-component/*": ["app/app/atlas/component/*"],
+				"@atlas-client/*": ["app/app/atlas/shared/*"],
 				
 				"@doka/*": ["cookie/*"]
 		}
