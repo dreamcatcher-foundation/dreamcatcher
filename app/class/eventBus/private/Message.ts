@@ -2,7 +2,16 @@ import { eventBus } from "./EventBus.ts";
 import { EventSubscription as FbEventSubscription } from "fbemitter";
 import * as TsResult from "ts-results";
 
-export async function message<Result>({ to="global", message="", timeout=0n, item=undefined }: { to?: string; message?: string; timeout?: bigint; item?: unknown; }): Promise<TsResult.Option<Result>> {
+export async function message<Result>({
+    to="public",
+    message="",
+    timeout=0n,
+    item=undefined}: {
+        to?: string;
+        message?: string;
+        timeout?: bigint;
+        item?: unknown;
+}): Promise<TsResult.Option<Result>> {
     return await new Promise(function(resolve): void {
         let success: boolean = false;
         const subscription: FbEventSubscription = eventBus().responseEventEmitterOf({ node: to }).once(message, function(response): void {

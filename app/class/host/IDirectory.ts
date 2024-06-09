@@ -10,3 +10,15 @@ export interface IDirectory {
     children(): (IFile | IDirectory)[];
     searchFor({ fileName, fileExtension }: { fileName: string; fileExtension: string; }): TsResult.Option<IFile>;
 }
+
+export function isIDirectory(item: any): item is IDirectory {
+    return (
+        item &&
+        typeof item.path === "function" &&
+        typeof item.childPaths === "function" &&
+        typeof item.childDirectories === "function" &&
+        typeof item.childFiles === "function" &&
+        typeof item.children === "function" &&
+        typeof item.searchFor === "function"
+    );
+}

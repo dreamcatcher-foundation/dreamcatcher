@@ -406,7 +406,7 @@ export namespace Host {
             if (extension.none) {
                 return TsResult.None;
             }
-            let temporaryPath: IPath = new Path(`${__dirname}/${name.unwrap()}.${extension.unwrap()}`);
+            let temporaryPath: IPath = new Path(a);
             return new TsResult.Some<IPath>(temporaryPath);
         }
 

@@ -2,11 +2,11 @@ import { type IPath } from "./IPath.ts";
 import FileSystem from "fs";
 import * as TsResult from "ts-results";
 
-function Path({ _inner }: { _inner: string; }): IPath {
-    const _i: IPath = { toString, exists, isFile, isDirectory };
+export function Path({ _string }: { _string: string; }): IPath {
+    const _: IPath = { toString, exists, isFile, isDirectory };
 
     function toString(): string {
-        return _inner;
+        return _string;
     }
 
     function exists(): TsResult.Result<boolean, unknown> {
@@ -42,5 +42,5 @@ function Path({ _inner }: { _inner: string; }): IPath {
         }
     }
 
-    return _i;
+    return _;
 }
