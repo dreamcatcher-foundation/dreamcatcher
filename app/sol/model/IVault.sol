@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IBase } from "../base/IBase.sol";
 import { IAuthFacet } from "./facet/accessControl/auth/IAuthFacet.sol";
 import { IStandardTokenFacet } from "./facet/token/standardToken/IStandardTokenFacet.sol";
 import { IStandardTokenMintFacet } from "./facet/token/standardToken/IStandardTokenMintFacet.sol";
@@ -7,6 +8,7 @@ import { IStandardTokenBurnFacet } from "./facet/token/standardToken/IStandardTo
 import { IStandardTokenSetterFacet } from "./facet/token/standardToken/IStandardTokenSetterFacet.sol";
 
 interface IVault is
+    /***/IBase,
     /***/IAuthFacet,
     /***/IStandardTokenFacet,
     /***/IStandardTokenMintFacet,

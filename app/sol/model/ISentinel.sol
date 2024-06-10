@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IBase } from "../base/IBase.sol";
 import { IAuthFacet } from "./facet/accessControl/auth/IAuthFacet.sol";
 import { IStandardTokenFacet } from "./facet/token/standardToken/IStandardTokenFacet.sol";
 import { IStandardTokenMintFacet } from "./facet/token/standardToken/IStandardTokenMintFacet.sol";
@@ -8,6 +9,7 @@ import { IStandardTokenSetterFacet } from "./facet/token/standardToken/IStandard
 import { IRouterFacet } from "./facet/router/IRouterFacet.sol";
 
 interface ISentinel is
+    /***/IBase,
     /***/IAuthFacet,
     /***/IStandardTokenFacet,
     /***/IStandardTokenMintFacet,
