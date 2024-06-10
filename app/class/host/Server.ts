@@ -8,7 +8,6 @@ import { HtmlFile } from "./file/HtmlFile.ts";
 import { File } from "./file/File.ts";
 import * as TsResult from "ts-results";
 import Express from "express";
-import memoize from "memoize";
 
 interface IServer {
     connected(): boolean;
@@ -43,17 +42,15 @@ export const server = (function() {
             try {
                 let path: TsResult.Option<IPath> = TsResult.None;
                 directory.childFiles().unwrapOr([]).forEach(childFile => {
-                    if (childFile.name().unwrapOr(undefined) === "App") {
-                        if (childFile.extension().unwrapOr(undefined) === "tsx") {
-                            path = TsResult.Some<IPath>(childFile.path());
-                        }
+                    if (childFile.name().unwrapOr(undefined) === "App" && childFile.extension().unwrapOr(undefined) === "tsx") {
+                        path = TsResult.Some<IPath>(childFile.path());
                     }
-                    path = TsResult.None;
                 });
                 if (path.none) {
                     return TsResult.None;
                 }
-                return TsResult.Some<ITsxFile>(TsxFile(path).unwrap());
+                /** @unsafe */
+                return TsResult.Some<ITsxFile>(TsxFile((path as TsResult.Option<IPath>).unwrap()).unwrap());
             }
             catch {
                 return TsResult.None;
@@ -63,17 +60,15 @@ export const server = (function() {
             try {
                 let path: TsResult.Option<IPath> = TsResult.None;
                 directory.childFiles().unwrapOr([]).forEach(childFile => {
-                    if (childFile.name().unwrapOr(undefined) === "App") {
-                        if (childFile.extension().unwrapOr(undefined) === "html") {
-                            path = TsResult.Some<IPath>(childFile.path());
-                        }
+                    if (childFile.name().unwrapOr(undefined) === "App" && childFile.extension().unwrapOr(undefined) === "html") {
+                        path = TsResult.Some<IPath>(childFile.path());
                     }
-                    path = TsResult.None;
                 });
                 if (path.none) {
                     return TsResult.None;
                 }
-                return TsResult.Some<IHtmlFile>(HtmlFile(path).unwrap());
+                /** @unsafe */
+                return TsResult.Some<IHtmlFile>(HtmlFile((path as TsResult.Option<IPath>).unwrap()).unwrap());
             }
             catch {
                 return TsResult.None;
