@@ -6,14 +6,14 @@ import { isValidExtension } from "./IFile.ts";
 import * as TsResult from "ts-results";
 import * as ChildProcess from "child_process";
 
-export function TsxFile({ _path }: { _path: IPath }): TsResult.Result<ITsxFile, unknown> {
-    const _: ITsxFile = { ...File({ _path }), transpile };
+export function TsxFile(_path: IPath): TsResult.Result<ITsxFile, unknown> {
+    const _: ITsxFile = { ...File(_path), transpile };
 
     if (!isValidExtension(_, "tsx")) {
         return TsResult.Err<string>("InvalidExtension");
     }
 
-    function transpile({ directory }: { directory?: IDirectory }): TsResult.Result<Buffer, unknown> {
+    function transpile(directory?: IDirectory): TsResult.Result<Buffer, unknown> {
         if (!_exists()) {
             return TsResult.Err<string>("PathNotFound");
         }

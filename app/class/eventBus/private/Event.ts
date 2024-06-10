@@ -6,7 +6,7 @@ class Event implements IEvent {
         this.Event();
     }
 
-    protected async Event(): this {
+    protected Event(): this {
 
     }
 }

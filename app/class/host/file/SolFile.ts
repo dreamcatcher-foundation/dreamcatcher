@@ -22,7 +22,7 @@ export function SolFile(_path: IPath): TsResult.Result<ISolFile, unknown> {
         if (name.none || extension.none) {
             return TsResult.None;
         }
-        return TsResult.Some<IPath>(Path({ _string: `${__dirname}/${name.unwrap()}.${extension.unwrap()}` }));
+        return TsResult.Some<IPath>(Path(`${__dirname}/${name.unwrap()}.${extension.unwrap()}`));
     }
 
     function content(): TsResult.Result<Buffer, unknown> {

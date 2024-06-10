@@ -9,8 +9,15 @@ import * as TsResult from "ts-results";
 import { join } from "path";
 import { File } from "./file/File.ts";
 
-export function Directory({ _path }: { _path: IPath }): IDirectory {
-    const _: IDirectory = { path, childPaths, childDirectories, childFiles, children, searchFor };
+export function Directory(_path: IPath): IDirectory {
+    const _: IDirectory = { 
+        path, 
+        childPaths, 
+        childDirectories, 
+        childFiles, 
+        children, 
+        searchFor 
+    };
     
     function path(): IPath {
         return _path;
@@ -18,7 +25,7 @@ export function Directory({ _path }: { _path: IPath }): IDirectory {
 
     function childPaths(): IPath[] {
         const result: IPath[] = [];
-        FileSystem.readdirSync(path().toString()).forEach(path => result.push(Path({ _string: path })));
+        FileSystem.readdirSync(path().toString()).forEach(path => result.push(Path(path)));
         return result;
     }
 
@@ -29,7 +36,7 @@ export function Directory({ _path }: { _path: IPath }): IDirectory {
                 if (!childPath.isDirectory().unwrapOr(false)) {
                     return;
                 }
-                result.push(Directory({ _path: childPath }));
+                result.push(Directory(childPath));
             });
             return TsResult.Ok<IDirectory[]>(result);
         }
@@ -43,11 +50,11 @@ export function Directory({ _path }: { _path: IPath }): IDirectory {
             const result: IFile[] = [];
             childPaths().forEach(childPath => {
                 const joined: string = join(path().toString(), childPath.toString());
-                const joinedPath: IPath = Path({ _string: joined });
+                const joinedPath: IPath = Path(joined);
                 if (!joinedPath.isFile().unwrapOr(false)) {
                     return;
                 }
-                result.push(File({ _path: joinedPath }));
+                result.push(File(joinedPath));
             });
             return TsResult.Ok<IFile[]>(result);
         }

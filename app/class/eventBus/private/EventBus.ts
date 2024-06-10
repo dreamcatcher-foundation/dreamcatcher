@@ -6,7 +6,7 @@ export const eventBus: () => IEventBus = (function(): () => IEventBus {
     const _responseEventEmitters: Map<string, undefined | FbEventEmitter> = new Map();
     let _instance: IEventBus;
 
-    function questionEventEmitterOf({ node }: { node: string; }): FbEventEmitter {
+    function questionEventEmitterOf(node: string): FbEventEmitter {
         if (!_questionEventEmitters.get(node)) {
             return _questionEventEmitters
                 .set(node, new FbEventEmitter())
@@ -15,7 +15,7 @@ export const eventBus: () => IEventBus = (function(): () => IEventBus {
         return _questionEventEmitters.get(node)!;
     }
 
-    function responseEventEmitterOf({ node }: { node: string; }): FbEventEmitter {
+    function responseEventEmitterOf(node: string): FbEventEmitter {
         if (!_responseEventEmitters.get(node)) {
             return _responseEventEmitters
                 .set(node, new FbEventEmitter())

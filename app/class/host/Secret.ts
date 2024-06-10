@@ -1,7 +1,7 @@
 import * as TsResult from "ts-results";
 
-export function secret({ key }: { key: string; }): TsResult.Option<string> {
-    const content: string | undefined = process?.env?.[key];
+export function secret(k: string): TsResult.Option<string> {
+    const content: string | undefined = process?.env?.[k];
     if (!content) {
         return TsResult.None;
     }

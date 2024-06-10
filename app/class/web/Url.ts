@@ -3,7 +3,7 @@ import { type IUrl } from "./IUrl.ts";
 import * as TsResult from "ts-results";
 import Axios from "axios";
 
-export function Url({ _string }: { _string: string; }): IUrl {
+export function Url(_string: string): IUrl {
     const _: IUrl = { toString, response, post };
 
     function toString(): string {

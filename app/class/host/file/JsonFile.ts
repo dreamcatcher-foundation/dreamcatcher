@@ -37,4 +37,6 @@ export function JsonFile(_path: IPath) {
     function _exists(): boolean {
         return _.path().exists().unwrapOr(false);
     }
+
+    return TsResult.Ok<IJsonFile>(_);
 }

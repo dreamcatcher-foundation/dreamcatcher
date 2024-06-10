@@ -2,7 +2,7 @@ import { type IPath } from "./IPath.ts";
 import FileSystem from "fs";
 import * as TsResult from "ts-results";
 
-export function Path({ _string }: { _string: string; }): IPath {
+export function Path(_string: string): IPath {
     const _: IPath = { toString, exists, isFile, isDirectory };
 
     function toString(): string {

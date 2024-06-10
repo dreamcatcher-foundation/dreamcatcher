@@ -9,7 +9,7 @@ export interface IFile {
     directory(): TsResult.Option<IDirectory>;
     content(): TsResult.Result<Buffer, unknown>;
     remove(): TsResult.Result<void, unknown>;
-    create({ override }: { override?: boolean; }): TsResult.Result<void, unknown>;
+    create(override?: boolean): TsResult.Result<void, unknown>;
 }
 
 export function isIFile(object: any): object is IFile {

@@ -14,15 +14,16 @@ export async function message<Result>({
 }): Promise<TsResult.Option<Result>> {
     return await new Promise(function(resolve): void {
         let success: boolean = false;
-        const subscription: FbEventSubscription = eventBus().responseEventEmitterOf({ node: to }).once(message, function(response): void {
+        const subscription: FbEventSubscription = eventBus().responseEventEmitterOf(to).once(message, (response: unknown) => {
             if (!success) {
                 success = true;
-                resolve(TsResult.Some(response));
+                /** @unsafe */
+                resolve(TsResult.Some((response as Result)));
                 return;
             }
             return;
         });
-        eventBus().questionEventEmitterOf({ node: to }).emit(message, item);
+        eventBus().questionEventEmitterOf(to).emit(message, item);
         setTimeout(function() {
             if (!success) {
                 subscription.remove();

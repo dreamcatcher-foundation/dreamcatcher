@@ -61,7 +61,7 @@ export function File(_path: IPath): IFile {
         if (result === "") {
             return TsResult.None;
         }
-        return TsResult.Some<IDirectory>(Directory({ _path: Path({ _string: result })}));
+        return TsResult.Some<IDirectory>(Directory(Path(result)));
     }
 
     function content(): TsResult.Result<Buffer, unknown> {
@@ -88,7 +88,7 @@ export function File(_path: IPath): IFile {
         }
     }
 
-    function create({ override=false }: { override?: boolean }): TsResult.Result<void, unknown> {
+    function create(override?: boolean): TsResult.Result<void, unknown> {
         try {
             /**
              * If any failure occurs during the exists process by default process will assume that the file exists as to not override
