@@ -16,7 +16,7 @@ library FixedPointValueMathLib {
         if (real.value >= best.value) {
             return fullYield();
         }
-        return toEther(scale(real, best));
+        return scale(real, best, 18);
     }
 
     function zeroYield() internal pure returns (FixedPointValue memory) {
@@ -91,7 +91,7 @@ library FixedPointValueMathLib {
         number0 = toEther(number0);
         number1 = toEther(number1);
         FixedPointValue memory result = add(number0, number1);
-        result = asNewDecimals(result, decimals);
+        result = toNewDecimals(result, decimals);
         return result;
     }
 
@@ -123,7 +123,7 @@ library FixedPointValueMathLib {
         _checkTypes(number0, number1);
         uint256 value0 = number0.value;
         uint256 value1 = number1.value;
-        uint256 decimals = number0.decimals;
+        uint8 decimals = number0.decimals;
         uint256 result = value0 + value1;
         return FixedPointValue({ value: result, decimals: decimals });
     }
@@ -132,7 +132,7 @@ library FixedPointValueMathLib {
         _checkTypes(number0, number1);
         uint256 value0 = number0.value;
         uint256 value1 = number1.value;
-        uint256 decimals = number0.decimals;
+        uint8 decimals = number0.decimals;
         uint256 result = value0 - value1;
         return FixedPointValue({ value: result, decimals: decimals });
     }
@@ -183,7 +183,7 @@ library FixedPointValueMathLib {
         if (number0.decimals != number1.decimals) {
             revert IncompatibleRepresentation(number0.decimals, number1.decimals);
         }
-        if (number0.decimals != number2.deicmals) {
+        if (number0.decimals != number2.decimals) {
             revert IncompatibleRepresentation(number0.decimals, number2.decimals);
         }
         return true;
