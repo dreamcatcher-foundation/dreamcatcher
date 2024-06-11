@@ -4,5 +4,5 @@ pragma solidity >=0.8.19;
 enum PairLayout {
     IsMatch,
     IsReverseMatch,
-    IsNoMatch
+    IsNotMatch
 }

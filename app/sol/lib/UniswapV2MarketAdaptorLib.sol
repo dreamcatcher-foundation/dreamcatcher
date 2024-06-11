@@ -21,10 +21,7 @@ library UniswapV2MarketAdaptorLib {
     error PairNotFound();
 
     function yield(UniswapV2Market memory uniswapV2Market, address[] memory path, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asBasisPoints) {
-        return calculateYield(
-            uniswapV2Market.bestAmountOut(path, amountIn), 
-            uniswapV2Market.realAmountOut(path, amountIn)
-        );
+        return FixedPointValueMathLib.calculateYield(uniswapV2Market.bestAmountOut(path, amountIn), uniswapV2Market.realAmountOut(path, amountIn));
     }
 
     function bestAmountOut(UniswapV2Market memory uniswapV2Market, address[] memory path, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asEther) {
@@ -40,7 +37,7 @@ library UniswapV2MarketAdaptorLib {
 
     function quote(UniswapV2Market memory uniswapV2Market, address[] memory path) internal view returns (FixedPointValue memory) {
         uniswapV2Market.onlyAvailablePair(path);
-        return calculateQuote(uniswapV2Market, path, uniswapV2Market.layoutOf(path));
+        return calculateQuote(uniswapV2Market, path, uniswapV2Market.pairLayoutOf(path));
     }
 
     function calculateQuote(UniswapV2Market memory uniswapV2Market, address[] memory path, PairLayout pairLayout) internal view returns (FixedPointValue memory) {
@@ -79,17 +76,17 @@ library UniswapV2MarketAdaptorLib {
     }
 
     function pairLayoutOf(UniswapV2Market memory uniswapV2Market, address[] memory path) internal view returns (PairLayout) {
-        if (path.token0() == uniswapV2Market.pair(path).token0() && path.token1() == uniswapV2Market.pair(path).token1()) {
+        if (path.token0() == uniswapV2Market.pairOf(path).token0() && path.token1() == uniswapV2Market.pairOf(path).token1()) {
             return PairLayout.IsMatch;
         }
-        if (path.token0() == uniswapV2Market.pair(path).token1() && path.token1() == uniswapV2Market.pair(path).token0()) {
+        if (path.token0() == uniswapV2Market.pairOf(path).token1() && path.token1() == uniswapV2Market.pairOf(path).token0()) {
             return PairLayout.IsReverseMatch;
         }
         return PairLayout.IsNotMatch;
     }
 
     function onlyAvailablePair(UniswapV2Market memory uniswapV2Market, address[] memory path) internal view returns (bool) {
-        path.onlyValidPath(path);
+        path.onlyValidPath();
         if (!hasPair(uniswapV2Market, path)) {
             revert PairNotFound();
         }
@@ -97,12 +94,12 @@ library UniswapV2MarketAdaptorLib {
     }
 
     function hasPair(UniswapV2Market memory uniswapV2Market, address[] memory path) internal view returns (bool) {
-        path.onlyValidPath(path);
+        path.onlyValidPath();
         return uniswapV2Market.pairAddressOf(path) != address(0);
     }
 
     function reserveOf(UniswapV2Market memory uniswapV2Market, address[] memory path) internal view returns (uint256[] memory) {
-        path.onlyValidPath(path);
+        path.onlyValidPath();
         uint256[] memory reserve = new uint256[](2);
         (reserve[0], reserve[1],) 
             = uniswapV2Market
@@ -111,16 +108,14 @@ library UniswapV2MarketAdaptorLib {
         return reserve;
     }
 
-    function pairOf(UniswapV2Market memory market, address[] memory path) internal view returns (IUniswapV2Pair) {
+    function pairOf(UniswapV2Market memory uniswapV2Market, address[] memory path) internal view returns (IUniswapV2Pair) {
         path.onlyValidPath();
-        onlyIfHasPair(market, path);
-        return IUniswapV2Pair(market.pairAddressOf(path));
+        uniswapV2Market.onlyAvailablePair(path);
+        return IUniswapV2Pair(uniswapV2Market.pairAddressOf(path));
     }
 
     function pairAddressOf(UniswapV2Market memory market, address[] memory path) internal view returns (address) {
         path.onlyValidPath();
-        return market
-            .factory()
-            .getPair(path.token0(), path.token1());
+        return market.factory().getPair(path.token0(), path.token1());
     }
 }
