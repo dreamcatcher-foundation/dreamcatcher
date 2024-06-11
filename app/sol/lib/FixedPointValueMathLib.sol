@@ -6,6 +6,27 @@ import { FixedPointValue } from "../struct/math/FixedPointValue.sol";
 library FixedPointValueMathLib {
     error IncompatibleRepresentation(uint8 decimals0, uint8 decimals1);
 
+    function calculateYield(FixedPointValue memory best, FixedPointValue memory real) internal pure returns (FixedPointValue memory) {
+        if (best.value == 0) {
+            return zeroYield();
+        }
+        if (real.value == 0) {
+            return zeroYield();
+        }
+        if (real.value >= best.value) {
+            return fullYield();
+        }
+        return toEther(scale(real, best));
+    }
+
+    function zeroYield() internal pure returns (FixedPointValue memory) {
+        return FixedPointValue({ value: 0, decimals: 18 });
+    }
+
+    function fullYield() internal pure returns (FixedPointValue memory) {
+        return toEther(FixedPointValue({ value: 10000, decimals: 0 }));
+    }
+
     function slice(FixedPointValue memory number, FixedPointValue memory slice, uint8 decimals) internal pure returns (FixedPointValue memory) {
         number = toEther(number0);
         proportion = toEther(proportion);

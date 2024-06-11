@@ -5,19 +5,11 @@ import { IUniswapV2Factory } from "../import/uniswap/interfaces/IUniswapV2Factor
 import { UniswapV2Market } from "../struct/UniswapV2Market.sol";
 
 library UniswapV2MarketLib {
-    function router(UniswapV2Market memory uniswapV2Market) internal view returns (address) {
-        return uniswapV2Market.inner.router;
-    }
-
-    function factory(UniswapV2Market memory uniswapV2Market) internal view returns (address) {
-        return uniswapV2Market.inner.factory;
-    }
-
-    function toRouter(UniswapV2Market memory uniswapV2Market) internal view returns (IUniswapV2Router02 memory) {
+    function router(UniswapV2Market memory uniswapV2Market) internal pure returns (IUniswapV2Router02) {
         return IUniswapV2Router02(router(uniswapV2Market));
     }
 
-    function toFactory(UniswapV2Market memory uniswapV2Market) internal view returns (IUniswapV2Factory memory) {
+    function factory(UniswapV2Market memory uniswapV2Market) internal pure returns (IUniswapV2Factory) {
         return IUniswapV2Factory(factory(uniswapV2Market));
     }
 }
