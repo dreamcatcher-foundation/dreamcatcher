@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { Math } from "../import/openzeppelin/utils/math/Math.sol";
-import { FixedPointValue } from "../struct/math/FixedPointValue.sol";
+import { FixedPointValue } from "../struct/FixedPointValue.sol";
 
 library FixedPointValueMathLib {
     error IncompatibleRepresentation(uint8 decimals0, uint8 decimals1);
@@ -28,8 +28,8 @@ library FixedPointValueMathLib {
     }
 
     function slice(FixedPointValue memory number, FixedPointValue memory slice, uint8 decimals) internal pure returns (FixedPointValue memory) {
-        number = toEther(number0);
-        proportion = toEther(proportion);
+        number = toEther(number);
+        slice = toEther(slice);
         FixedPointValue memory proportion = FixedPointValue({ value: 10000000000000000000000, decimals: 18 });
         FixedPointValue memory result = div(number, proportion);
         result = mul(result, slice);
@@ -195,4 +195,4 @@ library FixedPointValueMathLib {
         }
         return true;
     }
-} 
+}

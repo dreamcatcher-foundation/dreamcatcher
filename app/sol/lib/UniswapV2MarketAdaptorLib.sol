@@ -7,7 +7,7 @@ import { IUniswapV2Router02 } from "../import/uniswap/interfaces/IUniswapV2Route
 import { IUniswapV2Factory } from "../import/uniswap/interfaces/IUniswapV2Factory.sol";
 import { UniswapV2PathLib } from "./UniswapV2PathLib.sol";
 import { UniswapV2MarketLib } from "./UniswapV2MarketLib.sol";
-import { FixedPointValueMathLib } from "./FixedPointValueMathLib.sol":
+import { FixedPointValueMathLib } from "./FixedPointValueMathLib.sol";
 import { UniswapV2Market } from "../struct/UniswapV2Market.sol";
 import { PairLayout } from "../enum/PairLayout.sol";
 import { FixedPointValue } from "../struct/FixedPointValue.sol";
@@ -20,7 +20,7 @@ library UniswapV2MarketAdaptorLib {
 
     error PairNotFound();
 
-    function yield(UniswapV2Market memory uniswapV2Market, address[] memorry path, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asBasisPoints) {
+    function yield(UniswapV2Market memory uniswapV2Market, address[] memory path, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asBasisPoints) {
         return calculateYield(
             uniswapV2Market.bestAmountOut(path, amountIn), 
             uniswapV2Market.realAmountOut(path, amountIn)
