@@ -63,7 +63,7 @@ library ShareMathLib {
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function simulateAmountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue supply) internal pure returns (FixedPointValue memory) {
+    function simulateAmountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure returns (FixedPointValue memory) {
 
         /**
         * -> A redundant check to ensure that the amount of supply in
