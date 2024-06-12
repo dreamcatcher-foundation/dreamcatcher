@@ -2,5 +2,5 @@
 pragma solidity >=0.8.19;
 
 struct VaultTokenTracker {
-    address[32] _slots;
+    address[32] slots;
 }
