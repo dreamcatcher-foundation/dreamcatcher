@@ -4,7 +4,6 @@ import { Math } from "../import/openzeppelin/utils/math/Math.sol";
 
 library FixedPointValueLib {
     using Math for uint256;
-    using FixedPointValueLib for FixedPointValueLib.FixedPointValue;
 
     struct FixedPointValue {
         uint256 value;

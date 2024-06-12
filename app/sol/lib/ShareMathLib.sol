@@ -11,7 +11,7 @@ library ShareMathLib {
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function simulateAmountToMint(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure returns (FixedPointValue memory) {
+    function ShareMathLib__simulateAmountToSend(FixedPointValue memory assetsIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure returns (FixedPointValue memory) {
 
         /**
         * -> In this scenario there are not assets in the vault and no supply
@@ -63,7 +63,7 @@ library ShareMathLib {
     *    then it will be caught at the end of the function during
     *    the fixed point math operation.
      */
-    function simulateAmountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure returns (FixedPointValue memory) {
+    function ShareMathLib__simulateAmountToSend(FixedPointValue memory supplyIn, FixedPointValue memory assets, FixedPointValue memory supply) internal pure returns (FixedPointValue memory) {
 
         /**
         * -> A redundant check to ensure that the amount of supply in

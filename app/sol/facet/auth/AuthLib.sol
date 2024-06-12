@@ -1,7 +1,38 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { EnumerableSet } from "../../../../import/openzeppelin/utils/structs/EnumerableSet.sol";
-import { Auth } from "./Auth.sol";
+import { AuthSlot } from "./AuthSlot.sol";
+
+contract AuthInternal is AuthSlot {
+    event RoleTransfer(address indexed from, address indexed to, string indexed role);
+
+    error Auth$CallerIsMissingRole(address account, string missingRole);
+    error Auth$SenderIsMissingRole(address from, address to, string role);
+    error Auth$RecipientCannotHaveMoreThanOneInstanceOfTheSameRole(address from, address to, string role);
+    error RecipientAndSenderAreBothTheZeroAddress(address from, address to, string role);
+    error OwnershipHasAlreadyBeenClaimed();
+
+    function _onlyRole(string memory role) internal view returns (bool) {
+        if (!_hasRole$Auth(role)) {
+            revert Auth$CallerIsMissingRole(msg.sender, role);
+        }
+        return true;
+    }
+
+    function _membersOf$Auth(string memory role, uint256 key) internal view returns (address) {
+        return _auth().inner.membersOf[role].at(key);
+    }
+
+    function _membersOf$Auth(string memory role) internal view returns (address[] memory) {
+        return _auth().inner.membersOf[role].values();
+    }
+
+    function _hasRole$Auth() {
+
+    }
+
+
+}
 
 library AuthLib {
     using EnumerableSet for EnumerableSet.AddressSet;
