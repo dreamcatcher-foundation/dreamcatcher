@@ -7,9 +7,9 @@ import { IUniswapV2Factory } from "../../../import/uniswap/interfaces/IUniswapV2
 import { UniswapV2Pair } from "./UniswapV2Pair.sol";
 import { PairLayout } from "./PairLayout.sol";
 import { FixedPointValue } from "../../math/fixedPoint/FixedPointValue.sol";
-import { FixedPointConversion } from "../../math/fixedPoint/FixedPointConversion.sol";
-import { FixedPointArithmetic } from "../../math/fixedPoint/FixedPointArithmetic.sol";
-import { FixedPointYield } from "../../math/fixedPoint/FixedPointYield.sol";
+import { FixedPointValueConversionLib } from "../../math/fixedPoint/FixedPointValueConversionLib.sol";
+import { FixedPointValueArithmeticLib } from "../../math/fixedPoint/FixedPointValueArithmeticLib.sol";
+import { FixedPointValueYieldLib } from "../../math/fixedPoint/FixedPointValueYieldLib.sol";
 
 library UniswapV2PairLib {
     error InvalidUniswapV2Path();
@@ -17,13 +17,13 @@ library UniswapV2PairLib {
     error InvalidUniswapV2PairLayout();
 
     function yield(UniswapV2Pair memory pair, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asBasisPointsInEther) {
-        return FixedPointYield.calculateYield(bestAmountOut(pair, amountIn), realAmountOut(pair, amountIn));
+        return FixedPointValueYieldLib.calculateYield(bestAmountOut(pair, amountIn), realAmountOut(pair, amountIn));
     }
 
     function bestAmountOut(UniswapV2Pair memory pair, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asEther) {
         _checkPath(pair);
         _checkPair(pair);
-        return FixedPointArithmetic.mul(FixedPointConversion.toEther(amountIn), quote(pair));
+        return FixedPointValueArithmeticLib.mul(FixedPointValueConversionLib.toEther(amountIn), quote(pair));
     }
 
     function realAmountOut(UniswapV2Pair memory pair, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asEther) {
@@ -31,9 +31,9 @@ library UniswapV2PairLib {
         _checkPair(pair);
         uint256[] memory amounts
             = IUniswapV2Router02(pair.router)
-                .getAmountsOut(FixedPointConversion.toEther(amountIn).value, pair.path);
+                .getAmountsOut(FixedPointValueConversionLib.toEther(amountIn).value, pair.path);
         uint256 amount = amounts[amounts.length - 1];
-        return FixedPointConversion.toEther(FixedPointValue({ value: amount, decimals: _decimals1(pair) }));
+        return FixedPointValueConversionLib.toEther(FixedPointValue({ value: amount, decimals: _decimals1(pair) }));
     }
 
     function quote(UniswapV2Pair memory pair) internal view returns (FixedPointValue memory asEther) {
@@ -42,7 +42,7 @@ library UniswapV2PairLib {
         return _quote(pair, _layout(pair));
     }
 
-    function _checkPath(UniswapV2Pair memory pair) private view {
+    function _checkPath(UniswapV2Pair memory pair) private pure {
         if (pair.path.length < 2) {
             revert InvalidUniswapV2Path();
         }
@@ -72,7 +72,7 @@ library UniswapV2PairLib {
                     _reserves(pair)[0],
                     _reserves(pair)[1]
                 );
-        return FixedPointConversion.toEther(FixedPointValue({ value: result, decimals: _decimals1(pair) }));
+        return FixedPointValueConversionLib.toEther(FixedPointValue({ value: result, decimals: _decimals1(pair) }));
     }
 
     function _quote1(UniswapV2Pair memory pair) private view returns (FixedPointValue memory asEther) {
@@ -83,7 +83,7 @@ library UniswapV2PairLib {
                     _reserves(pair)[1],
                     _reserves(pair)[0]
                 );
-        return FixedPointConversion.toEther(FixedPointValue({ value: result, decimals: _decimals1(pair) }));
+        return FixedPointValueConversionLib.toEther(FixedPointValue({ value: result, decimals: _decimals1(pair) }));
     }
 
     function _layout(UniswapV2Pair memory pair) private view returns (PairLayout) {
@@ -125,11 +125,11 @@ library UniswapV2PairLib {
         return IERC20Metadata(_token1(pair)).decimals();
     }
 
-    function _token0(UniswapV2Pair memory pair) private view returns (address) {
+    function _token0(UniswapV2Pair memory pair) private pure returns (address) {
         return pair.path[0];
     }
 
-    function _token1(UniswapV2Pair memory pair) private view returns (address) {
+    function _token1(UniswapV2Pair memory pair) private pure returns (address) {
         return pair.path[pair.path.length - 1];
     }
 }

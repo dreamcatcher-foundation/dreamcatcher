@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { Math } from "../../import/openzeppelin/utils/math/Math.sol";
+import { Math } from "../../../import/openzeppelin/utils/math/Math.sol";
 import { FixedPointValue } from "./FixedPointValue.sol";
 
-library FixedPointConversion {
+library FixedPointValueConversionLib {
     function toEther(FixedPointValue memory number) internal pure returns (FixedPointValue memory asEther) {
         return toNewDecimals(number, 18);
     }
