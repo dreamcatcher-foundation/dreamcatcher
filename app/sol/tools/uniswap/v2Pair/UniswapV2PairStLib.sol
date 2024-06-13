@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IERC20 } from "../../../import/openzeppelin/token/ERC20/IERC20.sol";
 import { IERC20Metadata } from "../../../import/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
 import { IUniswapV2Pair } from "../../../import/uniswap/interfaces/IUniswapV2Pair.sol";
 import { IUniswapV2Router02 } from "../../../import/uniswap/interfaces/IUniswapV2Router02.sol";
@@ -15,6 +16,18 @@ library UniswapV2PairStLib {
     error InvalidUniswapV2Path();
     error InvalidUniswapV2Pair();
     error InvalidUniswapV2PairLayout();
+
+    function bestAssets(UniswapV2Pair storage pair) internal view returns (FixedPointValue memory asEther) {
+        return bestAmountOut(pair, balance(pair));
+    }
+
+    function realAssets(UniswapV2Pair storage pair) internal view returns (FixedPointValue memory asEther) {
+        return realAmountOut(pair, balance(pair));
+    }
+
+    function balance(UniswapV2Pair storage pair) internal view returns (FixedPointValue memory asEther) {
+        return FixedPointValueConversionLib.toEther(FixedPointValue({ value: IERC20(_token0(pair)).balanceOf(address(this)), decimals: _decimals0(pair) }));
+    }
 
     function yield(UniswapV2Pair storage pair, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asBasisPointsInEther) {
         return FixedPointValueYieldLib.calculateYield(bestAmountOut(pair, amountIn), realAmountOut(pair, amountIn));

@@ -16,6 +16,18 @@ library UniswapV2PairLib {
     error InvalidUniswapV2Pair();
     error InvalidUniswapV2PairLayout();
 
+    function bestAssets(UniswapV2Pair memory pair) internal view returns (FixedPointValue memory asEther) {
+        return bestAmountOut(pair, balance(pair));
+    }
+
+    function realAssets(UniswapV2Pair memory pair) internal view returns (FixedPointValue memory asEther) {
+        return realAmountOut(pair, balance(pair));
+    }
+
+    function balance(UniswapV2Pair memory pair) internal view returns (FixedPointValue memory asEther) {
+        return FixedPointValueConversionLib.toEther(FixedPointValue({ value: IERC20(_token0(pair)).balanceOf(address(this)), decimals: _decimals0(pair) }));
+    }
+
     function yield(UniswapV2Pair memory pair, FixedPointValue memory amountIn) internal view returns (FixedPointValue memory asBasisPointsInEther) {
         return FixedPointValueYieldLib.calculateYield(bestAmountOut(pair, amountIn), realAmountOut(pair, amountIn));
     }

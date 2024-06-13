@@ -5,4 +5,5 @@ import { UniswapV2Pair } from "../v2Pair/UniswapV2Pair.sol";
 struct UniswapV2Wallet {
     UniswapV2Pair[] pairs;
     address asset;
+    bool initialized;
 }
