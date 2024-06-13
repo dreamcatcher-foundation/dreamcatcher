@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: Apache-2.0
+pragma solidity >=0.8.19;
+import { TokenSl } from "./TokenSl.sol";
+
+library TokenSlMintLib {
+    error MintToAddressZero(address account, uint256 amount);
+
+    function mint(TokenSl storage sl, address account, uint256 amount) internal returns (bool) {
+        if (account == address(0)) {
+            revert MintToAddressZero(account, amount);
+        }
+        sl.totalSupply += amount;
+        sl.balances[account] += amount;
+        emit Transfer(address(0), account, amount);
+        return true;
+    }
+}

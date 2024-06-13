@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { IBase } from "./IBase.sol";
-import { IFacet } from "./IFacet.sol";
-import { SolidStateDiamond } from "./import/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
+import { IFacet } from "../facets/IFacet.sol";
+import { SolidStateDiamond } from "../imports/solidstate-v0.8.24/proxy/diamond/SolidStateDiamond.sol";
 
 /**
 * The `Base` contract inherits from the `IBase` interface and extends the `SolidStateDiamond` contract, 
