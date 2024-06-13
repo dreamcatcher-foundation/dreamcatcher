@@ -53,13 +53,13 @@ library TokenSlLib {
     }
 
     function increaseAllowance(TokenSl storage sl, address spender, uint256 amount) internal returns (bool) {
-        _approve(sl, msg.sender, sl.allowance(msg.sender, spender) + amount);
+        _approve(sl, msg.sender, spender, sl.allowance(msg.sender, spender) + amount);
         return true;
     }
 
     function decreaseAllowance(TokenSl storage sl, address spender, uint256 amount) internal returns (bool) {
         if (sl.allowance(msg.sender, spender) < amount) {
-            revert AllowanceBelowZero();
+            revert AllowanceBelowZero(spender, sl.allowance(msg.sender, spender), amount);
         }
         _approve(sl, msg.sender, spender, sl.allowance(msg.sender, spender) - amount);
         return true;
@@ -102,7 +102,7 @@ library TokenSlLib {
         if (sl.allowance(owner, spender) < amount) {
             revert InsufficientAllowance(owner, spender, amount);
         }
-        _approve(sl, spender, sl.allowance(owner, spender) - amount);
+        _approve(sl, owner, spender, sl.allowance(owner, spender) - amount);
         return true;
     }
-}
+}s

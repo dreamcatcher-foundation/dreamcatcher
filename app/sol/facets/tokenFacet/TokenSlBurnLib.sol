@@ -6,6 +6,8 @@ import { TokenSlLib } from "./TokenSlLib.sol";
 library TokenSlBurnLib {
     using TokenSlLib for TokenSl;
 
+    event Transfer(address indexed from, address indexed to, uint256 amount);
+
     error InsufficientBalance(address account, uint256 amount);
     error BurnFromZeroAddress(address account, uint256 amount);
 

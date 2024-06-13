@@ -2,7 +2,7 @@
 pragma solidity >=0.8.19;
 import { IFacet } from "../IFacet.sol";
 import { ITokenFacet } from "./ITokenFacet.sol";
-import { TokenSlLib } from "./TokenSlLib.sol"
+import { TokenSlLib } from "./TokenSlLib.sol";
 import { TokenSlot } from "./TokenSlot.sol";
 import { TokenSl } from "./TokenSl.sol";
 
@@ -12,12 +12,32 @@ contract TokenFacet is
     TokenSlot {
     using TokenSlLib for TokenSl;
 
+    function selectors() external pure returns (bytes4[] memory) {
+        bytes4[] memory selectors = new bytes4[](11);
+        selectors[0] = bytes4(keccak256("name()"));
+        selectors[1] = bytes4(keccak256("symbol()"));
+        selectors[2] = bytes4(keccak256("decimals()"));
+        selectors[3] = bytes4(keccak256("totalSupply()"));
+        selectors[4] = bytes4(keccak256("balanceOf(address)"));
+        selectors[5] = bytes4(keccak256("allowance(address,address)"));
+        selectors[6] = bytes4(keccak256("transfer(address,uint256)"));
+        selectors[7] = bytes4(keccak256("transferFrom(address,address,uint256)"));
+        selectors[8] = bytes4(keccak256("approve(address,uint256)"));
+        selectors[9] = bytes4(keccak256("increaseAllowance(address,uint256)"));
+        selectors[10] = bytes4(keccak256("decreaseAllowance(address,uint256)"));
+        return selectors;
+    }
+
     function name() external view returns (string memory) {
         return _tokenSl().name();
     }
 
     function symbol() external view returns (string memory) {
         return _tokenSl().symbol();
+    }
+
+    function decimals() external pure returns (uint8) {
+        return 18;
     }
 
     function totalSupply() external view returns (uint256) {
