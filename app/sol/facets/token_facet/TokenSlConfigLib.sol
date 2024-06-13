@@ -10,21 +10,21 @@ library TokenSlConfigLib {
     error SymbolCanOnlyBeSetOnce();
 
     function setName(TokenSl storage sl, string memory name) internal returns (bool) {
-        if (sl.name == "") {
+        if (sl._name == "") {
             revert NameCanOnlyBeSetOnce();
         }
-        string memory oldName = sl.name;
-        string memory newName = sl.name = name;
+        string memory oldName = sl._name;
+        string memory newName = sl._name = name;
         emit NameSetTo(oldName, newName);
         return true;
     }
 
     function setSymbol(TokenSl storage sl, string memory symbol) internal returns (bool) {
-        if (sl.symbol == "") {
+        if (sl._symbol == "") {
             revert SymbolCanOnlyBeSetOnce();
         }
-        string memory oldSymbol = sl.symbol;
-        string memory newSymbol = sl.symbol = symbol;
+        string memory oldSymbol = sl._symbol;
+        string memory newSymbol = sl._symbol = symbol;
         emit SymbolSetTo(oldSymbol, newSymbol);
         return true;
     }

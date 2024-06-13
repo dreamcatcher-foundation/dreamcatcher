@@ -16,16 +16,24 @@ library TokenSlLib {
     error TransferToZeroAddress(address from, address to, uint256 amount);
     error AllowanceBelowZero(address spender, uint256 allowance, uint256 amount);
 
+    function name(TokenSl storage sl) internal view returns (string memory) {
+        return sl._name;
+    }
+
+    function symbol(TokenSl storage sl) internal view returns (string memory) {
+        return sl._symbol;
+    }
+
     function totalSupply(TokenSl storage sl) internal view returns (uint256) {
-        return sl.totalSupply;
+        return sl._totalSupply;
     }
 
     function balanceOf(TokenSl storage sl, address account) internal view returns (uint256) {
-        return sl.balances[account];
+        return sl._balances[account];
     }
 
     function allowance(TokenSl storage sl, address owner, address spender) internal view returns (uint256) {
-        return sl.allowances[owner][spender];
+        return sl._allowances[owner][spender];
     }
 
     function transfer(TokenSl storage sl, address to, uint256 amount) internal returns (bool) {
@@ -68,8 +76,8 @@ library TokenSlLib {
             revert InsufficientBalance(from, amount);
         }
         unchecked {
-            sl.balances[from] -= amount;
-            sl.balances[to] += amount;
+            sl._balances[from] -= amount;
+            sl._balances[to] += amount;
         }
         emit Transfer(from, to, amount);
         return true;
@@ -82,7 +90,7 @@ library TokenSlLib {
         if (spender == address(0)) {
             revert ApprovalToZeroAddress(owner, spender, amount);
         }
-        sl.allowances[owner][spender] = amount;
+        sl._allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
         return true;
     }

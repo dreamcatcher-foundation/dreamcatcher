@@ -9,8 +9,8 @@ library TokenSlMintLib {
         if (account == address(0)) {
             revert MintToAddressZero(account, amount);
         }
-        sl.totalSupply += amount;
-        sl.balances[account] += amount;
+        sl._totalSupply += amount;
+        sl._balances[account] += amount;
         emit Transfer(address(0), account, amount);
         return true;
     }

@@ -16,8 +16,8 @@ library TokenSlBurnLib {
         if (sl.balanceOf(account) < amount) {
             revert InsufficientBalance(account, amount);
         }
-        sl.balances[account] -= amount;
-        sl.totalSupply -= amount;
+        sl._balances[account] -= amount;
+        sl._totalSupply -= amount;
         emit Transfer(account, address(0), amount);
         return true;
     }
