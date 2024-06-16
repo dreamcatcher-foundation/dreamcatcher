@@ -7,6 +7,11 @@ library FixedPointMath {
     using FixedPointMath for FixedPointValue;
     using Math for uint256;    
 
+    struct FixedPointValue {
+        uint256 value;
+        uint8 decimals;
+    }
+
     function yield(FixedPointValue memory best, FixedPointValue memory real) internal pure returns (FixedPointValue memory BPR18) {
         if (best.value == 0) {
             return zeroYield();
