@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { IERC20 } from "../../imports/openzeppelin/token/ERC20/IERC20.sol";
+import { IERC20Metadata } from "../../imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
+import { IToken } from "./FixedPointERC20AdaptorLibrary.sol";
 import { FixedPointValue } from "./FixedPointValue.sol";
 import { FixedPointConversionLibrary } from "./FixedPointConversionLibrary.sol";
 import { FixedPointArithmeticLibrary } from "./FixedPointArithmeticLibrary.sol";
@@ -73,39 +75,39 @@ library FixedPointLibrary {
         return FixedPointConversionLibrary.convertToNewDecimals(number, decimals);
     }
 
-    function totalSupplyAsEtherDecimals(IERC20 token) internal view returns (FixedPointValue memory asEther) {
+    function totalSupplyAsEtherDecimals(IToken token) internal view returns (FixedPointValue memory asEther) {
         return FixedPointERC20AdaptorLibrary.totalSupplyAsEtherDecimals(token);
     }
 
-    function totalSupply(IERC20 token) internal view returns (FixedPointValue memory) {
+    function totalSupply(IToken token) internal view returns (FixedPointValue memory) {
         return FixedPointERC20AdaptorLibrary.totalSupply(token);
     }
 
-    function balanceOfAsEtherDecimals(IERC20 token, address account) internal view returns (FixedPointValue memory asEther) {
+    function balanceOfAsEtherDecimals(IToken token, address account) internal view returns (FixedPointValue memory asEther) {
         return FixedPointERC20AdaptorLibrary.balanceOfAsEtherDecimals(token, account);
     }
 
-    function balanceOf(IERC20 token, address account) internal view returns (uint256) {
+    function balanceOf(IToken token, address account) internal view returns (FixedPointValue memory) {
         return FixedPointERC20AdaptorLibrary.balanceOf(token, account);
     }
 
-    function allowanceAsEtherDecimals(IERC20 token, address owner, address spender) internal view returns (FixedPointValue memory) {
+    function allowanceAsEtherDecimals(IToken token, address owner, address spender) internal view returns (FixedPointValue memory) {
         return FixedPointERC20AdaptorLibrary.allowanceAsEtherDecimals(token, owner, spender);
     }    
 
-    function allowance(IERC20 token, address owner, address spender) internal view returns (FixedPointValue memory) {
+    function allowance(IToken token, address owner, address spender) internal view returns (FixedPointValue memory) {
         return FixedPointERC20AdaptorLibrary.allowance(token, owner, spender);
     }
 
-    function transfer(IERC20 token, address to, FixedPointValue memory amount) internal returns (bool) {
+    function transfer(IToken token, address to, FixedPointValue memory amount) internal returns (bool) {
         return FixedPointERC20AdaptorLibrary.transfer(token, to, amount);
     }
 
-    function transferFrom(IERC20 token, address from, address to, FixedPointValue memory amount) internal returns (bool) {
+    function transferFrom(IToken token, address from, address to, FixedPointValue memory amount) internal returns (bool) {
         return FixedPointERC20AdaptorLibrary.transferFrom(token, from, to, amount);
     }
 
-    function approve(IERC20 token, address spender, FixedPointValue memory amount) internal returns (bool) {
+    function approve(IToken token, address spender, FixedPointValue memory amount) internal returns (bool) {
         return FixedPointERC20AdaptorLibrary.approve(token, spender, amount);
     }
 }

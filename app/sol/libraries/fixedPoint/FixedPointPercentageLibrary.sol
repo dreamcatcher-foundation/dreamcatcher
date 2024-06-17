@@ -5,17 +5,17 @@ import { FixedPointConversionLibrary } from "./FixedPointConversionLibrary.sol";
 import { FixedPointArithmeticLibrary } from "./FixedPointArithmeticLibrary.sol";
 
 library FixedPointPercentageLibrary {
-    function yield(FixedPointValue memory actual, FixedPointValue memory optimal) internal pure returns (FixedPointValue memory percentageAsEther) {
-        if (optimal.value == 0) {
+    function yield(FixedPointValue memory real, FixedPointValue memory best) internal pure returns (FixedPointValue memory percentageAsEther) {
+        if (best.value == 0) {
             return zeroYield();
         }
-        if (actual.value == 0) {
+        if (real.value == 0) {
             return zeroYield();
         }
-        if (actual.value >= best.value) {
+        if (real.value >= best.value) {
             return fullYield();
         }
-        return scale(actual, optimal);
+        return scale(real, best);
     }
 
     function zeroYield() internal pure returns (FixedPointValue memory percentageAsEther) {
@@ -30,13 +30,13 @@ library FixedPointPercentageLibrary {
         number = FixedPointConversionLibrary.convertToEtherDecimals(number);
         percentage = FixedPointConversionLibrary.convertToEtherDecimals(percentage);
         FixedPointValue memory result = FixedPointArithmeticLibrary.div(number, FixedPointValue({ value: 10000000000000000000000, decimals: 18 }));
-        return FixedPointArithmeticLibrary.mul(percentage);
+        return FixedPointArithmeticLibrary.mul(result, percentage);
     }
 
     function scale(FixedPointValue memory number0, FixedPointValue memory number1) internal pure returns (FixedPointValue memory percentageAsEther) {
         number0 = FixedPointConversionLibrary.convertToEtherDecimals(number0);
         number1 = FixedPointConversionLibrary.convertToEtherDecimals(number1);
         FixedPointValue memory result = FixedPointArithmeticLibrary.div(number0, number1);
-        return FixedPointArithmeticLibrary.mul(FixedPointValue({ value: 10000000000000000000000, decimals: 18 }));
+        return FixedPointArithmeticLibrary.mul(result, FixedPointValue({ value: 10000000000000000000000, decimals: 18 }));
     }
 }

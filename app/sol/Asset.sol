@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IToken } from "./libraries/fixedPoint/FixedPointERC20AdaptorLibrary.sol";
 import { IUniswapV2Router02 } from "./imports/uniswap/interfaces/IUniswapV2Router02.sol";
 import { IUniswapV2Factory } from "./imports/uniswap/interfaces/IUniswapV2Factory.sol";
 import { IUniswapV2Pair } from "./imports/uniswap/interfaces/IUniswapV2Pair.sol";
-import { IERC20 } from "./imports/openzeppelin/token/ERC2O/IERC20.sol";
+import { IERC20 } from "./imports/openzeppelin/token/ERC20/IERC20.sol";
 import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
 import { Ownable } from "./imports/openzeppelin/access/Ownable.sol";
-import { FixedPointValue } from "./imports/libraries/fixedPoint/FixedPointValue.sol";
-import { FixedPointLibrary } from "./imports/libraries/fixedPoint/FixedPointLibrary.sol";
+import { FixedPointValue } from "./libraries/fixedPoint/FixedPointValue.sol";
+import { FixedPointLibrary } from "./libraries/fixedPoint/FixedPointLibrary.sol";
 
 contract Asset is Ownable {
     using FixedPointLibrary for FixedPointValue;
@@ -46,7 +47,7 @@ contract Asset is Ownable {
         for (uint256 i = 0; i < size; i += 1) {
             _path.push(path[i]);
         }
-        if (quote() == FixedPointValue({ value: 0, decimals: 18 })) {
+        if (quote().value == FixedPointValue({ value: 0, decimals: 18 }).value) {
             revert PairIsWorthless();
         }
     }
@@ -58,12 +59,12 @@ contract Asset is Ownable {
     }
 
     function bestAssets() public view returns (FixedPointValue memory asEther) {
-        FixedPointValue memory balance = FixedPointLibrary.balanceOfAsEther(IERC20(_path[0]), owner());
+        FixedPointValue memory balance = FixedPointLibrary.balanceOfAsEtherDecimals(IToken(_path[0]), owner());
         return bestAmountOut(balance);
     }
 
     function realAssets() public view returns (FixedPointValue memory asEther) {
-        FixedPointValue memory balance = FixedPointLibrary.balanceOfAsEther(IERC20(_path[0]), owner());
+        FixedPointValue memory balance = FixedPointLibrary.balanceOfAsEtherDecimals(IToken(_path[0]), owner());
         return realAmountOut(balance);
     }
 
