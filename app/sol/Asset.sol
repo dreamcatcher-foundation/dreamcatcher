@@ -30,7 +30,9 @@ contract Asset is Ownable {
     uint256 constant internal _PATH_SIZE_LIMIT = 8;
     address[] internal _path;
 
-    constructor(address[] memory path) Ownable(msg.sender) {
+    constructor() Ownable(msg.sender) {}
+
+    function init(address[] memory path) public {
         uint256 size = path.length;
         if (size < 2) {
             revert PathSizeIsLessThanTwo();
