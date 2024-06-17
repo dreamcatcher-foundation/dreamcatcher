@@ -3,7 +3,7 @@ pragma solidity >=0.8.19;
 import { Math as OpenzeppelinMath } from "./imports/openzeppelin/utils/math/Math.sol";
 
 contract FixedPointCalculator {
-    error PrecisionLoss(uint256 value0, uint256 value1, uint8 decimals0, uint8 decimals1);
+    error PrecisionLoss(uint8 decimals0, uint8 decimals1);
 
     function _yield(uint256 real, uint256 best, uint8 decimals0, uint8 decimals1) internal pure returns (uint256 percentage) {
         _validate(decimals0, decimals1);
@@ -83,7 +83,7 @@ contract FixedPointCalculator {
 
     function _validate(uint8 decimals0, uint8 decimals1) private pure {
         if (decimals0 > 18 || decimals1 > 18) {
-            revert PrecisionLoss(value0, value1, decimals0, decimals1);
+            revert PrecisionLoss(decimals0, decimals1);
         }
     }
 }
