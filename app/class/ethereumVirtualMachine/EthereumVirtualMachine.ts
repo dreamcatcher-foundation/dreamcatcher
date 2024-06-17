@@ -2,7 +2,7 @@ import { type IEthereumVirtualMachine } from "./IEthereumVirtualMachine.ts";
 import * as TsResult from "ts-results";
 import * as Ethers from "ethers";
 
-export function EthereumVirtualMachine({ signer_ }: { signer_: Ethers.Wallet; }): IEthereumVirtualMachine {
+export function EthereumVirtualMachine(signer_: Ethers.Wallet): IEthereumVirtualMachine {
     const i_: IEthereumVirtualMachine = { query, invoke, deploy };
 
     async function query({

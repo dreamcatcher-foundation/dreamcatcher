@@ -1,8 +1,20 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { IERC20 } from "./imports/openzeppelin/token/ERC20/IERC20.sol";
-import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
+import { IToken } from "./IToken.sol";
+import { Ownable } from "./imports/openzeppelin/access/Ownable.sol";
+import { ERC20 } from "./imports/openzeppelin/token/ERC20/ERC20.sol";
 
-interface IToken is IERC20, IERC20Metadata {}
+contract Token is IToken, Ownable, ERC20 {
+    constructor(string memory name, string memory symbol)
+    Ownable(msg.sender)
+    ERC20(name, symbol) 
+    {}
 
-contract Token {}
+    function mint(address account, uint256 amount) public virtual onlyOwner() {
+        _mint();
+    }
+
+    function burn(address account, uint256 amount) public virtual onlyOwner() {
+        _burn();
+    }
+}
