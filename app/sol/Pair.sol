@@ -8,6 +8,20 @@ import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IE
 import { FixedPointCalculator } from "./FixedPointCalculator.sol";
 import { Ownable } from "./imports/openzeppelin/access/Ownable.sol";
 
+interface IPairFactory {
+    function deploy(address[] memory path, uint256 targetAllocation) public returns (address);
+}
+
+contract PairFactory {
+    constructor() {}
+
+    function deploy(address[] memory path, uint256 targetAllocation) public returns (address) {
+        Pair pair = new Pair(path, targetAllocation);
+        pair.transferOwnership(msg.sender);
+        return address(pair);
+    }
+}
+
 interface IPair {
     function targetAllocation() external view returns (uint256 percentage);
     function sellSidePath() external view returns (address[] memory);
@@ -171,13 +185,13 @@ contract Pair is Ownable, FixedPointCalculator {
     }
 
     function sell(uint256 amountIn) public onlyOwner() returns (uint256) {
-        IERC20(_token0()).transferFrom(owner(), address(this), amountIn);
+        IERC20(_token0()).transferFrom(owner(), address(this), _toNewDecimals(amountIn, 18, _decimals0()));
         if (sellSideYield(amountIn) < _MIN_YIELD) {
             revert InsufficientYield();
         }
         IERC20(_token0()).approve(address(_QUICKSWAP_ROUTER), 0);
-        IERC20(_token0()).approve(address(_QUICKSWAP_ROUTER), _toNewDecimals(amountIn, _decimals0(), 18));
-        uint256 amountInConverted = _toNewDecimals(amountIn, _decimals0(), 18);
+        IERC20(_token0()).approve(address(_QUICKSWAP_ROUTER), _toNewDecimals(amountIn, 18, _decimals0()));
+        uint256 amountInConverted = _toNewDecimals(amountIn, 18, _decimals0());
         uint256[] memory amounts = _QUICKSWAP_ROUTER.swapExactTokensForTokens(amountInConverted, 0, sellSidePath(), owner(), block.timestamp);
         uint256 amount = amounts[amounts.length - 1];
         uint256 amountOut = _toEther(amount, _decimals1());
@@ -187,13 +201,13 @@ contract Pair is Ownable, FixedPointCalculator {
     }
 
     function buy(uint256 amountIn) public onlyOwner() returns (uint256) {
-        IERC20(_token1()).transferFrom(owner(), address(this), amountIn);
+        IERC20(_token1()).transferFrom(owner(), address(this), _toNewDecimals(amountIn, 18, _decimals1()));
         if (buySideYield(amountIn) < _MIN_YIELD) {
             revert InsufficientYield();
         }
         IERC20(_token1()).approve(address(_QUICKSWAP_ROUTER), 0);
-        IERC20(_token1()).approve(address(_QUICKSWAP_ROUTER), _toNewDecimals(amountIn, _decimals1(), 18));
-        uint256 amountInConverted = _toNewDecimals(amountIn, _decimals1(), 18);
+        IERC20(_token1()).approve(address(_QUICKSWAP_ROUTER), _toNewDecimals(amountIn, 18, _decimals1()));
+        uint256 amountInConverted = _toNewDecimals(amountIn, 18, _decimals1());
         uint256[] memory amounts = _QUICKSWAP_ROUTER.swapExactTokensForTokens(amountInConverted, 0, buySidePath(), owner(), block.timestamp);
         uint256 amount = amounts[amounts.length - 1];
         uint256 amountOut = _toEther(amount, _decimals0());
