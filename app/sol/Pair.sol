@@ -45,7 +45,7 @@ contract Pair is Ownable, FixedPointCalculator {
 
     IUniswapV2Router02 constant private _QUICKSWAP_ROUTER = IUniswapV2Router02(0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff);
     IUniswapV2Factory constant private _QUICKSWAP_FACTORY = IUniswapV2Factory(0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32);
-    uint256 constant private _MIN_YIELD = 97500000000000000000;
+    uint256 constant private _MIN_YIELD = 90000000000000000000; // 10% slippage
     uint256 constant private _PATH_SIZE_LIMIT = 10;
     address[] private _path;
     uint256 private _targetAllocation;
@@ -131,13 +131,23 @@ contract Pair is Ownable, FixedPointCalculator {
     function realSellSideAmountOut(uint256 amountIn) public view returns (uint256) {
         uint256[] memory amounts = _QUICKSWAP_ROUTER.getAmountsOut(amountIn, sellSidePath());
         uint256 amount = amounts[amounts.length - 1];
-        return _toEther(amount, _decimals1());   
+        /** -> Temporary fix */
+        uint256 result = _toEther(amount, _decimals1());
+        if (result >= bestSellSideAmountOut(amountIn)) {
+            return bestSellSideAmountOut(amountIn);
+        }
+        return result;
     }
 
     function realBuySideAmountOut(uint256 amountIn) public view returns (uint256) {
         uint256[] memory amounts = _QUICKSWAP_ROUTER.getAmountsOut(amountIn, buySidePath());
         uint256 amount = amounts[amounts.length - 1];
-        return _toEther(amount, _decimals0());
+        /** -> Temporary fix */
+        uint256 result = _toEther(amount, _decimals0());
+        if (result >= bestBuySideAmountOut(amountIn)) {
+            return bestBuySideAmountOut(amountIn);
+        }
+        return result;
     }
 
     function sellSideQuote() public view returns (uint256) {
@@ -167,12 +177,13 @@ contract Pair is Ownable, FixedPointCalculator {
         }
         IERC20(_token0()).approve(address(_QUICKSWAP_ROUTER), 0);
         IERC20(_token0()).approve(address(_QUICKSWAP_ROUTER), _toNewDecimals(amountIn, _decimals0(), 18));
-        uint256[] memory amounts = _QUICKSWAP_ROUTER.swapExactTokensForTokens(_toNewDecimals(amountIn, _decimals0(), 18), realSellSideAmountOut(amountIn), sellSidePath(), msg.sender, block.timestamp);
+        uint256 amountInConverted = _toNewDecimals(amountIn, _decimals0(), 18);
+        uint256[] memory amounts = _QUICKSWAP_ROUTER.swapExactTokensForTokens(amountInConverted, 0, sellSidePath(), owner(), block.timestamp);
         uint256 amount = amounts[amounts.length - 1];
         uint256 amountOut = _toEther(amount, _decimals1());
-        IERC20(_token1()).transfer(owner(), _toNewDecimals(amountOut, 18, _decimals1()));
         emit Sale(amountIn, amountOut);
         return amountOut;
+
     }
 
     function buy(uint256 amountIn) public onlyOwner() returns (uint256) {
@@ -182,10 +193,10 @@ contract Pair is Ownable, FixedPointCalculator {
         }
         IERC20(_token1()).approve(address(_QUICKSWAP_ROUTER), 0);
         IERC20(_token1()).approve(address(_QUICKSWAP_ROUTER), _toNewDecimals(amountIn, _decimals1(), 18));
-        uint256[] memory amounts = _QUICKSWAP_ROUTER.swapExactTokensForTokens(_toNewDecimals(amountIn, _decimals1(), 18), realBuySideAmountOut(amountIn), buySidePath(), msg.sender, block.timestamp);
+        uint256 amountInConverted = _toNewDecimals(amountIn, _decimals1(), 18);
+        uint256[] memory amounts = _QUICKSWAP_ROUTER.swapExactTokensForTokens(amountInConverted, 0, buySidePath(), owner(), block.timestamp);
         uint256 amount = amounts[amounts.length - 1];
         uint256 amountOut = _toEther(amount, _decimals0());
-        IERC20(_token0()).transfer(owner(), _toNewDecimals(amountOut, 18, _decimals0()));
         emit Purchase(amountIn, amountOut);
         return amountOut;
     }
