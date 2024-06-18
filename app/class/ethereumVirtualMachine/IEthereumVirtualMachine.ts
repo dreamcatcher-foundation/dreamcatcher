@@ -39,12 +39,16 @@ export interface IEthereumVirtualMachine {
     }): Promise<TsResult.Result<Ethers.TransactionReceipt | null, unknown>>;
     deploy({
         bytecode,
+        abi,
+        args,
         gasPrice,
         gasLimit,
         value,
         chainId,
         confirmations}: {
             bytecode: string;
+            abi?: string[] | object[];
+            args?: unknown[];
             gasPrice?:
                 | bigint
                 | "verySlow"

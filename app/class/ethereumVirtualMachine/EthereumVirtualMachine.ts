@@ -77,11 +77,15 @@ export function EthereumVirtualMachine(signer_: Ethers.Wallet): IEthereumVirtual
 
     async function deploy({
         bytecode,
+        abi,
+        args=[],
         gasPrice=50000000000n,
         gasLimit=10000000n,
         value=0n,
         chainId=undefined,
         confirmations=1n}: {
+            abi?: string[] | object[];
+            args?: unknown[];
             bytecode: string;
             gasPrice?:
                 | bigint
@@ -95,6 +99,11 @@ export function EthereumVirtualMachine(signer_: Ethers.Wallet): IEthereumVirtual
             confirmations?: bigint;
     }) {
         try {
+            let transaction;
+            if (args && abi) {
+                const factory = new Ethers.ContractFactory(abi, bytecode, signer_);
+                transaction = await factory.getDeployTransaction(...args);
+            }
             return TsResult.Ok<Ethers.TransactionReceipt | null>(await (await signer_.sendTransaction({
                 from: await signerAddress_(),
                 to: null,
@@ -113,7 +122,10 @@ export function EthereumVirtualMachine(signer_: Ethers.Wallet): IEthereumVirtual
                 gasLimit: gasLimit,
                 chainId: chainId,
                 value: value,
-                data: `0x${bytecode}`
+                data:
+                    !!args && !!abi
+                        ? transaction!.data :
+                    `0x${bytecode}`
             })).wait(Number(confirmations)));
         }
         catch (error: unknown) {

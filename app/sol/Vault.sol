@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.19;
-import { UniswapV2Pair } from "./UniswapV2Pair.sol";
+
 
 struct PairConstructorPayload {
     address[] path;
