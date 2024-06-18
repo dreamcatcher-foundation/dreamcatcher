@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.19;
+import { IERC20 } from "./imports/openzeppelin/token/ERC20/IERC20.sol";
+import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
 import { ITokenFactory } from "./Token.sol";
 import { IToken } from "./Token.sol";
 import { IPairFactory } from "./Pair.sol";
 import { IPair } from "./Pair.sol";
 import { FixedPointCalculator } from "./FixedPointCalculator.sol";
+import { ShareCalculator } from "./ShareCalculator.sol";
 import { Ownable } from "./imports/openzeppelin/access/Ownable.sol";
 
 struct PairPayload {
@@ -12,7 +15,7 @@ struct PairPayload {
     uint256 targetAllocation;
 }
 
-contract Vault is Ownable, FixedPointCalculator {
+contract Vault is Ownable, FixedPointCalculator, ShareCalculator {
     error DuplicateAsset();
     error PairsMustHaveTheSameBaseCurrency();
     error AllocationsExceedOneHundredPercent();
@@ -25,25 +28,28 @@ contract Vault is Ownable, FixedPointCalculator {
         _token = IToken(ITokenFactory(tokenFactory).deploy(name, symbol));
         uint256 totalAllocation = 0;
         for (uint256 i = 0; i < pairs.length; i += 1) {
-            totalAllocation += pairs[i].targetAllocation
+            totalAllocation += pairs[i].targetAllocation;
         }
         if (totalAllocation > 100000000000000000000) {
             revert AllocationsExceedOneHundredPercent();
         }
+        IPairFactory factory = IPairFactory(pairFactory);
         for (uint256 i = 0; i < pairs.length; i += 1) {
-            if (pairs[i].path[pairs[i].path.length - 1] != _CURRENCY) {
-                revert PairsMustHaveTheSameBaseCurrency();
-            }
-            for (uint256 ii = 0; ii < _pairs.length; ii += 1) {
-                if (_pairs[ii].sellSidePath()[0] == pairs[i].path[0]) {
-                    revert DuplicateAsset();
-                }
-            }
-            _pairs.push(IPairFactory(pairFactory).deploy(
-                pairs[i].path,
-                pairs[i].targetAllocation
-            ));
+            _checkForDuplicateAsset(pairs[i]);
+            _checkForBaseCurrency(pairs[i]);
+            address[] memory path = pairs[i].path;
+            uint256 targetAllocation = pairs[i].targetAllocation;
+            address pair = factory.deploy(path, targetAllocation);
+            _pairs.push(IPair(pair));
         }
+    }
+
+    function previewMint(uint256 assetsIn) public view returns (uint256) {
+        return _amountToMint(assetsIn, totalRealAssets(), _token.totalSupply());
+    }
+
+    function previewBurn(uint256 supplyIn) public view returns (uint256) {
+        return _amountToSend(supplyIn, totalRealAssets(), _token.totalSupply());
     }
 
     function totalBestAssets() public view returns (uint256) {
@@ -60,6 +66,32 @@ contract Vault is Ownable, FixedPointCalculator {
             result += _pairs[i].realAssets();
         }
         return result;
+    }
+
+    function mint(uint256 assetsIn) public returns (uint256) {
+        uint8 decimals0 = IERC20Metadata(_CURRENCY).decimals();
+        IERC20(_CURRENCY).transferFrom(msg.sender, address(this), _toNewDecimals(assetsIn, 18, decimals0));
+        uint256 amountToMint = previewMint(assetsIn);
+        if (amountToMint == 0) {
+            revert("Vault: Unable to mint.");
+        }
+        _token.mint(msg.sender, amountToMint);
+        return amountToMint;
+    }
+
+    function burn(uint256 supplyIn) public returns (bool) {
+        require(supplyIn != 0, "Vault: Supply in cannot be zero.");
+        require(previewBurn(supplyIn) != 0, "Vault: Unable to burn");
+        _token.burn(msg.sender, supplyIn);
+        uint256 slice = _mul(_div(supplyIn, _token.totalSupply(), 18, 18), _oneHundredPercent(), 18, 18);
+        for (uint256 i = 0; i < _pairs.length; i += 1) {
+            uint8 decimals = IERC20Metadata(_pairs.sellSidePath()[0]).decimals();
+            uint256 balance = IERC20(_pairs.sellSidePath()[0]).balanceOf(address(this));
+            uint256 balanceConverted = _toEther(balance, decimals);
+            uint256 amountToSend = _sliceOf(balanceConverted, slice, 18, 18);
+            IERC20(_pairs.sellSidePath()[0]).transfer(msg.sender, _toNewDecimals(amountToSend, 18, decimals));
+        }
+        return true;
     }
 
     function rebalance() public onlyOwner() returns (bool) {
@@ -93,27 +125,49 @@ contract Vault is Ownable, FixedPointCalculator {
     }
 
     function _excess(IPair pair) private view returns (uint256) {
-        if (_allocation() <= pair.targetAllocation()) {
+        if (totalRealAssets() == 0) {
             return 0;
         }
-        uint256 targetBalance = _mul(_div(totalRealAssets(), _oneHundredPercent()), pair.targetAllocation());
-        uint256 actualBalance = _mul(_div(totalRealAssets(), _oneHundredPercent()), _allocation(pair));
-        return _sub(actualBalance, targetBalance);
+        if (_allocation(pair) <= pair.targetAllocation()) {
+            return 0;
+        }
+        uint256 targetBalance = _mul(_div(totalRealAssets(), _oneHundredPercent(), 18, 18), pair.targetAllocation(), 18, 18);
+        uint256 actualBalance = _mul(_div(totalRealAssets(), _oneHundredPercent(), 18, 18), _allocation(pair), 18, 18);
+        return _sub(actualBalance, targetBalance, 18, 18);
     }
 
     function _deficit(IPair pair) private view returns (uint256) {
-        if (_allocation() >= pair.targetAllocation()) {
+        if (totalRealAssets() == 0) {
             return 0;
         }
-        uint256 targetBalance = _mul(_div(totalRealAssets(), _oneHundredPercent()), pair.targetAllocation());
-        uint256 actualBalance = _mul(_div(totalRealAssets(), _oneHundredPercent()), _allocation(pair));
-        return _sub(targetBalance, actualBalance);
+        if (_allocation(pair) >= pair.targetAllocation()) {
+            return 0;
+        }
+        uint256 targetBalance = _mul(_div(totalRealAssets(), _oneHundredPercent(), 18, 18), pair.targetAllocation(), 18, 18);
+        uint256 actualBalance = _mul(_div(totalRealAssets(), _oneHundredPercent(), 18, 18), _allocation(pair), 18, 18);
+        return _sub(targetBalance, actualBalance, 18, 18);
     }
 
     function _allocation(IPair pair) private view returns (uint256) {
         uint256 result = 0;
-        result = _div(pair.realAssets(), totalRealAssets());
-        result = _mul(result, _oneHundredPercent());
+        result = _div(pair.realAssets(), totalRealAssets(), 18, 18);
+        result = _mul(result, _oneHundredPercent(), 18, 18);
         return result;
+    }
+
+    function _checkForDuplicateAsset(PairPayload memory pair) private view returns (bool) {
+        for (uint256 i = 0; i < _pairs.length; i += 1) {
+            if (_pairs[i].sellSidePath()[0] == pair.path[0]) {
+                revert DuplicateAsset();
+            }
+        }
+        return true;
+    }
+
+    function _checkForBaseCurrency(PairPayload memory pair) private pure returns (bool) {
+        if (pair.path[pair.path.length - 1] != _CURRENCY) {
+            revert PairsMustHaveTheSameBaseCurrency();
+        }
+        return true;
     }
 }

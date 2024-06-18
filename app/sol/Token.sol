@@ -2,12 +2,11 @@
 pragma solidity >=0.8.19;
 import { IERC20 } from "./imports/openzeppelin/token/ERC20/IERC20.sol";
 import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
-import { IToken } from "./IToken.sol";
 import { Ownable } from "./imports/openzeppelin/access/Ownable.sol";
 import { ERC20 } from "./imports/openzeppelin/token/ERC20/ERC20.sol";
 
 interface ITokenFactory {
-    deploy(string memory name, string memory symbol) external returns (address);
+    function deploy(string memory name, string memory symbol) external returns (address);
 }
 
 contract TokenFactory {

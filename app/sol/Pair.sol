@@ -9,7 +9,7 @@ import { FixedPointCalculator } from "./FixedPointCalculator.sol";
 import { Ownable } from "./imports/openzeppelin/access/Ownable.sol";
 
 interface IPairFactory {
-    function deploy(address[] memory path, uint256 targetAllocation) public returns (address);
+    function deploy(address[] memory path, uint256 targetAllocation) external returns (address);
 }
 
 contract PairFactory {
