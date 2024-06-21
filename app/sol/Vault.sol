@@ -61,6 +61,10 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         _slots[2].token = 0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6; /** WBTC */
         _slots[3].token = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39; /** LINK */
         _slots[4].token = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270; /** WMATIC */
+        _slots[1].targetAllocation = 10 ether;
+        _slots[2].targetAllocation = 30 ether;
+        _slots[3].targetAllocation = 10 ether;
+        _slots[4].targetAllocation = 50 ether;
     }
 
     function previewMint(uint256 assetsIn) public view returns (uint256) {
