@@ -20,7 +20,27 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
     Slot[50] internal _slots;
 
     struct Slot {
-        address token;
+        SlotResult result;
+        /***/address token;
+        /***/uint256 targetAllocation;
+        uint256 actualAllocation;
+        uint256 targetBalance;
+        uint256 actualBalance;
+        uint256 surplusBalance;
+        uint256 deficitBalance;
+        TotalValue totalValue;
+    }
+
+    enum SlotResult {
+        OK,
+        ZERO_TOTAL_ASSETS,
+        INSUFFICIENT_LIQUIDITY,
+        INSUFFICIENT_INPUT_AMOUNT,
+        ADDRESS_NOT_FOUND,
+        MISSING_REQUIRED_DATA,
+        SLIPPAGE_EXCEEDS_THRESHOLD,
+        INSUFFICIENT_BALANCE,
+        UNKNOWN_ERROR
     }
 
     enum CacheResult {
@@ -35,6 +55,12 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
     constructor(address ownableToken) OwnableTokenController(ownableToken) {
         Slot storage slot = _slots[0];
         slot.token = _DENOMINATION;
+
+        /** For testing */
+        _slots[1].token = 0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619; /** WETH */
+        _slots[2].token = 0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6; /** WBTC */
+        _slots[3].token = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39; /** LINK */
+        _slots[4].token = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270; /** WMATIC */
     }
 
     function previewMint(uint256 assetsIn) public view returns (uint256) {
@@ -67,6 +93,49 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         }
         return result;
     }
+
+    function _fetchSlotData(Slot memory slot) private view returns (Slot memory) {
+        if (slot.token == address(0)) {
+            slot.result = SlotResult.MISSING_REQUIRED_DATA;
+            return slot;
+        }
+        if (totalAssets() == 0) {
+            slot.result = SlotResult.ZERO_TOTAL_ASSETS;
+            return slot;
+        }
+        Asset memory asset;
+        asset.exchange.factory = _FACTORY;
+        asset.exchange.router = _ROUTER;
+        asset.token = slot.token;
+        asset.denomination = _DENOMINATION;
+        asset = _fetchAssetData(asset);
+        slot.result = SlotResult.OK;
+        slot.actualBalance = asset.balance;
+        if (asset.totalValue.result != RebalanceEngineResult.OK) {
+            slot.totalValue.result =
+                asset.totalValue.result == RebalanceEngineResult.INSUFFICIENT_LIQUIDITY ? SlotResult.INSUFFICIENT_LIQUIDITY :
+                asset.totalValue.result == RebalanceEngineResult.INSUFFICIENT_INPUT_AMOUNT ? SlotResult.INSUFFICIENT_INPUT_AMOUNT :
+                asset.totalValue.result == RebalanceEngineResult.ADDRESS_NOT_FOUND ? SlotResult.ADDRESS_NOT_FOUND :
+                asset.totalValue.result == RebalanceEngineResult.MISSING_REQUIRED_DATA ? SlotResult.MISSING_REQUIRED_DATA :
+                asset.totalValue.result == RebalanceEngineResult.SLIPPAGE_EXCEEDS_THRESHOLD ? SlotResult.SLIPPAGE_EXCEEDS_THRESHOLD :
+                asset.totalValue.result == RebalanceEngineResult.INSUFFICIENT_BALANCE ? SlotResult.INSUFFICIENT_BALANCE :
+                asset.totalValue.result == RebalanceEngineResult.UNKNOWN_ERROR : SlotResult.UNKNOWN_ERROR : SlotResult.UNKNOWN_ERROR;
+            return asset;
+        }
+        slot.totalValue = totalValue;
+        slot.actualAllocation = _mul(_div(slot.totalValue / totalAssets()), _ONE_HUNDRED_PERCENT);
+        slot.targetBalance = _mul(_div(totalAssets(), _ONE_HUNDRED_PERCENT), slot.targetAllocation);
+        if (slot.actualBalance > slot.targetBalance) {
+            slot.surplusBalance = _sub(slot.actualBalance, slot.targetBalance);
+            return slot;
+        }
+        if (slot.actualBalance < slot.targetBalance) {
+            slot.deficitBalance = _sub(slot.targetBalance, slot.actualBalance);
+            return slot;
+        }
+        return slot;
+    }
+
 
     function _isSupported(address token) private view returns (bool) {
         if (IERC20Metadata(token).decimals() < 2 || IERC20Metadata(token).decimals() > 18) {
