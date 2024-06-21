@@ -5,21 +5,7 @@ import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IE
 import { Ownable } from "./imports/openzeppelin/access/Ownable.sol";
 import { ERC20 } from "./imports/openzeppelin/token/ERC20/ERC20.sol";
 
-interface ITokenFactory {
-    function deploy(string memory name, string memory symbol) external returns (address);
-}
-
-contract TokenFactory {
-    constructor() {}
-
-    function deploy(string memory name, string memory symbol) public returns (address) {
-        Token token = new Token(name, symbol);
-        token.transferOwnership(msg.sender);
-        return address(token);
-    }
-}
-
-interface IToken is IERC20, IERC20Metadata {
+interface IOwnableToken is IERC20, IERC20Metadata {
     function owner() external view returns (address);
     function renounceOwnership() external;
     function transferOwnership(address newOwner) external;
@@ -27,17 +13,19 @@ interface IToken is IERC20, IERC20Metadata {
     function burn(address account, uint256 amount) external;
 }
 
-contract Token is Ownable, ERC20 {
-    constructor(string memory name, string memory symbol)
-    Ownable(msg.sender)
-    ERC20(name, symbol) 
+contract OwnableToken is Ownable, ERC20 {
+    constructor(string memory name, string memory symbol, address owner)
+    Ownable(owner)
+    ERC20(name, symbol)
     {}
 
-    function mint(address account, uint256 amount) public virtual onlyOwner() {
+    function mint(address account, uint256 amount) public
+    onlyOwner() {
         _mint(account, amount);
     }
 
-    function burn(address account, uint256 amount) public virtual onlyOwner() {
+    function burn(address account, uint256 amount) public
+    onlyOwner() {
         _burn(account, amount);
     }
 }

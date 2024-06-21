@@ -7,7 +7,7 @@ import * as TsResult from "ts-results";
 
 (async function() {
     const mainnetNodeUrl: string = "https://polygon-rpc.com";
-    const testnetNodeUrl: string =  "https://rpc.tenderly.co/fork/35be7b7e-6871-475e-a56e-4fda35e0bb87";
+    const testnetNodeUrl: string =  "https://rpc.tenderly.co/fork/32d6d64e-587c-47bf-9b50-98d37af5c16d";
     const url: string = testnetNodeUrl;
     const key: TsResult.Option<string> = secret("polygonPrivateKey");
     if (key.none) {
@@ -83,6 +83,48 @@ import * as TsResult from "ts-results";
             return;
         }
         console.log(vaultAddress);
+
+        /** Mint */
+        await (async function() {
+            await approve(100000000000000);
+            await mint(1.00);
+            console.log(await currencyAt(vaultAddress));
+
+            async function approve(amount: number) {
+                const result = await machine.invoke({
+                    to: vaultCurrency,
+                    methodSignature: "function approve(address,uint256) external",
+                    methodName: "approve",
+                    methodArgs: [
+                        vaultAddress,
+                        toEther(amount) /** Wrong but should be high enough */
+                    ]
+                });
+                if (result.err) {
+                    console.error(result.toString());
+                    return false;
+                }
+                return true
+            }
+
+            async function mint(amount: number) {
+                const mint = await machine.invoke({
+                    to: vaultAddress!,
+                    methodSignature: "function mint(uint256) external returns (uint256)",
+                    methodName: "mint",
+                    methodArgs: [
+                        toEther(amount)
+                    ]
+                });
+                if (mint.err) {
+                    console.error("failed to mint");
+                    console.error(mint.toString());
+                    return;
+                }
+                console.log("successful mint");
+            }
+        })();
+
         const totalBestAssets = await machine.query({
             to: vaultAddress,
             methodSignature: "function totalBestAssets() external view returns (uint256)",
@@ -115,6 +157,43 @@ import * as TsResult from "ts-results";
             console.error(rebalance.toString());
             return;
         }
-        
+
+        await (async function() {
+            const amountIn: bigint = BigInt(1000000 * (10**18));
+            const burn = await machine.invoke({
+                to: vaultAddress,
+                methodSignature: "function burn(uint256) external returns (uint256)",
+                methodName: "burn",
+                methodArgs: [
+                    amountIn
+                ]
+            });
+            if (burn.err) {
+                console.error("failed to burn");
+                console.error(burn.toString());
+                return;
+            }
+            console.log("successful burn");
+        })();
+
+        async function currencyAt(address: string) {
+            const result = await machine.query({
+                to: vaultCurrency,
+                methodSignature: "function balanceOf(address) external view returns (uint256)",
+                methodName: "balanceOf",
+                methodArgs: [
+                    address
+                ]
+            });
+            if (result.err) {
+                console.error(result.toString());
+                return;
+            }
+            return "$" + (Number(result.unwrap()) / 10**18).toFixed(20);
+        }
+
+        function toEther(value: number) {
+            return BigInt(value * (10**18));
+        }
     })();
 })();

@@ -13,7 +13,7 @@ export function SolFile(_path: IPath): TsResult.Result<ISolFile, unknown> {
     const _: ISolFile = { ...File(_path), temporaryPath, content, output, errors, warnings, bytecode, abi, methods };
 
     if (!isValidExtension(_, "sol")) {
-        return TsResult.Err<string>("InvalidExtension");
+        return TsResult.Err<string>("SolFile: invalid extension");
     }
 
     function temporaryPath(): TsResult.Option<IPath> {
@@ -32,7 +32,7 @@ export function SolFile(_path: IPath): TsResult.Result<ISolFile, unknown> {
         if (temporaryPath().none) {
             return TsResult.Err<string>("FailedToGenerateTemporaryPath");
         }
-        const command: string = `bun hardhat flatten ${_.path().toString()} > ${temporaryPath().unwrap().toString()}`;
+        const command = "bun hardhat flatten " + _.path().toString() + " > " + temporaryPath().unwrap().toString();
         ChildProcess.exec(command);
         const beginTimestamp: number = Date.now();
         let nowTimestamp: number = beginTimestamp;
@@ -41,8 +41,8 @@ export function SolFile(_path: IPath): TsResult.Result<ISolFile, unknown> {
         }
         const temporaryFile: IFile = File(temporaryPath().unwrap());
         const content: TsResult.Result<Buffer, unknown> = temporaryFile.content();
-        if (!content.err) {
-            return content;
+        if (content.err) {
+            return TsResult.Err<string>("SolFile: unable to parse content");
         }
         const result: Buffer = content.unwrap();
         const temporaryFileRemoval: TsResult.Result<void, unknown> = temporaryFile.remove();
@@ -134,7 +134,7 @@ export function SolFile(_path: IPath): TsResult.Result<ISolFile, unknown> {
                 ?.bytecode
                 ?.object ?? "";
         if (result === "") {
-            return TsResult.Err<string>("InvalidBytecode");
+            return TsResult.Err<string>("SolFile: empty bytecode");
         }
         return TsResult.Ok<string>(result);
     }
