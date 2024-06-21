@@ -54,6 +54,7 @@ contract RebalanceEngine is UniswapEngine {
                 pair.result == UniswapEngineResult.INSUFFICIENT_BALANCE ? RebalanceEngineResult.INSUFFICIENT_BALANCE : RebalanceEngineResult.UNKNOWN_ERROR;
             return asset;
         }
+        asset.result = RebalanceEngineResult.OK;
         asset.balance = _cast(IERC20(pair.token0).balanceOf(address(this)), IERC20Metadata(pair.token0).decimals(), 18);
         asset.totalValue.result = 
                 pair.quote0.result == UniswapEngineResult.OK ? RebalanceEngineResult.OK :
