@@ -41,6 +41,8 @@ contract UniswapEngine is FixedPointEngine {
         uint256 reserve1;
         Quote quote0;
         Quote quote1;
+        AmountIn amountIn0;
+        AmountIn amountIn1;
         AmountOut amountOut0;
         AmountOut amountOut1;
         Slippage slippage0;
@@ -53,6 +55,11 @@ contract UniswapEngine is FixedPointEngine {
     }
 
     struct Quote {
+        UniswapEngineResult result;
+        uint256 value;
+    }
+
+    struct AmountIn {
         UniswapEngineResult result;
         uint256 value;
     }
@@ -132,7 +139,7 @@ contract UniswapEngine is FixedPointEngine {
         }
     }
 
-    function _swap(SwapRequest memory request) internal returns (UniswapEngineResult) {
+    function _swap(SwapRequest memory request) internal returns (uint256, UniswapEngineResult) {
         Pair memory pair;
         pair.exchange.factory = request.exchange.factory;
         pair.exchange.router = request.exchange.router;
@@ -141,14 +148,14 @@ contract UniswapEngine is FixedPointEngine {
         pair.amountIn0 = request.amountIn;
         pair = _fetchPairData(pair);
         if (pair.result != UniswapEngineResult.OK) {
-            return pair.result;
+            return (0, pair.result);
         }
         if (pair.slippage0.percentage > request.slippageThreshold) {
-            return UniswapEngineResult.SLIPPAGE_EXCEEDS_THRESHOLD;
+            return (0, UniswapEngineResult.SLIPPAGE_EXCEEDS_THRESHOLD);
         }
         uint256 balance = _cast(IERC20(pair.token0).balanceOf(address(this)), pair.decimals0, 18);
         if (pair.amountIn0 > balance) {
-            return UniswapEngineResult.INSUFFICIENT_BALANCE;
+            return (0, UniswapEngineResult.INSUFFICIENT_BALANCE);
         }
         IERC20(pair.token0).approve(pair.exchange.router, 0);
         IERC20(pair.token0).approve(pair.exchange.router, _cast(pair.amountIn0, 18, pair.decimals0));
@@ -160,7 +167,7 @@ contract UniswapEngine is FixedPointEngine {
         uint256 amountOut = _cast(amount, pair.decimals0, 18);
         IERC20(pair.token0).approve(pair.exchange.router, 0);
         emit Swap(request.tokenIn, request.tokenOut, request.amountIn, amountOut);
-        return UniswapEngineResult.OK;
+        return (amountOut, UniswapEngineResult.OK);
     }
 
     function _slippage(AmountOut memory amountOut, Quote memory quote) private pure returns (Slippage memory) {

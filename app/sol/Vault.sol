@@ -1,13 +1,18 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
+import { IERC20 } from "./imports/openzeppelin/token/ERC20/IERC20.sol";
 import { OwnableTokenController } from "./OwnableTokenController.sol";
 import { RebalanceEngine } from "./RebalanceEngine.sol";
+import { VendorEngine } from "./VendorEngine.sol";
+import { Ownable } from "./imports/openzeppelin/access/Ownable.sol";
 
 interface IVault {
     function previewMint(uint256 assetsIn) external view returns (uint256);
     function previewBurn(uint256 supplyIn) external view returns (uint256);
     function totalSupply() external view returns (uint256);
     function totalAssets() external view returns (uint256);
+    function rebalance(uint256[50] allocations) external returns (bool);
     function mint(uint256 assetsIn) external returns (bool);
     function burn(uint256 supplyIn) external returns (bool);
 }
@@ -22,12 +27,13 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
     struct Slot {
         SlotResult result;
         /***/address token;
-        /***/uint256 targetAllocation;
+        uint256 targetAllocation;
         uint256 actualAllocation;
         uint256 targetBalance;
         uint256 actualBalance;
         uint256 surplusBalance;
         uint256 deficitBalance;
+        uint256 targetValue;
         TotalValue totalValue;
     }
 
@@ -52,7 +58,8 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         UNSUPPORTED_TOKEN
     }
 
-    constructor(address ownableToken) OwnableTokenController(ownableToken) {
+    constructor(address ownableToken) OwnableTokenController(ownableToken) 
+    Ownable(msg.sender) {
         Slot storage slot = _slots[0];
         slot.token = _DENOMINATION;
 
@@ -61,10 +68,6 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         _slots[2].token = 0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6; /** WBTC */
         _slots[3].token = 0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39; /** LINK */
         _slots[4].token = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270; /** WMATIC */
-        _slots[1].targetAllocation = 10 ether;
-        _slots[2].targetAllocation = 30 ether;
-        _slots[3].targetAllocation = 10 ether;
-        _slots[4].targetAllocation = 50 ether;
     }
 
     function previewMint(uint256 assetsIn) public view returns (uint256) {
@@ -98,6 +101,122 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         return result;
     }
 
+    function rebalance(uint256[50] allocations) public onlyOwner() returns (bool) {
+        return _rebalance(allocations);
+    }
+
+    function mint(uint256 assetsIn) public returns (bool) {
+        uint256 amountToMint = previewMint(assetsIn);
+        if (amountToMint == 0) {
+            revert("Vault: you would receive nothing in return");
+        }
+        uint8 decimals = IERC20Metadata(_DENOMINATION).decimals();
+        if (_cast(IERC20(_DENOMINATION).balanceOf(msg.sender), decimals, 18) < assetsIn) {
+            revert("Vault: insufficient balance");
+        }
+        IERC20(_DENOMINATION).transferFrom(msg.sender, address(this), _cast(assetsIn, 18, decimals));
+        _mint(msg.sender, amountToMint);
+        return true;
+    }
+
+    function burn(uint256 supplyIn) public returns (bool) {
+        uint256 amountToSend = previewBurn(supplyIn);
+        if (amountToSend == 0) {
+            revert("Vault: you would receive nothing in return");
+        }
+        uint256 ownership = _mul(_div(amountToSend, totalAssets()), _ONE_HUNDRED_PERCENT);
+        for (uint256 i = 1; i < _slots.length; i += 1) {
+            Slot storage slot = _slots[i];
+            Slot memory cargo;
+            cargo.token = slot.token;
+            cargo.targetAllocation = slot.targetAllocation;
+            cargo = _fetchSlotData(cargo);
+            if (cargo.result == SlotResult.OK) {
+                uint256 balanceToSend = _mul(_div(cargo.actualBalance, _ONE_HUNDRED_PERCENT), ownership);
+                SwapRequest memory request;
+                request.tokenIn = cargo.token;
+                request.tokenOut = _DENOMINATION;
+                request.amountIn = balanceToSend;
+                request.slippageThreshold = 5 ether;
+                (uint256 amountOut, UniswapEngineResult result) = _swap(request);
+                if (result == UniswapEngineResult.OK && amountOut != 0) {
+                    uint8 decimals = IERC20Metadata(_DENOMINATION).decimals();
+                    IERC20(_DENOMINATION).transfer(msg.sender, _cast(amountOut, 18, decimals));
+                }
+                else {
+                    uint8 decimals = IERC20Metadata(cargo.token).decimals();
+                    IERC20(cargo.token).transfer(msg.sender, _cast(balanceToSend, 18, decimals));
+                }
+            }
+        }
+        return true;
+    }
+
+    function _rebalance(uint256[50] allocations) internal returns (bool) {
+        uint256 sum = 0;
+        for (uint8 i = 0; i < allocations.length; i += 1) {
+            uint256 allocation = allocations[i];
+            sum += allocation;
+        }
+        if (sum != 100 ether) {
+            return false;
+        }
+        for (uint8 i = 1; i < allocations.length; i += 1) {
+            uint256 allocation = allocations[i];
+            Slot storage slot = _slots[i];
+            if (slot.token != address(0)) {
+                Slot memory cargo;
+                cargo.token = slot.token;   
+                cargo.targetAllocation = allocation;
+                cargo = _fetchSlotData(cargo);
+                if (cargo.result == SlotResult.OK) {
+                    if (cargo.surplusBalance > 0) {
+                        SwapRequest memory request;
+                        request.tokenIn = cargo.token;
+                        request.tokenOut = _DENOMINATION;
+                        request.amountIn = cargo.surplusBalance;
+                        request.slippageThreshold = 5 ether;
+                        (uint256 amountOut, UniswapEngineResut result) = _swap(request);
+                    }
+                }      
+            }
+        }
+        for (uint8 i = 1; i < allocations.length; i += 1) {
+            uint256 allocation = allocations[i];
+            Slot storage slot = _slots[i];
+            if (slot.token != address(0)) {
+                Slot memory cargo;
+                cargo.token = slot.token;   
+                cargo.targetAllocation = allocation;
+                cargo = _fetchSlotData(cargo);
+                if (cargo.result == SlotResult.OK) {
+                    if (cargo.deficitBalance > 0) {
+                        /** How much denomination is required to make the purchase? */
+                        Pair memory pair;
+                        pair.exchange.factory = _FACTORY;
+                        pair.exchange.router = _ROUTER;
+                        pair.token0 = _DENOMINATION;
+                        pair.token1 = cargo.token;
+                        pair = _fetchPairData(pair);
+                        uint256 required = _amountIn(cargo.deficitBalance, pair.reserve0, pair.reserve1, pair.exchange.router);
+                        uint8 decimals = IERC20Metadata(_DENOMINATION).decimals();
+                        uint256 balance = _cast(IERC20(_DENOMINATION).balanceOf(address(this)), decimals, 18);
+                        if (balance >= required) {
+                            SwapRequest memory request;
+                            request.tokenIn = _DENOMINATION;
+                            request.tokenOut = cargo.token;
+                            request.amountIn = cargo.required;
+                            request.slippageThreshold = 5 ether;
+                            (uint256 amountOut, UniswapEngineResut result) = _swap(request);
+                        }
+                    }
+                }
+            }
+
+        }
+        return true;
+    }
+
     function _fetchSlotData(Slot memory slot) private view returns (Slot memory) {
         if (slot.token == address(0)) {
             slot.result = SlotResult.MISSING_REQUIRED_DATA;
@@ -116,19 +235,23 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         slot.result = SlotResult.OK;
         slot.actualBalance = asset.balance;
         if (asset.totalValue.result != RebalanceEngineResult.OK) {
-            slot.totalValue.result =
-                asset.totalValue.result == RebalanceEngineResult.INSUFFICIENT_LIQUIDITY ? SlotResult.INSUFFICIENT_LIQUIDITY :
-                asset.totalValue.result == RebalanceEngineResult.INSUFFICIENT_INPUT_AMOUNT ? SlotResult.INSUFFICIENT_INPUT_AMOUNT :
-                asset.totalValue.result == RebalanceEngineResult.ADDRESS_NOT_FOUND ? SlotResult.ADDRESS_NOT_FOUND :
-                asset.totalValue.result == RebalanceEngineResult.MISSING_REQUIRED_DATA ? SlotResult.MISSING_REQUIRED_DATA :
-                asset.totalValue.result == RebalanceEngineResult.SLIPPAGE_EXCEEDS_THRESHOLD ? SlotResult.SLIPPAGE_EXCEEDS_THRESHOLD :
-                asset.totalValue.result == RebalanceEngineResult.INSUFFICIENT_BALANCE ? SlotResult.INSUFFICIENT_BALANCE :
-                asset.totalValue.result == RebalanceEngineResult.UNKNOWN_ERROR : SlotResult.UNKNOWN_ERROR : SlotResult.UNKNOWN_ERROR;
-            return asset;
+            slot.totalValue.result = asset.totalValue.result;
+            return slot;
         }
-        slot.totalValue = totalValue;
-        slot.actualAllocation = _mul(_div(slot.totalValue / totalAssets()), _ONE_HUNDRED_PERCENT);
-        slot.targetBalance = _mul(_div(totalAssets(), _ONE_HUNDRED_PERCENT), slot.targetAllocation);
+        slot.totalValue.value = asset.totalValue.value;
+        slot.actualAllocation = _mul(_div(slot.totalValue.value, totalAssets()), _ONE_HUNDRED_PERCENT);
+        slot.targetValue = _mul(_div(totalAssets(), _ONE_HUNDRED_PERCENT), slot.targetAllocation);
+        Pair memory pair;
+        pair.exchange.factory = _FACTORY;
+        pair.exchange.router = _ROUTER;
+        pair.token0 = slot.token;
+        pair.token1 = _DENOMINATION;
+        pair.amountIn1 = slot.targetValue;
+        pair = _fetchPairData(pair);
+        if (pair.quote1.result != UniswapEngineResult.OK) {
+            return slot;
+        }
+        slot.targetBalance = pair.quote1.value;
         if (slot.actualBalance > slot.targetBalance) {
             slot.surplusBalance = _sub(slot.actualBalance, slot.targetBalance);
             return slot;
@@ -160,7 +283,8 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
 
 
     function _cache(address token) private returns (CacheResult) {
-        if (_isCached(token)) {
+        (, bool cached) = _isCached(token);
+        if (cached) {
             return CacheResult.ALREADY_CACHED;
         }
         if (!_isSupported(token)) {
@@ -186,5 +310,22 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         Slot storage slot = _slots[position];
         slot.token = address(0);
         return CacheResult.OK;
+    }
+
+    function _amountIn(uint256 token1AmountOut, uint256 token0Reserve, uint256 token1Reserve, address uniswapV2Router) private pure returns (AmountIn memory) {
+        AmountIn memory amountIn;
+        if (token1AmountOut == 0) {
+            amountIn.result = UniswapEngineResult.INSUFFICIENT_INPUT_AMOUNT;
+            amountIn.value = 0;
+            return amountIn;
+        }
+        if (token0Reserve == 0 || token1Reserve == 0) {
+            amountIn.result = UniswapEngineResult.INSUFFICIENT_LIQUIDITY;
+            amountIn.value = 0;
+            return amountIn;
+        }
+        amountIn.result = UniswapEngineResult.OK;
+        amountIn.value = IUniswapV2Router02(uniswapV2Router).getAmountIn(token1AmountOut, token0Reserve, token1Reserve);
+        return amountIn;
     }
 }
