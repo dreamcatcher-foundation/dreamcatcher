@@ -6,6 +6,7 @@ import { IUniswapAdaptor } from "./IUniswapAdaptor.sol";
 import { FixedPointCalculator } from "./FixedPointCalculator.sol";
 import { VTokenController } from "./VTokenController.sol";
 import { Cooldown } from "./modifiers/Cooldown.sol";
+import { Pair } from "./Pair.sol";
 
 /**
 * Current limitations regardling the distribution and strength of
@@ -21,11 +22,10 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
     address constant internal _ROUTER = 0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff;
 
     address[5] internal _slots;
-    uint256[5] internal _weightings
+    uint256[5] internal _weightings;
     IUniswapAdaptor internal _adaptor;
 
     constructor(address vToken, address adaptor, uint256[5] memory weightings) 
-    Ownable(msg.sender) 
     VTokenController(vToken) 
     Cooldown(5 seconds) { 
         _slots[0] = _DENOMINATION; /// USDC
@@ -80,10 +80,9 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
         for (uint8 i = 1; i < _slots.length; i += 1) {
             address slot = _slots[i];
             if (slot != address(0)) {
-                bool success;
                 address token0 = slot;
                 address token1 = _DENOMINATION;
-                (BalanceQueryResult memory balanceQueryResult, success) = _getBalanceSheet(_FACTORY, _ROUTER, token0, token1, _weightings[i]);
+                (BalanceQueryResult memory balanceQueryResult, bool success) = _getBalanceSheet(_FACTORY, _ROUTER, token0, token1, _weightings[i]);
                 if (success) {
                     uint256 sendableBalance = _mul(_div(balanceQueryResult.actualBalance, 100 ether), ownership);
                     SwapRequest memory request;
@@ -91,7 +90,7 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
                     request.tokenOut = token1;
                     request.amountIn = sendableBalance;
                     request.slippageThreshold = 5 ether;
-                    (uint256 out, success) = _swap(_FACTORY, _ROUTER, token0, token1, sendableBalance, 2 ether);
+                    (uint256 out, bool success) = _swap(_FACTORY, _ROUTER, token0, token1, sendableBalance, 2 ether);
                     if (success) {
                         uint8 decimals = IERC20Metadata(token1).decimals();
                         IERC20(token1).transfer(msg.sender, _cast(out, 18, decimals));
@@ -188,14 +187,13 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
         }
     }
 
-    function _tryBuyDeficit(uint8 slotIndex) private (bool) {
-        bool success;
+    function _tryBuyDeficit(uint8 slotIndex) private returns (bool) {
         address slot = _slots[slotIndex];
         if (slot == address(0)) {
             return false;
         }
         uint256 weighting = _weightings[slotIndex];
-        (BalanceQueryResult memory query, success) = _getBalanceSheet(_FACTORY, _ROUTER, slot, _DENOMINATION, weighting);
+        (BalanceQueryResult memory query, bool success) = _getBalanceSheet(_FACTORY, _ROUTER, slot, _DENOMINATION, weighting);
         if (!success) {
             return false;
         }
@@ -203,29 +201,28 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
             return false;
         }
         uint256 amountIn = query.targetValue - query.totalValue;
-        (uint256 out, success) = _swap(_FACTORY, _ROUTER, _DENOMINATION, slot, amountIn, 5 ether);
-        if (!success) {
+        (uint256 out, bool success_) = _swap(_FACTORY, _ROUTER, _DENOMINATION, slot, amountIn, 5 ether);
+        if (!success_) {
             return false;
         }
         return true;
     }
 
-    function _trySellSurplus(uint8 slotIndex) private (bool) {
-        bool success;
+    function _trySellSurplus(uint8 slotIndex) private returns (bool) {
         address slot = _slots[slotIndex];
         if (slot == address(0)) {
             return false;
         }
         uint256 weighting = _weightings[slotIndex];
-        (BalanceQueryResult memory query, success) = _getBalanceSheet(_FACTORY, _ROUTER, slot, _DENOMINATION, weighting);
+        (BalanceQueryResult memory query, bool success) = _getBalanceSheet(_FACTORY, _ROUTER, slot, _DENOMINATION, weighting);
         if (!success) {
             return false;
         }
         if (query.surplusBalance == 0) {
             return false;
         }
-        (uint256 out, success) = _swap(_FACTORY, _ROUTER, slot, _DENOMINATION, query.surplusBalance, 5 ether);
-        if (!success) {
+        (uint256 out, bool success_) = _swap(_FACTORY, _ROUTER, slot, _DENOMINATION, query.surplusBalance, 5 ether);
+        if (!success_) {
             return false;
         }
         return true;

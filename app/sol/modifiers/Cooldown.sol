@@ -9,7 +9,7 @@ contract Cooldown {
     uint32 private _duration;
 
     modifier cooldown() {
-        if (block.timestamp <= unlockTimestamp()) revert Cooldown();
+        if (block.timestamp <= _unlockTimestamp) revert Cooldown();
         _;
         _lock();
     }
@@ -21,6 +21,6 @@ contract Cooldown {
 
     function _lock() private {
         _lockedTimestamp = uint32(block.timestamp);
-        _unlockTimestamp + uint32(block.timestamp) + duration();
+        _unlockTimestamp + uint32(block.timestamp) + _duration;
     }
 }
