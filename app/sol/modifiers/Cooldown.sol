@@ -19,8 +19,7 @@ contract Cooldown {
         _lock();
     }
 
-    function _lock()
-    private {
+    function _lock() private {
         _lockedTimestamp = uint32(block.timestamp);
         _unlockTimestamp + uint32(block.timestamp) + duration();
     }

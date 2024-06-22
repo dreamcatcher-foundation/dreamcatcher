@@ -1,5 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IERC20 } from "./imports/openzeppelin/token/ERC20/IERC20.sol";
+import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
+import { IUniswapV2Router02 } from "./imports/uniswap/interfaces/IUniswapV2Router02.sol";
+import { IUniswapV2Factory } from "./imports/uniswap/interfaces/IUniswapV2Factory.sol";
+import { IUniswapV2Pair } from "./imports/uniswap/interfaces/IUniswapV2Pair.sol";
 import { Pair } from "./Pair.sol";
 import { QuoteResult } from "./QuoteResult.sol";
 import { BalanceQueryResult } from "./BalanceQueryResult.sol";
@@ -13,11 +18,22 @@ contract UniswapAdaptor is FixedPointCalculator, ThirdPartyBroker {
 
     constructor() {}
 
+    function getQuote(Pair memory pair, uint256 amountIn) public pure returns (QuoteResult memory) {
+        require(pair.token0 != address(0) && pair.token1 != address(0) && pair.decimals0 != 0 && pair.decimals1 != 0 && pair.factory != address(0) && pair.router != address(0), "VOID_PAIR");
+        require(pair.reserve0 != 0 && pair.reserve1 != 0, "INSUFFICIENT_LIQUIDITY");
+        QuoteResult memory quoteResult;
+        quoteResult.amountIn = amountIn;
+        quoteResult.quote = _quote(amountIn, pair.reserve0, pair.reserve1, pair.router);
+        quoteResult.out = _out(amountIn, pair.reserve0, pair.reserve1, pair.router);
+        quoteResult.slippage = _slippage(quoteResult.out, quoteResult.quote);
+        return quoteResult;
+    }
+
     function getBalanceSheet(Pair memory pair, uint256 targetWeight, uint256 totalAssets) public view returns (BalanceQueryResult memory) {
         BalanceQueryResult memory balanceQueryResult;
-        balanceQueryResult.targetWeigth = targetWeight;
+        balanceQueryResult.targetWeight = targetWeight;
         balanceQueryResult.totalAssets = totalAssets;
-        balanceQueryResult.actualBalance = _cast(IERC20(pair.token0).balanceOf(address(msg.sender), IERC20Metadata(pair.decimals0).decimals()), 18);
+        balanceQueryResult.actualBalance = _cast(IERC20(pair.token0).balanceOf(address(msg.sender)), IERC20Metadata(pair.token0).decimals(), 18);
         QuoteResult memory quoteResult = getQuote(pair, balanceQueryResult.actualBalance);
         balanceQueryResult.actualValue = quoteResult.quote;
         balanceQueryResult.actualWeight = _mul(_div(balanceQueryResult.actualValue, balanceQueryResult.totalAssets), 100 ether);
@@ -49,20 +65,9 @@ contract UniswapAdaptor is FixedPointCalculator, ThirdPartyBroker {
         return balanceQueryResult;
     }
 
-    function getQuote(Pair memory pair, uint256 amountIn) public view returns (QuoteResult memory) {
-        require(pair.token0 != address(0) && pair.token1 != address(0) && pair.decimals0 != 0 && pair.decimals1 != 0 && pair.factory != address(0) && pair.router != address(0), "VOID_PAIR");
-        require(pair.reserve0 != 0 && pair.reserve1 != 0, "INSUFFICIENT_LIQUIDITY");
-        QuoteResult memory quoteResult;
-        quoteResult.amountIn = amountIn;
-        quoteResult.quote = _quote(amountIn, pair.reserve0, pair.reserve1, pair.router);
-        quoteResult.out = _out(amountIn, pair.reserve0, pair.reserve1, pair.router);
-        quoteResult.slippage = _slippage(quoteResult.out, quoteResult.quote);
-        return quoteResult;
-    }
-
     function getPair(Asset memory asset) public view returns (Pair memory) {
         require(asset.factory != address(0) && asset.router != address(0) && asset.token0 != address(0) && asset.token1 != address(0), "VOID_ASSET");
-        require(IUniswapV2Factory(asset.factory).getPair(asset.token0, asset.token1), "PAIR_NOT_FOUND");
+        require(IUniswapV2Factory(asset.factory).getPair(asset.token0, asset.token1) != address(0), "PAIR_NOT_FOUND");
         Pair memory pair;
         pair.factory = asset.factory;
         pair.router = asset.router;
@@ -70,24 +75,28 @@ contract UniswapAdaptor is FixedPointCalculator, ThirdPartyBroker {
         pair.token1 = asset.token1;
         pair.decimals0 = IERC20Metadata(pair.token0).decimals();
         pair.decimals1 = IERC20Metadata(pair.token1).decimals();
-        address pairAddr = IUniswapV2Factory(pair.factory).getPair(result.token0, result.token1);
+        address pairAddr = IUniswapV2Factory(pair.factory).getPair(pair.token0, pair.token1);
         pair.addr = pairAddr;
         IUniswapV2Pair pairIntf = IUniswapV2Pair(pairAddr);
         (uint112 reserve0, uint112 reserve1,) = pairIntf.getReserves();
         address pairToken0 = pairIntf.token0();
-        address pairToken1 = pairIntf.token1();
         pair.reserve0 = pair.token0 == pairToken0
-            ? _cast(reserve0, pair.decimals0, 18) 
-            : _cast(reserve1, pair.decimals0, 18);
+            ? uint112(_cast(reserve0, pair.decimals0, 18)) 
+            : uint112(_cast(reserve1, pair.decimals0, 18));
         pair.reserve1 = pair.token0 == pairToken0
-            ? _cast(reserve1, pair.decimals1, 18)
-            : _cast(reserve0, pair.decimals1, 18);  
+            ? uint112(_cast(reserve1, pair.decimals1, 18))
+            : uint112(_cast(reserve0, pair.decimals1, 18));  
         return pair;
     }
 
     function swap(SwapRequest memory request) public thirdPartySwap(request.tokenIn, request.amountIn, request.router) returns (uint256) {
         require(request.factory != address(0) && request.router != address(0) && request.tokenIn != address(0) && request.tokenOut != address(0) && request.amountIn != 0, "UniswapEngine: VOID_SWAP_REQUEST");
-        QuoteResult memory quoteResult = getQuote(getPair(request.tokenIn, request.tokenOut, request.factory, request.router));
+        Asset memory asset;
+        asset.token0 = request.tokenIn;
+        asset.token1 = request.tokenOut;
+        asset.factory = request.factory;
+        asset.router = request.router;
+        QuoteResult memory quoteResult = getQuote(getPair(asset), request.amountIn);
         require(quoteResult.amountIn != 0 && quoteResult.quote != 0 && quoteResult.out != 0 && quoteResult.slippage != 0, "UniswapEngine: VOID_QUOTE_RESULT");
         require(quoteResult.slippage <= request.slippageThreshold, "UniswapEngine: SLIPPAGE_EXCEEDS_THRESHOLD");
         address[] memory path = new address[](2);

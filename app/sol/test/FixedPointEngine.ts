@@ -737,54 +737,6 @@ import * as TsResult from "ts-results";
             ]
         })).unwrap();
 
-        await transfer(weth, 0.0001);
-
-        await mint(0);
-        
-        log(await totalAssets());
-        log(await totalSupply());
-        
-        log("BeforeRebalance");
-
-        log(await totalAssets());
-        log(await totalSupply());  
-
-        log("usdc", await debug(usdc, 50));
-
-        log("weth", await debug(weth, 25));
-
-        log("wbtc", await debug(wbtc, 15));
-
-        log("link", await debug(link, 5));
-
-        log("wmatic", await debug(wmatic, 5));
-
-        (await machine.invoke({
-            to: vault,
-            methodSignature: "function sellSurplus(address,uint256) external",
-            methodName: "sellSurplus",
-            methodArgs: [
-                weth,
-                BigInt(25 * 10**18)
-            ]
-        })).unwrap();
-
-        log("AfterRebalance");
-
-        log(await totalAssets());
-        log(await totalSupply());  
-
-  
-        log("usdc", await debug(usdc, 50));
-
-        log("weth", await debug(weth, 25));
-
-        log("wbtc", await debug(wbtc, 15));
-
-        log("link", await debug(link, 5));
-
-        log("wmatic", await debug(wmatic, 5));
-
         //await mint(5000);
         //log("Rebalance test.")
         //await rebalance([50, 25, 25, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);

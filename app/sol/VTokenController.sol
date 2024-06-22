@@ -14,7 +14,7 @@ contract VTokenController {
         return _vToken.totalSupply();
     }
 
-    modifier mint(uint256 amount) {
+    modifier mintable(uint256 amount) {
         _;
         _mint(amount);
     }
@@ -23,7 +23,7 @@ contract VTokenController {
         _vToken.mint(msg.sender, amount);
     }
 
-    modifier burn(uint256 amount) {
+    modifier burnable(uint256 amount) {
         _burn(amount);
         _;
     }
