@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 import { Pair } from "./Pair.sol";
-import { PairQueryResult } from "./PairQueryResult.sol";
 import { QuoteResult } from "./QuoteResult.sol";
 import { BalanceQueryResult } from "./BalanceQueryResult.sol";
-import { FixedPointEngine } from "./FixedPointEngine.sol";
-import { ThirdPartyBroker } from "./modifiers/ThirdPartySwap.sol";
+import { FixedPointCalculator } from "./FixedPointCalculator.sol";
+import { ThirdPartyBroker } from "./modifiers/ThirdPartyBroker.sol";
 import { SwapRequest } from "./SwapRequest.sol";
+import { Asset } from "./Asset.sol";
 
-contract UniswapAdaptor is FixedPointEngine, ThirdPartyBroker {
+contract UniswapAdaptor is FixedPointCalculator, ThirdPartyBroker {
     event ThirdPartySwap(address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut);
 
     constructor() {}

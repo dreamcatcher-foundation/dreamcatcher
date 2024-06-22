@@ -56,7 +56,7 @@ contract FixedPointCalculator {
         return (x == 0 || decimals0 == decimals1) ? x : _muldiv(x, 10**decimals1, 10**decimals0);
     }
 
-    function _muldiv(uint256 a, uint256 b, uint256 denominator) internal pure return (uint256) {
+    function _muldiv(uint256 a, uint256 b, uint256 denominator) internal pure returns (uint256) {
         return Math.mulDiv(a, b, denominator);
     }
 }
