@@ -37,12 +37,10 @@ contract UniswapEngine is FixedPointEngine {
         uint8 decimals1;
         uint256 amountIn0; /** If `0` defaults to 1 ether */
         uint256 amountIn1; /** If `0` defaults to 1 ether */
-        uint256 reserve0;
-        uint256 reserve1;
+        uint256 reserve0; /** uint112 */
+        uint256 reserve1; /** uint112 */
         Quote quote0;
         Quote quote1;
-        AmountIn amountIn0;
-        AmountIn amountIn1;
         AmountOut amountOut0;
         AmountOut amountOut1;
         Slippage slippage0;

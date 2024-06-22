@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IUniswapV2Router02 } from "./imports/uniswap/interfaces/IUniswapV2Router02.sol";
 import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
 import { IERC20 } from "./imports/openzeppelin/token/ERC20/IERC20.sol";
 import { OwnableTokenController } from "./OwnableTokenController.sol";
@@ -12,7 +13,7 @@ interface IVault {
     function previewBurn(uint256 supplyIn) external view returns (uint256);
     function totalSupply() external view returns (uint256);
     function totalAssets() external view returns (uint256);
-    function rebalance(uint256[50] allocations) external returns (bool);
+    function rebalance(uint256[50] memory allocations) external returns (bool);
     function mint(uint256 assetsIn) external returns (bool);
     function burn(uint256 supplyIn) external returns (bool);
 }
@@ -101,8 +102,53 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         return result;
     }
 
-    function rebalance(uint256[50] allocations) public onlyOwner() returns (bool) {
-        return _rebalance(allocations);
+    //function buyDeficit(address token, uint256 allocation) public returns (bool) {
+    //    require(token != address(0), "token is zero address");
+    //    (uint8 p, bool success) = _isCached(token);
+    //    require(success, "unable to find token");
+    //    Slot storage slot = _slots[p];
+    //    Slot memory cargo;
+    //    cargo.token = slot.token;
+    //    cargo.targetAllocation = allocation;
+    //    cargo = _fetchSlotData(cargo);
+    //    require(cargo.result == SlotResult.OK, "unable to fetch slot data");
+    //    require(cargo.deficitBalance > 0, "token does not have a deficit");
+    //    SwapRequest memory request;
+    //    request.exchange.factory = _FACTORY;
+    //    request.exchange.router = _ROUTER;
+    //    request.tokenIn = _DENOMINATION;
+    //    request.tokenOut = cargo.token;
+    //    request.amountIn = cargo.targetValue - cargo.totalValue.value;
+    //    request.slippageThreshold = 5 ether;
+    //    (uint256 amountOut, UniswapEngineResult result) = _swap(request);
+    //    if (result == UniswapEngineResult.OK) {
+    //        
+    //    }
+    //    return true;
+    //}
+
+    function sellSurplus(address token, uint256 allocation) public returns (bool) {
+        require(token != address(0), "token is zero address");
+        (uint8 p, bool success) = _isCached(token);
+        require(success, "unable to find token");
+        Slot storage slot = _slots[p];
+        Slot memory cargo;
+        cargo.token = slot.token;
+        cargo.targetAllocation = allocation;
+        cargo = _fetchSlotData(cargo);
+        require(cargo.result == SlotResult.OK, "unable to fetch slot data");
+        require(cargo.surplusBalance > 0, "token does not have a surplus");
+        SwapRequest memory request;
+        request.exchange.factory = _FACTORY;
+        request.exchange.router = _ROUTER;
+        request.tokenIn = cargo.token;
+        request.tokenOut = _DENOMINATION;
+        request.amountIn = cargo.surplusBalance;
+        request.slippageThreshold = 2 ether;
+        (uint256 amountOut, UniswapEngineResult result) = _swap(request);
+        if (result == UniswapEngineResult.SLIPPAGE_EXCEEDS_THRESHOLD) {
+            revert("missing required data");
+        }
     }
 
     function mint(uint256 assetsIn) public returns (bool) {
@@ -124,6 +170,7 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         if (amountToSend == 0) {
             revert("Vault: you would receive nothing in return");
         }
+        _burn(msg.sender, supplyIn);
         uint256 ownership = _mul(_div(amountToSend, totalAssets()), _ONE_HUNDRED_PERCENT);
         for (uint256 i = 1; i < _slots.length; i += 1) {
             Slot storage slot = _slots[i];
@@ -149,72 +196,22 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
                 }
             }
         }
+        uint8 decimals = IERC20Metadata(_DENOMINATION).decimals();
+        uint256 balance = IERC20(_DENOMINATION).balanceOf(address(this));
+        uint256 balanceToSend = _mul(_div(_cast(balance, decimals, 18), _ONE_HUNDRED_PERCENT), ownership);
+        IERC20(_DENOMINATION).transfer(msg.sender, _cast(balanceToSend, 18, decimals));
         return true;
     }
 
-    function _rebalance(uint256[50] allocations) internal returns (bool) {
-        uint256 sum = 0;
-        for (uint8 i = 0; i < allocations.length; i += 1) {
-            uint256 allocation = allocations[i];
-            sum += allocation;
-        }
-        if (sum != 100 ether) {
-            return false;
-        }
-        for (uint8 i = 1; i < allocations.length; i += 1) {
-            uint256 allocation = allocations[i];
-            Slot storage slot = _slots[i];
-            if (slot.token != address(0)) {
-                Slot memory cargo;
-                cargo.token = slot.token;   
-                cargo.targetAllocation = allocation;
-                cargo = _fetchSlotData(cargo);
-                if (cargo.result == SlotResult.OK) {
-                    if (cargo.surplusBalance > 0) {
-                        SwapRequest memory request;
-                        request.tokenIn = cargo.token;
-                        request.tokenOut = _DENOMINATION;
-                        request.amountIn = cargo.surplusBalance;
-                        request.slippageThreshold = 5 ether;
-                        (uint256 amountOut, UniswapEngineResut result) = _swap(request);
-                    }
-                }      
-            }
-        }
-        for (uint8 i = 1; i < allocations.length; i += 1) {
-            uint256 allocation = allocations[i];
-            Slot storage slot = _slots[i];
-            if (slot.token != address(0)) {
-                Slot memory cargo;
-                cargo.token = slot.token;   
-                cargo.targetAllocation = allocation;
-                cargo = _fetchSlotData(cargo);
-                if (cargo.result == SlotResult.OK) {
-                    if (cargo.deficitBalance > 0) {
-                        /** How much denomination is required to make the purchase? */
-                        Pair memory pair;
-                        pair.exchange.factory = _FACTORY;
-                        pair.exchange.router = _ROUTER;
-                        pair.token0 = _DENOMINATION;
-                        pair.token1 = cargo.token;
-                        pair = _fetchPairData(pair);
-                        uint256 required = _amountIn(cargo.deficitBalance, pair.reserve0, pair.reserve1, pair.exchange.router);
-                        uint8 decimals = IERC20Metadata(_DENOMINATION).decimals();
-                        uint256 balance = _cast(IERC20(_DENOMINATION).balanceOf(address(this)), decimals, 18);
-                        if (balance >= required) {
-                            SwapRequest memory request;
-                            request.tokenIn = _DENOMINATION;
-                            request.tokenOut = cargo.token;
-                            request.amountIn = cargo.required;
-                            request.slippageThreshold = 5 ether;
-                            (uint256 amountOut, UniswapEngineResut result) = _swap(request);
-                        }
-                    }
-                }
-            }
-
-        }
-        return true;
+    function debug__fetchSlotData(
+        address token,
+        uint256 targetAllocation
+    ) external view returns (Slot memory) {
+        Slot memory slot;
+        slot.token = token;
+        slot.targetAllocation = targetAllocation;
+        slot = _fetchSlotData(slot);
+        return slot;
     }
 
     function _fetchSlotData(Slot memory slot) private view returns (Slot memory) {
@@ -225,6 +222,23 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         if (totalAssets() == 0) {
             slot.result = SlotResult.ZERO_TOTAL_ASSETS;
             return slot;
+        }
+        if (slot.token == _DENOMINATION) {
+            slot.result = SlotResult.OK;
+            slot.actualBalance = _cast(IERC20(_DENOMINATION).balanceOf(address(this)), IERC20Metadata(_DENOMINATION).decimals(), 18);
+            slot.totalValue.result = RebalanceEngineResult.OK;
+            slot.totalValue.value = slot.actualBalance;
+            slot.actualAllocation = _mul(_div(slot.totalValue.value, totalAssets()), _ONE_HUNDRED_PERCENT);
+            slot.targetValue = _mul(_div(totalAssets(), _ONE_HUNDRED_PERCENT), slot.targetAllocation);
+            slot.targetBalance = _mul(_div(totalSupply(), _ONE_HUNDRED_PERCENT), slot.targetAllocation);
+            if (slot.actualBalance > slot.targetBalance) {
+                slot.surplusBalance = _sub(slot.actualBalance, slot.targetBalance);
+                return slot;
+            }
+            if (slot.actualBalance < slot.targetBalance) {
+                slot.deficitBalance = _sub(slot.targetBalance, slot.actualBalance);
+                return slot;
+            }
         }
         Asset memory asset;
         asset.exchange.factory = _FACTORY;
@@ -263,13 +277,12 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         return slot;
     }
 
-
-    function _isSupported(address token) private view returns (bool) {
-        if (IERC20Metadata(token).decimals() < 2 || IERC20Metadata(token).decimals() > 18) {
-            return false;
-        }
-        return true;
-    }
+    //function _isSupported(address token) private view returns (bool) {
+    //    if (IERC20Metadata(token).decimals() < 2 || IERC20Metadata(token).decimals() > 18) {
+    //        return false;
+    //    }
+    //    return true;
+    //}
 
     function _isCached(address token) private view returns (uint8, bool) {
         for (uint8 i = 0; i < _slots.length; i += 1) {
@@ -282,50 +295,33 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
     }
 
 
-    function _cache(address token) private returns (CacheResult) {
-        (, bool cached) = _isCached(token);
-        if (cached) {
-            return CacheResult.ALREADY_CACHED;
-        }
-        if (!_isSupported(token)) {
-            return CacheResult.UNSUPPORTED_TOKEN;
-        }
-        (uint8 position, bool success) = _isCached(address(0));
-        if (!success) {
-            return CacheResult.SLOTS_ARE_FULL;
-        }
-        Slot storage slot = _slots[position];
-        slot.token = token;
-        return CacheResult.OK;
-    }
+    //function _cache(address token) private returns (CacheResult) {
+    //    (, bool cached) = _isCached(token);
+    //    if (cached) {
+    //        return CacheResult.ALREADY_CACHED;
+    //    }
+    //    //if (!_isSupported(token)) {
+    //    //    return CacheResult.UNSUPPORTED_TOKEN;
+    //    //}
+    //    (uint8 position, bool success) = _isCached(address(0));
+    //    if (!success) {
+    //        return CacheResult.SLOTS_ARE_FULL;
+    //    }
+    //    Slot storage slot = _slots[position];
+    //    slot.token = token;
+    //    return CacheResult.OK;
+    //}
 
-    function _forget(address token) private returns (CacheResult) {
-        (uint8 position, bool success) = _isCached(token);
-        if (success && position == 0) {
-            return CacheResult.DENOMINATION_IS_PROTECTED;
-        }
-        if (!success) {
-            return CacheResult.SLOT_NOT_FOUND;
-        }
-        Slot storage slot = _slots[position];
-        slot.token = address(0);
-        return CacheResult.OK;
-    }
-
-    function _amountIn(uint256 token1AmountOut, uint256 token0Reserve, uint256 token1Reserve, address uniswapV2Router) private pure returns (AmountIn memory) {
-        AmountIn memory amountIn;
-        if (token1AmountOut == 0) {
-            amountIn.result = UniswapEngineResult.INSUFFICIENT_INPUT_AMOUNT;
-            amountIn.value = 0;
-            return amountIn;
-        }
-        if (token0Reserve == 0 || token1Reserve == 0) {
-            amountIn.result = UniswapEngineResult.INSUFFICIENT_LIQUIDITY;
-            amountIn.value = 0;
-            return amountIn;
-        }
-        amountIn.result = UniswapEngineResult.OK;
-        amountIn.value = IUniswapV2Router02(uniswapV2Router).getAmountIn(token1AmountOut, token0Reserve, token1Reserve);
-        return amountIn;
-    }
+    //function _forget(address token) private returns (CacheResult) {
+    //    (uint8 position, bool success) = _isCached(token);
+    //    if (success && position == 0) {
+    //        return CacheResult.DENOMINATION_IS_PROTECTED;
+    //    }
+    //    if (!success) {
+    //        return CacheResult.SLOT_NOT_FOUND;
+    //    }
+    //    Slot storage slot = _slots[position];
+    //    slot.token = address(0);
+    //    return CacheResult.OK;
+    //}
 }
