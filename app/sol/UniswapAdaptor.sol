@@ -85,17 +85,18 @@ contract UniswapAdaptor is FixedPointCalculator, ThirdPartyBroker {
             : uint112(_cast(reserve1, pair.decimals0, 18));
         pair.reserve1 = pair.token0 == pairToken0
             ? uint112(_cast(reserve1, pair.decimals1, 18))
-            : uint112(_cast(reserve0, pair.decimals1, 18));  
+            : uint112(_cast(reserve0, pair.decimals1, 18));
+        require(pair.reserve0 != 0 && pair.reserve1 != 0, "UniswapAdaptor: INSUFFICIENT_LIQUIDITY");
         return pair;
     }
 
     function swap(SwapRequest memory request) public thirdPartySwap(request.tokenIn, request.amountIn, request.router) returns (uint256) {
         require(request.factory != address(0) && request.router != address(0) && request.tokenIn != address(0) && request.tokenOut != address(0) && request.amountIn != 0, "UniswapEngine: VOID_SWAP_REQUEST");
         Asset memory asset;
-        asset.token0 = request.tokenIn;
-        asset.token1 = request.tokenOut;
         asset.factory = request.factory;
         asset.router = request.router;
+        asset.token0 = request.tokenIn;
+        asset.token1 = request.tokenOut;
         QuoteResult memory quoteResult = getQuote(getPair(asset), request.amountIn);
         require(quoteResult.amountIn != 0 && quoteResult.quote != 0 && quoteResult.out != 0 && quoteResult.slippage != 0, "UniswapEngine: VOID_QUOTE_RESULT");
         require(quoteResult.slippage <= request.slippageThreshold, "UniswapEngine: SLIPPAGE_EXCEEDS_THRESHOLD");

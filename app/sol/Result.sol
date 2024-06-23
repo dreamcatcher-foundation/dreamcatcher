@@ -1,14 +1,45 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 
-enum Result {
-    OK,
-    ERR,
-    INSUFFICIENT_LIQUIDITY,
-    INSUFFICIENT_INPUT_AMOUNT,
-    INSUFFICIENT_BALANCE,
-    INSUFFICIENT_ALLOWANCE,
-    SLIPPAGE_EXCEEDS_THRESHOLD,
-    MISSING_REQUIRED_DATA,
-    ZERO_TOTAL_ASSETS
+struct Result {
+    bool ok;
+    string code;
+}
+
+function Ok() internal pure returns (Result memory r) {
+    r.ok = true;
+    r.code = "";
+    return r;
+}
+
+function Err(string memory code) internal pure returns (Result memory r) {
+    r.ok = false;
+    r.code = code;
+    return r;
+}
+
+library ResultLib {
+    using ResultLib for Result;
+
+    function eq(Result memory self, string memory code) internal pure returns (bool) {
+        return _match(self.code, code);
+    }
+
+    function tryPanic(Result memory self) internal pure {
+        if (!self.ok) {
+            _panic(self);
+        }
+    }
+
+    function panic(Result memory self) internal pure {
+        _panic(self);
+    }
+
+    function _panic(Result memory self) private pure {
+        revert(self.code);
+    }
+
+    function _match(string memory a, string memory b) private pure returns (bool) {
+        return bytes(a).length == bytes(b).length && keccak256(bytes(a)) == keccak256(bytes(b));
+    }
 }

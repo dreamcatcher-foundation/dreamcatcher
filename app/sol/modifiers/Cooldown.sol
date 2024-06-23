@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
 
-contract Cooldown {
-    error Cooldown();
+abstract contract Cooldown {
 
     uint32 private _lockedTimestamp;
     uint32 private _unlockTimestamp;
     uint32 private _duration;
 
     modifier cooldown() {
-        if (block.timestamp <= _unlockTimestamp) revert Cooldown();
+        if (block.timestamp <= _unlockTimestamp) revert("COOLDOWN");
         _;
         _lock();
     }

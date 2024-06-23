@@ -102,28 +102,28 @@ contract Vault is Ownable, OwnableTokenController, RebalanceEngine, VendorEngine
         return result;
     }
 
-    //function buyDeficit(address token, uint256 allocation) public returns (bool) {
-    //    require(token != address(0), "token is zero address");
-    //    (uint8 p, bool success) = _isCached(token);
-    //    require(success, "unable to find token");
-    //    Slot storage slot = _slots[p];
-    //    Slot memory cargo;
-    //    cargo.token = slot.token;
-    //    cargo.targetAllocation = allocation;
-    //    cargo = _fetchSlotData(cargo);
-    //    require(cargo.result == SlotResult.OK, "unable to fetch slot data");
-    //    require(cargo.deficitBalance > 0, "token does not have a deficit");
-    //    SwapRequest memory request;
-    //    request.exchange.factory = _FACTORY;
-    //    request.exchange.router = _ROUTER;
-    //    request.tokenIn = _DENOMINATION;
-    //    request.tokenOut = cargo.token;
-    //    request.amountIn = cargo.targetValue - cargo.totalValue.value;
-    //    request.slippageThreshold = 5 ether;
-    //    (uint256 amountOut, UniswapEngineResult result) = _swap(request);
-    //    if (result == UniswapEngineResult.OK) {
-    //        
-    //    }
+    function buyDeficit(address token, uint256 allocation) public returns (bool) {
+        require(token != address(0), "token is zero address");
+        (uint8 p, bool success) = _isCached(token);
+        require(success, "unable to find token");
+        Slot storage slot = _slots[p];
+        Slot memory cargo;
+        cargo.token = slot.token;
+        cargo.targetAllocation = allocation;
+        cargo = _fetchSlotData(cargo);
+        require(cargo.result == SlotResult.OK, "unable to fetch slot data");
+        require(cargo.deficitBalance > 0, "token does not have a deficit");
+        SwapRequest memory request;
+        request.exchange.factory = _FACTORY;
+        request.exchange.router = _ROUTER;
+        request.tokenIn = _DENOMINATION;
+        request.tokenOut = cargo.token;
+        request.amountIn = cargo.targetValue - cargo.totalValue.value;
+        request.slippageThreshold = 5 ether;
+        (uint256 amountOut, UniswapEngineResult result) = _swap(request);
+        if (result == UniswapEngineResult.OK) {
+            
+        }
     //    return true;
     //}
 

@@ -7,6 +7,9 @@ import { FixedPointCalculator } from "./FixedPointCalculator.sol";
 import { VTokenController } from "./VTokenController.sol";
 import { Cooldown } from "./modifiers/Cooldown.sol";
 import { Pair } from "./Pair.sol";
+import { BalanceQueryResult } from "./BalanceQueryResult.sol";
+import { SwapRequest } from "./SwapRequest.sol";
+import { Asset } from "./Asset.sol";
 
 /**
 * Current limitations regardling the distribution and strength of
@@ -52,7 +55,7 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
         for (uint8 i = 1; i < _slots.length; i += 1) {
             address slot = _slots[i];
             if (slot != address(0)) {
-                (BalanceQueryResult memory balanceQueryResult, bool success) = _getBalanceSheet(_FACTORY, _ROUTER, slot, _DENOMINATION, _weightings[i]);
+                (BalanceQueryResult memory balanceQueryResult, bool success) = _getBalanceSheet(slot, _DENOMINATION, _weightings[i], 0);
                 if (success) {
                     result += balanceQueryResult.actualValue;
                 }
@@ -61,7 +64,7 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
         return result;
     }
 
-    function mint(uint256 assetsIn) public mintable(assetsIn) returns (bool) {
+    function mint(uint256 assetsIn) public returns (bool) {
         uint256 mintable = previewMint(assetsIn);
         require(mintable != 0, "CALLER_WOULD_RECEIVE_NOTHING");
         uint8 decimals = IERC20Metadata(_DENOMINATION).decimals();
@@ -70,19 +73,21 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
         require(balance >= assetsIn, "INSUFFICIENT_CALLER_BALANCE");
         uint256 assetsInN = _cast(assetsIn, 18, decimals);
         IERC20(_DENOMINATION).transferFrom(msg.sender, address(this), assetsInN);
+        _mint(mintable);
         return true;
     }
 
-    function burn(uint256 supplyIn) public burnable(supplyIn) returns (bool) {
-        uint256 sendable = previewBurn(supplyIn);
-        require(sendable != 0, "CALLER_WOULD_RECEIVE_NOTHING");
-        uint256 ownership = _mul(_div(sendable, totalAssets()), 100 ether);
+    function burn(uint256 supplyIn) public returns (bool) {
+        uint256 assetsOut = previewBurn(supplyIn);
+        require(assetsOut != 0, "CALLER_WOULD_RECEIVE_NOTHING");
+        _burn(supplyIn);
+        uint256 ownership = _mul(_div(assetsOut, totalAssets()), 100 ether);
         for (uint8 i = 1; i < _slots.length; i += 1) {
             address slot = _slots[i];
             if (slot != address(0)) {
                 address token0 = slot;
                 address token1 = _DENOMINATION;
-                (BalanceQueryResult memory balanceQueryResult, bool success) = _getBalanceSheet(_FACTORY, _ROUTER, token0, token1, _weightings[i]);
+                (BalanceQueryResult memory balanceQueryResult, bool success) = _getBalanceSheet(token0, token1, _weightings[i], totalSupply());
                 if (success) {
                     uint256 sendableBalance = _mul(_div(balanceQueryResult.actualBalance, 100 ether), ownership);
                     SwapRequest memory request;
@@ -107,8 +112,9 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
         }
         uint8 decimals = IERC20Metadata(_DENOMINATION).decimals();
         uint256 balanceN = IERC20(_DENOMINATION).balanceOf(address(this));
-        uint256 sendableBalance = _mul(_div(_cast(balanceN, decimals, 18), 100 ether), ownership);
-        IERC20(_DENOMINATION).transfer(msg.sender, _cast(sendableBalance, 18, decimals));
+        uint256 balance = _cast(balanceN, decimals, 18);
+        uint256 owedBalance = _mul(_div(balance, 100 ether), ownership);
+        IERC20(_DENOMINATION).transfer(msg.sender, _cast(owedBalance, 18, decimals));
         return true;
     }
 
@@ -122,9 +128,9 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
     }
 
     function _amountToMint(uint256 assetsIn, uint256 totalAssets, uint256 totalSupply) internal pure returns (uint256) {
-        if (totalAssets == 0 && totalSupply == 0) return _INITIAL_MINT;
+        if (totalAssets == 0 && totalSupply == 0) return 1000 ether;
 
-        if (totalAssets != 0 && totalSupply == 0) return _INITIAL_MINT;
+        if (totalAssets != 0 && totalSupply == 0) return 1000 ether;
 
         if (totalAssets == 0 && totalSupply != 0) return 0;
 
@@ -138,7 +144,7 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
 
         if (totalAssets == 0 && totalSupply != 0) return 0;
 
-        return _muldiv(supplyIn, totalSupply, totalAssets);
+        return _muldiv(supplyIn, totalAssets, totalSupply);
     }
 
     function _getPair(address factory, address router, address token0, address token1) private view returns (Pair memory, bool) {
@@ -156,13 +162,13 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
         }
     }
 
-    function _getBalanceSheet(address factory, address router, address token0, address token1, uint256 targetWeight) private view returns (BalanceQueryResult memory, bool) {
-        (Pair memory pair, bool success) = _getPair(factory, router, token0, token1);
+    function _getBalanceSheet(address token0, address token1, uint256 targetWeight, uint256 totalAssets) private view returns (BalanceQueryResult memory, bool) {
+        (Pair memory pair, bool success) = _getPair(_FACTORY, _ROUTER, token0, token1);
         if (!success) {
             BalanceQueryResult memory balanceQueryResult;
             return (balanceQueryResult, false);
         }
-        try _adaptor.getBalanceSheet(pair, targetWeight, totalAssets()) returns (BalanceQueryResult memory balanceQueryResult) {
+        try _adaptor.getBalanceSheet(pair, targetWeight, totalAssets) returns (BalanceQueryResult memory balanceQueryResult) {
             return (balanceQueryResult, true);
         }
         catch {
@@ -193,15 +199,15 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
             return false;
         }
         uint256 weighting = _weightings[slotIndex];
-        (BalanceQueryResult memory query, bool success) = _getBalanceSheet(_FACTORY, _ROUTER, slot, _DENOMINATION, weighting);
+        (BalanceQueryResult memory query, bool success) = _getBalanceSheet(slot, _DENOMINATION, weighting, totalAssets());
         if (!success) {
             return false;
         }
         if (query.deficitBalance == 0) {
             return false;
         }
-        uint256 amountIn = query.targetValue - query.totalValue;
-        (uint256 out, bool success_) = _swap(_FACTORY, _ROUTER, _DENOMINATION, slot, amountIn, 5 ether);
+        uint256 amountIn = query.targetValue - query.actualValue;
+        (uint256 out, bool success_) = _swap(_FACTORY, _ROUTER, _DENOMINATION, slot, amountIn, 100 ether);
         if (!success_) {
             return false;
         }
@@ -214,14 +220,14 @@ contract Vault is FixedPointCalculator, VTokenController, Cooldown {
             return false;
         }
         uint256 weighting = _weightings[slotIndex];
-        (BalanceQueryResult memory query, bool success) = _getBalanceSheet(_FACTORY, _ROUTER, slot, _DENOMINATION, weighting);
+        (BalanceQueryResult memory query, bool success) = _getBalanceSheet(slot, _DENOMINATION, weighting, totalAssets());
         if (!success) {
             return false;
         }
         if (query.surplusBalance == 0) {
             return false;
         }
-        (uint256 out, bool success_) = _swap(_FACTORY, _ROUTER, slot, _DENOMINATION, query.surplusBalance, 5 ether);
+        (uint256 out, bool success_) = _swap(_FACTORY, _ROUTER, slot, _DENOMINATION, query.surplusBalance, 100 ether);
         if (!success_) {
             return false;
         }
