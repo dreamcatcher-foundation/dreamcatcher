@@ -7,18 +7,18 @@ library FixedPointMath {
     using FixedPointMath for uint256;
     using Math for uint256;
     
-    function loss(uint256 a, uint256 b) internal pure returns (Result, uint256 percentage) {
+    function loss(uint256 a, uint256 b) internal pure returns (Result memory, uint256 percentage) {
         uint256 oneHundredPercent = 100 ether;
         uint256 x;
         {
-            (Result r, uint256 n) = a.yield(b);
+            (Result memory r, uint256 n) = a.yield(b);
             if (!r.ok) {
                 return (r, 0);
             }
             x = n;
         }
         {
-            (Result r, uint256 n) = oneHundredPercent.sub(x);
+            (Result memory r, uint256 n) = oneHundredPercent.sub(x);
             if (!r.ok) {
                 return (r, 0);
             }
@@ -27,7 +27,7 @@ library FixedPointMath {
         return (Ok(), x);
     }
 
-    function yield(uint256 a, uint256 b) internal pure returns (Result, uint256 percentage) {
+    function yield(uint256 a, uint256 b) internal pure returns (Result memory, uint256 percentage) {
         if (a == 0) {
             return (Ok(), 0);
         }
@@ -36,7 +36,7 @@ library FixedPointMath {
         }
         uint256 x;
         {
-            (Result r, uint256 n) = a.percentageOf(b);
+            (Result memory r, uint256 n) = a.percentageOf(b);
             if (!r.ok) {
                 return (r, 0);
             }
@@ -45,17 +45,17 @@ library FixedPointMath {
         return (Ok(), x);
     }
 
-    function percentageOf(uint256 a, uint256 b) internal pure returns (Result, uint256 percentage) {
+    function percentageOf(uint256 a, uint256 b) internal pure returns (Result memory, uint256 percentage) {
         uint256 x;
         {
-            (Result r, uint256 n) = a.div(b);
+            (Result memory r, uint256 n) = a.div(b);
             if (!r.ok) {
                 return (r, 0);
             }
             x = n;
         }
         {
-            (Result r, uint256 n) = x.mul(100 ether);
+            (Result memory r, uint256 n) = x.mul(100 ether);
             if (!r.ok) {
                 return (r, 0);
             }
@@ -64,17 +64,17 @@ library FixedPointMath {
         return (Ok(), x);
     }
 
-    function slice(uint256 x, uint256 percentage) internal pure returns (Result, uint256) {
+    function slice(uint256 x, uint256 percentage) internal pure returns (Result memory, uint256) {
         uint256 y;
         {
-            (Result r, uint256 n) = x.div(100 ether);
+            (Result memory r, uint256 n) = x.div(100 ether);
             if (!r.ok) {
                 return (r, 0);
             }
             y = n;
         }
         {
-            (Result r, uint256 n) = y.mul(percentage);
+            (Result memory r, uint256 n) = y.mul(percentage);
             if (!r.ok) {
                 return (r, 0);
             }
@@ -83,7 +83,7 @@ library FixedPointMath {
         return (Ok(), y);
     }
 
-    function add(uint256 a, uint256 b) internal pure returns (Result, uint256) {
+    function add(uint256 a, uint256 b) internal pure returns (Result memory, uint256) {
         unchecked {
             uint256 c = a + b;
             if (c < a) {
@@ -93,7 +93,7 @@ library FixedPointMath {
         }
     }
 
-    function sub(uint256 a, uint256 b) internal pure returns (Result, uint256) {
+    function sub(uint256 a, uint256 b) internal pure returns (Result memory, uint256) {
         unchecked {
             if (b > a) {
                 return (Err("UINT_UNDER"), 0);
@@ -102,15 +102,15 @@ library FixedPointMath {
         }
     }
 
-    function mul(uint256 a, uint256 b) internal pure returns (Result, uint256) {
+    function mul(uint256 a, uint256 b) internal pure returns (Result memory, uint256) {
         return a.muldiv(b, 1 ether);
     }
 
-    function div(uint256 a, uint256 b) internal pure returns (Result, uint256) {
+    function div(uint256 a, uint256 b) internal pure returns (Result memory, uint256) {
         return a.muldiv(1 ether, b);
     }
 
-    function cast(uint256 x, uint8 decimals0, uint8 decimals1) internal pure returns (Result, uint256) {
+    function cast(uint256 x, uint8 decimals0, uint8 decimals1) internal pure returns (Result memory, uint256) {
         if (decimals0 < 2 || decimals1 < 2 || decimals0 > 18 || decimals1 > 18) {
             return (Err("DECIMALS_OUT_OF_BOUNDS"), 0);
         }
@@ -118,7 +118,7 @@ library FixedPointMath {
             return (Ok(), x);
         }
         {
-            (Result r, uint256 n) = x.muldiv(10**decimals1, 10**decimals0);
+            (Result memory r, uint256 n) = x.muldiv(10**decimals1, 10**decimals0);
             if (!r.ok) {
                 return (r, 0);
             }
@@ -127,7 +127,7 @@ library FixedPointMath {
         return (Ok(), x);
     }
 
-    function muldiv(uint256 a, uint256 b, uint256 c) internal pure returns (Result, uint256) {
+    function muldiv(uint256 a, uint256 b, uint256 c) internal pure returns (Result memory, uint256) {
         if (c == 0) {
             return (Err("DIVISION_BY_ZERO"), 0);
         }
