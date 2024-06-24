@@ -1,5 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
+import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
+import { IUniswapV2Router02 } from "./imports/uniswap/interfaces/IUniswapV2Router02.sol";
+import { IUniswapV2Factory } from "./imports/uniswap/interfaces/IUniswapV2Factory.sol";
 import { IUniswapV2Pair } from "./imports/uniswap/interfaces/IUniswapV2Pair.sol";
 import { IToken } from "./IToken.sol";
 import { Result, Ok, Err } from "./Result.sol";
@@ -40,7 +43,7 @@ contract UniswapAdaptor {
         }
         uint256 amountInN;
         {
-            (Result r, uint256 x) = amountIn.cast(18, pair.decimals0);
+            (Result memory r, uint256 x) = amountIn.cast(18, pair.decimals0);
             if (!r.ok) {
                 quote.result = r;
                 return quote;
@@ -48,7 +51,7 @@ contract UniswapAdaptor {
             amountInN = x;
         }
         {
-            (Result r, uint256 x) = _bestAmountOut(amountIn, pair.reserve0, pair.reserve1);
+            (Result memory r, uint256 x) = _bestAmountOut(amountIn, pair.reserve0, pair.reserve1);
             if (!r.ok) {
                 quote.result = r;
                 return quote;
@@ -56,7 +59,7 @@ contract UniswapAdaptor {
             quote.bestAmountOut = x;
         }
         {
-            (Result r, uint256 x) = _realAmountOut(path, amountInN);
+            (Result memory r, uint256 x) = _realAmountOut(path, amountInN);
             if (!r.ok) {
                 quote.result = r;
                 return quote;
@@ -64,7 +67,7 @@ contract UniswapAdaptor {
             quote.realAmountOut = x;
         }
         {
-            (Result r, uint256 x) = _slippage(quote.realAmountOut, quote.bestAmountOut);
+            (Result memory r, uint256 x) = _slippage(quote.realAmountOut, quote.bestAmountOut);
             if (!r.ok) {
                 quote.result = r;
                 return quote;
@@ -74,7 +77,7 @@ contract UniswapAdaptor {
         return quote;
     }
 
-    function _slippage(uint256 realAmountOut, uint256 bestAmountOut) private pure returns (Result, uint256) {
+    function _slippage(uint256 realAmountOut, uint256 bestAmountOut) private pure returns (Result memory, uint256) {
         if (realAmountOut == 0 && bestAmountOut != 0) {
             return (Ok(), 0);
         }
@@ -87,20 +90,20 @@ contract UniswapAdaptor {
         if (realAmountOut >= bestAmountOut) {
             return (Ok(), 100 ether);
         }
-        (Result r, uint256 x) = realAmountOut.loss(bestAmountOut);
+        (Result memory r, uint256 x) = realAmountOut.loss(bestAmountOut);
         if (!r.ok) {
             return (r, 0);
         }
         return (Ok(), x);
     }
 
-    function _realAmountOut(address[] memory path, uint256 amountIn) private pure returns (Result, uint256) {
+    function _realAmountOut(address[] memory path, uint256 amountIn) private pure returns (Result memory, uint256) {
         try IUniswapV2Router02(router()).getAmountsOut(amountIn, path) returns (uint256[] memory n) {
-            uint8 decimals = path[path.length - 1];
+            uint8 decimals = IToken(path[path.length - 1]).decimals();
             uint256 amountN = n[n.length - 1];
             uint256 amount;
             {
-                (Result r, uint256 x) = amountN.cast(decimals, 18);
+                (Result memory r, uint256 x) = amountN.cast(decimals, 18);
                 if (!r.ok) {
                     return (r, 0);
                 }
@@ -108,12 +111,12 @@ contract UniswapAdaptor {
             }
             return (Ok(), amount);
         }
-        catch (string memory code) {
+        catch Error(string memory code) {
             return (Err(code), 0);
         }
     }
 
-    function _bestAmountOut(uint256 amountIn, uint256 reserve0, uint256 reserve0) private pure returns (Result, uint256) {
+    function _bestAmountOut(uint256 amountIn, uint112 reserve0, uint112 reserve1) private pure returns (Result memory, uint256) {
         if (amountIn == 0) {
             return (Err("INSUFFICIENT_AMOUNT_IN"), 0);
         }
@@ -123,14 +126,14 @@ contract UniswapAdaptor {
         try IUniswapV2Router02(router()).quote(amountIn, reserve0, reserve1) returns (uint256 x) {
             return (Ok(), x);
         }
-        catch (string memory code) {
+        catch Error(string memory code) {
             return (Err(code), 0);
         }
     }
 
     function pair(address token0, address token1) public view returns (Pair memory) {
         Pair memory pair;
-        if (token0 == address(0) || token1 == address(0) || codeSize(token0) == 0 || codeSide(token1) == 0) {
+        if (token0 == address(0) || token1 == address(0)) {
             pair.result = Err("VOID_INPUT");
             return pair;
         }
@@ -150,15 +153,35 @@ contract UniswapAdaptor {
                 }
                 pair.addr = x;
             }
-            catch (string memory code) {
+            catch Error(string memory code) {
                 pair.result = Err(code);
                 return pair;
+            }
+        }
+        uint8 decimals0;
+        uint8 decimals1;
+        {
+            {
+                (Result memory r, uint8 x) = _decimals(token0);
+                if (!r.ok) {
+                    pair.result = r;
+                    return pair;
+                }
+                decimals0 = x;
+            }
+            {
+                (Result memory r, uint8 x) = _decimals(token1);
+                if (!r.ok) {
+                    pair.result = r;
+                    return pair;
+                }
+                decimals1 = x;
             }
         }
         address pToken0;
         address pToken1;
         {
-            (Result r, address x0, address x1) = _pairTokens(pair.addr, token0, token1);
+            (Result memory r, address x0, address x1) = _pairTokens(pair.addr, token0, token1);
             if (!r.ok) {
                 pair.result = r;
                 return pair;
@@ -169,7 +192,7 @@ contract UniswapAdaptor {
         uint112 reserve0;
         uint112 reserve1;
         {
-            (Result r, uint112 x0, uint112 x1) = _reserves(pair.addr, token0, token1, decimals0, decimals1);
+            (Result memory r, uint112 x0, uint112 x1) = _reserves(pair.addr, token0, token1, decimals0, decimals1);
             if (!r.ok) {
                 pair.result = r;
                 return pair;
@@ -185,27 +208,27 @@ contract UniswapAdaptor {
         return pair;
     }
 
-    function _reserves(address pair, address token0, address token1, uint8 decimals0, uint8 decimals1) private view returns (Result, uint112, uint112) {
-        try IUniswapV2Pair(pair).getReserves() returns (uint112 reserve0N, uint112 reserve1N,) {
-            (Result r0, uint112 reserve0) = reserve0N.cast(decimals0, 18);
+    function _reserves(address pair, address token0, address token1, uint8 decimals0, uint8 decimals1) private view returns (Result memory, uint112, uint112) {
+        try IUniswapV2Pair(pair).getReserves() returns (uint112 reserve0N, uint112 reserve1N, uint32) {
+            (Result memory r0, uint256 reserve0) = uint256(reserve0N).cast(decimals0, 18);
             if (!r0.ok) {
-                return (r, 0, 0);
+                return (r0, 0, 0);
             }
-            (Result r1, uint112 reserve1) = reserve1N.cast(decimals1, 18);
+            (Result memory r1, uint256 reserve1) = uint256(reserve1N).cast(decimals1, 18);
             if (!r1.ok) {
-                return (r, 0, 0);
+                return (r1, 0, 0);
             }
             if (reserve0 == 0 || reserve1 == 0) {
                 return (Err("INSUFFICIENT_LIQUIDITY"), 0, 0);
             }
-            return (Ok(), reserve0, reserve1);
+            return (Ok(), uint112(reserve0), uint112(reserve1));
         }
-        catch (string memory code) {
+        catch Error(string memory code) {
             return (Err(code), 0, 0);
         }
     }
 
-    function _pairTokens(address pair, address token0, address token1) private view returns (Result, address, address) {
+    function _pairTokens(address pair, address token0, address token1) private view returns (Result memory, address, address) {
         address pToken0;
         address pToken1;
         try IUniswapV2Pair(pair).token0() returns (address x) {
@@ -214,28 +237,28 @@ contract UniswapAdaptor {
             }
             pToken0 = x;
         }
-        catch (string memory code) {
+        catch Error(string memory code) {
             return Err(code);
         }
 
-        try IUniswapV2Pair(pair).token1() returns (address n) {
+        try IUniswapV2Pair(pair).token1() returns (address x) {
             if ((x == address(0)) || (x != token0 || x != token1)) {
                 return (Err("VOID_PAIR_TOKEN"), address(0), address(0));
             }
             pToken1 = x;
         }
-        catch (string memory code) {
+        catch Error(string memory code) {
             return Err(code);
         }
 
         return (Ok(), pToken0, pToken1);
     }
 
-    function _decimals(address token) private view returns (Result, uint8) {
+    function _decimals(address token) private view returns (Result memory, uint8) {
         try IToken(token).decimals() returns (uint8 x) {
             return (Ok(), x);
         }
-        catch (string memory code) {
+        catch Error(string memory code) {
             return Err(code);
         }
     }

@@ -25,13 +25,13 @@ import * as TsResult from "ts-results";
             wbtc: "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
             link: "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39",
             wmatic: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
-        };
+        } as const;
         let factory = "0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32";
         let router = "0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff";
-        let bytecode = "";
-        let abi = [];
-        let adaptor = ((await (machine.deploy({ bytecode, abi }))).unwrap())?.contractAddress!;
-        
+        let bytecode: string = "";
+        let abi: object[] = [];
+        let adaptor: string = ((await (machine.deploy({ bytecode, abi }))).unwrap())?.contractAddress!;
+
         await (async function() {
 
 
