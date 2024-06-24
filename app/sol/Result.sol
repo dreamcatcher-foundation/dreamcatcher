@@ -8,12 +8,10 @@ struct Result {
 
 function Ok() pure returns (Result memory r) {
     r.ok = true;
-    r.code = "";
     return r;
 }
 
 function Err(string memory code) pure returns (Result memory r) {
-    r.ok = false;
     r.code = code;
     return r;
 }

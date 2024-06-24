@@ -6,7 +6,7 @@ import { FixedPointMath } from "./FixedPointMath.sol";
 library VendorLib {
     using FixedPointMath for uint256;
 
-    function mint(uint256 assetsIn, uint256 totalAssets, uint256 totalSupply) internal pure returns (Result memory, uint256) {
+    function previewMint(uint256 assetsIn, uint256 totalAssets, uint256 totalSupply) internal pure returns (Result memory, uint256) {
         if (totalAssets == 0 && totalSupply == 0) return (Ok(), 1000000 ether);
 
         if (totalAssets != 0 && totalSupply == 0) return (Ok(), 1000000 ether);
@@ -16,7 +16,7 @@ library VendorLib {
         return assetsIn.muldiv(totalSupply, totalAssets);
     }
 
-    function burn(uint256 supplyIn, uint256 totalAssets, uint256 totalSupply) internal pure returns (Result memory, uint256) {
+    function previewBurn(uint256 supplyIn, uint256 totalAssets, uint256 totalSupply) internal pure returns (Result memory, uint256) {
         if (totalAssets == 0 && totalSupply == 0) return (Ok(), 0);
 
         if (totalAssets != 0 && totalSupply == 0) return (Ok(), 0);

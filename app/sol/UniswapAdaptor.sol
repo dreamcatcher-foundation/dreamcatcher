@@ -1,147 +1,242 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { IERC20 } from "./imports/openzeppelin/token/ERC20/IERC20.sol";
-import { IERC20Metadata } from "./imports/openzeppelin/token/ERC20/extensions/IERC20Metadata.sol";
-import { IUniswapV2Router02 } from "./imports/uniswap/interfaces/IUniswapV2Router02.sol";
-import { IUniswapV2Factory } from "./imports/uniswap/interfaces/IUniswapV2Factory.sol";
 import { IUniswapV2Pair } from "./imports/uniswap/interfaces/IUniswapV2Pair.sol";
+import { IToken } from "./IToken.sol";
+import { Result, Ok, Err } from "./Result.sol";
+import { FixedPointMath } from "./FixedPointMath.sol";
+import { Address } from "./Address.sol";
 import { Pair } from "./Pair.sol";
-import { QuoteResult } from "./QuoteResult.sol";
-import { BalanceQueryResult } from "./BalanceQueryResult.sol";
-import { FixedPointCalculator } from "./FixedPointCalculator.sol";
-import { ThirdPartyBroker } from "./modifiers/ThirdPartyBroker.sol";
-import { SwapRequest } from "./SwapRequest.sol";
-import { Asset } from "./Asset.sol";
+import { Quote } from "./Quote.sol";
 
-contract UniswapAdaptor is FixedPointCalculator, ThirdPartyBroker {
-    event ThirdPartySwap(address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut);
+contract UniswapAdaptor {
+    using FixedPointMath for uint256;
+    
+    address private _factory;
+    address private _router;
 
-    constructor() {}
-
-    function getQuote(Pair memory pair, uint256 amountIn) public pure returns (QuoteResult memory) {
-        require(pair.token0 != address(0) && pair.token1 != address(0) && pair.decimals0 != 0 && pair.decimals1 != 0 && pair.factory != address(0) && pair.router != address(0), "VOID_PAIR");
-        require(pair.reserve0 != 0 && pair.reserve1 != 0, "INSUFFICIENT_LIQUIDITY");
-        QuoteResult memory quoteResult;
-        quoteResult.amountIn = amountIn;
-        quoteResult.quote = _quote(amountIn, pair.reserve0, pair.reserve1, pair.router);
-        quoteResult.out = _out(amountIn, pair.reserve0, pair.reserve1, pair.router);
-        quoteResult.slippage = _slippage(quoteResult.out, quoteResult.quote);
-        return quoteResult;
+    constructor(address factory, address router) {
+        require(factory != address(0) && router != address(0), "VOID_INPUT");
+        _factory = factory;
+        _router = router;
     }
 
-    function getBalanceSheet(Pair memory pair, uint256 targetWeight, uint256 totalAssets) public view returns (BalanceQueryResult memory) {
-        BalanceQueryResult memory balanceQueryResult;
-        balanceQueryResult.targetWeight = targetWeight;
-        balanceQueryResult.totalAssets = totalAssets;
-        balanceQueryResult.actualBalance = _cast(IERC20(pair.token0).balanceOf(address(msg.sender)), IERC20Metadata(pair.token0).decimals(), 18);
-        QuoteResult memory quoteResult = getQuote(pair, balanceQueryResult.actualBalance);
-        balanceQueryResult.actualValue = quoteResult.quote;
-        balanceQueryResult.actualWeight = _mul(_div(balanceQueryResult.actualValue, balanceQueryResult.totalAssets), 100 ether);
-        balanceQueryResult.targetValue = _mul(_div(balanceQueryResult.totalAssets, 100 ether), balanceQueryResult.targetWeight);
-        Asset memory asset;
-        asset.factory = pair.factory;
-        asset.router = pair.router;
-        asset.token0 = pair.token1;
-        asset.token1 = pair.token0;
-        Pair memory reversePair = getPair(asset);
-        QuoteResult memory reverseQuoteResult = getQuote(reversePair, balanceQueryResult.targetValue);
-        balanceQueryResult.targetBalance = reverseQuoteResult.quote;
-        balanceQueryResult.surplusBalance = 
-            balanceQueryResult.actualBalance > balanceQueryResult.targetBalance
-                ? _sub(balanceQueryResult.actualBalance, balanceQueryResult.targetBalance)
-                : 0;
-        balanceQueryResult.deficitBalance =
-            balanceQueryResult.actualBalance < balanceQueryResult.targetBalance
-                ? _sub(balanceQueryResult.targetBalance, balanceQueryResult.actualBalance)
-                : 0;
-        balanceQueryResult.surplusValue =
-            balanceQueryResult.actualValue > balanceQueryResult.targetValue
-                ? _sub(balanceQueryResult.actualValue, balanceQueryResult.targetValue)
-                : 0;
-        balanceQueryResult.deficitValue =
-            balanceQueryResult.actualValue < balanceQueryResult.targetValue
-                ? _sub(balanceQueryResult.targetValue, balanceQueryResult.actualValue)
-                : 0;
-        return balanceQueryResult;
+    function factory() public view returns (address) {
+        return _factory;
     }
 
-    function getPair(Asset memory asset) public view returns (Pair memory) {
-        require(asset.factory != address(0) && asset.router != address(0) && asset.token0 != address(0) && asset.token1 != address(0), "VOID_ASSET");
-        require(IUniswapV2Factory(asset.factory).getPair(asset.token0, asset.token1) != address(0), "PAIR_NOT_FOUND");
+    function router() public view returns (address) {
+        return _router;
+    }
+
+    function quote(address[] memory path, uint256 amountIn) public pure returns (Quote memory) {
+        Quote memory quote;
+        quote.amountIn = amountIn;
+        address token0 = path[0];
+        address token1 = path[path.length - 1];
+        Pair memory pair = pair(token0, token1);
+        if (!pair.result.ok) {
+            quote.result = pair.result;
+            return quote;
+        }
+        uint256 amountInN;
+        {
+            (Result r, uint256 x) = amountIn.cast(18, pair.decimals0);
+            if (!r.ok) {
+                quote.result = r;
+                return quote;
+            }
+            amountInN = x;
+        }
+        {
+            (Result r, uint256 x) = _bestAmountOut(amountIn, pair.reserve0, pair.reserve1);
+            if (!r.ok) {
+                quote.result = r;
+                return quote;
+            }
+            quote.bestAmountOut = x;
+        }
+        {
+            (Result r, uint256 x) = _realAmountOut(path, amountInN);
+            if (!r.ok) {
+                quote.result = r;
+                return quote;
+            }
+            quote.realAmountOut = x;
+        }
+        {
+            (Result r, uint256 x) = _slippage(quote.realAmountOut, quote.bestAmountOut);
+            if (!r.ok) {
+                quote.result = r;
+                return quote;
+            }
+            quote.slippage = x;
+        }
+        return quote;
+    }
+
+    function _slippage(uint256 realAmountOut, uint256 bestAmountOut) private pure returns (Result, uint256) {
+        if (realAmountOut == 0 && bestAmountOut != 0) {
+            return (Ok(), 0);
+        }
+        if (realAmountOut != 0 && bestAmountOut == 0) {
+            return (Ok(), 100 ether);
+        }
+        if (realAmountOut == 0 && bestAmountOut == 0) {
+            return (Ok(), 100 ether);
+        }
+        if (realAmountOut >= bestAmountOut) {
+            return (Ok(), 100 ether);
+        }
+        (Result r, uint256 x) = realAmountOut.loss(bestAmountOut);
+        if (!r.ok) {
+            return (r, 0);
+        }
+        return (Ok(), x);
+    }
+
+    function _realAmountOut(address[] memory path, uint256 amountIn) private pure returns (Result, uint256) {
+        try IUniswapV2Router02(router()).getAmountsOut(amountIn, path) returns (uint256[] memory n) {
+            uint8 decimals = path[path.length - 1];
+            uint256 amountN = n[n.length - 1];
+            uint256 amount;
+            {
+                (Result r, uint256 x) = amountN.cast(decimals, 18);
+                if (!r.ok) {
+                    return (r, 0);
+                }
+                amount = x;
+            }
+            return (Ok(), amount);
+        }
+        catch (string memory code) {
+            return (Err(code), 0);
+        }
+    }
+
+    function _bestAmountOut(uint256 amountIn, uint256 reserve0, uint256 reserve0) private pure returns (Result, uint256) {
+        if (amountIn == 0) {
+            return (Err("INSUFFICIENT_AMOUNT_IN"), 0);
+        }
+        if (reserve0 == 0 || reserve1 == 0) {
+            return (Err("INSUFFICIENT_LIQUIDITY"), 0);
+        }
+        try IUniswapV2Router02(router()).quote(amountIn, reserve0, reserve1) returns (uint256 x) {
+            return (Ok(), x);
+        }
+        catch (string memory code) {
+            return (Err(code), 0);
+        }
+    }
+
+    function pair(address token0, address token1) public view returns (Pair memory) {
         Pair memory pair;
-        pair.factory = asset.factory;
-        pair.router = asset.router;
-        pair.token0 = asset.token0;
-        pair.token1 = asset.token1;
-        pair.decimals0 = IERC20Metadata(pair.token0).decimals();
-        pair.decimals1 = IERC20Metadata(pair.token1).decimals();
-        address pairAddr = IUniswapV2Factory(pair.factory).getPair(pair.token0, pair.token1);
-        pair.addr = pairAddr;
-        IUniswapV2Pair pairIntf = IUniswapV2Pair(pairAddr);
-        (uint112 reserve0, uint112 reserve1,) = pairIntf.getReserves();
-        address pairToken0 = pairIntf.token0();
-        pair.reserve0 = pair.token0 == pairToken0
-            ? uint112(_cast(reserve0, pair.decimals0, 18)) 
-            : uint112(_cast(reserve1, pair.decimals0, 18));
-        pair.reserve1 = pair.token0 == pairToken0
-            ? uint112(_cast(reserve1, pair.decimals1, 18))
-            : uint112(_cast(reserve0, pair.decimals1, 18));
-        require(pair.reserve0 != 0 && pair.reserve1 != 0, "UniswapAdaptor: INSUFFICIENT_LIQUIDITY");
+        if (token0 == address(0) || token1 == address(0) || codeSize(token0) == 0 || codeSide(token1) == 0) {
+            pair.result = Err("VOID_INPUT");
+            return pair;
+        }
+        (pair.result, pair.decimals0) = _decimals(token0);
+        if (!pair.result.ok) {
+            return pair;
+        }
+        (pair.result, pair.decimals1) = _decimals(token1);
+        if (!pair.result.ok) {
+            return pair;
+        }
+        {
+            try  IUniswapV2Factory(factory()).getPair(token0, token1) returns (address x) {
+                if (x == address(0)) {
+                    pair.result = Err("PAIR_NOT_FOUND");
+                    return pair;
+                }
+                pair.addr = x;
+            }
+            catch (string memory code) {
+                pair.result = Err(code);
+                return pair;
+            }
+        }
+        address pToken0;
+        address pToken1;
+        {
+            (Result r, address x0, address x1) = _pairTokens(pair.addr, token0, token1);
+            if (!r.ok) {
+                pair.result = r;
+                return pair;
+            }
+            pToken0 = x0;
+            pToken1 = x1;
+        }
+        uint112 reserve0;
+        uint112 reserve1;
+        {
+            (Result r, uint112 x0, uint112 x1) = _reserves(pair.addr, token0, token1, decimals0, decimals1);
+            if (!r.ok) {
+                pair.result = r;
+                return pair;
+            }
+            reserve0 = x0;
+            reserve1 = x1;
+        }
+        pair.result = Ok();
+        pair.token0 = token0;
+        pair.token1 = token1;
+        pair.reserve0 = token0 == pToken0 ? uint112(reserve0) : uint112(reserve1);
+        pair.reserve1 = token0 == pToken0 ? uint112(reserve1) : uint112(reserve1);
         return pair;
     }
 
-    function swap(SwapRequest memory request) public thirdPartySwap(request.tokenIn, request.amountIn, request.router) returns (uint256) {
-        require(request.factory != address(0) && request.router != address(0) && request.tokenIn != address(0) && request.tokenOut != address(0) && request.amountIn != 0, "UniswapEngine: VOID_SWAP_REQUEST");
-        Asset memory asset;
-        asset.factory = request.factory;
-        asset.router = request.router;
-        asset.token0 = request.tokenIn;
-        asset.token1 = request.tokenOut;
-        QuoteResult memory quoteResult = getQuote(getPair(asset), request.amountIn);
-        require(quoteResult.amountIn != 0 && quoteResult.quote != 0 && quoteResult.out != 0 && quoteResult.slippage != 0, "UniswapEngine: VOID_QUOTE_RESULT");
-        require(quoteResult.slippage <= request.slippageThreshold, "UniswapEngine: SLIPPAGE_EXCEEDS_THRESHOLD");
-        address[] memory path = new address[](2);
-        path[0] = request.tokenIn;
-        path[1] = request.tokenOut;
-        uint8 decimals = IERC20Metadata(request.tokenIn).decimals();
-        uint256 amountInN = _cast(request.amountIn, 18, decimals);
-        uint256[] memory amountsN = IUniswapV2Router02(request.router).swapExactTokensForTokens(amountInN, 0, path, msg.sender, block.timestamp);
-        uint256 outN = amountsN[amountsN.length - 1];
-        uint256 out = _cast(outN, decimals, 18);
-        emit ThirdPartySwap(request.tokenIn, request.tokenOut, request.amountIn, out);
-        return out;
+    function _reserves(address pair, address token0, address token1, uint8 decimals0, uint8 decimals1) private view returns (Result, uint112, uint112) {
+        try IUniswapV2Pair(pair).getReserves() returns (uint112 reserve0N, uint112 reserve1N,) {
+            (Result r0, uint112 reserve0) = reserve0N.cast(decimals0, 18);
+            if (!r0.ok) {
+                return (r, 0, 0);
+            }
+            (Result r1, uint112 reserve1) = reserve1N.cast(decimals1, 18);
+            if (!r1.ok) {
+                return (r, 0, 0);
+            }
+            if (reserve0 == 0 || reserve1 == 0) {
+                return (Err("INSUFFICIENT_LIQUIDITY"), 0, 0);
+            }
+            return (Ok(), reserve0, reserve1);
+        }
+        catch (string memory code) {
+            return (Err(code), 0, 0);
+        }
     }
 
-    function _slippage(uint256 out, uint256 quote) private pure returns (uint256) {
-        return
-            out == 0 && quote != 0
-                ? 0 :
-            out != 0 && quote == 0
-                ? 100 ether :
-            out == 0 && quote == 0
-                ? 100 ether :
-            out > quote
-                ? 100 ether :
-            _loss(out, quote);
+    function _pairTokens(address pair, address token0, address token1) private view returns (Result, address, address) {
+        address pToken0;
+        address pToken1;
+        try IUniswapV2Pair(pair).token0() returns (address x) {
+            if ((x == address(0)) || (x != token0 || x != token1)) {
+                return (Err("VOID_PAIR_TOKEN"), address(0), address(0));
+            }
+            pToken0 = x;
+        }
+        catch (string memory code) {
+            return Err(code);
+        }
+
+        try IUniswapV2Pair(pair).token1() returns (address n) {
+            if ((x == address(0)) || (x != token0 || x != token1)) {
+                return (Err("VOID_PAIR_TOKEN"), address(0), address(0));
+            }
+            pToken1 = x;
+        }
+        catch (string memory code) {
+            return Err(code);
+        }
+
+        return (Ok(), pToken0, pToken1);
     }
 
-    function _quote(uint256 amountIn, uint256 reserve0, uint256 reserve1, address router) private pure returns (uint256) {
-        return
-            amountIn == 0
-                ? 0 :
-            reserve0 == 0 || 
-            reserve1 == 0
-                ? 0 :
-            IUniswapV2Router02(router).quote(amountIn, reserve0, reserve1);
-    }
-
-    function _out(uint256 amountIn, uint256 reserve0, uint256 reserve1, address router) private pure returns (uint256) {
-        return
-            amountIn == 0
-                ? 0 :
-            reserve0 == 0 || 
-            reserve1 == 0
-                ? 0 :
-            IUniswapV2Router02(router).getAmountOut(amountIn, reserve0, reserve1);
+    function _decimals(address token) private view returns (Result, uint8) {
+        try IToken(token).decimals() returns (uint8 x) {
+            return (Ok(), x);
+        }
+        catch (string memory code) {
+            return Err(code);
+        }
     }
 }
