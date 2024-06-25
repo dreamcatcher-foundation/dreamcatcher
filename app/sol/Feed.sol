@@ -13,15 +13,8 @@ struct Quote {
     uint256 slippage;
 }
 
-interface IFeed {
-    function quote(address factory, address router, address[] memory path, uint256 amountIn) external view returns (uint256 optimal, uint256 adjusted, uint256 slippage);
-    function swap(address factory, address router, address[] memory path, uint256 amountIn, uint256 slippageThreshold) external;
-}
-
-contract Feed  {
+abstract contract Feed  {
     using FixedPointMath for uint256;
-
-    constructor() {}
 
     function quote(address factory, address router, address[] memory path, uint256 amountIn) public view returns (Quote memory) {
         (uint112 reserve0, uint112 reserve1) = _reserves(factory, path);
