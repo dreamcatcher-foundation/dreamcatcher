@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { Result } from "./Result.sol";
-
+2
 struct Pair {
-    Result result;
     address addr;
     address token0;
     address token1;

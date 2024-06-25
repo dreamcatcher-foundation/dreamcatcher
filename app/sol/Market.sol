@@ -2,14 +2,19 @@
 pragma solidity >=0.8.19;
 import { Quote } from "./";
 
+
 contract Market {
-    address[] _adaptors;
-
-    constructor() {}
-
-    function Adaptor() {
-        
+    struct Components {
+        address feed;
     }
+
+    address private _feed;
+
+    constructor(Components memory components) {
+        _feed = components.feed;
+    }
+
+
 
     function highestQuote(address[] memory path, uint256 amountIn) public view returns (Quote memory);
 
