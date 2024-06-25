@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity >=0.8.19;
-import { Math } from "../../imports/openzeppelin/utils/math/Math.sol";
+import { Math } from "./imports/openzeppelin/utils/math/Math.sol";
 
 library FixedPointMath {
     using FixedPointMath for uint256;
