@@ -1,7 +1,8 @@
 import { Page } from "@component/Page";
 import { Layer } from "@component/Layer";
 import { Nav } from "@component/Nav";
-import * as ColorPalette from "@component/ColorPalette";
+import { LandingPageBackgroundLayer } from "./LandingPageBackgroundLayer";
+import { LandingPageHeroSection } from "./LandingPageHeroSection";
 import React from "react";
 
 export function LandingPage(): React.JSX.Element {
@@ -9,14 +10,13 @@ export function LandingPage(): React.JSX.Element {
         <Page
         hlen={1n}
         vlen={1n}>
+            <LandingPageBackgroundLayer/>
             <Layer
             style={{
-                background: ColorPalette.OBSIDIAN.toString()
+                justifyContent: "start"
             }}>
-
-            </Layer>
-            <Layer>
                 <Nav/>
+                <LandingPageHeroSection/>
             </Layer>
         </Page>
     </>;

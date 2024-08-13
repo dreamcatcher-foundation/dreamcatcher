@@ -15,7 +15,7 @@ let _isConnecting: Ref<boolean> = Ref<boolean>(false);
 
 export function NavConnectButton(): React.JSX.Element {
     let [symbolSpring, setSymbolSpring] = useSpring(() => ({ opacity: "0", config: config.gentle }));
-    let fontSize: string = RelativeUnit(1);
+    let fontSize: string = RelativeUnit(1.5);
     let symbolColor: string = ColorPalette.DEEP_PURPLE.toString();
     let shadowSize: number = 1;
     let shadowSize0: number = shadowSize * 1;

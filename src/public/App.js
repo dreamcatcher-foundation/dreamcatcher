@@ -27340,6 +27340,7 @@ function Rgba(_rgb, _a) {
 }
 
 // src/public/component/config/ColorPalette.ts
+var GHOST_IRON = Hex("#2D2D2D").unwrap();
 var SOFT_OBSIDIAN = Hex("#141414").unwrap();
 var DARK_OBSIDIAN = Hex("#111111").unwrap();
 var OBSIDIAN = Hex("#171717").unwrap();
@@ -46277,7 +46278,7 @@ var _notifications = [];
 var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 function NavConnectButton() {
   let [symbolSpring, setSymbolSpring] = useSpring(() => ({ opacity: "0", config: config.gentle }));
-  let fontSize = RelativeUnit(1);
+  let fontSize = RelativeUnit(1.5);
   let symbolColor = DEEP_PURPLE.toString();
   let shadowSize = 1;
   let shadowSize0 = shadowSize * 1;
@@ -46374,7 +46375,7 @@ function Nav() {
       style: {
         width: RelativeUnit(100),
         justifyContent: "space-between",
-        padding: RelativeUnit(1)
+        padding: RelativeUnit(2)
       },
       children: [
         jsx_dev_runtime10.jsxDEV(NavBrand, {}, undefined, false, undefined, this),
@@ -46407,22 +46408,154 @@ function Nav() {
   }, undefined, false, undefined, this);
 }
 
-// src/public/component/page/landing/LandingPage.tsx
+// src/public/component/decoration/Blurdot.tsx
 var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
-function LandingPage() {
+function Blurdot(props) {
+  let { color0, color1, style, ...more } = props;
   return jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
-    children: jsx_dev_runtime11.jsxDEV(Page, {
+    children: jsx_dev_runtime11.jsxDEV(Col, {
+      style: {
+        background: `radial-gradient(closest-side, ${color0}, ${color1})`,
+        opacity: "0.05",
+        ...style ?? {}
+      },
+      ...more
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/page/landing/LandingPageBackgroundLayer.tsx
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+function LandingPageBackgroundLayer() {
+  return jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+    children: jsx_dev_runtime12.jsxDEV(Layer, {
+      style: {
+        background: OBSIDIAN.toString()
+      },
+      children: [
+        jsx_dev_runtime12.jsxDEV(Blurdot, {
+          color0: DEEP_PURPLE.toString(),
+          color1: OBSIDIAN.toString(),
+          style: {
+            width: RelativeUnit(500),
+            aspectRatio: "1/1",
+            position: "absolute",
+            right: RelativeUnit(200)
+          }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime12.jsxDEV(Blurdot, {
+          color0: "#0652FE",
+          color1: OBSIDIAN.toString(),
+          style: {
+            width: RelativeUnit(500),
+            aspectRatio: "1/1",
+            position: "absolute",
+            left: RelativeUnit(200)
+          }
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/page/landing/LandingPageLearnMoreButton.tsx
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+function LandingPageLearnMoreButton() {
+  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
+    children: jsx_dev_runtime13.jsxDEV(Link, {
+      to: "https://dreamcatcher-1.gitbook.io/dreamcatcher",
+      style: {
+        textDecoration: "none",
+        width: RelativeUnit(15),
+        aspectRatio: "4/1",
+        borderColor: GHOST_IRON.toString(),
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderRadius: "5px",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        pointerEvents: "auto",
+        cursor: "pointer"
+      },
+      children: jsx_dev_runtime13.jsxDEV(Text, {
+        text: "Learn More",
+        style: {
+          fontSize: RelativeUnit(1.25)
+        }
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/page/landing/LandingPageHeroSection.tsx
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+function LandingPageHeroSection() {
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+    children: jsx_dev_runtime14.jsxDEV(Row, {
+      style: {
+        width: RelativeUnit(100),
+        height: "auto",
+        padding: RelativeUnit(5)
+      },
+      children: [
+        jsx_dev_runtime14.jsxDEV(Col, {
+          children: [
+            jsx_dev_runtime14.jsxDEV(Text, {
+              text: "Shape the Decentralized Enterprise.",
+              style: {
+                fontSize: RelativeUnit(5)
+              }
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime14.jsxDEV(Row, {
+              style: {
+                width: "100%",
+                height: "auto",
+                justifyContent: "start"
+              },
+              children: jsx_dev_runtime14.jsxDEV(Text, {
+                text: "Launch your space-proof code for your autonomous systems.",
+                style: {
+                  fontSize: RelativeUnit(2)
+                }
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime14.jsxDEV(Row, {
+              children: jsx_dev_runtime14.jsxDEV(LandingPageLearnMoreButton, {}, undefined, false, undefined, this)
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime14.jsxDEV(Image, {
+          src: "../../../img/shape/Stripe.svg",
+          style: {
+            width: RelativeUnit(25),
+            aspectRatio: "1/1"
+          }
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/page/landing/LandingPage.tsx
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+function LandingPage() {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Page, {
       hlen: 1n,
       vlen: 1n,
       children: [
-        jsx_dev_runtime11.jsxDEV(Layer, {
+        jsx_dev_runtime15.jsxDEV(LandingPageBackgroundLayer, {}, undefined, false, undefined, this),
+        jsx_dev_runtime15.jsxDEV(Layer, {
           style: {
-            background: OBSIDIAN.toString()
-          }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime11.jsxDEV(Layer, {
-          children: jsx_dev_runtime11.jsxDEV(Nav, {}, undefined, false, undefined, this)
-        }, undefined, false, undefined, this)
+            justifyContent: "start"
+          },
+          children: [
+            jsx_dev_runtime15.jsxDEV(Nav, {}, undefined, false, undefined, this),
+            jsx_dev_runtime15.jsxDEV(LandingPageHeroSection, {}, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
@@ -46430,11 +46563,11 @@ function LandingPage() {
 
 // src/public/lib/react/Renderable.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root) {
-    return client.createRoot(root).render(jsx_dev_runtime12.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime16.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   }
@@ -46442,8 +46575,8 @@ function render(routes) {
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime13.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime17.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
 }]);

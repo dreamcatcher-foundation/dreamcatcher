@@ -11,7 +11,7 @@ export function Nav(): React.JSX.Element {
         style={{
             width: RelativeUnit(100),
             justifyContent: "space-between",
-            padding: RelativeUnit(1)
+            padding: RelativeUnit(2)
         }}>
             <NavBrand/>
             <Row
