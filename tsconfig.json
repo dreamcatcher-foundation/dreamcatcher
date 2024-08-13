@@ -52,7 +52,10 @@
 					"./src/public/component/layout/*",
 					"./src/public/component/config/*",
 					"./src/public/component/misc/*",
-					"./src/public/component/page/*"
+					"./src/public/component/page/*",
+					"./src/public/component/text/*",
+					"./src/public/component/nav/*",
+					"./src/public/component/state/*"
 				]
 		}
 	}

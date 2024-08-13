@@ -67,19 +67,19 @@ export function DeploymentArgsWithArgs(_: DeploymentArgsWithArgs): DeploymentArg
     return _;
 }
 
-type SessionConstructorResult
+export type SessionConstructorResult
     =
     | Ok<Session>
     | SessionConstructorErr;
 
-type SessionConstructorErr
+export type SessionConstructorErr
     =
     | Err<unknown>
     | Err<"missingWindow">
     | Err<"missingProvider">
     | Err<"missingAccounts">;
 
-interface Session {
+export interface Session {
     chainId():
         Promise<
             | Ok<bigint>
