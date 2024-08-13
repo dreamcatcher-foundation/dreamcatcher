@@ -34,11 +34,19 @@
 
 		"baseUrl": "",
 			"paths": {
-				"@atlas/*": ["app/app/atlas/*"],
-				"@atlas-component/*": ["app/app/atlas/component/*"],
-				"@atlas-client/*": ["app/app/atlas/shared/*"],
-				
-				"@doka/*": ["cookie/*"]
+				"@lib/*": [
+					"./src/public/lib/*",
+					"./src/public/lib/color/*",
+					"./src/public/lib/result/*",
+					"./src/public/lib/network/*",
+					"./src/public/lib/solc/*",
+					"./src/public/lib/evm/*",
+					"./src/public/lib/react/*",
+					"./src/public/lib/unit/*",
+					"./src/public/lib/unit/relative-unit/*",
+					"./src/public/lib/eda/*",
+					"./src/public/lib/eda/ref/*"
+				]
 		}
 	}
 }

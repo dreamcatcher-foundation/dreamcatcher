@@ -1,24 +1,12 @@
-import * as FileSystem from "fs";
-import * as Path from "path";
-import * as ChildProcess from "child_process";
-import * as Solc from "solc";
-import * as Ethers from "ethers";
+import * as FileSystem from 'fs';
+import * as Path from 'path';
+import * as ChildProcess from 'child_process';
+import * as Solc from 'solc';
+import * as Ethers from 'ethers';
+import { loader } from './EngineLoader.ts';
 
-const loader: Loader = {
-    'srcDir': './code/contract/sol/native/',
-    'fsrcDir': './code/contract/sol/dist/',
-    'contractIds': [
-        'Diamond'
-    ],
-    'app': ,
-    'networks': [{
-        'name': 'polygon',
-        'rpcUrl': 
-        'privateKeys': []
-    }]
-}
 
-interface Loader {
+export interface Loader {
     'srcDir': string;
     'fsrcDir': string;
     'contractIds': string[];
@@ -162,7 +150,7 @@ function CompiledContract(srcDir: string, fsrcDir: string, name: string) {
     };
 }
 
-interface Loaded {
+export interface Loaded {
     contracts: (contractId: string) => CompiledContract | undefined;
     networks: (networkId: string) => Ethers.JsonRpcProvider | undefined;
     accounts: (networkId: string) => Ethers.Wallet | undefined;
