@@ -75,9 +75,9 @@ type SessionConstructorResult
 type SessionConstructorErr
     =
     | Err<unknown>
-    | Err<"MISSING_WINDOW">
-    | Err<"MISSING_PROVIDER">
-    | Err<"MISSING_ACCOUNTS">;
+    | Err<"missingWindow">
+    | Err<"missingProvider">
+    | Err<"missingAccounts">;
 
 interface Session {
     chainId():
@@ -116,15 +116,15 @@ export async function Session(): Promise<SessionConstructorResult> {
     let _provider!: BrowserProvider;
     try {
         let ethereum: unknown = (window as any).ethereum;
-        if (!window) return Err<"MISSING_WINDOW">("MISSING_WINDOW");
-        if (!ethereum) return Err<"MISSING_PROVIDER">("MISSING_PROVIDER");
+        if (!window) return Err<"missingWindow">("missingWindow");
+        if (!ethereum) return Err<"missingProvider">("missingProvider");
         _provider = new BrowserProvider(ethereum as any);
         let accounts: string[];
         accounts = await _provider.send("eth_accounts", []);
         if (accounts.length === 0) {
             accounts = await _provider.send("eth_requestAccounts", []);
         }
-        if (accounts.length === 0) return Err<"MISSING_ACCOUNTS">("MISSING_ACCOUNTS");
+        if (accounts.length === 0) return Err<"missingAccounts">("missingAccounts");
     }
     catch (e: unknown) {
         return Err<unknown>(e);
@@ -283,7 +283,7 @@ export async function Session(): Promise<SessionConstructorResult> {
 
 type NotConnectedErr
     =
-    | Err<"NOT_CONNECTED">;
+    | Err<"notConnected">;
 
 export async function connect():
     Promise<
@@ -307,7 +307,7 @@ export async function query(args: QueryArgs):
         | NotConnectedErr
         | Err<unknown>
     > {
-    if (_session.none) return Err<"NOT_CONNECTED">("NOT_CONNECTED");
+    if (_session.none) return Err<"notConnected">("notConnected");
     return await _session.unwrap().query(args);
 }
 
@@ -317,7 +317,7 @@ export async function call(args: CallArgs):
         | NotConnectedErr
         | Err<unknown>
     > {
-    if (_session.none) return Err<"NOT_CONNECTED">("NOT_CONNECTED");
+    if (_session.none) return Err<"notConnected">("notConnected");
     return await _session.unwrap().call(args);
 }
 
@@ -327,6 +327,6 @@ export async function deploy(args: DeploymentArgs | DeploymentArgsWithArgs):
         | NotConnectedErr
         | Err<unknown>    
     > {
-    if (_session.none) return Err<"NOT_CONNECTED">("NOT_CONNECTED");
+    if (_session.none) return Err<"notConnected">("notConnected");
     return await _session.unwrap().deploy(args);
 }

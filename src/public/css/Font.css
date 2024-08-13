@@ -14,11 +14,11 @@
 }
 
 @font-face {
-    font-family: "suisse-intl-regular";
+    font-family: "suisseIntlRegular";
     src: url(./asset/font/SuisseIntlRegular.otf) format("opentype");
 }
 
 @font-face {
-    font-family: "satoshi-regular";
+    font-family: "satoshiRegular";
     src: url(./asset/font/satoshi/SatoshiRegular.otf) format("opentype");
 }

@@ -10,3 +10,5 @@ export function render(routes: RouteObject[]): void {
     }
     return;
 }
+
+export { RouteObject };

@@ -6,6 +6,9 @@ import { Interface } from "ethers";
 import { ContractFactory } from "ethers";
 import { Ok } from "@lib/Result"
 import { Err } from "@lib/Result";
+import { Option } from "@lib/Result";
+import { Some } from "@lib/Result";
+import { None } from "@lib/Result";
 
 export interface QueryArgs {
     to: string;
@@ -65,10 +68,11 @@ interface Account {
 }
 
 export function Account(_wallet: Wallet): Account {
+    return { wallet, walletAddress, generateNonce, query, call, deploy };
     function wallet(): Wallet {
         return _wallet;
     }
-    async function signerAddress():
+    async function walletAddress():
         Promise<
             | Ok<string>
             | Err<unknown>
@@ -102,6 +106,101 @@ export function Account(_wallet: Wallet): Account {
             let contract: Contract = new Contract(to, [signature], _wallet);
             let name: string = signature.split(" ")[1];
             return Ok<unknown>(await contract.getFunction(name)(... args_ ?? []));
+        }
+        catch (e: unknown) {
+            return Err<unknown>(e);
+        }
+    }
+    async function call(args: CallArgs):
+        Promise<
+            | Ok<Option<TransactionReceipt>>
+            | Err<unknown>
+        > {
+        try {
+            let walletAddress_:
+                | Ok<string>
+                | Err<unknown>
+                = await walletAddress();
+            if (walletAddress_.err) return walletAddress_;
+            let nonce:
+                | Ok<number>
+                | Err<unknown>
+                = await generateNonce();
+            if (nonce.err) return nonce;
+            let { to, signature, args: args_, gasPrice, gasLimit, value, chainId, confirmations } = args;
+            let name: string = signature.split(" ")[1];
+            let maybeReceipt:
+                | TransactionReceipt
+                | null
+                = await (await _wallet.sendTransaction({
+                    from: walletAddress_.unwrap(),
+                    to: to,
+                    nonce: nonce.unwrap(),
+                    gasPrice: gasPrice ?? 20000000000n,
+                    gasLimit: gasLimit ?? 10000000n,
+                    chainId: chainId,
+                    value: value ?? 0n,
+                    data: new Interface([signature]).encodeFunctionData(name, args_ ?? [])
+                })).wait(Number(confirmations ?? 1n));
+                if (!maybeReceipt) return Ok<Option<TransactionReceipt>>(None);
+                return Ok<Option<TransactionReceipt>>(Some<TransactionReceipt>(maybeReceipt));
+        }
+        catch (e: unknown) {
+            return Err<unknown>(e);
+        }
+    }
+    async function deploy(args: DeploymentArgs | DeploymentArgsWithArgs):
+        Promise<
+            | Ok<Option<TransactionReceipt>>
+            | Err<unknown>
+        > {
+        try {
+            let walletAddress_:
+                | Ok<string>
+                | Err<unknown>
+                = await walletAddress();
+            if (walletAddress_.err) return walletAddress_;
+            let nonce:
+                | Ok<number>
+                | Err<unknown>
+                = await generateNonce();
+            if (nonce.err) return nonce;
+            if ("abi" in args) {
+                let { bytecode, abi, args: args_, gasPrice, gasLimit, value, chainId, confirmations } = args;
+                let factory: ContractFactory = new ContractFactory(abi, bytecode, _wallet);
+                let transaction: ContractDeployTransaction = await factory.getDeployTransaction(... args_ ?? []);
+                let maybeReceipt:
+                    | TransactionReceipt
+                    | null
+                    = await (await _wallet.sendTransaction({
+                        from: walletAddress_.unwrap(),
+                        to: null,
+                        nonce: nonce.unwrap(),
+                        gasPrice: gasPrice ?? 20000000000n,
+                        gasLimit: gasLimit ?? 10000000n,
+                        chainId: chainId,
+                        value: value ?? 0n,
+                        data: transaction.data
+                    })).wait(Number(confirmations ?? 1n));
+                if (!maybeReceipt) return Ok<Option<TransactionReceipt>>(None);
+                return Ok<Option<TransactionReceipt>>(Some<TransactionReceipt>(maybeReceipt));
+            }
+            let { bytecode, gasPrice, gasLimit, value, chainId, confirmations } = args;
+            let maybeReceipt:
+                | TransactionReceipt
+                | null
+                = await (await _wallet.sendTransaction({
+                    from: walletAddress_.unwrap(),
+                    to: null,
+                    nonce: nonce.unwrap(),
+                    gasPrice: gasPrice ?? 20000000000n,
+                    gasLimit: gasLimit ?? 10000000n,
+                    chainId: chainId,
+                    value: value ?? 0n,
+                    data: `0x${bytecode}`
+                })).wait(Number(confirmations ?? 1n));
+                if (!maybeReceipt) return Ok<Option<TransactionReceipt>>(None);
+                return Ok<Option<TransactionReceipt>>(Some<TransactionReceipt>(maybeReceipt));
         }
         catch (e: unknown) {
             return Err<unknown>(e);

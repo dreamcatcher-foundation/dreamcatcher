@@ -16,7 +16,7 @@ export type HexCharSetCheckResult
 
 export type HexCharSetCheckErr 
     = 
-    | Err<"INVALID_CHAR_SET">;
+    | Err<"invalidCharSet">;
 
 export type HexConstructorResult
     =
@@ -26,9 +26,9 @@ export type HexConstructorResult
 export type HexConstructorErr 
     =
     | HexCharSetCheckErr
-    | Err<"STRING_LENGTH_TOO_SHORT">
-    | Err<"STRING_LENGTH_TOO_LONG">
-    | Err<"STRING_MISSING_HASH">;
+    | Err<"stringLengthTooShort">
+    | Err<"stringLengthTooLong">
+    | Err<"stringMissingHash">;
 
 export interface Hex extends ColorType {}
 
@@ -48,13 +48,13 @@ export function Hex(_string: string): HexConstructorResult {
                 let validChar: string = _VALID_CHARS[x];
                 if (char === validChar) hasValidChar = true;
             }
-            if (!hasValidChar) return Err("INVALID_CHAR_SET" as const);
+            if (!hasValidChar) return Err<"invalidCharSet">("invalidCharSet");
         }
         return EmptyOk;
     }
-    if (_string.length < 7) return Err("STRING_LENGTH_TOO_SHORT" as const);
-    if (_string.length > 7) return Err("STRING_LENGTH_TOO_LONG" as const);
-    if (_string.startsWith("#") === false) return Err("STRING_MISSING_HASH" as const);
+    if (_string.length < 7) return Err<"stringLengthTooShort">("stringLengthTooShort");
+    if (_string.length > 7) return Err<"stringLengthTooLong">("stringLengthTooLong");
+    if (_string.startsWith("#") === false) return Err<"stringMissingHash">("stringMissingHash");
     let charSetCheck: HexCharSetCheckResult = _checkCharSet(_string);
     if (charSetCheck.err) return charSetCheck;
     return Ok<Hex>({ toString, toHex, toRgb, toRgba });
@@ -86,12 +86,12 @@ export type RgbConstructorResult
 
 export type RgbConstructorErr
     =
-    | Err<"VALUE_R_IS_BELOW_MIN_RGB_VALUE">
-    | Err<"VALUE_G_IS_BELOW_MIN_RGB_VALUE">
-    | Err<"VALUE_B_IS_BELOW_MIN_RGB_VALUE">
-    | Err<"VALUE_R_IS_ABOVE_MAX_RGB_VALUE">
-    | Err<"VALUE_G_IS_ABOVE_MAX_RGB_VALUE">
-    | Err<"VALUE_B_IS_ABOVE_MAX_RGB_VALUE">;
+    | Err<"valueRIsBelowMinRgbValue">
+    | Err<"valueGIsBelowMinRgbValue">
+    | Err<"valueBIsBelowMinRgbValue">
+    | Err<"valueRIsAboveMaxRgbValue">
+    | Err<"valueGIsAboveMaxRgbValue">
+    | Err<"valueBIsAboveMaxRgbValue">;
 
 export interface Rgb extends ColorType {
     r(): bigint;
@@ -102,12 +102,12 @@ export interface Rgb extends ColorType {
 export function Rgb(_r: bigint, _g: bigint, _b: bigint): RgbConstructorResult {
     const _MIN_RGB_VALUE: bigint = 0n;
     const _MAX_RGB_VALUE: bigint = 255n;
-    if (_r < _MIN_RGB_VALUE) return Err<"VALUE_R_IS_BELOW_MIN_RGB_VALUE">("VALUE_R_IS_BELOW_MIN_RGB_VALUE");
-    if (_g < _MIN_RGB_VALUE) return Err<"VALUE_G_IS_BELOW_MIN_RGB_VALUE">("VALUE_G_IS_BELOW_MIN_RGB_VALUE");
-    if (_b < _MIN_RGB_VALUE) return Err<"VALUE_B_IS_BELOW_MIN_RGB_VALUE">("VALUE_B_IS_BELOW_MIN_RGB_VALUE");
-    if (_r > _MAX_RGB_VALUE) return Err<"VALUE_R_IS_ABOVE_MAX_RGB_VALUE">("VALUE_R_IS_ABOVE_MAX_RGB_VALUE");
-    if (_g > _MAX_RGB_VALUE) return Err<"VALUE_G_IS_ABOVE_MAX_RGB_VALUE">("VALUE_G_IS_ABOVE_MAX_RGB_VALUE");
-    if (_b > _MAX_RGB_VALUE) return Err<"VALUE_B_IS_ABOVE_MAX_RGB_VALUE">("VALUE_B_IS_ABOVE_MAX_RGB_VALUE");
+    if (_r < _MIN_RGB_VALUE) return Err<"valueRIsBelowMinRgbValue">("valueRIsBelowMinRgbValue");
+    if (_g < _MIN_RGB_VALUE) return Err<"valueGIsBelowMinRgbValue">("valueGIsBelowMinRgbValue");
+    if (_b < _MIN_RGB_VALUE) return Err<"valueBIsBelowMinRgbValue">("valueBIsBelowMinRgbValue");
+    if (_r > _MAX_RGB_VALUE) return Err<"valueRIsAboveMaxRgbValue">("valueRIsAboveMaxRgbValue");
+    if (_g > _MAX_RGB_VALUE) return Err<"valueGIsAboveMaxRgbValue">("valueGIsAboveMaxRgbValue");
+    if (_b > _MAX_RGB_VALUE) return Err<"valueBIsAboveMaxRgbValue">("valueBIsAboveMaxRgbValue");
     return Ok<Rgb>({ r, g, b, toString, toHex, toRgb, toRgba });
     function r(): bigint {
         return _r;
@@ -149,8 +149,8 @@ export type RgbaConstructorResult
 
 export type RgbaConstructorErr
     =
-    | Err<"VALUE_A_IS_BELOW_MIN_OPACITY_VALUE">
-    | Err<"VALUE_A_IS_ABOVE_MAX_OPACITY_VALUE">;
+    | Err<"valueAIsBelowMinOpacityValue">
+    | Err<"valueAIsAboveMaxOpacityValue">;
 
 export interface Rgba extends Rgb {
     a(): number;
@@ -159,8 +159,8 @@ export interface Rgba extends Rgb {
 export function Rgba(_rgb: Rgb, _a: number): RgbaConstructorResult {
     const _MIN_OPACITY_VALUE: number = 0;
     const _MAX_OPACITY_VALUE: number = 1;
-    if (_a < _MIN_OPACITY_VALUE) return Err<"VALUE_A_IS_BELOW_MIN_OPACITY_VALUE">("VALUE_A_IS_BELOW_MIN_OPACITY_VALUE");
-    if (_a > _MAX_OPACITY_VALUE) return Err<"VALUE_A_IS_ABOVE_MAX_OPACITY_VALUE">("VALUE_A_IS_ABOVE_MAX_OPACITY_VALUE");
+    if (_a < _MIN_OPACITY_VALUE) return Err<"valueAIsBelowMinOpacityValue">("valueAIsBelowMinOpacityValue");
+    if (_a > _MAX_OPACITY_VALUE) return Err<"valueAIsAboveMaxOpacityValue">("valueAIsAboveMaxOpacityValue");
     return Ok<Rgba>({ r, g, b, a, toString, toHex, toRgb, toRgba });
     function r(): bigint {
         return _rgb.r();

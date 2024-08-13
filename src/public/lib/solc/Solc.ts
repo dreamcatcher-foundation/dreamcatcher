@@ -41,15 +41,15 @@ export type CompilationErr
     =
     | Err<unknown>
     | Err<ExecException>
-    | Err<"MISSING_PATH">
-    | Err<"INCOMPATIBLE_FILE_TYPE">
-    | Err<"FAILED_TO_PARSE_FILE_NAME">
-    | Err<"FAILED_TO_PARSE_FILE_EXTENSION">
-    | Err<"FAILED_TO_PARSE_FILE_CONTENT">
-    | Err<"CORRUPTION">;
+    | Err<"missingPath">
+    | Err<"incompatibleFileType">
+    | Err<"failedToParseFileName">
+    | Err<"failedToParseFileExtension">
+    | Err<"failedToParseFileContent">
+    | Err<"corruption">;
 
 export function compile(_path: string): CompilationResult {
-    if (!existsSync(_path)) return Err<"MISSING_PATH">("MISSING_PATH");
+    if (!existsSync(_path)) return Err<"missingPath">("missingPath");
     let name:
         | string
         | undefined
@@ -58,7 +58,7 @@ export function compile(_path: string): CompilationResult {
             ?.pop()
             ?.split(".")
             ?.at(-2);
-    if (!name) return Err<"FAILED_TO_PARSE_FILE_NAME">("FAILED_TO_PARSE_FILE_NAME");
+    if (!name) return Err<"failedToParseFileName">("failedToParseFileName");
     let shards:
         | string[]
         | undefined
@@ -66,12 +66,12 @@ export function compile(_path: string): CompilationResult {
             ?.split("/")
             ?.pop()
             ?.split(".");
-    if (!shards) return Err<"FAILED_TO_PARSE_FILE_EXTENSION">("FAILED_TO_PARSE_FILE_EXTENSION");
+    if (!shards) return Err<"failedToParseFileExtension">("failedToParseFileExtension");
     let extension:
         | string
         | undefined
         = shards.at(-1);
-    if (!extension) return Err<"FAILED_TO_PARSE_FILE_EXTENSION">("FAILED_TO_PARSE_FILE_EXTENSION");
+    if (!extension) return Err<"failedToParseFileExtension">("failedToParseFileExtension");
     let temporaryPath: string = join(__dirname, `${name}.${extension}`);
     let sourcecode: string = "";
     try {
@@ -84,7 +84,7 @@ export function compile(_path: string): CompilationResult {
         while (nowTimestamp - beginTimestamp < 4000) nowTimestamp = Date.now();
         if (exception) return Err<ExecException>(exception);
         let item: string = readFileSync(temporaryPath, "utf8");
-        if (item === "") return Err<"FAILED_TO_PARSE_FILE_CONTENT">("FAILED_TO_PARSE_FILE_CONTENT");
+        if (item === "") return Err<"failedToParseFileContent">("failedToParseFileContent");
         sourcecode = item;
     }
     catch (e: unknown) {
@@ -120,7 +120,7 @@ export function compile(_path: string): CompilationResult {
                 && "formattedMessage" in errorOrWarning
                 && typeof errorOrWarning.severity === "string"
                 && typeof errorOrWarning.formattedMessage === "string"
-            )) return Err<"CORRUPTION">("CORRUPTION");
+            )) return Err<"corruption">("corruption");
             if (errorOrWarning.severity === "error") errors.push(errorOrWarning.formattedMessage);
             else warnings.push(errorOrWarning.formattedMessage);
         }
@@ -146,24 +146,24 @@ export function compile(_path: string): CompilationResult {
                     ?.[name]
                     ?.evm
                     ?.methodIdentifiers;
-            if (!bytecode) return Err<"CORRUPTION">("CORRUPTION");
-            if (!abi) return Err<"CORRUPTION">("CORRUPTION");
-            if (!methods) return Err<"CORRUPTION">("CORRUPTION");
+            if (!bytecode) return Err<"corruption">("corruption");
+            if (!abi) return Err<"corruption">("corruption");
+            if (!methods) return Err<"corruption">("corruption");
             if (!(
                 bytecode
                 && typeof bytecode === "string"
                 && bytecode !== ""
-            )) return Err<"CORRUPTION">("CORRUPTION");
+            )) return Err<"corruption">("corruption");
             if (!(
                 abi
                 && Array.isArray(abi)
                 && abi.length !== 0
                 && typeof abi[0] === "object"
-            )) return Err<"CORRUPTION">("CORRUPTION");
+            )) return Err<"corruption">("corruption");
             if (!(
                 methods
                 && typeof methods === "object"
-            )) return Err<"CORRUPTION">("CORRUPTION");
+            )) return Err<"corruption">("corruption");
             return Ok<Sol>(Sol({
                 path: _path,
                 bytecode: bytecode,
