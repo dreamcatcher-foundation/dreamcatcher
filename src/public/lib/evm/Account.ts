@@ -63,7 +63,7 @@ export function DeploymentArgsWithArgs(_: DeploymentArgsWithArgs): DeploymentArg
     return _;
 }
 
-interface Account {
+export interface Account {
     walletAddress():
         Promise<
             | Ok<string>

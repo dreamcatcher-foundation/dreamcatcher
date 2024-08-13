@@ -46,6 +46,10 @@
 					"./src/public/lib/unit/relative-unit/*",
 					"./src/public/lib/eda/*",
 					"./src/public/lib/eda/ref/*"
+				],
+				"@component/*": [
+					"./src/public/component/*",
+					"./src/public/component/layout/*"
 				]
 		}
 	}
