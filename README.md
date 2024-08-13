@@ -1,3 +1,4 @@
+[o] color palette.
 [x] react navbar component.
 [x] react text component.
 [o] react image component.

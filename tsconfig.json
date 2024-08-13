@@ -49,7 +49,10 @@
 				],
 				"@component/*": [
 					"./src/public/component/*",
-					"./src/public/component/layout/*"
+					"./src/public/component/layout/*",
+					"./src/public/component/config/*",
+					"./src/public/component/misc/*",
+					"./src/public/component/page/*"
 				]
 		}
 	}
