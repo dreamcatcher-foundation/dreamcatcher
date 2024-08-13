@@ -64,14 +64,35 @@ export function DeploymentArgsWithArgs(_: DeploymentArgsWithArgs): DeploymentArg
 }
 
 interface Account {
-
+    walletAddress():
+        Promise<
+            | Ok<string>
+            | Err<unknown>
+        >;
+    generateNonce():
+        Promise<
+            | Ok<number>
+            | Err<unknown>
+        >;
+    query(args: QueryArgs):
+        Promise<
+            | Ok<unknown>
+            | Err<unknown>
+        >;
+    call(args: CallArgs):
+        Promise<
+            | Ok<Option<TransactionReceipt>>
+            | Err<unknown>
+        >;
+    deploy(args: DeploymentArgs | DeploymentArgsWithArgs):
+        Promise<
+            | Ok<Option<TransactionReceipt>>
+            | Err<unknown>
+        >;
 }
 
 export function Account(_wallet: Wallet): Account {
-    return { wallet, walletAddress, generateNonce, query, call, deploy };
-    function wallet(): Wallet {
-        return _wallet;
-    }
+    return { walletAddress, generateNonce, query, call, deploy };
     async function walletAddress():
         Promise<
             | Ok<string>
