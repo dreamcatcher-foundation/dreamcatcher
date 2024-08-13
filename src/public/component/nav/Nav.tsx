@@ -10,8 +10,8 @@ export function Nav(): React.JSX.Element {
         <Row
         style={{
             width: RelativeUnit(100),
-            height: RelativeUnit(10),
-            justifyContent: "space-between"
+            justifyContent: "space-between",
+            padding: RelativeUnit(1)
         }}>
             <NavBrand/>
             <Row

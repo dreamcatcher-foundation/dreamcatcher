@@ -12,7 +12,8 @@ export function Image(props: ImageProps): React.JSX.Element {
         <Row
         style={{
             backgroundImage: `url(${ src })`,
-            backgroundSize: "cover"
+            backgroundSize: "cover",
+            ... style ?? {}
         }}
         { ... more }/>
     </>;

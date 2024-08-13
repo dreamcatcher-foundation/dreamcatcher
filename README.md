@@ -1,5 +1,6 @@
+[x] server
 [o] color palette.
-[x] react nav component.
+[o] react nav component.
 [o] react text component.
 [o] react image component.
 [o] react layout components.

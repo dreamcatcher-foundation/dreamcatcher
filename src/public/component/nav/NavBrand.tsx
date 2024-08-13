@@ -10,13 +10,13 @@ export function NavBrand(): React.JSX.Element {
             <Image
             src="../../img/press-kit/Logo.png"
             style={{
-                width: RelativeUnit(5),
-                height: RelativeUnit(5)
+                width: RelativeUnit(2),
+                aspectRatio: "1/1"
             }}/>
             <Text
             text="Dreamcatcher"
             style={{
-                fontSize: RelativeUnit(2)
+                fontSize: RelativeUnit(1.5)
             }}/>
         </Col>
     </>;
