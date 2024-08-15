@@ -1,9 +1,9 @@
 import { Hex } from "@lib/Color";
 
 export const GHOST_IRON: Hex = Hex("#2D2D2D").unwrap();
-export const SOFT_OBSIDIAN: Hex = Hex("#141414").unwrap();
+export const SOFT_OBSIDIAN: Hex = Hex("#171717").unwrap();
 export const DARK_OBSIDIAN: Hex = Hex("#111111").unwrap();
-export const OBSIDIAN: Hex = Hex("#171717").unwrap();
+export const OBSIDIAN: Hex = Hex("#141414").unwrap();
 export const TITANIUM: Hex = Hex("#D6D5D4").unwrap();
 export const TEAL: Hex = Hex("#00FFAB").unwrap();
 export const PINK: Hex = Hex("#FF00FB").unwrap();

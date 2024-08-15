@@ -17,7 +17,7 @@ export function LandingPageBackgroundLayer(): React.JSX.Element {
                 width: RelativeUnit(500),
                 aspectRatio: "1/1",
                 position: "absolute",
-                right: RelativeUnit(200)
+                right: RelativeUnit(100)
             }}/>
             <Blurdot
             color0="#0652FE"
@@ -26,7 +26,7 @@ export function LandingPageBackgroundLayer(): React.JSX.Element {
                 width: RelativeUnit(500),
                 aspectRatio: "1/1",
                 position: "absolute",
-                left: RelativeUnit(200)
+                left: RelativeUnit(100)
             }}/>
         </Layer>
     </>;

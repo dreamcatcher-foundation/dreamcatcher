@@ -3,6 +3,7 @@ import { Layer } from "@component/Layer";
 import { Nav } from "@component/Nav";
 import { LandingPageBackgroundLayer } from "./LandingPageBackgroundLayer";
 import { LandingPageHeroSection } from "./LandingPageHeroSection";
+import { Window } from "@component/window/Window";
 import React from "react";
 
 export function LandingPage(): React.JSX.Element {

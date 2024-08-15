@@ -25,6 +25,9 @@ export function Nav(): React.JSX.Element {
                 label="Whitepaper"
                 to="https://dreamcatcher-1.gitbook.io/dreamcatcher"/>
                 <NavButton
+                label="Explore"
+                to="/explore"/>
+                <NavButton
                 label="Launch"
                 to="/launch"/>
                 <NavButton

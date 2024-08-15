@@ -56,7 +56,9 @@
 					"./src/public/component/text/*",
 					"./src/public/component/nav/*",
 					"./src/public/component/state/*",
-					"./src/public/component/decoration/*"
+					"./src/public/component/decoration/*",
+					"./src/public/component/button/*",
+					"./src/public/component/hook/*"
 				]
 		}
 	}
