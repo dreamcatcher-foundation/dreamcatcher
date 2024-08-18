@@ -23450,6 +23450,226 @@ var require_jsx_dev_runtime = __commonJS((exports, module) => {
   }
 });
 
+// node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js
+var require_use_sync_external_store_shim_development = __commonJS((exports) => {
+  var React5 = __toESM(require_react(), 1);
+  if (true) {
+    (function() {
+      if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
+        __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error);
+      }
+      var ReactSharedInternals = React5.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+      function error(format) {
+        {
+          {
+            for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1;_key2 < _len2; _key2++) {
+              args[_key2 - 1] = arguments[_key2];
+            }
+            printWarning("error", format, args);
+          }
+        }
+      }
+      function printWarning(level, format, args) {
+        {
+          var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
+          var stack = ReactDebugCurrentFrame.getStackAddendum();
+          if (stack !== "") {
+            format += "%s";
+            args = args.concat([stack]);
+          }
+          var argsWithFormat = args.map(function(item) {
+            return String(item);
+          });
+          argsWithFormat.unshift("Warning: " + format);
+          Function.prototype.apply.call(console[level], console, argsWithFormat);
+        }
+      }
+      function is2(x, y) {
+        return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
+      }
+      var objectIs = typeof Object.is === "function" ? Object.is : is2;
+      var useState8 = React5.useState, useEffect9 = React5.useEffect, useLayoutEffect5 = React5.useLayoutEffect, useDebugValue2 = React5.useDebugValue;
+      var didWarnOld18Alpha = false;
+      var didWarnUncachedGetSnapshot = false;
+      function useSyncExternalStore2(subscribe, getSnapshot, getServerSnapshot) {
+        {
+          if (!didWarnOld18Alpha) {
+            if (React5.startTransition !== undefined) {
+              didWarnOld18Alpha = true;
+              error("You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release.");
+            }
+          }
+        }
+        var value = getSnapshot();
+        {
+          if (!didWarnUncachedGetSnapshot) {
+            var cachedValue = getSnapshot();
+            if (!objectIs(value, cachedValue)) {
+              error("The result of getSnapshot should be cached to avoid an infinite loop");
+              didWarnUncachedGetSnapshot = true;
+            }
+          }
+        }
+        var _useState = useState8({
+          inst: {
+            value,
+            getSnapshot
+          }
+        }), inst = _useState[0].inst, forceUpdate = _useState[1];
+        useLayoutEffect5(function() {
+          inst.value = value;
+          inst.getSnapshot = getSnapshot;
+          if (checkIfSnapshotChanged(inst)) {
+            forceUpdate({
+              inst
+            });
+          }
+        }, [subscribe, value, getSnapshot]);
+        useEffect9(function() {
+          if (checkIfSnapshotChanged(inst)) {
+            forceUpdate({
+              inst
+            });
+          }
+          var handleStoreChange = function() {
+            if (checkIfSnapshotChanged(inst)) {
+              forceUpdate({
+                inst
+              });
+            }
+          };
+          return subscribe(handleStoreChange);
+        }, [subscribe]);
+        useDebugValue2(value);
+        return value;
+      }
+      function checkIfSnapshotChanged(inst) {
+        var latestGetSnapshot = inst.getSnapshot;
+        var prevValue = inst.value;
+        try {
+          var nextValue = latestGetSnapshot();
+          return !objectIs(prevValue, nextValue);
+        } catch (error2) {
+          return true;
+        }
+      }
+      function useSyncExternalStore$1(subscribe, getSnapshot, getServerSnapshot) {
+        return getSnapshot();
+      }
+      var canUseDOM = !!(typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined");
+      var isServerEnvironment = !canUseDOM;
+      var shim = isServerEnvironment ? useSyncExternalStore$1 : useSyncExternalStore2;
+      var useSyncExternalStore$2 = React5.useSyncExternalStore !== undefined ? React5.useSyncExternalStore : shim;
+      exports.useSyncExternalStore = useSyncExternalStore$2;
+      if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop === "function") {
+        __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error);
+      }
+    })();
+  }
+});
+
+// node_modules/use-sync-external-store/shim/index.js
+var require_shim = __commonJS((exports, module) => {
+  if (false) {
+  } else {
+    module.exports = require_use_sync_external_store_shim_development();
+  }
+});
+
+// node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js
+var require_with_selector_development = __commonJS((exports) => {
+  var React5 = __toESM(require_react(), 1);
+  if (true) {
+    (function() {
+      if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
+        __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error);
+      }
+      var shim = require_shim();
+      function is2(x, y) {
+        return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
+      }
+      var objectIs = typeof Object.is === "function" ? Object.is : is2;
+      var useSyncExternalStore = shim.useSyncExternalStore;
+      var useRef10 = React5.useRef, useEffect9 = React5.useEffect, useMemo6 = React5.useMemo, useDebugValue2 = React5.useDebugValue;
+      function useSyncExternalStoreWithSelector(subscribe, getSnapshot, getServerSnapshot, selector, isEqual2) {
+        var instRef = useRef10(null);
+        var inst;
+        if (instRef.current === null) {
+          inst = {
+            hasValue: false,
+            value: null
+          };
+          instRef.current = inst;
+        } else {
+          inst = instRef.current;
+        }
+        var _useMemo = useMemo6(function() {
+          var hasMemo = false;
+          var memoizedSnapshot;
+          var memoizedSelection;
+          var memoizedSelector = function(nextSnapshot) {
+            if (!hasMemo) {
+              hasMemo = true;
+              memoizedSnapshot = nextSnapshot;
+              var _nextSelection = selector(nextSnapshot);
+              if (isEqual2 !== undefined) {
+                if (inst.hasValue) {
+                  var currentSelection = inst.value;
+                  if (isEqual2(currentSelection, _nextSelection)) {
+                    memoizedSelection = currentSelection;
+                    return currentSelection;
+                  }
+                }
+              }
+              memoizedSelection = _nextSelection;
+              return _nextSelection;
+            }
+            var prevSnapshot = memoizedSnapshot;
+            var prevSelection = memoizedSelection;
+            if (objectIs(prevSnapshot, nextSnapshot)) {
+              return prevSelection;
+            }
+            var nextSelection = selector(nextSnapshot);
+            if (isEqual2 !== undefined && isEqual2(prevSelection, nextSelection)) {
+              return prevSelection;
+            }
+            memoizedSnapshot = nextSnapshot;
+            memoizedSelection = nextSelection;
+            return nextSelection;
+          };
+          var maybeGetServerSnapshot = getServerSnapshot === undefined ? null : getServerSnapshot;
+          var getSnapshotWithSelector = function() {
+            return memoizedSelector(getSnapshot());
+          };
+          var getServerSnapshotWithSelector = maybeGetServerSnapshot === null ? undefined : function() {
+            return memoizedSelector(maybeGetServerSnapshot());
+          };
+          return [getSnapshotWithSelector, getServerSnapshotWithSelector];
+        }, [getSnapshot, getServerSnapshot, selector, isEqual2]), getSelection = _useMemo[0], getServerSelection = _useMemo[1];
+        var value = useSyncExternalStore(subscribe, getSelection, getServerSelection);
+        useEffect9(function() {
+          inst.hasValue = true;
+          inst.value = value;
+        }, [value]);
+        useDebugValue2(value);
+        return value;
+      }
+      exports.useSyncExternalStoreWithSelector = useSyncExternalStoreWithSelector;
+      if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop === "function") {
+        __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error);
+      }
+    })();
+  }
+});
+
+// node_modules/use-sync-external-store/shim/with-selector.js
+var require_with_selector = __commonJS((exports, module) => {
+  if (false) {
+  } else {
+    module.exports = require_with_selector_development();
+  }
+});
+
 // node_modules/fbemitter/lib/EventSubscription.js
 var require_EventSubscription = __commonJS((exports, module) => {
   var EventSubscription = function() {
@@ -31676,70 +31896,2642 @@ var SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
 var savedScrollPositions = {};
 
 // src/public/component/nav/NavButton.tsx
-var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
-function NavButton(props) {
-  let { label, style, to: to2, children, ...more } = props;
-  let [symbolSpring, setSymbolSpring] = useSpring(() => ({ opacity: "0", config: config.gentle }));
-  let fontSize = RelativeUnit(1);
-  let symbolColor = DEEP_PURPLE.toString();
-  let shadowSize = 1;
-  let shadowSize0 = shadowSize * 1;
-  let shadowSize1 = shadowSize * 2;
-  let shadowSize2 = shadowSize * 3;
-  let shadowSize3 = shadowSize * 4;
-  let shadowSize4 = shadowSize * 5;
-  let shadowSize5 = shadowSize * 6;
-  let distance0 = RelativeUnit(shadowSize0);
-  let distance1 = RelativeUnit(shadowSize1);
-  let distance2 = RelativeUnit(shadowSize2);
-  let distance3 = RelativeUnit(shadowSize3);
-  let distance4 = RelativeUnit(shadowSize4);
-  let distance5 = RelativeUnit(shadowSize5);
-  let shadow0 = `0 0 ${distance0} ${symbolColor}`;
-  let shadow1 = `0 0 ${distance1} ${symbolColor}`;
-  let shadow2 = `0 0 ${distance2} ${symbolColor}`;
-  let shadow3 = `0 0 ${distance3} ${symbolColor}`;
-  let shadow4 = `0 0 ${distance4} ${symbolColor}`;
-  let shadow5 = `0 0 ${distance5} ${symbolColor}`;
-  let textShadow = `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
-  return jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
-    children: jsx_dev_runtime8.jsxDEV(Link, {
-      to: to2,
-      onMouseEnter: () => setSymbolSpring.start({ opacity: "1" }),
-      onMouseLeave: () => setSymbolSpring.start({ opacity: "0" }),
-      style: {
-        pointerEvents: "auto",
-        textDecoration: "none",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: RelativeUnit(1),
-        ...style ?? {}
-      },
-      ...more,
-      children: [
-        jsx_dev_runtime8.jsxDEV(Text, {
-          text: "\u21F4",
-          style: {
-            fontSize,
-            fontWeight: "bold",
-            fontFamily: "satoshiRegular",
-            color: symbolColor,
-            textShadow,
-            ...symbolSpring
+var import_react20 = __toESM(require_react(), 1);
+
+// node_modules/xstate/dev/dist/xstate-dev.esm.js
+var getGlobal = function() {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+};
+var getDevTools = function() {
+  const w = getGlobal();
+  if (!!w.__xstate__) {
+    return w.__xstate__;
+  }
+  return;
+};
+var devToolsAdapter = (service) => {
+  if (typeof window === "undefined") {
+    return;
+  }
+  const devTools = getDevTools();
+  if (devTools) {
+    devTools.register(service);
+  }
+};
+
+// node_modules/xstate/dist/State-cdbc7940.esm.js
+var createAfterEvent = function(delayRef, id) {
+  return {
+    type: `xstate.after.${delayRef}.${id}`
+  };
+};
+var createDoneStateEvent = function(id, output) {
+  return {
+    type: `xstate.done.state.${id}`,
+    output
+  };
+};
+var createDoneActorEvent = function(invokeId, output) {
+  return {
+    type: `xstate.done.actor.${invokeId}`,
+    output,
+    actorId: invokeId
+  };
+};
+var createErrorActorEvent = function(id, error) {
+  return {
+    type: `xstate.error.actor.${id}`,
+    error,
+    actorId: id
+  };
+};
+var createInitEvent = function(input) {
+  return {
+    type: XSTATE_INIT,
+    input
+  };
+};
+var reportUnhandledError = function(err) {
+  setTimeout(() => {
+    throw err;
+  });
+};
+var matchesState = function(parentStateId, childStateId) {
+  const parentStateValue = toStateValue(parentStateId);
+  const childStateValue = toStateValue(childStateId);
+  if (typeof childStateValue === "string") {
+    if (typeof parentStateValue === "string") {
+      return childStateValue === parentStateValue;
+    }
+    return false;
+  }
+  if (typeof parentStateValue === "string") {
+    return parentStateValue in childStateValue;
+  }
+  return Object.keys(parentStateValue).every((key) => {
+    if (!(key in childStateValue)) {
+      return false;
+    }
+    return matchesState(parentStateValue[key], childStateValue[key]);
+  });
+};
+var toStatePath = function(stateId) {
+  if (isArray(stateId)) {
+    return stateId;
+  }
+  let result3 = [];
+  let segment = "";
+  for (let i = 0;i < stateId.length; i++) {
+    const char = stateId.charCodeAt(i);
+    switch (char) {
+      case 92:
+        segment += stateId[i + 1];
+        i++;
+        continue;
+      case 46:
+        result3.push(segment);
+        segment = "";
+        continue;
+    }
+    segment += stateId[i];
+  }
+  result3.push(segment);
+  return result3;
+};
+var toStateValue = function(stateValue) {
+  if (isMachineSnapshot(stateValue)) {
+    return stateValue.value;
+  }
+  if (typeof stateValue !== "string") {
+    return stateValue;
+  }
+  const statePath = toStatePath(stateValue);
+  return pathToStateValue(statePath);
+};
+var pathToStateValue = function(statePath) {
+  if (statePath.length === 1) {
+    return statePath[0];
+  }
+  const value = {};
+  let marker = value;
+  for (let i = 0;i < statePath.length - 1; i++) {
+    if (i === statePath.length - 2) {
+      marker[statePath[i]] = statePath[i + 1];
+    } else {
+      const previous = marker;
+      marker = {};
+      previous[statePath[i]] = marker;
+    }
+  }
+  return value;
+};
+var mapValues = function(collection, iteratee) {
+  const result3 = {};
+  const collectionKeys = Object.keys(collection);
+  for (let i = 0;i < collectionKeys.length; i++) {
+    const key = collectionKeys[i];
+    result3[key] = iteratee(collection[key], key, collection, i);
+  }
+  return result3;
+};
+var toArrayStrict = function(value) {
+  if (isArray(value)) {
+    return value;
+  }
+  return [value];
+};
+var toArray2 = function(value) {
+  if (value === undefined) {
+    return [];
+  }
+  return toArrayStrict(value);
+};
+var resolveOutput = function(mapper, context, event, self2) {
+  if (typeof mapper === "function") {
+    return mapper({
+      context,
+      event,
+      self: self2
+    });
+  }
+  return mapper;
+};
+var isArray = function(value) {
+  return Array.isArray(value);
+};
+var isErrorActorEvent = function(event) {
+  return event.type.startsWith("xstate.error.actor");
+};
+var toTransitionConfigArray = function(configLike) {
+  return toArrayStrict(configLike).map((transitionLike) => {
+    if (typeof transitionLike === "undefined" || typeof transitionLike === "string") {
+      return {
+        target: transitionLike
+      };
+    }
+    return transitionLike;
+  });
+};
+var normalizeTarget = function(target) {
+  if (target === undefined || target === TARGETLESS_KEY) {
+    return;
+  }
+  return toArray2(target);
+};
+var toObserver = function(nextHandler, errorHandler, completionHandler) {
+  const isObserver = typeof nextHandler === "object";
+  const self2 = isObserver ? nextHandler : undefined;
+  return {
+    next: (isObserver ? nextHandler.next : nextHandler)?.bind(self2),
+    error: (isObserver ? nextHandler.error : errorHandler)?.bind(self2),
+    complete: (isObserver ? nextHandler.complete : completionHandler)?.bind(self2)
+  };
+};
+var createInvokeId = function(stateNodeId, index) {
+  return `${index}.${stateNodeId}`;
+};
+var resolveReferencedActor = function(machine, src) {
+  const match = src.match(/^xstate\.invoke\.(\d+)\.(.*)/);
+  if (!match) {
+    return machine.implementations.actors[src];
+  }
+  const [, indexStr, nodeId] = match;
+  const node = machine.getStateNodeById(nodeId);
+  const invokeConfig = node.config.invoke;
+  return (Array.isArray(invokeConfig) ? invokeConfig[indexStr] : invokeConfig).src;
+};
+var createScheduledEventId = function(actorRef, id) {
+  return `${actorRef.sessionId}.${id}`;
+};
+var createSystem = function(rootActor, options) {
+  const children = new Map;
+  const keyedActors = new Map;
+  const reverseKeyedActors = new WeakMap;
+  const inspectionObservers = new Set;
+  const timerMap = {};
+  const {
+    clock,
+    logger
+  } = options;
+  const scheduler = {
+    schedule: (source, target, event, delay, id = Math.random().toString(36).slice(2)) => {
+      const scheduledEvent = {
+        source,
+        target,
+        event,
+        delay,
+        id,
+        startedAt: Date.now()
+      };
+      const scheduledEventId = createScheduledEventId(source, id);
+      system._snapshot._scheduledEvents[scheduledEventId] = scheduledEvent;
+      const timeout = clock.setTimeout(() => {
+        delete timerMap[scheduledEventId];
+        delete system._snapshot._scheduledEvents[scheduledEventId];
+        system._relay(source, target, event);
+      }, delay);
+      timerMap[scheduledEventId] = timeout;
+    },
+    cancel: (source, id) => {
+      const scheduledEventId = createScheduledEventId(source, id);
+      const timeout = timerMap[scheduledEventId];
+      delete timerMap[scheduledEventId];
+      delete system._snapshot._scheduledEvents[scheduledEventId];
+      if (timeout !== undefined) {
+        clock.clearTimeout(timeout);
+      }
+    },
+    cancelAll: (actorRef) => {
+      for (const scheduledEventId in system._snapshot._scheduledEvents) {
+        const scheduledEvent = system._snapshot._scheduledEvents[scheduledEventId];
+        if (scheduledEvent.source === actorRef) {
+          scheduler.cancel(actorRef, scheduledEvent.id);
+        }
+      }
+    }
+  };
+  const sendInspectionEvent = (event) => {
+    if (!inspectionObservers.size) {
+      return;
+    }
+    const resolvedInspectionEvent = {
+      ...event,
+      rootId: rootActor.sessionId
+    };
+    inspectionObservers.forEach((observer) => observer.next?.(resolvedInspectionEvent));
+  };
+  const system = {
+    _snapshot: {
+      _scheduledEvents: (options?.snapshot && options.snapshot.scheduler) ?? {}
+    },
+    _bookId: () => `x:${idCounter++}`,
+    _register: (sessionId, actorRef) => {
+      children.set(sessionId, actorRef);
+      return sessionId;
+    },
+    _unregister: (actorRef) => {
+      children.delete(actorRef.sessionId);
+      const systemId = reverseKeyedActors.get(actorRef);
+      if (systemId !== undefined) {
+        keyedActors.delete(systemId);
+        reverseKeyedActors.delete(actorRef);
+      }
+    },
+    get: (systemId) => {
+      return keyedActors.get(systemId);
+    },
+    _set: (systemId, actorRef) => {
+      const existing = keyedActors.get(systemId);
+      if (existing && existing !== actorRef) {
+        throw new Error(`Actor with system ID '${systemId}' already exists.`);
+      }
+      keyedActors.set(systemId, actorRef);
+      reverseKeyedActors.set(actorRef, systemId);
+    },
+    inspect: (observerOrFn) => {
+      const observer = toObserver(observerOrFn);
+      inspectionObservers.add(observer);
+      return {
+        unsubscribe() {
+          inspectionObservers.delete(observer);
+        }
+      };
+    },
+    _sendInspectionEvent: sendInspectionEvent,
+    _relay: (source, target, event) => {
+      system._sendInspectionEvent({
+        type: "@xstate.event",
+        sourceRef: source,
+        actorRef: target,
+        event
+      });
+      target._send(event);
+    },
+    scheduler,
+    getSnapshot: () => {
+      return {
+        _scheduledEvents: {
+          ...system._snapshot._scheduledEvents
+        }
+      };
+    },
+    start: () => {
+      const scheduledEvents = system._snapshot._scheduledEvents;
+      system._snapshot._scheduledEvents = {};
+      for (const scheduledId in scheduledEvents) {
+        const {
+          source,
+          target,
+          event,
+          delay,
+          id
+        } = scheduledEvents[scheduledId];
+        scheduler.schedule(source, target, event, delay, id);
+      }
+    },
+    _clock: clock,
+    _logger: logger
+  };
+  return system;
+};
+var createActor = function(logic, ...[options]) {
+  return new Actor(logic, options);
+};
+var resolveCancel = function(_, snapshot, actionArgs, actionParams, {
+  sendId
+}) {
+  const resolvedSendId = typeof sendId === "function" ? sendId(actionArgs, actionParams) : sendId;
+  return [snapshot, resolvedSendId];
+};
+var executeCancel = function(actorScope, resolvedSendId) {
+  actorScope.defer(() => {
+    actorScope.system.scheduler.cancel(actorScope.self, resolvedSendId);
+  });
+};
+var cancel = function(sendId) {
+  function cancel2(args, params) {
+  }
+  cancel2.type = "xstate.cancel";
+  cancel2.sendId = sendId;
+  cancel2.resolve = resolveCancel;
+  cancel2.execute = executeCancel;
+  return cancel2;
+};
+var evaluateGuard = function(guard, context, event, snapshot) {
+  const {
+    machine
+  } = snapshot;
+  const isInline = typeof guard === "function";
+  const resolved = isInline ? guard : machine.implementations.guards[typeof guard === "string" ? guard : guard.type];
+  if (!isInline && !resolved) {
+    throw new Error(`Guard '${typeof guard === "string" ? guard : guard.type}' is not implemented.'.`);
+  }
+  if (typeof resolved !== "function") {
+    return evaluateGuard(resolved, context, event, snapshot);
+  }
+  const guardArgs = {
+    context,
+    event
+  };
+  const guardParams = isInline || typeof guard === "string" ? undefined : ("params" in guard) ? typeof guard.params === "function" ? guard.params({
+    context,
+    event
+  }) : guard.params : undefined;
+  if (!("check" in resolved)) {
+    return resolved(guardArgs, guardParams);
+  }
+  const builtinGuard = resolved;
+  return builtinGuard.check(snapshot, guardArgs, resolved);
+};
+var resolveRaise = function(_, snapshot, args, actionParams, {
+  event: eventOrExpr,
+  id,
+  delay
+}, {
+  internalQueue
+}) {
+  const delaysMap = snapshot.machine.implementations.delays;
+  if (typeof eventOrExpr === "string") {
+    throw new Error(`Only event objects may be used with raise; use raise({ type: "${eventOrExpr}" }) instead`);
+  }
+  const resolvedEvent = typeof eventOrExpr === "function" ? eventOrExpr(args, actionParams) : eventOrExpr;
+  let resolvedDelay;
+  if (typeof delay === "string") {
+    const configDelay = delaysMap && delaysMap[delay];
+    resolvedDelay = typeof configDelay === "function" ? configDelay(args, actionParams) : configDelay;
+  } else {
+    resolvedDelay = typeof delay === "function" ? delay(args, actionParams) : delay;
+  }
+  if (typeof resolvedDelay !== "number") {
+    internalQueue.push(resolvedEvent);
+  }
+  return [snapshot, {
+    event: resolvedEvent,
+    id,
+    delay: resolvedDelay
+  }];
+};
+var executeRaise = function(actorScope, params) {
+  const {
+    event,
+    delay,
+    id
+  } = params;
+  if (typeof delay === "number") {
+    actorScope.defer(() => {
+      const self2 = actorScope.self;
+      actorScope.system.scheduler.schedule(self2, self2, event, delay, id);
+    });
+    return;
+  }
+};
+var raise = function(eventOrExpr, options) {
+  function raise2(args, params) {
+  }
+  raise2.type = "xstate.raise";
+  raise2.event = eventOrExpr;
+  raise2.id = options?.id;
+  raise2.delay = options?.delay;
+  raise2.resolve = resolveRaise;
+  raise2.execute = executeRaise;
+  return raise2;
+};
+var resolveSpawn = function(actorScope, snapshot, actionArgs, _actionParams, {
+  id,
+  systemId,
+  src,
+  input,
+  syncSnapshot
+}) {
+  const logic = typeof src === "string" ? resolveReferencedActor(snapshot.machine, src) : src;
+  const resolvedId = typeof id === "function" ? id(actionArgs) : id;
+  let actorRef;
+  if (logic) {
+    actorRef = createActor(logic, {
+      id: resolvedId,
+      src,
+      parent: actorScope.self,
+      syncSnapshot,
+      systemId,
+      input: typeof input === "function" ? input({
+        context: snapshot.context,
+        event: actionArgs.event,
+        self: actorScope.self
+      }) : input
+    });
+  }
+  return [cloneMachineSnapshot(snapshot, {
+    children: {
+      ...snapshot.children,
+      [resolvedId]: actorRef
+    }
+  }), {
+    id,
+    actorRef
+  }];
+};
+var executeSpawn = function(actorScope, {
+  id,
+  actorRef
+}) {
+  if (!actorRef) {
+    return;
+  }
+  actorScope.defer(() => {
+    if (actorRef._processingStatus === ProcessingStatus.Stopped) {
+      return;
+    }
+    actorRef.start();
+  });
+};
+var spawnChild = function(...[src, {
+  id,
+  systemId,
+  input,
+  syncSnapshot = false
+} = {}]) {
+  function spawnChild2(args, params) {
+  }
+  spawnChild2.type = "snapshot.spawnChild";
+  spawnChild2.id = id;
+  spawnChild2.systemId = systemId;
+  spawnChild2.src = src;
+  spawnChild2.input = input;
+  spawnChild2.syncSnapshot = syncSnapshot;
+  spawnChild2.resolve = resolveSpawn;
+  spawnChild2.execute = executeSpawn;
+  return spawnChild2;
+};
+var resolveStop = function(_, snapshot, args, actionParams, {
+  actorRef
+}) {
+  const actorRefOrString = typeof actorRef === "function" ? actorRef(args, actionParams) : actorRef;
+  const resolvedActorRef = typeof actorRefOrString === "string" ? snapshot.children[actorRefOrString] : actorRefOrString;
+  let children = snapshot.children;
+  if (resolvedActorRef) {
+    children = {
+      ...children
+    };
+    delete children[resolvedActorRef.id];
+  }
+  return [cloneMachineSnapshot(snapshot, {
+    children
+  }), resolvedActorRef];
+};
+var executeStop = function(actorScope, actorRef) {
+  if (!actorRef) {
+    return;
+  }
+  actorScope.system._unregister(actorRef);
+  if (actorRef._processingStatus !== ProcessingStatus.Running) {
+    actorScope.stopChild(actorRef);
+    return;
+  }
+  actorScope.defer(() => {
+    actorScope.stopChild(actorRef);
+  });
+};
+var stopChild = function(actorRef) {
+  function stop2(args, params) {
+  }
+  stop2.type = "xstate.stopChild";
+  stop2.actorRef = actorRef;
+  stop2.resolve = resolveStop;
+  stop2.execute = executeStop;
+  return stop2;
+};
+var getChildren = function(stateNode) {
+  return Object.values(stateNode.states).filter((sn) => sn.type !== "history");
+};
+var getProperAncestors = function(stateNode, toStateNode) {
+  const ancestors = [];
+  if (toStateNode === stateNode) {
+    return ancestors;
+  }
+  let m = stateNode.parent;
+  while (m && m !== toStateNode) {
+    ancestors.push(m);
+    m = m.parent;
+  }
+  return ancestors;
+};
+var getAllStateNodes = function(stateNodes) {
+  const nodeSet = new Set(stateNodes);
+  const adjList = getAdjList(nodeSet);
+  for (const s of nodeSet) {
+    if (s.type === "compound" && (!adjList.get(s) || !adjList.get(s).length)) {
+      getInitialStateNodesWithTheirAncestors(s).forEach((sn) => nodeSet.add(sn));
+    } else {
+      if (s.type === "parallel") {
+        for (const child of getChildren(s)) {
+          if (child.type === "history") {
+            continue;
           }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime8.jsxDEV(Text, {
-          text: label,
-          style: {
-            fontSize
+          if (!nodeSet.has(child)) {
+            const initialStates = getInitialStateNodesWithTheirAncestors(child);
+            for (const initialStateNode of initialStates) {
+              nodeSet.add(initialStateNode);
+            }
           }
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
+        }
+      }
+    }
+  }
+  for (const s of nodeSet) {
+    let m = s.parent;
+    while (m) {
+      nodeSet.add(m);
+      m = m.parent;
+    }
+  }
+  return nodeSet;
+};
+var getValueFromAdj = function(baseNode, adjList) {
+  const childStateNodes = adjList.get(baseNode);
+  if (!childStateNodes) {
+    return {};
+  }
+  if (baseNode.type === "compound") {
+    const childStateNode = childStateNodes[0];
+    if (childStateNode) {
+      if (isAtomicStateNode(childStateNode)) {
+        return childStateNode.key;
+      }
+    } else {
+      return {};
+    }
+  }
+  const stateValue = {};
+  for (const childStateNode of childStateNodes) {
+    stateValue[childStateNode.key] = getValueFromAdj(childStateNode, adjList);
+  }
+  return stateValue;
+};
+var getAdjList = function(stateNodes) {
+  const adjList = new Map;
+  for (const s of stateNodes) {
+    if (!adjList.has(s)) {
+      adjList.set(s, []);
+    }
+    if (s.parent) {
+      if (!adjList.has(s.parent)) {
+        adjList.set(s.parent, []);
+      }
+      adjList.get(s.parent).push(s);
+    }
+  }
+  return adjList;
+};
+var getStateValue = function(rootNode, stateNodes) {
+  const config2 = getAllStateNodes(stateNodes);
+  return getValueFromAdj(rootNode, getAdjList(config2));
+};
+var isInFinalState = function(stateNodeSet, stateNode) {
+  if (stateNode.type === "compound") {
+    return getChildren(stateNode).some((s) => s.type === "final" && stateNodeSet.has(s));
+  }
+  if (stateNode.type === "parallel") {
+    return getChildren(stateNode).every((sn) => isInFinalState(stateNodeSet, sn));
+  }
+  return stateNode.type === "final";
+};
+var getCandidates = function(stateNode, receivedEventType) {
+  const candidates = stateNode.transitions.get(receivedEventType) || [...stateNode.transitions.keys()].filter((eventDescriptor) => {
+    if (eventDescriptor === WILDCARD) {
+      return true;
+    }
+    if (!eventDescriptor.endsWith(".*")) {
+      return false;
+    }
+    const partialEventTokens = eventDescriptor.split(".");
+    const eventTokens = receivedEventType.split(".");
+    for (let tokenIndex = 0;tokenIndex < partialEventTokens.length; tokenIndex++) {
+      const partialEventToken = partialEventTokens[tokenIndex];
+      const eventToken = eventTokens[tokenIndex];
+      if (partialEventToken === "*") {
+        const isLastToken = tokenIndex === partialEventTokens.length - 1;
+        return isLastToken;
+      }
+      if (partialEventToken !== eventToken) {
+        return false;
+      }
+    }
+    return true;
+  }).sort((a, b) => b.length - a.length).flatMap((key) => stateNode.transitions.get(key));
+  return candidates;
+};
+var getDelayedTransitions = function(stateNode) {
+  const afterConfig = stateNode.config.after;
+  if (!afterConfig) {
+    return [];
+  }
+  const mutateEntryExit = (delay, i) => {
+    const afterEvent = createAfterEvent(delay, stateNode.id);
+    const eventType = afterEvent.type;
+    stateNode.entry.push(raise(afterEvent, {
+      id: eventType,
+      delay
+    }));
+    stateNode.exit.push(cancel(eventType));
+    return eventType;
+  };
+  const delayedTransitions = Object.keys(afterConfig).flatMap((delay, i) => {
+    const configTransition = afterConfig[delay];
+    const resolvedTransition = typeof configTransition === "string" ? {
+      target: configTransition
+    } : configTransition;
+    const resolvedDelay = Number.isNaN(+delay) ? delay : +delay;
+    const eventType = mutateEntryExit(resolvedDelay);
+    return toArray2(resolvedTransition).map((transition) => ({
+      ...transition,
+      event: eventType,
+      delay: resolvedDelay
+    }));
+  });
+  return delayedTransitions.map((delayedTransition) => {
+    const {
+      delay
+    } = delayedTransition;
+    return {
+      ...formatTransition(stateNode, delayedTransition.event, delayedTransition),
+      delay
+    };
+  });
+};
+var formatTransition = function(stateNode, descriptor, transitionConfig) {
+  const normalizedTarget = normalizeTarget(transitionConfig.target);
+  const reenter = transitionConfig.reenter ?? false;
+  const target = resolveTarget(stateNode, normalizedTarget);
+  const transition = {
+    ...transitionConfig,
+    actions: toArray2(transitionConfig.actions),
+    guard: transitionConfig.guard,
+    target,
+    source: stateNode,
+    reenter,
+    eventType: descriptor,
+    toJSON: () => ({
+      ...transition,
+      source: `#${stateNode.id}`,
+      target: target ? target.map((t) => `#${t.id}`) : undefined
+    })
+  };
+  return transition;
+};
+var formatTransitions = function(stateNode) {
+  const transitions = new Map;
+  if (stateNode.config.on) {
+    for (const descriptor of Object.keys(stateNode.config.on)) {
+      if (descriptor === NULL_EVENT) {
+        throw new Error('Null events ("") cannot be specified as a transition key. Use `always: { ... }` instead.');
+      }
+      const transitionsConfig = stateNode.config.on[descriptor];
+      transitions.set(descriptor, toTransitionConfigArray(transitionsConfig).map((t) => formatTransition(stateNode, descriptor, t)));
+    }
+  }
+  if (stateNode.config.onDone) {
+    const descriptor = `xstate.done.state.${stateNode.id}`;
+    transitions.set(descriptor, toTransitionConfigArray(stateNode.config.onDone).map((t) => formatTransition(stateNode, descriptor, t)));
+  }
+  for (const invokeDef of stateNode.invoke) {
+    if (invokeDef.onDone) {
+      const descriptor = `xstate.done.actor.${invokeDef.id}`;
+      transitions.set(descriptor, toTransitionConfigArray(invokeDef.onDone).map((t) => formatTransition(stateNode, descriptor, t)));
+    }
+    if (invokeDef.onError) {
+      const descriptor = `xstate.error.actor.${invokeDef.id}`;
+      transitions.set(descriptor, toTransitionConfigArray(invokeDef.onError).map((t) => formatTransition(stateNode, descriptor, t)));
+    }
+    if (invokeDef.onSnapshot) {
+      const descriptor = `xstate.snapshot.${invokeDef.id}`;
+      transitions.set(descriptor, toTransitionConfigArray(invokeDef.onSnapshot).map((t) => formatTransition(stateNode, descriptor, t)));
+    }
+  }
+  for (const delayedTransition of stateNode.after) {
+    let existing = transitions.get(delayedTransition.eventType);
+    if (!existing) {
+      existing = [];
+      transitions.set(delayedTransition.eventType, existing);
+    }
+    existing.push(delayedTransition);
+  }
+  return transitions;
+};
+var formatInitialTransition = function(stateNode, _target) {
+  const resolvedTarget = typeof _target === "string" ? stateNode.states[_target] : _target ? stateNode.states[_target.target] : undefined;
+  if (!resolvedTarget && _target) {
+    throw new Error(`Initial state node "${_target}" not found on parent state node #${stateNode.id}`);
+  }
+  const transition = {
+    source: stateNode,
+    actions: !_target || typeof _target === "string" ? [] : toArray2(_target.actions),
+    eventType: null,
+    reenter: false,
+    target: resolvedTarget ? [resolvedTarget] : [],
+    toJSON: () => ({
+      ...transition,
+      source: `#${stateNode.id}`,
+      target: resolvedTarget ? [`#${resolvedTarget.id}`] : []
+    })
+  };
+  return transition;
+};
+var resolveTarget = function(stateNode, targets) {
+  if (targets === undefined) {
+    return;
+  }
+  return targets.map((target) => {
+    if (typeof target !== "string") {
+      return target;
+    }
+    if (isStateId(target)) {
+      return stateNode.machine.getStateNodeById(target);
+    }
+    const isInternalTarget = target[0] === STATE_DELIMITER;
+    if (isInternalTarget && !stateNode.parent) {
+      return getStateNodeByPath(stateNode, target.slice(1));
+    }
+    const resolvedTarget = isInternalTarget ? stateNode.key + target : target;
+    if (stateNode.parent) {
+      try {
+        const targetStateNode = getStateNodeByPath(stateNode.parent, resolvedTarget);
+        return targetStateNode;
+      } catch (err) {
+        throw new Error(`Invalid transition definition for state node '${stateNode.id}':\n${err.message}`);
+      }
+    } else {
+      throw new Error(`Invalid target: "${target}" is not a valid target from the root node. Did you mean ".${target}"?`);
+    }
+  });
+};
+var resolveHistoryDefaultTransition = function(stateNode) {
+  const normalizedTarget = normalizeTarget(stateNode.config.target);
+  if (!normalizedTarget) {
+    return stateNode.parent.initial;
+  }
+  return {
+    target: normalizedTarget.map((t) => typeof t === "string" ? getStateNodeByPath(stateNode.parent, t) : t)
+  };
+};
+var isHistoryNode = function(stateNode) {
+  return stateNode.type === "history";
+};
+var getInitialStateNodesWithTheirAncestors = function(stateNode) {
+  const states = getInitialStateNodes(stateNode);
+  for (const initialState of states) {
+    for (const ancestor of getProperAncestors(initialState, stateNode)) {
+      states.add(ancestor);
+    }
+  }
+  return states;
+};
+var getInitialStateNodes = function(stateNode) {
+  const set = new Set;
+  function iter(descStateNode) {
+    if (set.has(descStateNode)) {
+      return;
+    }
+    set.add(descStateNode);
+    if (descStateNode.type === "compound") {
+      iter(descStateNode.initial.target[0]);
+    } else if (descStateNode.type === "parallel") {
+      for (const child of getChildren(descStateNode)) {
+        iter(child);
+      }
+    }
+  }
+  iter(stateNode);
+  return set;
+};
+var getStateNode = function(stateNode, stateKey) {
+  if (isStateId(stateKey)) {
+    return stateNode.machine.getStateNodeById(stateKey);
+  }
+  if (!stateNode.states) {
+    throw new Error(`Unable to retrieve child state '${stateKey}' from '${stateNode.id}'; no child states exist.`);
+  }
+  const result3 = stateNode.states[stateKey];
+  if (!result3) {
+    throw new Error(`Child state '${stateKey}' does not exist on '${stateNode.id}'`);
+  }
+  return result3;
+};
+var getStateNodeByPath = function(stateNode, statePath) {
+  if (typeof statePath === "string" && isStateId(statePath)) {
+    try {
+      return stateNode.machine.getStateNodeById(statePath);
+    } catch (e) {
+    }
+  }
+  const arrayStatePath = toStatePath(statePath).slice();
+  let currentStateNode = stateNode;
+  while (arrayStatePath.length) {
+    const key = arrayStatePath.shift();
+    if (!key.length) {
+      break;
+    }
+    currentStateNode = getStateNode(currentStateNode, key);
+  }
+  return currentStateNode;
+};
+var getStateNodes = function(stateNode, stateValue) {
+  if (typeof stateValue === "string") {
+    const childStateNode = stateNode.states[stateValue];
+    if (!childStateNode) {
+      throw new Error(`State '${stateValue}' does not exist on '${stateNode.id}'`);
+    }
+    return [stateNode, childStateNode];
+  }
+  const childStateKeys = Object.keys(stateValue);
+  const childStateNodes = childStateKeys.map((subStateKey) => getStateNode(stateNode, subStateKey)).filter(Boolean);
+  return [stateNode.machine.root, stateNode].concat(childStateNodes, childStateKeys.reduce((allSubStateNodes, subStateKey) => {
+    const subStateNode = getStateNode(stateNode, subStateKey);
+    if (!subStateNode) {
+      return allSubStateNodes;
+    }
+    const subStateNodes = getStateNodes(subStateNode, stateValue[subStateKey]);
+    return allSubStateNodes.concat(subStateNodes);
+  }, []));
+};
+var transitionAtomicNode = function(stateNode, stateValue, snapshot, event) {
+  const childStateNode = getStateNode(stateNode, stateValue);
+  const next = childStateNode.next(snapshot, event);
+  if (!next || !next.length) {
+    return stateNode.next(snapshot, event);
+  }
+  return next;
+};
+var transitionCompoundNode = function(stateNode, stateValue, snapshot, event) {
+  const subStateKeys = Object.keys(stateValue);
+  const childStateNode = getStateNode(stateNode, subStateKeys[0]);
+  const next = transitionNode(childStateNode, stateValue[subStateKeys[0]], snapshot, event);
+  if (!next || !next.length) {
+    return stateNode.next(snapshot, event);
+  }
+  return next;
+};
+var transitionParallelNode = function(stateNode, stateValue, snapshot, event) {
+  const allInnerTransitions = [];
+  for (const subStateKey of Object.keys(stateValue)) {
+    const subStateValue = stateValue[subStateKey];
+    if (!subStateValue) {
+      continue;
+    }
+    const subStateNode = getStateNode(stateNode, subStateKey);
+    const innerTransitions = transitionNode(subStateNode, subStateValue, snapshot, event);
+    if (innerTransitions) {
+      allInnerTransitions.push(...innerTransitions);
+    }
+  }
+  if (!allInnerTransitions.length) {
+    return stateNode.next(snapshot, event);
+  }
+  return allInnerTransitions;
+};
+var transitionNode = function(stateNode, stateValue, snapshot, event) {
+  if (typeof stateValue === "string") {
+    return transitionAtomicNode(stateNode, stateValue, snapshot, event);
+  }
+  if (Object.keys(stateValue).length === 1) {
+    return transitionCompoundNode(stateNode, stateValue, snapshot, event);
+  }
+  return transitionParallelNode(stateNode, stateValue, snapshot, event);
+};
+var getHistoryNodes = function(stateNode) {
+  return Object.keys(stateNode.states).map((key) => stateNode.states[key]).filter((sn) => sn.type === "history");
+};
+var isDescendant = function(childStateNode, parentStateNode) {
+  let marker = childStateNode;
+  while (marker.parent && marker.parent !== parentStateNode) {
+    marker = marker.parent;
+  }
+  return marker.parent === parentStateNode;
+};
+var hasIntersection = function(s1, s2) {
+  const set1 = new Set(s1);
+  const set2 = new Set(s2);
+  for (const item of set1) {
+    if (set2.has(item)) {
+      return true;
+    }
+  }
+  for (const item of set2) {
+    if (set1.has(item)) {
+      return true;
+    }
+  }
+  return false;
+};
+var removeConflictingTransitions = function(enabledTransitions, stateNodeSet, historyValue) {
+  const filteredTransitions = new Set;
+  for (const t1 of enabledTransitions) {
+    let t1Preempted = false;
+    const transitionsToRemove = new Set;
+    for (const t2 of filteredTransitions) {
+      if (hasIntersection(computeExitSet([t1], stateNodeSet, historyValue), computeExitSet([t2], stateNodeSet, historyValue))) {
+        if (isDescendant(t1.source, t2.source)) {
+          transitionsToRemove.add(t2);
+        } else {
+          t1Preempted = true;
+          break;
+        }
+      }
+    }
+    if (!t1Preempted) {
+      for (const t3 of transitionsToRemove) {
+        filteredTransitions.delete(t3);
+      }
+      filteredTransitions.add(t1);
+    }
+  }
+  return Array.from(filteredTransitions);
+};
+var findLeastCommonAncestor = function(stateNodes) {
+  const [head, ...tail] = stateNodes;
+  for (const ancestor of getProperAncestors(head, undefined)) {
+    if (tail.every((sn) => isDescendant(sn, ancestor))) {
+      return ancestor;
+    }
+  }
+};
+var getEffectiveTargetStates = function(transition, historyValue) {
+  if (!transition.target) {
+    return [];
+  }
+  const targets = new Set;
+  for (const targetNode of transition.target) {
+    if (isHistoryNode(targetNode)) {
+      if (historyValue[targetNode.id]) {
+        for (const node of historyValue[targetNode.id]) {
+          targets.add(node);
+        }
+      } else {
+        for (const node of getEffectiveTargetStates(resolveHistoryDefaultTransition(targetNode), historyValue)) {
+          targets.add(node);
+        }
+      }
+    } else {
+      targets.add(targetNode);
+    }
+  }
+  return [...targets];
+};
+var getTransitionDomain = function(transition, historyValue) {
+  const targetStates = getEffectiveTargetStates(transition, historyValue);
+  if (!targetStates) {
+    return;
+  }
+  if (!transition.reenter && targetStates.every((target) => target === transition.source || isDescendant(target, transition.source))) {
+    return transition.source;
+  }
+  const lca = findLeastCommonAncestor(targetStates.concat(transition.source));
+  if (lca) {
+    return lca;
+  }
+  if (transition.reenter) {
+    return;
+  }
+  return transition.source.machine.root;
+};
+var computeExitSet = function(transitions, stateNodeSet, historyValue) {
+  const statesToExit = new Set;
+  for (const t of transitions) {
+    if (t.target?.length) {
+      const domain = getTransitionDomain(t, historyValue);
+      if (t.reenter && t.source === domain) {
+        statesToExit.add(domain);
+      }
+      for (const stateNode of stateNodeSet) {
+        if (isDescendant(stateNode, domain)) {
+          statesToExit.add(stateNode);
+        }
+      }
+    }
+  }
+  return [...statesToExit];
+};
+var areStateNodeCollectionsEqual = function(prevStateNodes, nextStateNodeSet) {
+  if (prevStateNodes.length !== nextStateNodeSet.size) {
+    return false;
+  }
+  for (const node of prevStateNodes) {
+    if (!nextStateNodeSet.has(node)) {
+      return false;
+    }
+  }
+  return true;
+};
+var microstep = function(transitions, currentSnapshot, actorScope, event, isInitial, internalQueue) {
+  if (!transitions.length) {
+    return currentSnapshot;
+  }
+  const mutStateNodeSet = new Set(currentSnapshot._nodes);
+  let historyValue = currentSnapshot.historyValue;
+  const filteredTransitions = removeConflictingTransitions(transitions, mutStateNodeSet, historyValue);
+  let nextState = currentSnapshot;
+  if (!isInitial) {
+    [nextState, historyValue] = exitStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, historyValue, internalQueue);
+  }
+  nextState = resolveActionsAndContext(nextState, event, actorScope, filteredTransitions.flatMap((t) => t.actions), internalQueue);
+  nextState = enterStates(nextState, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial);
+  const nextStateNodes = [...mutStateNodeSet];
+  if (nextState.status === "done") {
+    nextState = resolveActionsAndContext(nextState, event, actorScope, nextStateNodes.sort((a, b) => b.order - a.order).flatMap((state) => state.exit), internalQueue);
+  }
+  try {
+    if (historyValue === currentSnapshot.historyValue && areStateNodeCollectionsEqual(currentSnapshot._nodes, mutStateNodeSet)) {
+      return nextState;
+    }
+    return cloneMachineSnapshot(nextState, {
+      _nodes: nextStateNodes,
+      historyValue
+    });
+  } catch (e) {
+    throw e;
+  }
+};
+var getMachineOutput = function(snapshot, event, actorScope, rootNode, rootCompletionNode) {
+  if (rootNode.output === undefined) {
+    return;
+  }
+  const doneStateEvent = createDoneStateEvent(rootCompletionNode.id, rootCompletionNode.output !== undefined && rootCompletionNode.parent ? resolveOutput(rootCompletionNode.output, snapshot.context, event, actorScope.self) : undefined);
+  return resolveOutput(rootNode.output, snapshot.context, doneStateEvent, actorScope.self);
+};
+var enterStates = function(currentSnapshot, event, actorScope, filteredTransitions, mutStateNodeSet, internalQueue, historyValue, isInitial) {
+  let nextSnapshot = currentSnapshot;
+  const statesToEnter = new Set;
+  const statesForDefaultEntry = new Set;
+  computeEntrySet(filteredTransitions, historyValue, statesForDefaultEntry, statesToEnter);
+  if (isInitial) {
+    statesForDefaultEntry.add(currentSnapshot.machine.root);
+  }
+  const completedNodes = new Set;
+  for (const stateNodeToEnter of [...statesToEnter].sort((a, b) => a.order - b.order)) {
+    mutStateNodeSet.add(stateNodeToEnter);
+    const actions = [];
+    actions.push(...stateNodeToEnter.entry);
+    for (const invokeDef of stateNodeToEnter.invoke) {
+      actions.push(spawnChild(invokeDef.src, {
+        ...invokeDef,
+        syncSnapshot: !!invokeDef.onSnapshot
+      }));
+    }
+    if (statesForDefaultEntry.has(stateNodeToEnter)) {
+      const initialActions = stateNodeToEnter.initial.actions;
+      actions.push(...initialActions);
+    }
+    nextSnapshot = resolveActionsAndContext(nextSnapshot, event, actorScope, actions, internalQueue, stateNodeToEnter.invoke.map((invokeDef) => invokeDef.id));
+    if (stateNodeToEnter.type === "final") {
+      const parent = stateNodeToEnter.parent;
+      let ancestorMarker = parent?.type === "parallel" ? parent : parent?.parent;
+      let rootCompletionNode = ancestorMarker || stateNodeToEnter;
+      if (parent?.type === "compound") {
+        internalQueue.push(createDoneStateEvent(parent.id, stateNodeToEnter.output !== undefined ? resolveOutput(stateNodeToEnter.output, nextSnapshot.context, event, actorScope.self) : undefined));
+      }
+      while (ancestorMarker?.type === "parallel" && !completedNodes.has(ancestorMarker) && isInFinalState(mutStateNodeSet, ancestorMarker)) {
+        completedNodes.add(ancestorMarker);
+        internalQueue.push(createDoneStateEvent(ancestorMarker.id));
+        rootCompletionNode = ancestorMarker;
+        ancestorMarker = ancestorMarker.parent;
+      }
+      if (ancestorMarker) {
+        continue;
+      }
+      nextSnapshot = cloneMachineSnapshot(nextSnapshot, {
+        status: "done",
+        output: getMachineOutput(nextSnapshot, event, actorScope, nextSnapshot.machine.root, rootCompletionNode)
+      });
+    }
+  }
+  return nextSnapshot;
+};
+var computeEntrySet = function(transitions, historyValue, statesForDefaultEntry, statesToEnter) {
+  for (const t of transitions) {
+    const domain = getTransitionDomain(t, historyValue);
+    for (const s of t.target || []) {
+      if (!isHistoryNode(s) && (t.source !== s || t.source !== domain || t.reenter)) {
+        statesToEnter.add(s);
+        statesForDefaultEntry.add(s);
+      }
+      addDescendantStatesToEnter(s, historyValue, statesForDefaultEntry, statesToEnter);
+    }
+    const targetStates = getEffectiveTargetStates(t, historyValue);
+    for (const s of targetStates) {
+      const ancestors = getProperAncestors(s, domain);
+      if (domain?.type === "parallel") {
+        ancestors.push(domain);
+      }
+      addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, ancestors, !t.source.parent && t.reenter ? undefined : domain);
+    }
+  }
+};
+var addDescendantStatesToEnter = function(stateNode, historyValue, statesForDefaultEntry, statesToEnter) {
+  if (isHistoryNode(stateNode)) {
+    if (historyValue[stateNode.id]) {
+      const historyStateNodes = historyValue[stateNode.id];
+      for (const s of historyStateNodes) {
+        statesToEnter.add(s);
+        addDescendantStatesToEnter(s, historyValue, statesForDefaultEntry, statesToEnter);
+      }
+      for (const s of historyStateNodes) {
+        addProperAncestorStatesToEnter(s, stateNode.parent, statesToEnter, historyValue, statesForDefaultEntry);
+      }
+    } else {
+      const historyDefaultTransition = resolveHistoryDefaultTransition(stateNode);
+      for (const s of historyDefaultTransition.target) {
+        statesToEnter.add(s);
+        if (historyDefaultTransition === stateNode.parent?.initial) {
+          statesForDefaultEntry.add(stateNode.parent);
+        }
+        addDescendantStatesToEnter(s, historyValue, statesForDefaultEntry, statesToEnter);
+      }
+      for (const s of historyDefaultTransition.target) {
+        addProperAncestorStatesToEnter(s, stateNode.parent, statesToEnter, historyValue, statesForDefaultEntry);
+      }
+    }
+  } else {
+    if (stateNode.type === "compound") {
+      const [initialState] = stateNode.initial.target;
+      if (!isHistoryNode(initialState)) {
+        statesToEnter.add(initialState);
+        statesForDefaultEntry.add(initialState);
+      }
+      addDescendantStatesToEnter(initialState, historyValue, statesForDefaultEntry, statesToEnter);
+      addProperAncestorStatesToEnter(initialState, stateNode, statesToEnter, historyValue, statesForDefaultEntry);
+    } else {
+      if (stateNode.type === "parallel") {
+        for (const child of getChildren(stateNode).filter((sn) => !isHistoryNode(sn))) {
+          if (![...statesToEnter].some((s) => isDescendant(s, child))) {
+            if (!isHistoryNode(child)) {
+              statesToEnter.add(child);
+              statesForDefaultEntry.add(child);
+            }
+            addDescendantStatesToEnter(child, historyValue, statesForDefaultEntry, statesToEnter);
+          }
+        }
+      }
+    }
+  }
+};
+var addAncestorStatesToEnter = function(statesToEnter, historyValue, statesForDefaultEntry, ancestors, reentrancyDomain) {
+  for (const anc of ancestors) {
+    if (!reentrancyDomain || isDescendant(anc, reentrancyDomain)) {
+      statesToEnter.add(anc);
+    }
+    if (anc.type === "parallel") {
+      for (const child of getChildren(anc).filter((sn) => !isHistoryNode(sn))) {
+        if (![...statesToEnter].some((s) => isDescendant(s, child))) {
+          statesToEnter.add(child);
+          addDescendantStatesToEnter(child, historyValue, statesForDefaultEntry, statesToEnter);
+        }
+      }
+    }
+  }
+};
+var addProperAncestorStatesToEnter = function(stateNode, toStateNode, statesToEnter, historyValue, statesForDefaultEntry) {
+  addAncestorStatesToEnter(statesToEnter, historyValue, statesForDefaultEntry, getProperAncestors(stateNode, toStateNode));
+};
+var exitStates = function(currentSnapshot, event, actorScope, transitions, mutStateNodeSet, historyValue, internalQueue) {
+  let nextSnapshot = currentSnapshot;
+  const statesToExit = computeExitSet(transitions, mutStateNodeSet, historyValue);
+  statesToExit.sort((a, b) => b.order - a.order);
+  let changedHistory;
+  for (const exitStateNode of statesToExit) {
+    for (const historyNode of getHistoryNodes(exitStateNode)) {
+      let predicate;
+      if (historyNode.history === "deep") {
+        predicate = (sn) => isAtomicStateNode(sn) && isDescendant(sn, exitStateNode);
+      } else {
+        predicate = (sn) => {
+          return sn.parent === exitStateNode;
+        };
+      }
+      changedHistory ??= {
+        ...historyValue
+      };
+      changedHistory[historyNode.id] = Array.from(mutStateNodeSet).filter(predicate);
+    }
+  }
+  for (const s of statesToExit) {
+    nextSnapshot = resolveActionsAndContext(nextSnapshot, event, actorScope, [...s.exit, ...s.invoke.map((def) => stopChild(def.id))], internalQueue);
+    mutStateNodeSet.delete(s);
+  }
+  return [nextSnapshot, changedHistory || historyValue];
+};
+var resolveAndExecuteActionsWithContext = function(currentSnapshot, event, actorScope, actions, extra, retries) {
+  const {
+    machine
+  } = currentSnapshot;
+  let intermediateSnapshot = currentSnapshot;
+  for (const action of actions) {
+    let executeAction = function() {
+      actorScope.system._sendInspectionEvent({
+        type: "@xstate.action",
+        actorRef: actorScope.self,
+        action: {
+          type: typeof action === "string" ? action : typeof action === "object" ? action.type : action.name || "(anonymous)",
+          params: actionParams
+        }
+      });
+      try {
+        executingCustomAction = resolvedAction;
+        resolvedAction(actionArgs, actionParams);
+      } finally {
+        executingCustomAction = false;
+      }
+    };
+    const isInline = typeof action === "function";
+    const resolvedAction = isInline ? action : machine.implementations.actions[typeof action === "string" ? action : action.type];
+    if (!resolvedAction) {
+      continue;
+    }
+    const actionArgs = {
+      context: intermediateSnapshot.context,
+      event,
+      self: actorScope.self,
+      system: actorScope.system
+    };
+    const actionParams = isInline || typeof action === "string" ? undefined : ("params" in action) ? typeof action.params === "function" ? action.params({
+      context: intermediateSnapshot.context,
+      event
+    }) : action.params : undefined;
+    if (!("resolve" in resolvedAction)) {
+      if (actorScope.self._processingStatus === ProcessingStatus.Running) {
+        executeAction();
+      } else {
+        actorScope.defer(() => {
+          executeAction();
+        });
+      }
+      continue;
+    }
+    const builtinAction = resolvedAction;
+    const [nextState, params, actions2] = builtinAction.resolve(actorScope, intermediateSnapshot, actionArgs, actionParams, resolvedAction, extra);
+    intermediateSnapshot = nextState;
+    if ("retryResolve" in builtinAction) {
+      retries?.push([builtinAction, params]);
+    }
+    if ("execute" in builtinAction) {
+      if (actorScope.self._processingStatus === ProcessingStatus.Running) {
+        builtinAction.execute(actorScope, params);
+      } else {
+        actorScope.defer(builtinAction.execute.bind(null, actorScope, params));
+      }
+    }
+    if (actions2) {
+      intermediateSnapshot = resolveAndExecuteActionsWithContext(intermediateSnapshot, event, actorScope, actions2, extra, retries);
+    }
+  }
+  return intermediateSnapshot;
+};
+var resolveActionsAndContext = function(currentSnapshot, event, actorScope, actions, internalQueue, deferredActorIds) {
+  const retries = deferredActorIds ? [] : undefined;
+  const nextState = resolveAndExecuteActionsWithContext(currentSnapshot, event, actorScope, actions, {
+    internalQueue,
+    deferredActorIds
+  }, retries);
+  retries?.forEach(([builtinAction, params]) => {
+    builtinAction.retryResolve(actorScope, nextState, params);
+  });
+  return nextState;
+};
+var macrostep = function(snapshot, event, actorScope, internalQueue = []) {
+  let nextSnapshot = snapshot;
+  const microstates = [];
+  function addMicrostate(microstate, event2, transitions) {
+    actorScope.system._sendInspectionEvent({
+      type: "@xstate.microstep",
+      actorRef: actorScope.self,
+      event: event2,
+      snapshot: microstate,
+      _transitions: transitions
+    });
+    microstates.push(microstate);
+  }
+  if (event.type === XSTATE_STOP) {
+    nextSnapshot = cloneMachineSnapshot(stopChildren(nextSnapshot, event, actorScope), {
+      status: "stopped"
+    });
+    addMicrostate(nextSnapshot, event, []);
+    return {
+      snapshot: nextSnapshot,
+      microstates
+    };
+  }
+  let nextEvent = event;
+  if (nextEvent.type !== XSTATE_INIT) {
+    const currentEvent = nextEvent;
+    const isErr = isErrorActorEvent(currentEvent);
+    const transitions = selectTransitions(currentEvent, nextSnapshot);
+    if (isErr && !transitions.length) {
+      nextSnapshot = cloneMachineSnapshot(snapshot, {
+        status: "error",
+        error: currentEvent.error
+      });
+      addMicrostate(nextSnapshot, currentEvent, []);
+      return {
+        snapshot: nextSnapshot,
+        microstates
+      };
+    }
+    nextSnapshot = microstep(transitions, snapshot, actorScope, nextEvent, false, internalQueue);
+    addMicrostate(nextSnapshot, currentEvent, transitions);
+  }
+  let shouldSelectEventlessTransitions = true;
+  while (nextSnapshot.status === "active") {
+    let enabledTransitions = shouldSelectEventlessTransitions ? selectEventlessTransitions(nextSnapshot, nextEvent) : [];
+    const previousState = enabledTransitions.length ? nextSnapshot : undefined;
+    if (!enabledTransitions.length) {
+      if (!internalQueue.length) {
+        break;
+      }
+      nextEvent = internalQueue.shift();
+      enabledTransitions = selectTransitions(nextEvent, nextSnapshot);
+    }
+    nextSnapshot = microstep(enabledTransitions, nextSnapshot, actorScope, nextEvent, false, internalQueue);
+    shouldSelectEventlessTransitions = nextSnapshot !== previousState;
+    addMicrostate(nextSnapshot, nextEvent, enabledTransitions);
+  }
+  if (nextSnapshot.status !== "active") {
+    stopChildren(nextSnapshot, nextEvent, actorScope);
+  }
+  return {
+    snapshot: nextSnapshot,
+    microstates
+  };
+};
+var stopChildren = function(nextState, event, actorScope) {
+  return resolveActionsAndContext(nextState, event, actorScope, Object.values(nextState.children).map((child) => stopChild(child)), []);
+};
+var selectTransitions = function(event, nextState) {
+  return nextState.machine.getTransitionData(nextState, event);
+};
+var selectEventlessTransitions = function(nextState, event) {
+  const enabledTransitionSet = new Set;
+  const atomicStates = nextState._nodes.filter(isAtomicStateNode);
+  for (const stateNode of atomicStates) {
+    loop:
+      for (const s of [stateNode].concat(getProperAncestors(stateNode, undefined))) {
+        if (!s.always) {
+          continue;
+        }
+        for (const transition of s.always) {
+          if (transition.guard === undefined || evaluateGuard(transition.guard, nextState.context, event, nextState)) {
+            enabledTransitionSet.add(transition);
+            break loop;
+          }
+        }
+      }
+  }
+  return removeConflictingTransitions(Array.from(enabledTransitionSet), new Set(nextState._nodes), nextState.historyValue);
+};
+var resolveStateValue = function(rootNode, stateValue) {
+  const allStateNodes = getAllStateNodes(getStateNodes(rootNode, stateValue));
+  return getStateValue(rootNode, [...allStateNodes]);
+};
+var isMachineSnapshot = function(value) {
+  return !!value && typeof value === "object" && "machine" in value && "value" in value;
+};
+var createMachineSnapshot = function(config2, machine) {
+  return {
+    status: config2.status,
+    output: config2.output,
+    error: config2.error,
+    machine,
+    context: config2.context,
+    _nodes: config2._nodes,
+    value: getStateValue(machine.root, config2._nodes),
+    tags: new Set(config2._nodes.flatMap((sn) => sn.tags)),
+    children: config2.children,
+    historyValue: config2.historyValue || {},
+    matches: machineSnapshotMatches,
+    hasTag: machineSnapshotHasTag,
+    can: machineSnapshotCan,
+    getMeta: machineSnapshotGetMeta,
+    toJSON: machineSnapshotToJSON
+  };
+};
+var cloneMachineSnapshot = function(snapshot, config2 = {}) {
+  return createMachineSnapshot({
+    ...snapshot,
+    ...config2
+  }, snapshot.machine);
+};
+var getPersistedSnapshot = function(snapshot, options) {
+  const {
+    _nodes: nodes,
+    tags,
+    machine,
+    children,
+    context,
+    can,
+    hasTag,
+    matches,
+    getMeta,
+    toJSON,
+    ...jsonValues
+  } = snapshot;
+  const childrenJson = {};
+  for (const id in children) {
+    const child = children[id];
+    childrenJson[id] = {
+      snapshot: child.getPersistedSnapshot(options),
+      src: child.src,
+      systemId: child._systemId,
+      syncSnapshot: child._syncSnapshot
+    };
+  }
+  const persisted = {
+    ...jsonValues,
+    context: persistContext(context),
+    children: childrenJson
+  };
+  return persisted;
+};
+var persistContext = function(contextPart) {
+  let copy;
+  for (const key in contextPart) {
+    const value = contextPart[key];
+    if (value && typeof value === "object") {
+      if ("sessionId" in value && "send" in value && "ref" in value) {
+        copy ??= Array.isArray(contextPart) ? contextPart.slice() : {
+          ...contextPart
+        };
+        copy[key] = {
+          xstate$$type: $$ACTOR_TYPE,
+          id: value.id
+        };
+      } else {
+        const result3 = persistContext(value);
+        if (result3 !== value) {
+          copy ??= Array.isArray(contextPart) ? contextPart.slice() : {
+            ...contextPart
+          };
+          copy[key] = result3;
+        }
+      }
+    }
+  }
+  return copy ?? contextPart;
+};
+
+class Mailbox {
+  constructor(_process) {
+    this._process = _process;
+    this._active = false;
+    this._current = null;
+    this._last = null;
+  }
+  start() {
+    this._active = true;
+    this.flush();
+  }
+  clear() {
+    if (this._current) {
+      this._current.next = null;
+      this._last = this._current;
+    }
+  }
+  enqueue(event) {
+    const enqueued = {
+      value: event,
+      next: null
+    };
+    if (this._current) {
+      this._last.next = enqueued;
+      this._last = enqueued;
+      return;
+    }
+    this._current = enqueued;
+    this._last = enqueued;
+    if (this._active) {
+      this.flush();
+    }
+  }
+  flush() {
+    while (this._current) {
+      const consumed = this._current;
+      this._process(consumed.value);
+      this._current = consumed.next;
+    }
+    this._last = null;
+  }
 }
+var STATE_DELIMITER = ".";
+var TARGETLESS_KEY = "";
+var NULL_EVENT = "";
+var STATE_IDENTIFIER = "#";
+var WILDCARD = "*";
+var XSTATE_INIT = "xstate.init";
+var XSTATE_STOP = "xstate.stop";
+var symbolObservable = (() => typeof Symbol === "function" && Symbol.observable || "@@observable")();
+var idCounter = 0;
+var $$ACTOR_TYPE = 1;
+var ProcessingStatus = function(ProcessingStatus2) {
+  ProcessingStatus2[ProcessingStatus2["NotStarted"] = 0] = "NotStarted";
+  ProcessingStatus2[ProcessingStatus2["Running"] = 1] = "Running";
+  ProcessingStatus2[ProcessingStatus2["Stopped"] = 2] = "Stopped";
+  return ProcessingStatus2;
+}({});
+var defaultOptions = {
+  clock: {
+    setTimeout: (fn, ms) => {
+      return setTimeout(fn, ms);
+    },
+    clearTimeout: (id) => {
+      return clearTimeout(id);
+    }
+  },
+  logger: console.log.bind(console),
+  devTools: false
+};
+
+class Actor {
+  constructor(logic, options) {
+    this.logic = logic;
+    this._snapshot = undefined;
+    this.clock = undefined;
+    this.options = undefined;
+    this.id = undefined;
+    this.mailbox = new Mailbox(this._process.bind(this));
+    this.observers = new Set;
+    this.eventListeners = new Map;
+    this.logger = undefined;
+    this._processingStatus = ProcessingStatus.NotStarted;
+    this._parent = undefined;
+    this._syncSnapshot = undefined;
+    this.ref = undefined;
+    this._actorScope = undefined;
+    this._systemId = undefined;
+    this.sessionId = undefined;
+    this.system = undefined;
+    this._doneEvent = undefined;
+    this.src = undefined;
+    this._deferred = [];
+    const resolvedOptions = {
+      ...defaultOptions,
+      ...options
+    };
+    const {
+      clock,
+      logger,
+      parent,
+      syncSnapshot,
+      id,
+      systemId,
+      inspect
+    } = resolvedOptions;
+    this.system = parent ? parent.system : createSystem(this, {
+      clock,
+      logger
+    });
+    if (inspect && !parent) {
+      this.system.inspect(toObserver(inspect));
+    }
+    this.sessionId = this.system._bookId();
+    this.id = id ?? this.sessionId;
+    this.logger = options?.logger ?? this.system._logger;
+    this.clock = options?.clock ?? this.system._clock;
+    this._parent = parent;
+    this._syncSnapshot = syncSnapshot;
+    this.options = resolvedOptions;
+    this.src = resolvedOptions.src ?? logic;
+    this.ref = this;
+    this._actorScope = {
+      self: this,
+      id: this.id,
+      sessionId: this.sessionId,
+      logger: this.logger,
+      defer: (fn) => {
+        this._deferred.push(fn);
+      },
+      system: this.system,
+      stopChild: (child) => {
+        if (child._parent !== this) {
+          throw new Error(`Cannot stop child actor ${child.id} of ${this.id} because it is not a child`);
+        }
+        child._stop();
+      },
+      emit: (emittedEvent) => {
+        const listeners = this.eventListeners.get(emittedEvent.type);
+        const wildcardListener = this.eventListeners.get("*");
+        if (!listeners && !wildcardListener) {
+          return;
+        }
+        const allListeners = new Set([...listeners ? listeners.values() : [], ...wildcardListener ? wildcardListener.values() : []]);
+        for (const handler of Array.from(allListeners)) {
+          handler(emittedEvent);
+        }
+      }
+    };
+    this.send = this.send.bind(this);
+    this.system._sendInspectionEvent({
+      type: "@xstate.actor",
+      actorRef: this
+    });
+    if (systemId) {
+      this._systemId = systemId;
+      this.system._set(systemId, this);
+    }
+    this._initState(options?.snapshot ?? options?.state);
+    if (systemId && this._snapshot.status !== "active") {
+      this.system._unregister(this);
+    }
+  }
+  _initState(persistedState) {
+    try {
+      this._snapshot = persistedState ? this.logic.restoreSnapshot ? this.logic.restoreSnapshot(persistedState, this._actorScope) : persistedState : this.logic.getInitialSnapshot(this._actorScope, this.options?.input);
+    } catch (err) {
+      this._snapshot = {
+        status: "error",
+        output: undefined,
+        error: err
+      };
+    }
+  }
+  update(snapshot, event) {
+    this._snapshot = snapshot;
+    let deferredFn;
+    while (deferredFn = this._deferred.shift()) {
+      try {
+        deferredFn();
+      } catch (err) {
+        this._deferred.length = 0;
+        this._snapshot = {
+          ...snapshot,
+          status: "error",
+          error: err
+        };
+      }
+    }
+    switch (this._snapshot.status) {
+      case "active":
+        for (const observer of this.observers) {
+          try {
+            observer.next?.(snapshot);
+          } catch (err) {
+            reportUnhandledError(err);
+          }
+        }
+        break;
+      case "done":
+        for (const observer of this.observers) {
+          try {
+            observer.next?.(snapshot);
+          } catch (err) {
+            reportUnhandledError(err);
+          }
+        }
+        this._stopProcedure();
+        this._complete();
+        this._doneEvent = createDoneActorEvent(this.id, this._snapshot.output);
+        if (this._parent) {
+          this.system._relay(this, this._parent, this._doneEvent);
+        }
+        break;
+      case "error":
+        this._error(this._snapshot.error);
+        break;
+    }
+    this.system._sendInspectionEvent({
+      type: "@xstate.snapshot",
+      actorRef: this,
+      event,
+      snapshot
+    });
+  }
+  subscribe(nextListenerOrObserver, errorListener, completeListener) {
+    const observer = toObserver(nextListenerOrObserver, errorListener, completeListener);
+    if (this._processingStatus !== ProcessingStatus.Stopped) {
+      this.observers.add(observer);
+    } else {
+      switch (this._snapshot.status) {
+        case "done":
+          try {
+            observer.complete?.();
+          } catch (err) {
+            reportUnhandledError(err);
+          }
+          break;
+        case "error": {
+          const err = this._snapshot.error;
+          if (!observer.error) {
+            reportUnhandledError(err);
+          } else {
+            try {
+              observer.error(err);
+            } catch (err2) {
+              reportUnhandledError(err2);
+            }
+          }
+          break;
+        }
+      }
+    }
+    return {
+      unsubscribe: () => {
+        this.observers.delete(observer);
+      }
+    };
+  }
+  on(type, handler) {
+    let listeners = this.eventListeners.get(type);
+    if (!listeners) {
+      listeners = new Set;
+      this.eventListeners.set(type, listeners);
+    }
+    const wrappedHandler = handler.bind(undefined);
+    listeners.add(wrappedHandler);
+    return {
+      unsubscribe: () => {
+        listeners.delete(wrappedHandler);
+      }
+    };
+  }
+  start() {
+    if (this._processingStatus === ProcessingStatus.Running) {
+      return this;
+    }
+    if (this._syncSnapshot) {
+      this.subscribe({
+        next: (snapshot) => {
+          if (snapshot.status === "active") {
+            this.system._relay(this, this._parent, {
+              type: `xstate.snapshot.${this.id}`,
+              snapshot
+            });
+          }
+        },
+        error: () => {
+        }
+      });
+    }
+    this.system._register(this.sessionId, this);
+    if (this._systemId) {
+      this.system._set(this._systemId, this);
+    }
+    this._processingStatus = ProcessingStatus.Running;
+    const initEvent = createInitEvent(this.options.input);
+    this.system._sendInspectionEvent({
+      type: "@xstate.event",
+      sourceRef: this._parent,
+      actorRef: this,
+      event: initEvent
+    });
+    const status = this._snapshot.status;
+    switch (status) {
+      case "done":
+        this.update(this._snapshot, initEvent);
+        return this;
+      case "error":
+        this._error(this._snapshot.error);
+        return this;
+    }
+    if (!this._parent) {
+      this.system.start();
+    }
+    if (this.logic.start) {
+      try {
+        this.logic.start(this._snapshot, this._actorScope);
+      } catch (err) {
+        this._snapshot = {
+          ...this._snapshot,
+          status: "error",
+          error: err
+        };
+        this._error(err);
+        return this;
+      }
+    }
+    this.update(this._snapshot, initEvent);
+    if (this.options.devTools) {
+      this.attachDevTools();
+    }
+    this.mailbox.start();
+    return this;
+  }
+  _process(event) {
+    let nextState;
+    let caughtError;
+    try {
+      nextState = this.logic.transition(this._snapshot, event, this._actorScope);
+    } catch (err) {
+      caughtError = {
+        err
+      };
+    }
+    if (caughtError) {
+      const {
+        err
+      } = caughtError;
+      this._snapshot = {
+        ...this._snapshot,
+        status: "error",
+        error: err
+      };
+      this._error(err);
+      return;
+    }
+    this.update(nextState, event);
+    if (event.type === XSTATE_STOP) {
+      this._stopProcedure();
+      this._complete();
+    }
+  }
+  _stop() {
+    if (this._processingStatus === ProcessingStatus.Stopped) {
+      return this;
+    }
+    this.mailbox.clear();
+    if (this._processingStatus === ProcessingStatus.NotStarted) {
+      this._processingStatus = ProcessingStatus.Stopped;
+      return this;
+    }
+    this.mailbox.enqueue({
+      type: XSTATE_STOP
+    });
+    return this;
+  }
+  stop() {
+    if (this._parent) {
+      throw new Error("A non-root actor cannot be stopped directly.");
+    }
+    return this._stop();
+  }
+  _complete() {
+    for (const observer of this.observers) {
+      try {
+        observer.complete?.();
+      } catch (err) {
+        reportUnhandledError(err);
+      }
+    }
+    this.observers.clear();
+  }
+  _reportError(err) {
+    if (!this.observers.size) {
+      if (!this._parent) {
+        reportUnhandledError(err);
+      }
+      return;
+    }
+    let reportError2 = false;
+    for (const observer of this.observers) {
+      const errorListener = observer.error;
+      reportError2 ||= !errorListener;
+      try {
+        errorListener?.(err);
+      } catch (err2) {
+        reportUnhandledError(err2);
+      }
+    }
+    this.observers.clear();
+    if (reportError2) {
+      reportUnhandledError(err);
+    }
+  }
+  _error(err) {
+    this._stopProcedure();
+    this._reportError(err);
+    if (this._parent) {
+      this.system._relay(this, this._parent, createErrorActorEvent(this.id, err));
+    }
+  }
+  _stopProcedure() {
+    if (this._processingStatus !== ProcessingStatus.Running) {
+      return this;
+    }
+    this.system.scheduler.cancelAll(this);
+    this.mailbox.clear();
+    this.mailbox = new Mailbox(this._process.bind(this));
+    this._processingStatus = ProcessingStatus.Stopped;
+    this.system._unregister(this);
+    return this;
+  }
+  _send(event) {
+    if (this._processingStatus === ProcessingStatus.Stopped) {
+      return;
+    }
+    this.mailbox.enqueue(event);
+  }
+  send(event) {
+    this.system._relay(undefined, this, event);
+  }
+  attachDevTools() {
+    const {
+      devTools
+    } = this.options;
+    if (devTools) {
+      const resolvedDevToolsAdapter = typeof devTools === "function" ? devTools : devToolsAdapter;
+      resolvedDevToolsAdapter(this);
+    }
+  }
+  toJSON() {
+    return {
+      xstate$$type: $$ACTOR_TYPE,
+      id: this.id
+    };
+  }
+  getPersistedSnapshot(options) {
+    return this.logic.getPersistedSnapshot(this._snapshot, options);
+  }
+  [symbolObservable]() {
+    return this;
+  }
+  getSnapshot() {
+    return this._snapshot;
+  }
+}
+var isAtomicStateNode = (stateNode) => stateNode.type === "atomic" || stateNode.type === "final";
+var isStateId = (str) => str[0] === STATE_IDENTIFIER;
+var executingCustomAction = false;
+var machineSnapshotMatches = function matches(testValue) {
+  return matchesState(testValue, this.value);
+};
+var machineSnapshotHasTag = function hasTag(tag) {
+  return this.tags.has(tag);
+};
+var machineSnapshotCan = function can(event) {
+  const transitionData = this.machine.getTransitionData(this, event);
+  return !!transitionData?.length && transitionData.some((t) => t.target !== undefined || t.actions.length);
+};
+var machineSnapshotToJSON = function toJSON() {
+  const {
+    _nodes: nodes,
+    tags,
+    machine,
+    getMeta,
+    toJSON: toJSON2,
+    can: can2,
+    hasTag: hasTag2,
+    matches: matches2,
+    ...jsonValues
+  } = this;
+  return {
+    ...jsonValues,
+    tags: Array.from(tags)
+  };
+};
+var machineSnapshotGetMeta = function getMeta() {
+  return this._nodes.reduce((acc, stateNode) => {
+    if (stateNode.meta !== undefined) {
+      acc[stateNode.id] = stateNode.meta;
+    }
+    return acc;
+  }, {});
+};
+// node_modules/xstate/dist/log-54d038f7.esm.js
+var createSpawner = function(actorScope, {
+  machine,
+  context
+}, event, spawnedChildren) {
+  const spawn = (src, options = {}) => {
+    const {
+      systemId,
+      input
+    } = options;
+    if (typeof src === "string") {
+      const logic = resolveReferencedActor(machine, src);
+      if (!logic) {
+        throw new Error(`Actor logic '${src}' not implemented in machine '${machine.id}'`);
+      }
+      const actorRef = createActor(logic, {
+        id: options.id,
+        parent: actorScope.self,
+        syncSnapshot: options.syncSnapshot,
+        input: typeof input === "function" ? input({
+          context,
+          event,
+          self: actorScope.self
+        }) : input,
+        src,
+        systemId
+      });
+      spawnedChildren[actorRef.id] = actorRef;
+      return actorRef;
+    } else {
+      const actorRef = createActor(src, {
+        id: options.id,
+        parent: actorScope.self,
+        syncSnapshot: options.syncSnapshot,
+        input: options.input,
+        src,
+        systemId
+      });
+      return actorRef;
+    }
+  };
+  return (src, options) => {
+    const actorRef = spawn(src, options);
+    spawnedChildren[actorRef.id] = actorRef;
+    actorScope.defer(() => {
+      if (actorRef._processingStatus === ProcessingStatus.Stopped) {
+        return;
+      }
+      actorRef.start();
+    });
+    return actorRef;
+  };
+};
+var resolveAssign = function(actorScope, snapshot, actionArgs, actionParams, {
+  assignment
+}) {
+  if (!snapshot.context) {
+    throw new Error("Cannot assign to undefined `context`. Ensure that `context` is defined in the machine config.");
+  }
+  const spawnedChildren = {};
+  const assignArgs = {
+    context: snapshot.context,
+    event: actionArgs.event,
+    spawn: createSpawner(actorScope, snapshot, actionArgs.event, spawnedChildren),
+    self: actorScope.self,
+    system: actorScope.system
+  };
+  let partialUpdate = {};
+  if (typeof assignment === "function") {
+    partialUpdate = assignment(assignArgs, actionParams);
+  } else {
+    for (const key of Object.keys(assignment)) {
+      const propAssignment = assignment[key];
+      partialUpdate[key] = typeof propAssignment === "function" ? propAssignment(assignArgs, actionParams) : propAssignment;
+    }
+  }
+  const updatedContext = Object.assign({}, snapshot.context, partialUpdate);
+  return [cloneMachineSnapshot(snapshot, {
+    context: updatedContext,
+    children: Object.keys(spawnedChildren).length ? {
+      ...snapshot.children,
+      ...spawnedChildren
+    } : snapshot.children
+  })];
+};
+var assign2 = function(assignment) {
+  function assign3(args, params) {
+  }
+  assign3.type = "xstate.assign";
+  assign3.assignment = assignment;
+  assign3.resolve = resolveAssign;
+  return assign3;
+};
+
+// node_modules/xstate/dist/xstate.esm.js
+var memo = function(object, key, fn) {
+  let memoizedData = cache.get(object);
+  if (!memoizedData) {
+    memoizedData = {
+      [key]: fn()
+    };
+    cache.set(object, memoizedData);
+  } else if (!(key in memoizedData)) {
+    memoizedData[key] = fn();
+  }
+  return memoizedData[key];
+};
+var createMachine = function(config2, implementations) {
+  return new StateMachine(config2, implementations);
+};
+var cache = new WeakMap;
+var EMPTY_OBJECT = {};
+var toSerializableAction = (action) => {
+  if (typeof action === "string") {
+    return {
+      type: action
+    };
+  }
+  if (typeof action === "function") {
+    if ("resolve" in action) {
+      return {
+        type: action.type
+      };
+    }
+    return {
+      type: action.name
+    };
+  }
+  return action;
+};
+
+class StateNode {
+  constructor(config2, options) {
+    this.config = config2;
+    this.key = undefined;
+    this.id = undefined;
+    this.type = undefined;
+    this.path = undefined;
+    this.states = undefined;
+    this.history = undefined;
+    this.entry = undefined;
+    this.exit = undefined;
+    this.parent = undefined;
+    this.machine = undefined;
+    this.meta = undefined;
+    this.output = undefined;
+    this.order = -1;
+    this.description = undefined;
+    this.tags = [];
+    this.transitions = undefined;
+    this.always = undefined;
+    this.parent = options._parent;
+    this.key = options._key;
+    this.machine = options._machine;
+    this.path = this.parent ? this.parent.path.concat(this.key) : [];
+    this.id = this.config.id || [this.machine.id, ...this.path].join(STATE_DELIMITER);
+    this.type = this.config.type || (this.config.states && Object.keys(this.config.states).length ? "compound" : this.config.history ? "history" : "atomic");
+    this.description = this.config.description;
+    this.order = this.machine.idMap.size;
+    this.machine.idMap.set(this.id, this);
+    this.states = this.config.states ? mapValues(this.config.states, (stateConfig, key) => {
+      const stateNode = new StateNode(stateConfig, {
+        _parent: this,
+        _key: key,
+        _machine: this.machine
+      });
+      return stateNode;
+    }) : EMPTY_OBJECT;
+    if (this.type === "compound" && !this.config.initial) {
+      throw new Error(`No initial state specified for compound state node "#${this.id}". Try adding { initial: "${Object.keys(this.states)[0]}" } to the state config.`);
+    }
+    this.history = this.config.history === true ? "shallow" : this.config.history || false;
+    this.entry = toArray2(this.config.entry).slice();
+    this.exit = toArray2(this.config.exit).slice();
+    this.meta = this.config.meta;
+    this.output = this.type === "final" || !this.parent ? this.config.output : undefined;
+    this.tags = toArray2(config2.tags).slice();
+  }
+  _initialize() {
+    this.transitions = formatTransitions(this);
+    if (this.config.always) {
+      this.always = toTransitionConfigArray(this.config.always).map((t) => formatTransition(this, NULL_EVENT, t));
+    }
+    Object.keys(this.states).forEach((key) => {
+      this.states[key]._initialize();
+    });
+  }
+  get definition() {
+    return {
+      id: this.id,
+      key: this.key,
+      version: this.machine.version,
+      type: this.type,
+      initial: this.initial ? {
+        target: this.initial.target,
+        source: this,
+        actions: this.initial.actions.map(toSerializableAction),
+        eventType: null,
+        reenter: false,
+        toJSON: () => ({
+          target: this.initial.target.map((t) => `#${t.id}`),
+          source: `#${this.id}`,
+          actions: this.initial.actions.map(toSerializableAction),
+          eventType: null
+        })
+      } : undefined,
+      history: this.history,
+      states: mapValues(this.states, (state) => {
+        return state.definition;
+      }),
+      on: this.on,
+      transitions: [...this.transitions.values()].flat().map((t) => ({
+        ...t,
+        actions: t.actions.map(toSerializableAction)
+      })),
+      entry: this.entry.map(toSerializableAction),
+      exit: this.exit.map(toSerializableAction),
+      meta: this.meta,
+      order: this.order || -1,
+      output: this.output,
+      invoke: this.invoke,
+      description: this.description,
+      tags: this.tags
+    };
+  }
+  toJSON() {
+    return this.definition;
+  }
+  get invoke() {
+    return memo(this, "invoke", () => toArray2(this.config.invoke).map((invokeConfig, i) => {
+      const {
+        src,
+        systemId
+      } = invokeConfig;
+      const resolvedId = invokeConfig.id ?? createInvokeId(this.id, i);
+      const resolvedSrc = typeof src === "string" ? src : `xstate.invoke.${createInvokeId(this.id, i)}`;
+      return {
+        ...invokeConfig,
+        src: resolvedSrc,
+        id: resolvedId,
+        systemId,
+        toJSON() {
+          const {
+            onDone,
+            onError,
+            ...invokeDefValues
+          } = invokeConfig;
+          return {
+            ...invokeDefValues,
+            type: "xstate.invoke",
+            src: resolvedSrc,
+            id: resolvedId
+          };
+        }
+      };
+    }));
+  }
+  get on() {
+    return memo(this, "on", () => {
+      const transitions = this.transitions;
+      return [...transitions].flatMap(([descriptor, t]) => t.map((t2) => [descriptor, t2])).reduce((map, [descriptor, transition]) => {
+        map[descriptor] = map[descriptor] || [];
+        map[descriptor].push(transition);
+        return map;
+      }, {});
+    });
+  }
+  get after() {
+    return memo(this, "delayedTransitions", () => getDelayedTransitions(this));
+  }
+  get initial() {
+    return memo(this, "initial", () => formatInitialTransition(this, this.config.initial));
+  }
+  next(snapshot, event) {
+    const eventType = event.type;
+    const actions = [];
+    let selectedTransition;
+    const candidates = memo(this, `candidates-${eventType}`, () => getCandidates(this, eventType));
+    for (const candidate of candidates) {
+      const {
+        guard
+      } = candidate;
+      const resolvedContext = snapshot.context;
+      let guardPassed = false;
+      try {
+        guardPassed = !guard || evaluateGuard(guard, resolvedContext, event, snapshot);
+      } catch (err) {
+        const guardType = typeof guard === "string" ? guard : typeof guard === "object" ? guard.type : undefined;
+        throw new Error(`Unable to evaluate guard ${guardType ? `'${guardType}' ` : ""}in transition for event '${eventType}' in state node '${this.id}':\n${err.message}`);
+      }
+      if (guardPassed) {
+        actions.push(...candidate.actions);
+        selectedTransition = candidate;
+        break;
+      }
+    }
+    return selectedTransition ? [selectedTransition] : undefined;
+  }
+  get events() {
+    return memo(this, "events", () => {
+      const {
+        states
+      } = this;
+      const events = new Set(this.ownEvents);
+      if (states) {
+        for (const stateId of Object.keys(states)) {
+          const state = states[stateId];
+          if (state.states) {
+            for (const event of state.events) {
+              events.add(`${event}`);
+            }
+          }
+        }
+      }
+      return Array.from(events);
+    });
+  }
+  get ownEvents() {
+    const events = new Set([...this.transitions.keys()].filter((descriptor) => {
+      return this.transitions.get(descriptor).some((transition) => !(!transition.target && !transition.actions.length && !transition.reenter));
+    }));
+    return Array.from(events);
+  }
+}
+var STATE_IDENTIFIER2 = "#";
+
+class StateMachine {
+  constructor(config2, implementations) {
+    this.config = config2;
+    this.version = undefined;
+    this.schemas = undefined;
+    this.implementations = undefined;
+    this.__xstatenode = true;
+    this.idMap = new Map;
+    this.root = undefined;
+    this.id = undefined;
+    this.states = undefined;
+    this.events = undefined;
+    this.id = config2.id || "(machine)";
+    this.implementations = {
+      actors: implementations?.actors ?? {},
+      actions: implementations?.actions ?? {},
+      delays: implementations?.delays ?? {},
+      guards: implementations?.guards ?? {}
+    };
+    this.version = this.config.version;
+    this.schemas = this.config.schemas;
+    this.transition = this.transition.bind(this);
+    this.getInitialSnapshot = this.getInitialSnapshot.bind(this);
+    this.getPersistedSnapshot = this.getPersistedSnapshot.bind(this);
+    this.restoreSnapshot = this.restoreSnapshot.bind(this);
+    this.start = this.start.bind(this);
+    this.root = new StateNode(config2, {
+      _key: this.id,
+      _machine: this
+    });
+    this.root._initialize();
+    this.states = this.root.states;
+    this.events = this.root.events;
+  }
+  provide(implementations) {
+    const {
+      actions,
+      guards,
+      actors,
+      delays
+    } = this.implementations;
+    return new StateMachine(this.config, {
+      actions: {
+        ...actions,
+        ...implementations.actions
+      },
+      guards: {
+        ...guards,
+        ...implementations.guards
+      },
+      actors: {
+        ...actors,
+        ...implementations.actors
+      },
+      delays: {
+        ...delays,
+        ...implementations.delays
+      }
+    });
+  }
+  resolveState(config2) {
+    const resolvedStateValue = resolveStateValue(this.root, config2.value);
+    const nodeSet = getAllStateNodes(getStateNodes(this.root, resolvedStateValue));
+    return createMachineSnapshot({
+      _nodes: [...nodeSet],
+      context: config2.context || {},
+      children: {},
+      status: isInFinalState(nodeSet, this.root) ? "done" : config2.status || "active",
+      output: config2.output,
+      error: config2.error,
+      historyValue: config2.historyValue
+    }, this);
+  }
+  transition(snapshot, event, actorScope) {
+    return macrostep(snapshot, event, actorScope).snapshot;
+  }
+  microstep(snapshot, event, actorScope) {
+    return macrostep(snapshot, event, actorScope).microstates;
+  }
+  getTransitionData(snapshot, event) {
+    return transitionNode(this.root, snapshot.value, snapshot, event) || [];
+  }
+  getPreInitialState(actorScope, initEvent, internalQueue) {
+    const {
+      context
+    } = this.config;
+    const preInitial = createMachineSnapshot({
+      context: typeof context !== "function" && context ? context : {},
+      _nodes: [this.root],
+      children: {},
+      status: "active"
+    }, this);
+    if (typeof context === "function") {
+      const assignment = ({
+        spawn,
+        event,
+        self: self2
+      }) => context({
+        spawn,
+        input: event.input,
+        self: self2
+      });
+      return resolveActionsAndContext(preInitial, initEvent, actorScope, [assign2(assignment)], internalQueue);
+    }
+    return preInitial;
+  }
+  getInitialSnapshot(actorScope, input) {
+    const initEvent = createInitEvent(input);
+    const internalQueue = [];
+    const preInitialState = this.getPreInitialState(actorScope, initEvent, internalQueue);
+    const nextState = microstep([{
+      target: [...getInitialStateNodes(this.root)],
+      source: this.root,
+      reenter: true,
+      actions: [],
+      eventType: null,
+      toJSON: null
+    }], preInitialState, actorScope, initEvent, true, internalQueue);
+    const {
+      snapshot: macroState
+    } = macrostep(nextState, initEvent, actorScope, internalQueue);
+    return macroState;
+  }
+  start(snapshot) {
+    Object.values(snapshot.children).forEach((child) => {
+      if (child.getSnapshot().status === "active") {
+        child.start();
+      }
+    });
+  }
+  getStateNodeById(stateId) {
+    const fullPath = toStatePath(stateId);
+    const relativePath = fullPath.slice(1);
+    const resolvedStateId = isStateId(fullPath[0]) ? fullPath[0].slice(STATE_IDENTIFIER2.length) : fullPath[0];
+    const stateNode = this.idMap.get(resolvedStateId);
+    if (!stateNode) {
+      throw new Error(`Child state node '#${resolvedStateId}' does not exist on machine '${this.id}'`);
+    }
+    return getStateNodeByPath(stateNode, relativePath);
+  }
+  get definition() {
+    return this.root.definition;
+  }
+  toJSON() {
+    return this.definition;
+  }
+  getPersistedSnapshot(snapshot, options) {
+    return getPersistedSnapshot(snapshot, options);
+  }
+  restoreSnapshot(snapshot, _actorScope) {
+    const children = {};
+    const snapshotChildren = snapshot.children;
+    Object.keys(snapshotChildren).forEach((actorId) => {
+      const actorData = snapshotChildren[actorId];
+      const childState = actorData.snapshot;
+      const src = actorData.src;
+      const logic = typeof src === "string" ? resolveReferencedActor(this, src) : src;
+      if (!logic) {
+        return;
+      }
+      const actorRef = createActor(logic, {
+        id: actorId,
+        parent: _actorScope.self,
+        syncSnapshot: actorData.syncSnapshot,
+        snapshot: childState,
+        src,
+        systemId: actorData.systemId
+      });
+      children[actorId] = actorRef;
+    });
+    const restoredSnapshot = createMachineSnapshot({
+      ...snapshot,
+      children,
+      _nodes: Array.from(getAllStateNodes(getStateNodes(this.root, snapshot.value)))
+    }, this);
+    let seen = new Set;
+    function reviveContext(contextPart, children2) {
+      if (seen.has(contextPart)) {
+        return;
+      }
+      seen.add(contextPart);
+      for (let key in contextPart) {
+        const value = contextPart[key];
+        if (value && typeof value === "object") {
+          if ("xstate$$type" in value && value.xstate$$type === $$ACTOR_TYPE) {
+            contextPart[key] = children2[value.id];
+            continue;
+          }
+          reviveContext(value, children2);
+        }
+      }
+    }
+    reviveContext(restoredSnapshot.context, children);
+    return restoredSnapshot;
+  }
+}
+
+// node_modules/@xstate/react/dist/xstate-react.esm.js
+var React5 = __toESM(require_react(), 1);
+var import_react16 = __toESM(require_react(), 1);
+var shim = __toESM(require_shim(), 1);
+
+// node_modules/use-isomorphic-layout-effect/dist/use-isomorphic-layout-effect.browser.esm.js
+var import_react15 = __toESM(require_react(), 1);
+var index = import_react15.useLayoutEffect;
+var use_isomorphic_layout_effect_browser_esm_default = index;
+
+// node_modules/@xstate/react/dist/xstate-react.esm.js
+var with_selector = __toESM(require_with_selector(), 1);
+var stopRootWithRehydration = function(actorRef) {
+  const persistedSnapshots = [];
+  forEachActor(actorRef, (ref) => {
+    persistedSnapshots.push([ref, ref.getSnapshot()]);
+    ref.observers = new Set;
+  });
+  const systemSnapshot = actorRef.system.getSnapshot?.();
+  actorRef.stop();
+  actorRef.system._snapshot = systemSnapshot;
+  persistedSnapshots.forEach(([ref, snapshot]) => {
+    ref._processingStatus = 0;
+    ref._snapshot = snapshot;
+  });
+};
+var useIdleActorRef = function(logic, options) {
+  let [[currentConfig, actorRef], setCurrent] = import_react16.useState(() => {
+    const actorRef2 = createActor(logic, options);
+    return [logic.config, actorRef2];
+  });
+  if (logic.config !== currentConfig) {
+    const newActorRef = createActor(logic, {
+      ...options,
+      snapshot: actorRef.getPersistedSnapshot({
+        __unsafeAllowInlineActors: true
+      })
+    });
+    setCurrent([logic.config, newActorRef]);
+    actorRef = newActorRef;
+  }
+  use_isomorphic_layout_effect_browser_esm_default(() => {
+    actorRef.logic.implementations = logic.implementations;
+  });
+  return actorRef;
+};
+var useActor = function(logic, options = {}) {
+  const actorRef = useIdleActorRef(logic, options);
+  const getSnapshot = import_react16.useCallback(() => {
+    return actorRef.getSnapshot();
+  }, [actorRef]);
+  const subscribe = import_react16.useCallback((handleStoreChange) => {
+    const {
+      unsubscribe
+    } = actorRef.subscribe(handleStoreChange);
+    return unsubscribe;
+  }, [actorRef]);
+  const actorSnapshot = shim.useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  import_react16.useEffect(() => {
+    actorRef.start();
+    return () => {
+      stopRootWithRehydration(actorRef);
+    };
+  }, [actorRef]);
+  return [actorSnapshot, actorRef.send, actorRef];
+};
+var useMachine = function(machine, options = {}) {
+  return useActor(machine, options);
+};
+var forEachActor = (actorRef, callback) => {
+  callback(actorRef);
+  const children = actorRef.getSnapshot().children;
+  if (children) {
+    Object.values(children).forEach((child) => {
+      forEachActor(child, callback);
+    });
+  }
+};
 
 // src/public/lib/eda/ref/Ref.ts
 var import_fbemitter = __toESM(require_fbemitter(), 1);
@@ -31759,6 +34551,128 @@ function Ref(_value) {
   function onSet(listener) {
     return _em.addListener("set", listener);
   }
+}
+
+// src/public/component/slide/MainSlide.tsx
+var import_react17 = __toESM(require_react(), 1);
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
+
+// src/public/component/Root.tsx
+var import_react18 = __toESM(require_react(), 1);
+var import_react19 = __toESM(require_react(), 1);
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+var setRootRef = Ref(undefined);
+
+// src/public/component/nav/NavButton.tsx
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+function NavButton(props) {
+  let { label, goto, style, to: to2, children, ...more } = props;
+  if (!to2)
+    to2 = "/";
+  if (goto)
+    to2 = "/";
+  let [symbolSpring, setSymbolSpring] = useSpring(() => ({
+    opacity: "0",
+    fontSize: RelativeUnit(1),
+    fontWeight: "bold",
+    fontFamily: "satoshiRegular",
+    color: DEEP_PURPLE.toString(),
+    textShadow: glow(DEEP_PURPLE.toString(), 1),
+    config: config.gentle
+  }));
+  let [labelSpring, setLabelSpring] = useSpring(() => ({
+    opacity: "0",
+    fontSize: RelativeUnit(1)
+  }));
+  let [, send] = useMachine(import_react20.useMemo(() => createMachine({
+    initial: "initial",
+    states: {
+      initial: {
+        entry: () => {
+          setLabelSpring.start({ opacity: "1" });
+          send({ type: "done" });
+          return;
+        },
+        on: {
+          done: "idle"
+        }
+      },
+      idle: {
+        entry: () => {
+          setSymbolSpring.start({ opacity: "0" });
+          return;
+        },
+        on: {
+          mouseEnter: "hover"
+        }
+      },
+      hover: {
+        entry: () => {
+          setSymbolSpring.start({ opacity: "1" });
+          return;
+        },
+        on: {
+          mouseLeave: "idle"
+        }
+      }
+    }
+  }), []));
+  function glow(color, strength) {
+    let strength0 = strength * 1;
+    let strength1 = strength * 2;
+    let strength2 = strength * 3;
+    let strength3 = strength * 4;
+    let strength4 = strength * 5;
+    let strength5 = strength * 6;
+    let distance0 = RelativeUnit(strength0);
+    let distance1 = RelativeUnit(strength1);
+    let distance2 = RelativeUnit(strength2);
+    let distance3 = RelativeUnit(strength3);
+    let distance4 = RelativeUnit(strength4);
+    let distance5 = RelativeUnit(strength5);
+    let shadow0 = `0 0 ${distance0} ${color}`;
+    let shadow1 = `0 0 ${distance1} ${color}`;
+    let shadow2 = `0 0 ${distance2} ${color}`;
+    let shadow3 = `0 0 ${distance3} ${color}`;
+    let shadow4 = `0 0 ${distance4} ${color}`;
+    let shadow5 = `0 0 ${distance5} ${color}`;
+    return `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
+  }
+  return jsx_dev_runtime10.jsxDEV(jsx_dev_runtime10.Fragment, {
+    children: jsx_dev_runtime10.jsxDEV(Link, {
+      to: to2,
+      onMouseEnter: () => send({ type: "mouseEnter" }),
+      onMouseLeave: () => send({ type: "mouseLeave" }),
+      onClick: () => {
+        if (goto) {
+          setRootRef.get()({ type: goto });
+          return;
+        }
+        return;
+      },
+      style: {
+        pointerEvents: "auto",
+        textDecoration: "none",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: RelativeUnit(1),
+        ...style
+      },
+      ...more,
+      children: [
+        jsx_dev_runtime10.jsxDEV(Text, {
+          text: "\u21F4",
+          style: { ...symbolSpring }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime10.jsxDEV(Text, {
+          text: label,
+          style: { ...labelSpring }
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
 }
 
 // node_modules/ethers/lib.esm/_version.js
@@ -31789,8 +34703,8 @@ var checkType = function(value, type, name) {
 async function resolveProperties(value) {
   const keys = Object.keys(value);
   const results = await Promise.all(keys.map((k) => Promise.resolve(value[k])));
-  return results.reduce((accum, v, index) => {
-    accum[keys[index]] = v;
+  return results.reduce((accum, v, index2) => {
+    accum[keys[index2]] = v;
     return accum;
   }, {});
 }
@@ -32645,11 +35559,11 @@ class FetchRequest {
   [Symbol.iterator]() {
     const headers = this.headers;
     const keys = Object.keys(headers);
-    let index = 0;
+    let index2 = 0;
     return {
       next: () => {
-        if (index < keys.length) {
-          const key = keys[index++];
+        if (index2 < keys.length) {
+          const key = keys[index2++];
           return {
             value: [key, headers[key]],
             done: false
@@ -32935,11 +35849,11 @@ class FetchResponse {
   [Symbol.iterator]() {
     const headers = this.headers;
     const keys = Object.keys(headers);
-    let index = 0;
+    let index2 = 0;
     return {
       next: () => {
-        if (index < keys.length) {
-          const key = keys[index++];
+        if (index2 < keys.length) {
+          const key = keys[index2++];
           return {
             value: [key, headers[key]],
             done: false
@@ -33155,14 +36069,14 @@ var throwError = function(name, error) {
 };
 var toObject = function(names, items, deep) {
   if (names.indexOf(null) >= 0) {
-    return items.map((item, index) => {
+    return items.map((item, index2) => {
       if (item instanceof Result5) {
         return toObject(getNames(item), item, deep);
       }
       return item;
     });
   }
-  return names.reduce((accum, name, index) => {
+  return names.reduce((accum, name, index2) => {
     let item = items.getValue(name);
     if (!(name in accum)) {
       if (deep && item instanceof Result5) {
@@ -33200,8 +36114,8 @@ class Result5 extends Array {
       wrap = false;
     }
     super(items.length);
-    items.forEach((item, index) => {
-      this[index] = item;
+    items.forEach((item, index2) => {
+      this[index2] = item;
     });
     const nameCounts = names.reduce((accum, name) => {
       if (typeof name === "string") {
@@ -33209,8 +36123,8 @@ class Result5 extends Array {
       }
       return accum;
     }, new Map);
-    setNames(this, Object.freeze(items.map((item, index) => {
-      const name = names[index];
+    setNames(this, Object.freeze(items.map((item, index2) => {
+      const name = names[index2];
       if (name != null && nameCounts.get(name) === 1) {
         return name;
       }
@@ -33228,13 +36142,13 @@ class Result5 extends Array {
       get: (target, prop, receiver) => {
         if (typeof prop === "string") {
           if (prop.match(/^[0-9]+$/)) {
-            const index = getNumber(prop, "%index");
-            if (index < 0 || index >= this.length) {
+            const index2 = getNumber(prop, "%index");
+            if (index2 < 0 || index2 >= this.length) {
               throw new RangeError("out of result range");
             }
-            const item = target[index];
+            const item = target[index2];
             if (item instanceof Error) {
-              throwError(`index ${index}`, item);
+              throwError(`index ${index2}`, item);
             }
             return item;
           }
@@ -33258,9 +36172,9 @@ class Result5 extends Array {
   }
   toArray(deep) {
     const result3 = [];
-    this.forEach((item, index) => {
+    this.forEach((item, index2) => {
       if (item instanceof Error) {
-        throwError(`index ${index}`, item);
+        throwError(`index ${index2}`, item);
       }
       if (deep && item instanceof Result5) {
         item = item.toArray(deep);
@@ -33271,8 +36185,8 @@ class Result5 extends Array {
   }
   toObject(deep) {
     const names = getNames(this);
-    return names.reduce((accum, name, index) => {
-      assert(name != null, `value at index ${index} unnamed`, "UNSUPPORTED_OPERATION", {
+    return names.reduce((accum, name, index2) => {
+      assert(name != null, `value at index ${index2} unnamed`, "UNSUPPORTED_OPERATION", {
         operation: "toObject()"
       });
       return toObject(names, this, deep);
@@ -33335,11 +36249,11 @@ class Result5 extends Array {
     return result3;
   }
   getValue(name) {
-    const index = getNames(this).indexOf(name);
-    if (index === -1) {
+    const index2 = getNames(this).indexOf(name);
+    if (index2 === -1) {
       return;
     }
-    const value = this[index];
+    const value = this[index2];
     if (value instanceof Error) {
       throwError(`property ${JSON.stringify(name)}`, value.error);
     }
@@ -34164,7 +37078,7 @@ class SHA512 extends SHA2 {
 var sha512 = wrapConstructor(() => new SHA512);
 
 // node_modules/ethers/lib.esm/crypto/crypto-browser.js
-var getGlobal = function() {
+var getGlobal2 = function() {
   if (typeof self !== "undefined") {
     return self;
   }
@@ -34185,7 +37099,7 @@ function createHash(algo) {
   }
   assertArgument(false, "invalid hashing algorithm name", "algorithm", algo);
 }
-var anyGlobal = getGlobal();
+var anyGlobal = getGlobal2();
 var crypto3 = anyGlobal.crypto || anyGlobal.msCrypto;
 
 // node_modules/@noble/hashes/esm/sha3.js
@@ -36744,8 +39658,8 @@ function pack(writer, coders, values) {
   let staticWriter = new Writer;
   let dynamicWriter = new Writer;
   let updateFuncs = [];
-  coders.forEach((coder, index) => {
-    let value = arrayValues[index];
+  coders.forEach((coder, index2) => {
+    let value = arrayValues[index2];
     if (coder.dynamic) {
       let dynamicOffset = dynamicWriter.length;
       coder.encode(dynamicWriter, value);
@@ -37030,7 +39944,7 @@ class TupleCoder extends Coder {
       }
       return accum;
     }, {});
-    this.coders.forEach((coder, index) => {
+    this.coders.forEach((coder, index2) => {
       let name = coder.localName;
       if (!name || uniqueNames[name] !== 1) {
         return;
@@ -37041,7 +39955,7 @@ class TupleCoder extends Coder {
       if (values[name] != null) {
         return;
       }
-      values[name] = values[index];
+      values[name] = values[index2];
     });
     return Object.freeze(values);
   }
@@ -37936,17 +40850,17 @@ Zeros.fill(0);
 var accessSetify = function(addr, storageKeys) {
   return {
     address: getAddress(addr),
-    storageKeys: storageKeys.map((storageKey, index) => {
-      assertArgument(isHexString(storageKey, 32), "invalid slot", `storageKeys[${index}]`, storageKey);
+    storageKeys: storageKeys.map((storageKey, index2) => {
+      assertArgument(isHexString(storageKey, 32), "invalid slot", `storageKeys[${index2}]`, storageKey);
       return storageKey.toLowerCase();
     })
   };
 };
 function accessListify(value) {
   if (Array.isArray(value)) {
-    return value.map((set, index) => {
+    return value.map((set, index2) => {
       if (Array.isArray(set)) {
-        assertArgument(set.length === 2, "invalid slot set", `value[${index}]`, set);
+        assertArgument(set.length === 2, "invalid slot set", `value[${index2}]`, set);
         return accessSetify(set[0], set[1]);
       }
       assertArgument(set != null && typeof set === "object", "invalid address-slot set", "value", value);
@@ -38893,14 +41807,14 @@ class TypedDataEncoder {
     const types2 = {};
     Object.keys(_types).forEach((type) => {
       types2[type] = _types[type].map(({ name, type: type2 }) => {
-        let { base, index } = splitArray(type2);
+        let { base, index: index2 } = splitArray(type2);
         if (base === "int" && !_types["int"]) {
           base = "int256";
         }
         if (base === "uint" && !_types["uint"]) {
           base = "uint256";
         }
-        return { name, type: base + (index || "") };
+        return { name, type: base + (index2 || "") };
       });
       links.set(type, new Set);
       parents.set(type, []);
@@ -39582,9 +42496,9 @@ class ParamType {
       }
       const childType = this.arrayChildren;
       const result4 = value.slice();
-      result4.forEach((value2, index) => {
+      result4.forEach((value2, index2) => {
         childType.#walkAsync(promises, value2, process, (value3) => {
-          result4[index] = value3;
+          result4[index2] = value3;
         });
       });
       setValue(result4);
@@ -39612,9 +42526,9 @@ class ParamType {
       if (result4.length !== this.components.length) {
         throw new Error("array is wrong length");
       }
-      result4.forEach((value2, index) => {
-        components[index].#walkAsync(promises, value2, process, (value3) => {
-          result4[index] = value3;
+      result4.forEach((value2, index2) => {
+        components[index2].#walkAsync(promises, value2, process, (value3) => {
+          result4[index2] = value3;
         });
       });
       setValue(result4);
@@ -39715,7 +42629,7 @@ class ParamType {
   }
 }
 
-class Fragment12 {
+class Fragment14 {
   type;
   inputs;
   constructor(guard, type, inputs) {
@@ -39726,10 +42640,10 @@ class Fragment12 {
   static from(obj) {
     if (typeof obj === "string") {
       try {
-        Fragment12.from(JSON.parse(obj));
+        Fragment14.from(JSON.parse(obj));
       } catch (e) {
       }
-      return Fragment12.from(lex(obj));
+      return Fragment14.from(lex(obj));
     }
     if (obj instanceof TokenString) {
       const type = obj.peekKeyword(KwTypes);
@@ -39787,7 +42701,7 @@ class Fragment12 {
   }
 }
 
-class NamedFragment extends Fragment12 {
+class NamedFragment extends Fragment14 {
   name;
   constructor(guard, type, name, inputs) {
     super(guard, type, inputs);
@@ -39903,7 +42817,7 @@ class EventFragment extends NamedFragment {
   }
 }
 
-class ConstructorFragment extends Fragment12 {
+class ConstructorFragment extends Fragment14 {
   payable;
   gas;
   constructor(guard, type, inputs, payable, gas) {
@@ -39956,7 +42870,7 @@ class ConstructorFragment extends Fragment12 {
   }
 }
 
-class FallbackFragment extends Fragment12 {
+class FallbackFragment extends Fragment14 {
   payable;
   constructor(guard, inputs, payable) {
     super(guard, "fallback", inputs);
@@ -40418,7 +43332,7 @@ class Interface {
     const frags = [];
     for (const a of abi) {
       try {
-        frags.push(Fragment12.from(a));
+        frags.push(Fragment14.from(a));
       } catch (error) {
         console.log(`[Warning] Invalid Fragment ${JSON.stringify(a)}:`, error.message);
       }
@@ -40429,7 +43343,7 @@ class Interface {
     let fallback = null;
     let receive = false;
     this.#abiCoder = this.getAbiCoder();
-    this.fragments.forEach((fragment, index) => {
+    this.fragments.forEach((fragment, index2) => {
       let bucket;
       switch (fragment.type) {
         case "constructor":
@@ -40443,7 +43357,7 @@ class Interface {
           if (fragment.inputs.length === 0) {
             receive = true;
           } else {
-            assertArgument(!fallback || fragment.payable !== fallback.payable, "conflicting fallback fragments", `fragments[${index}]`, fragment);
+            assertArgument(!fallback || fragment.payable !== fallback.payable, "conflicting fallback fragments", `fragments[${index2}]`, fragment);
             fallback = fragment;
             receive = fallback.payable;
           }
@@ -40838,8 +43752,8 @@ class Interface {
       }
       return zeroPadValue(hexlify(value), 32);
     };
-    values.forEach((value, index) => {
-      const param = fragment.inputs[index];
+    values.forEach((value, index2) => {
+      const param = fragment.inputs[index2];
       if (!param.indexed) {
         assertArgument(value == null, "cannot filter non-indexed parameters; must be null", "contract." + param.name, value);
         return;
@@ -40872,8 +43786,8 @@ class Interface {
       topics.push(fragment.topicHash);
     }
     assertArgument(values.length === fragment.inputs.length, "event arguments/values mismatch", "values", values);
-    fragment.inputs.forEach((param, index) => {
-      const value = values[index];
+    fragment.inputs.forEach((param, index2) => {
+      const value = values[index2];
       if (param.indexed) {
         if (param.type === "string") {
           topics.push(id(value));
@@ -40908,7 +43822,7 @@ class Interface {
     const indexed = [];
     const nonIndexed = [];
     const dynamic = [];
-    fragment.inputs.forEach((param, index) => {
+    fragment.inputs.forEach((param, index2) => {
       if (param.indexed) {
         if (param.type === "string" || param.type === "bytes" || param.baseType === "tuple" || param.baseType === "array") {
           indexed.push(ParamType.from({ type: "bytes32", name: param.name }));
@@ -40927,12 +43841,12 @@ class Interface {
     const values = [];
     const keys = [];
     let nonIndexedIndex = 0, indexedIndex = 0;
-    fragment.inputs.forEach((param, index) => {
+    fragment.inputs.forEach((param, index2) => {
       let value = null;
       if (param.indexed) {
         if (resultIndexed == null) {
           value = new Indexed(null);
-        } else if (dynamic[index]) {
+        } else if (dynamic[index2]) {
           value = new Indexed(resultIndexed[indexedIndex++]);
         } else {
           try {
@@ -41199,13 +44113,13 @@ class Block {
     };
   }
   [Symbol.iterator]() {
-    let index = 0;
+    let index2 = 0;
     const txs = this.transactions;
     return {
       next: () => {
-        if (index < this.length) {
+        if (index2 < this.length) {
           return {
-            value: txs[index++],
+            value: txs[index2++],
             done: false
           };
         }
@@ -41307,14 +44221,14 @@ class Log {
     });
   }
   toJSON() {
-    const { address: address11, blockHash, blockNumber, data: data9, index, removed, topics, transactionHash, transactionIndex } = this;
+    const { address: address11, blockHash, blockNumber, data: data9, index: index2, removed, topics, transactionHash, transactionIndex } = this;
     return {
       _type: "log",
       address: address11,
       blockHash,
       blockNumber,
       data: data9,
-      index,
+      index: index2,
       removed,
       topics,
       transactionHash,
@@ -41399,7 +44313,7 @@ class TransactionReceipt {
       from,
       contractAddress,
       hash: hash4,
-      index,
+      index: index2,
       blockHash,
       blockNumber,
       logsBloom,
@@ -41419,7 +44333,7 @@ class TransactionReceipt {
       blobGasPrice: toJson(this.blobGasPrice),
       gasUsed: toJson(this.gasUsed),
       hash: hash4,
-      index,
+      index: index2,
       logs,
       logsBloom,
       root,
@@ -41431,11 +44345,11 @@ class TransactionReceipt {
     return this.logs.length;
   }
   [Symbol.iterator]() {
-    let index = 0;
+    let index2 = 0;
     return {
       next: () => {
-        if (index < this.length) {
-          return { value: this.logs[index++], done: false };
+        if (index2 < this.length) {
+          return { value: this.logs[index2++], done: false };
         }
         return { value: undefined, done: true };
       }
@@ -41519,7 +44433,7 @@ class TransactionResponse {
     this.#startBlock = -1;
   }
   toJSON() {
-    const { blockNumber, blockHash, index, hash: hash4, type, to: to2, from, nonce, data: data9, signature: signature2, accessList, blobVersionedHashes } = this;
+    const { blockNumber, blockHash, index: index2, hash: hash4, type, to: to2, from, nonce, data: data9, signature: signature2, accessList, blobVersionedHashes } = this;
     return {
       _type: "TransactionResponse",
       accessList,
@@ -41538,7 +44452,7 @@ class TransactionResponse {
       nonce,
       signature: signature2,
       to: to2,
-      index,
+      index: index2,
       type,
       value: toJson(this.value)
     };
@@ -41687,7 +44601,7 @@ class TransactionResponse {
     }
     const waiter = new Promise((resolve, reject) => {
       const cancellers = [];
-      const cancel = () => {
+      const cancel2 = () => {
         cancellers.forEach((c) => c());
       };
       cancellers.push(() => {
@@ -41695,7 +44609,7 @@ class TransactionResponse {
       });
       if (timeout > 0) {
         const timer = setTimeout(() => {
-          cancel();
+          cancel2();
           reject(makeError("wait for transaction timeout", "TIMEOUT"));
         }, timeout);
         cancellers.push(() => {
@@ -41704,7 +44618,7 @@ class TransactionResponse {
       }
       const txListener = async (receipt2) => {
         if (await receipt2.confirmations() >= confirms) {
-          cancel();
+          cancel2();
           try {
             resolve(checkReceipt(receipt2));
           } catch (error) {
@@ -41722,7 +44636,7 @@ class TransactionResponse {
             await checkReplacement();
           } catch (error) {
             if (isError(error, "TRANSACTION_REPLACED")) {
-              cancel();
+              cancel2();
               reject(error);
               return;
             }
@@ -41920,8 +44834,8 @@ async function copyOverrides(arg, allowed) {
 async function resolveArgs(_runner, inputs, args) {
   const runner = getRunner(_runner, "resolveName");
   const resolver = canResolve(runner) ? runner : null;
-  return await Promise.all(inputs.map((param, index) => {
-    return param.walkAsync(args[index], (type, value) => {
+  return await Promise.all(inputs.map((param, index2) => {
+    return param.walkAsync(args[index2], (type, value) => {
       value = Typed.dereference(value, type);
       if (type === "address") {
         return resolveAddress(value, resolver);
@@ -42225,7 +45139,7 @@ async function getSub(contract, operation, event) {
       }
       starting.push(provider3.on(filter, listener));
     };
-    const stop2 = async () => {
+    const stop3 = async () => {
       if (starting.length == 0) {
         return;
       }
@@ -42234,7 +45148,7 @@ async function getSub(contract, operation, event) {
       await Promise.all(started);
       provider3.off(filter, listener);
     };
-    sub = { tag, listeners: [], start: start2, stop: stop2 };
+    sub = { tag, listeners: [], start: start2, stop: stop3 };
     subs.set(tag, sub);
   }
   return sub;
@@ -42288,12 +45202,12 @@ class PreparedTopicFilter {
     const runner = getRunner(contract.runner, "resolveName");
     const resolver = canResolve(runner) ? runner : null;
     this.#filter = async function() {
-      const resolvedArgs = await Promise.all(fragment.inputs.map((param, index) => {
-        const arg = args[index];
+      const resolvedArgs = await Promise.all(fragment.inputs.map((param, index2) => {
+        const arg = args[index2];
         if (arg == null) {
           return null;
         }
-        return param.walkAsync(args[index], (type, value) => {
+        return param.walkAsync(args[index2], (type, value) => {
           if (type === "address") {
             if (Array.isArray(value)) {
               return Promise.all(value.map((v) => resolveAddress(v, resolver)));
@@ -42562,9 +45476,9 @@ class BaseContract {
       return this;
     }
     if (listener) {
-      const index = sub.listeners.map(({ listener: listener2 }) => listener2).indexOf(listener);
-      if (index >= 0) {
-        sub.listeners.splice(index, 1);
+      const index2 = sub.listeners.map(({ listener: listener2 }) => listener2).indexOf(listener);
+      if (index2 >= 0) {
+        sub.listeners.splice(index2, 1);
       }
     }
     if (listener == null || sub.listeners.length === 0) {
@@ -42583,8 +45497,8 @@ class BaseContract {
       getInternal(this).subs.delete(sub.tag);
     } else {
       const { subs } = getInternal(this);
-      for (const { tag, stop: stop2 } of subs.values()) {
-        stop2();
+      for (const { tag, stop: stop3 } of subs.values()) {
+        stop3();
         subs.delete(tag);
       }
     }
@@ -44080,7 +46994,7 @@ class UnmanagedSubscriber {
   resume() {
   }
 }
-var defaultOptions = {
+var defaultOptions2 = {
   cacheTimeout: 250,
   pollingInterval: 4000
 };
@@ -44099,7 +47013,7 @@ class AbstractProvider {
   #disableCcipRead;
   #options;
   constructor(_network, options) {
-    this.#options = Object.assign({}, defaultOptions, options || {});
+    this.#options = Object.assign({}, defaultOptions2, options || {});
     if (_network === "any") {
       this.#anyNetwork = true;
       this.#networkPromise = null;
@@ -44913,9 +47827,9 @@ class AbstractProvider {
       return this;
     }
     if (listener) {
-      const index = sub.listeners.map(({ listener: listener2 }) => listener2).indexOf(listener);
-      if (index >= 0) {
-        sub.listeners.splice(index, 1);
+      const index2 = sub.listeners.map(({ listener: listener2 }) => listener2).indexOf(listener);
+      if (index2 >= 0) {
+        sub.listeners.splice(index2, 1);
       }
     }
     if (!listener || sub.listeners.length === 0) {
@@ -45384,7 +48298,7 @@ var spelunkMessage = function(value) {
   return result3;
 };
 var Primitive = "bigint,boolean,function,number,string,symbol".split(/,/g);
-var defaultOptions2 = {
+var defaultOptions3 = {
   polling: false,
   staticNetwork: null,
   batchStallTime: 10,
@@ -45601,7 +48515,7 @@ class JsonRpcApiProvider extends AbstractProvider {
   constructor(network3, options) {
     super(network3, options);
     this.#nextId = 1;
-    this.#options = Object.assign({}, defaultOptions2, options || {});
+    this.#options = Object.assign({}, defaultOptions3, options || {});
     this.#payloads = [];
     this.#drainTimer = null;
     this.#network = null;
@@ -45992,7 +48906,7 @@ class JsonRpcApiPollingProvider extends JsonRpcApiProvider {
     super(network3, options);
     let pollingInterval = this._getOption("pollingInterval");
     if (pollingInterval == null) {
-      pollingInterval = defaultOptions2.pollingInterval;
+      pollingInterval = defaultOptions3.pollingInterval;
     }
     this.#pollingInterval = pollingInterval;
   }
@@ -46177,8 +49091,8 @@ async function Session() {
     try {
       let { to: to2, signature: signature2, args: args_ } = args;
       let contract4 = new Contract(to2, [signature2], _provider);
-      let name = signature2.split(" ")[1];
-      let response = contract4.getFunction(name)(...args_ ?? []);
+      let name = signature2.split(" ")[1].split("(")[0];
+      let response = await contract4.getFunction(name)(...args_ ?? []);
       return Ok(response);
     } catch (e) {
       return Err(e);
@@ -46194,7 +49108,7 @@ async function Session() {
       if (nonce.err)
         return nonce;
       let { to: to2, signature: signature2, args: args_, gasPrice, gasLimit, value, chainId: chainId2, confirmations } = args;
-      let name = signature2.split(" ")[1];
+      let name = signature2.split(" ")[1].split("(")[0];
       let maybeReceipt = await (await signer.sendTransaction({
         from: signerAddress_.unwrap(),
         to: to2,
@@ -46258,12 +49172,25 @@ async function Session() {
     }
   }
 }
+function isConnected() {
+  return _session.some;
+}
 async function connect() {
   let session = await Session();
   if (session.err)
     return session;
   _session = Some(session.unwrap());
   return EmptyOk;
+}
+async function query(args) {
+  if (_session.none)
+    return Err("notConnected");
+  return await _session.unwrap().query(args);
+}
+async function chainId() {
+  if (_session.none)
+    return Err("notConnected");
+  return await _session.unwrap().chainId();
 }
 var _session = None;
 
@@ -46275,7 +49202,7 @@ function postNotification(string2) {
 var _notifications = [];
 
 // src/public/component/nav/NavConnectButton.tsx
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 function NavConnectButton() {
   let [symbolSpring, setSymbolSpring] = useSpring(() => ({ opacity: "0", config: config.gentle }));
   let fontSize = RelativeUnit(1.5);
@@ -46300,8 +49227,8 @@ function NavConnectButton() {
   let shadow4 = `0 0 ${distance4} ${symbolColor}`;
   let shadow5 = `0 0 ${distance5} ${symbolColor}`;
   let textShadow = `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
-  return jsx_dev_runtime9.jsxDEV(jsx_dev_runtime9.Fragment, {
-    children: jsx_dev_runtime9.jsxDEV(Row, {
+  return jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
+    children: jsx_dev_runtime11.jsxDEV(Row, {
       style: {
         pointerEvents: "auto",
         cursor: "pointer",
@@ -46344,7 +49271,7 @@ function NavConnectButton() {
         return postNotification("You are connected.");
       },
       children: [
-        jsx_dev_runtime9.jsxDEV(Text, {
+        jsx_dev_runtime11.jsxDEV(Text, {
           text: "\uD81A\uDDF6",
           style: {
             fontSize,
@@ -46355,7 +49282,7 @@ function NavConnectButton() {
             ...symbolSpring
           }
         }, undefined, false, undefined, this),
-        jsx_dev_runtime9.jsxDEV(Text, {
+        jsx_dev_runtime11.jsxDEV(Text, {
           text: "Connect",
           style: {
             fontSize
@@ -46368,56 +49295,89 @@ function NavConnectButton() {
 var _isConnecting = Ref(false);
 
 // src/public/component/nav/Nav.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-function Nav() {
-  return jsx_dev_runtime10.jsxDEV(jsx_dev_runtime10.Fragment, {
-    children: jsx_dev_runtime10.jsxDEV(Row, {
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+function Nav2() {
+  return jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+    children: jsx_dev_runtime12.jsxDEV(Row, {
       style: {
         width: RelativeUnit(100),
         justifyContent: "space-between",
         padding: RelativeUnit(2)
       },
       children: [
-        jsx_dev_runtime10.jsxDEV(NavBrand, {}, undefined, false, undefined, this),
-        jsx_dev_runtime10.jsxDEV(Row, {
+        jsx_dev_runtime12.jsxDEV(NavBrand, {}, undefined, false, undefined, this),
+        jsx_dev_runtime12.jsxDEV(Row, {
           style: {
             gap: RelativeUnit(2)
           },
           children: [
-            jsx_dev_runtime10.jsxDEV(NavButton, {
+            jsx_dev_runtime12.jsxDEV(NavButton, {
               label: "Home",
               to: "/"
             }, undefined, false, undefined, this),
-            jsx_dev_runtime10.jsxDEV(NavButton, {
+            jsx_dev_runtime12.jsxDEV(NavButton, {
               label: "Whitepaper",
               to: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
             }, undefined, false, undefined, this),
-            jsx_dev_runtime10.jsxDEV(NavButton, {
+            jsx_dev_runtime12.jsxDEV(NavButton, {
               label: "Explore",
               to: "/explore"
             }, undefined, false, undefined, this),
-            jsx_dev_runtime10.jsxDEV(NavButton, {
+            jsx_dev_runtime12.jsxDEV(NavButton, {
               label: "Launch",
               to: "/launch"
             }, undefined, false, undefined, this),
-            jsx_dev_runtime10.jsxDEV(NavButton, {
+            jsx_dev_runtime12.jsxDEV(NavButton, {
               label: "Github",
               to: "/"
             }, undefined, false, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        jsx_dev_runtime10.jsxDEV(NavConnectButton, {}, undefined, false, undefined, this)
+        jsx_dev_runtime12.jsxDEV(NavConnectButton, {}, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/layout/template/PageTemplate.tsx
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+function PageTemplate({
+  content,
+  background
+}) {
+  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
+    children: jsx_dev_runtime13.jsxDEV(Page, {
+      hlen: 1n,
+      vlen: 1n,
+      children: [
+        jsx_dev_runtime13.jsxDEV(Layer, {
+          children: background
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime13.jsxDEV(Layer, {
+          children: [
+            jsx_dev_runtime13.jsxDEV(Nav2, {}, undefined, false, undefined, this),
+            jsx_dev_runtime13.jsxDEV(Col, {
+              style: {
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "center"
+              },
+              children: content
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
 
 // src/public/component/decoration/Blurdot.tsx
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 function Blurdot(props) {
   let { color0, color1, style, ...more } = props;
-  return jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
-    children: jsx_dev_runtime11.jsxDEV(Col, {
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+    children: jsx_dev_runtime14.jsxDEV(Col, {
       style: {
         background: `radial-gradient(closest-side, ${color0}, ${color1})`,
         opacity: "0.05",
@@ -46428,16 +49388,18 @@ function Blurdot(props) {
   }, undefined, false, undefined, this);
 }
 
-// src/public/component/page/landing/LandingPageBackgroundLayer.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
-function LandingPageBackgroundLayer() {
-  return jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
-    children: jsx_dev_runtime12.jsxDEV(Layer, {
+// src/public/component/page/landing/LandingPageBackground.tsx
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+function LandingPageBackground() {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Col, {
       style: {
+        width: "100%",
+        height: "100%",
         background: OBSIDIAN.toString()
       },
       children: [
-        jsx_dev_runtime12.jsxDEV(Blurdot, {
+        jsx_dev_runtime15.jsxDEV(Blurdot, {
           color0: DEEP_PURPLE.toString(),
           color1: OBSIDIAN.toString(),
           style: {
@@ -46447,7 +49409,7 @@ function LandingPageBackgroundLayer() {
             right: RelativeUnit(100)
           }
         }, undefined, false, undefined, this),
-        jsx_dev_runtime12.jsxDEV(Blurdot, {
+        jsx_dev_runtime15.jsxDEV(Blurdot, {
           color0: "#0652FE",
           color1: OBSIDIAN.toString(),
           style: {
@@ -46463,7 +49425,7 @@ function LandingPageBackgroundLayer() {
 }
 
 // src/public/component/button/Button.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 function Button(props) {
   let { label, borderColor, textColor, onClick, ...more } = props;
   let [symbolSpring, animateSymbolSpring] = useSpring(() => ({ opacity: "0", config: config.stiff }));
@@ -46478,8 +49440,8 @@ function Button(props) {
   let fontSize = RelativeUnit(1.25);
   let color = textColor ?? TITANIUM.toString();
   function _Container({ children }) {
-    return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-      children: jsx_dev_runtime13.jsxDEV(Col, {
+    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+      children: jsx_dev_runtime16.jsxDEV(Col, {
         onMouseEnter: () => {
           animateHiddenWrapperSpring.start({ top: RelativeUnit(1.5) });
           animateSymbolSpring.start({ opacity: "1" });
@@ -46515,8 +49477,8 @@ function Button(props) {
     }, undefined, false, undefined, this);
   }
   function _HiddenWrapper({ children }) {
-    return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-      children: jsx_dev_runtime13.jsxDEV(Col, {
+    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+      children: jsx_dev_runtime16.jsxDEV(Col, {
         style: {
           position: "relative",
           ...hiddenWrapperSpring
@@ -46526,8 +49488,8 @@ function Button(props) {
     }, undefined, false, undefined, this);
   }
   function _Symbol() {
-    return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-      children: jsx_dev_runtime13.jsxDEV(Text, {
+    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+      children: jsx_dev_runtime16.jsxDEV(Text, {
         text: "\uD81A\uDDF6",
         style: {
           fontSize,
@@ -46541,8 +49503,8 @@ function Button(props) {
     }, undefined, false, undefined, this);
   }
   function _Label() {
-    return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-      children: jsx_dev_runtime13.jsxDEV(Text, {
+    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+      children: jsx_dev_runtime16.jsxDEV(Text, {
         text: label,
         style: {
           fontSize,
@@ -46573,12 +49535,12 @@ function Button(props) {
     let shadow5 = `0 0 ${distance5} ${color2}`;
     return `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
   }
-  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-    children: jsx_dev_runtime13.jsxDEV(_Container, {
-      children: jsx_dev_runtime13.jsxDEV(_HiddenWrapper, {
+  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+    children: jsx_dev_runtime16.jsxDEV(_Container, {
+      children: jsx_dev_runtime16.jsxDEV(_HiddenWrapper, {
         children: [
-          jsx_dev_runtime13.jsxDEV(_Symbol, {}, undefined, false, undefined, this),
-          jsx_dev_runtime13.jsxDEV(_Label, {}, undefined, false, undefined, this)
+          jsx_dev_runtime16.jsxDEV(_Symbol, {}, undefined, false, undefined, this),
+          jsx_dev_runtime16.jsxDEV(_Label, {}, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
     }, undefined, false, undefined, this)
@@ -46586,10 +49548,10 @@ function Button(props) {
 }
 
 // src/public/component/page/landing/LandingPageHeroSection.tsx
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 function LandingPageHeroSection() {
-  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
-    children: jsx_dev_runtime14.jsxDEV(Row, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(Row, {
       style: {
         width: RelativeUnit(100),
         height: "auto",
@@ -46599,28 +49561,28 @@ function LandingPageHeroSection() {
         paddingBottom: RelativeUnit(2.5)
       },
       children: [
-        jsx_dev_runtime14.jsxDEV(Col, {
+        jsx_dev_runtime17.jsxDEV(Col, {
           style: {
             gap: RelativeUnit(1)
           },
           children: [
-            jsx_dev_runtime14.jsxDEV(Col, {
+            jsx_dev_runtime17.jsxDEV(Col, {
               children: [
-                jsx_dev_runtime14.jsxDEV(Row, {
-                  children: jsx_dev_runtime14.jsxDEV(Text, {
+                jsx_dev_runtime17.jsxDEV(Row, {
+                  children: jsx_dev_runtime17.jsxDEV(Text, {
                     text: "Shape the Decentralized Enterprise.",
                     style: {
                       fontSize: RelativeUnit(4.5)
                     }
                   }, undefined, false, undefined, this)
                 }, undefined, false, undefined, this),
-                jsx_dev_runtime14.jsxDEV(Row, {
+                jsx_dev_runtime17.jsxDEV(Row, {
                   style: {
                     width: "100%",
                     height: "auto",
                     justifyContent: "start"
                   },
-                  children: jsx_dev_runtime14.jsxDEV(Text, {
+                  children: jsx_dev_runtime17.jsxDEV(Text, {
                     text: "Launch your space-proof code for your autonomous systems.",
                     style: {
                       fontSize: RelativeUnit(2)
@@ -46629,18 +49591,18 @@ function LandingPageHeroSection() {
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            jsx_dev_runtime14.jsxDEV(Row, {
+            jsx_dev_runtime17.jsxDEV(Row, {
               style: {
                 width: "100%",
                 justifyContent: "start",
                 gap: RelativeUnit(2)
               },
               children: [
-                jsx_dev_runtime14.jsxDEV(Button, {
+                jsx_dev_runtime17.jsxDEV(Button, {
                   label: "Test Button",
                   borderColor: DEEP_PURPLE.toString()
                 }, undefined, false, undefined, this),
-                jsx_dev_runtime14.jsxDEV(Button, {
+                jsx_dev_runtime17.jsxDEV(Button, {
                   label: "Learn More",
                   borderColor: GHOST_IRON.toString()
                 }, undefined, false, undefined, this)
@@ -46648,7 +49610,7 @@ function LandingPageHeroSection() {
             }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        jsx_dev_runtime14.jsxDEV(Image, {
+        jsx_dev_runtime17.jsxDEV(Image, {
           src: "../../../img/shape/Stripe.svg",
           style: {
             width: RelativeUnit(25),
@@ -46661,361 +49623,407 @@ function LandingPageHeroSection() {
 }
 
 // src/public/component/page/landing/LandingPage.tsx
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 function LandingPage() {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Page, {
-      hlen: 1n,
-      vlen: 1n,
-      children: [
-        jsx_dev_runtime15.jsxDEV(LandingPageBackgroundLayer, {}, undefined, false, undefined, this),
-        jsx_dev_runtime15.jsxDEV(Layer, {
-          style: {
-            justifyContent: "start"
-          },
-          children: [
-            jsx_dev_runtime15.jsxDEV(Nav, {}, undefined, false, undefined, this),
-            jsx_dev_runtime15.jsxDEV(LandingPageHeroSection, {}, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// src/public/component/page/explore/ExplorePageCard.tsx
-var import_react15 = __toESM(require_react(), 1);
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
-function ExplorePageCard(props) {
-  const _MAX_STRING_LENGTH = 32;
-  let { style, ...more } = props;
-  let [name, setName] = import_react15.useState("This is a really long name for a really big address");
-  let [symbol, setSymbol] = import_react15.useState("****");
-  let [quote, setQuote] = import_react15.useState(0);
-  function _Card({ children }) {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(Col, {
-        style: {
-          width: RelativeUnit(25),
-          aspectRatio: "2/1",
-          borderRadius: RelativeUnit(0.25),
-          borderColor: GHOST_IRON.toString(),
-          borderWidth: RelativeUnit(0.1),
-          borderStyle: "solid",
-          background: DARK_OBSIDIAN.toString(),
-          padding: RelativeUnit(1),
-          justifyContent: "start",
-          ...style
-        },
-        ...more,
-        children
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _Header({ children }) {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(Row, {
-        style: {
-          width: "100%",
-          height: "20%",
-          justifyContent: "start",
-          gap: RelativeUnit(1)
-        },
-        children
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _HeaderName() {
-    function _name() {
-      if (name.length > _MAX_STRING_LENGTH)
-        return name.substring(0, _MAX_STRING_LENGTH - 3) + "...";
-      return name;
-    }
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(animated6.div, {
-        style: {
-          fontSize: RelativeUnit(1),
-          color: TITANIUM.toString()
-        },
-        children: _name()
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _HeaderSymbol() {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(animated6.div, {
-        style: {
-          fontSize: RelativeUnit(1),
-          color: TITANIUM.toString()
-        },
-        children: symbol
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _SubHeader({ children }) {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(Row, {
-        style: {
-          width: "100%",
-          height: "10%",
-          justifyContent: "start"
-        },
-        children
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _SubHeaderAddress() {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(animated6.div, {
-        style: {
-          fontSize: RelativeUnit(0.75),
-          color: TITANIUM.toString()
-        },
-        children: "0x0000000000000000000000000000000000000000"
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _Content({ children }) {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(Row, {
-        style: {
-          gap: RelativeUnit(1)
-        },
-        children
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _ContentQuote() {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(animated6.div, {
-        style: {
-          fontSize: RelativeUnit(2),
-          fontFamily: "satoshiRegular",
-          color: TITANIUM.toString()
-        },
-        children: "$" + quote.toFixed(8)
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _ContentQuotePnlPercentage() {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(animated6.div, {
-        style: {
-          fontSize: RelativeUnit(0.8),
-          fontFamily: "satoshiRegular",
-          color: RED.toString()
-        },
-        children: "+24.42%"
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _ButtonGroup() {
-    let _starSymbolChar = "\u2726";
-    function _Wrapper({ children }) {
-      return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-        children: jsx_dev_runtime16.jsxDEV(Row, {
-          children
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this);
-    }
-    function _MintButton() {
-      let [symbol2, setSymbol2] = useSpring(() => ({ opacity: "0", config: config.stiff }));
-      let [label, setLabel] = useSpring(() => ({ opacity: "1", config: config.stiff }));
-      let [hiddenWrapper, setHiddenWrapper] = useSpring(() => ({
-        width: RelativeUnit(1),
-        height: RelativeUnit(1),
-        top: RelativeUnit(-1.5),
-        gap: RelativeUnit(1.5),
-        config: config.stiff
-      }));
-      function _Container({ children }) {
-        return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-          children: jsx_dev_runtime16.jsxDEV(Col, {
-            onMouseEnter: () => {
-              setHiddenWrapper.start({ top: RelativeUnit(1.5) });
-              setSymbol2.start({ opacity: "1" });
-              setLabel.start({ opacity: "0" });
-              return;
-            },
-            onMouseLeave: () => {
-              setHiddenWrapper.start({ top: RelativeUnit(-1.5) });
-              setSymbol2.start({ opacity: "0" });
-              setLabel.start({ opacity: "1" });
-              return;
-            },
-            onClick: () => {
-            },
-            style: {
-              width: RelativeUnit(7.5),
-              aspectRatio: "4/1",
-              borderColor: GHOST_IRON.toString(),
-              borderWidth: RelativeUnit(0.1),
-              borderStyle: "solid",
-              borderRadius: RelativeUnit(0.25),
-              pointerEvents: "auto",
-              cursor: "pointer",
-              overflow: "hidden",
-              background: "transparent"
-            },
-            children
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this);
-      }
-      function _HiddenWrapper({ children }) {
-        return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-          children: jsx_dev_runtime16.jsxDEV(Col, {
-            style: {
-              position: "relative",
-              ...hiddenWrapper
-            },
-            children
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this);
-      }
-      function _Symbol() {
-        return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-          children: jsx_dev_runtime16.jsxDEV(Text, {
-            text: _starSymbolChar,
-            style: {
-              fontSize: RelativeUnit(1),
-              fontWeight: "bold",
-              fontFamily: "satoshiRegular",
-              color: "green",
-              textShadow: _glow("green", 1),
-              ...symbol2
-            }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this);
-      }
-      function _Label() {
-        return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-          children: jsx_dev_runtime16.jsxDEV(Text, {
-            text: "Deposit",
-            style: {
-              fontSize: RelativeUnit(1),
-              color: TITANIUM.toString(),
-              ...label
-            }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this);
-      }
-      return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-        children: jsx_dev_runtime16.jsxDEV(_Container, {
-          children: jsx_dev_runtime16.jsxDEV(_HiddenWrapper, {
-            children: [
-              jsx_dev_runtime16.jsxDEV(_Symbol, {}, undefined, false, undefined, this),
-              jsx_dev_runtime16.jsxDEV(_Label, {}, undefined, false, undefined, this)
-            ]
-          }, undefined, true, undefined, this)
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this);
-    }
-    function _BurnButton() {
-      return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {}, undefined, false, undefined, this);
-    }
-    function _glow(color, strength) {
-      let strength0 = strength * 1;
-      let strength1 = strength * 2;
-      let strength2 = strength * 3;
-      let strength3 = strength * 4;
-      let strength4 = strength * 5;
-      let strength5 = strength * 6;
-      let distance0 = RelativeUnit(strength0);
-      let distance1 = RelativeUnit(strength1);
-      let distance2 = RelativeUnit(strength2);
-      let distance3 = RelativeUnit(strength3);
-      let distance4 = RelativeUnit(strength4);
-      let distance5 = RelativeUnit(strength5);
-      let shadow0 = `0 0 ${distance0} ${color}`;
-      let shadow1 = `0 0 ${distance1} ${color}`;
-      let shadow2 = `0 0 ${distance2} ${color}`;
-      let shadow3 = `0 0 ${distance3} ${color}`;
-      let shadow4 = `0 0 ${distance4} ${color}`;
-      let shadow5 = `0 0 ${distance5} ${color}`;
-      return `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
-    }
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(_Wrapper, {
-        children: [
-          jsx_dev_runtime16.jsxDEV(_MintButton, {}, undefined, false, undefined, this),
-          jsx_dev_runtime16.jsxDEV(_BurnButton, {}, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-    children: jsx_dev_runtime16.jsxDEV(_Card, {
-      children: [
-        jsx_dev_runtime16.jsxDEV(_Header, {
-          children: [
-            jsx_dev_runtime16.jsxDEV(_HeaderName, {}, undefined, false, undefined, this),
-            jsx_dev_runtime16.jsxDEV(_HeaderSymbol, {}, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
-        jsx_dev_runtime16.jsxDEV(_SubHeader, {
-          children: jsx_dev_runtime16.jsxDEV(_SubHeaderAddress, {}, undefined, false, undefined, this)
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime16.jsxDEV(_Content, {
-          children: [
-            jsx_dev_runtime16.jsxDEV(_ContentQuote, {}, undefined, false, undefined, this),
-            jsx_dev_runtime16.jsxDEV(_ContentQuotePnlPercentage, {}, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
-        jsx_dev_runtime16.jsxDEV(_ButtonGroup, {}, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
+  return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
+    children: jsx_dev_runtime18.jsxDEV(PageTemplate, {
+      content: jsx_dev_runtime18.jsxDEV(LandingPageHeroSection, {}, undefined, false, undefined, this),
+      background: jsx_dev_runtime18.jsxDEV(LandingPageBackground, {}, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 
 // src/public/component/page/explore/ExplorePage.tsx
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
-function ExplorePage() {
-  function _Page({ children }) {
-    return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-      children: jsx_dev_runtime17.jsxDEV(Page, {
-        hlen: 1n,
-        vlen: 1n,
-        children
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _Background() {
-    function _Layer({ children }) {
-      return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-        children: jsx_dev_runtime17.jsxDEV(Layer, {
-          style: {
-            background: OBSIDIAN.toString()
-          },
-          children
-        }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this);
+var import_react23 = __toESM(require_react(), 1);
+var import_react24 = __toESM(require_react(), 1);
+
+// src/public/component/layout/template/PagePreConnectTemplate.tsx
+var import_react21 = __toESM(require_react(), 1);
+var import_react22 = __toESM(require_react(), 1);
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+function PagePreConnectTemplate({
+  content,
+  background
+}) {
+  const connectToYourWeb3WalletLoaderMessage = "Connect to your Web3 Wallet.";
+  const changeYourNetworkToPolygonLoaderMessage = "Change your network to polygon.";
+  const somethingWentWrongTryAgainLaterLoaderMessage = "Something went wrong. Try again later.";
+  const [loaderMessage, setLoaderMessage] = import_react22.useState(connectToYourWeb3WalletLoaderMessage);
+  const [content_, setContent] = import_react22.useState(() => jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this));
+  const [_, setPagePreConnectTemplate] = useMachine(import_react21.useMemo(() => createMachine({
+    initial: "loading",
+    states: {
+      loading: {
+        entry: () => {
+          setContent(() => jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+            children: jsx_dev_runtime19.jsxDEV(PagePreConnectTemplateLoader, {
+              message: loaderMessage
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this));
+          (async () => {
+            if (isConnected()) {
+              let chainId3 = await chainId();
+              if (chainId3.err) {
+                setLoaderMessage(somethingWentWrongTryAgainLaterLoaderMessage);
+                setPagePreConnectTemplate({ type: "failure " });
+                return;
+              }
+              if (chainId3.unwrap() !== 137n) {
+                setLoaderMessage(changeYourNetworkToPolygonLoaderMessage);
+                setPagePreConnectTemplate({ type: "failure" });
+                return;
+              }
+              return setPagePreConnectTemplate({ type: "success" });
+            }
+            let connection = await connect();
+            if (connection.err) {
+              setLoaderMessage(somethingWentWrongTryAgainLaterLoaderMessage);
+              setPagePreConnectTemplate({ type: "failure" });
+              return;
+            }
+            let chainId2 = await chainId();
+            if (chainId2.err) {
+              setLoaderMessage(somethingWentWrongTryAgainLaterLoaderMessage);
+              setPagePreConnectTemplate({ type: "failure " });
+              return;
+            }
+            if (chainId2.unwrap() !== 137n) {
+              setLoaderMessage(changeYourNetworkToPolygonLoaderMessage);
+              setPagePreConnectTemplate({ type: "failure" });
+              return;
+            }
+            return setPagePreConnectTemplate({ type: "success" });
+          })();
+          return;
+        },
+        on: {
+          success: "loaded",
+          failure: "wait"
+        }
+      },
+      loaded: {
+        entry: () => {
+          return setContent(content);
+        }
+      },
+      wait: {
+        entry: () => {
+          let ms = 3600;
+          return setTimeout(() => {
+            return setPagePreConnectTemplate({ type: "done" });
+          }, ms);
+        },
+        on: {
+          done: "loading"
+        }
+      }
     }
-    return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-      children: jsx_dev_runtime17.jsxDEV(_Layer, {}, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: jsx_dev_runtime17.jsxDEV(_Page, {
-      children: [
-        jsx_dev_runtime17.jsxDEV(_Background, {}, undefined, false, undefined, this),
-        jsx_dev_runtime17.jsxDEV(Layer, {
-          children: [
-            jsx_dev_runtime17.jsxDEV(Nav, {}, undefined, false, undefined, this),
-            jsx_dev_runtime17.jsxDEV(ExplorePageCard, {}, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
+  }), [setLoaderMessage, setContent]));
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(PageTemplate, {
+      content: content_,
+      background
+    }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
+}
+function PagePreConnectTemplateLoader({
+  message
+}) {
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: [
+      jsx_dev_runtime19.jsxDEV(Image, {
+        src: "../../../img/animation/loader/Infinity.svg",
+        style: {
+          width: RelativeUnit(20),
+          aspectRatio: "1/1"
+        }
+      }, undefined, false, undefined, this),
+      jsx_dev_runtime19.jsxDEV(Text, {
+        text: message,
+        style: {
+          fontSize: RelativeUnit(2.5)
+        }
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+
+// src/public/component/page/explore/ExplorePage.tsx
+function ExplorePage() {
+  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: jsx_dev_runtime20.jsxDEV(PagePreConnectTemplate, {
+      content: jsx_dev_runtime20.jsxDEV(ExplorePageContent, {}, undefined, false, undefined, this),
+      background: jsx_dev_runtime20.jsxDEV(ExplorePageBackground, {}, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function ExplorePageContent() {
+  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: [
+      jsx_dev_runtime20.jsxDEV(Row, {
+        style: {
+          gap: RelativeUnit(2)
+        },
+        children: [
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      jsx_dev_runtime20.jsxDEV(Row, {
+        style: {
+          gap: RelativeUnit(2)
+        },
+        children: [
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      jsx_dev_runtime20.jsxDEV(Row, {
+        style: {
+          gap: RelativeUnit(2)
+        },
+        children: [
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+            daoAddress: "999"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+}
+function ExplorePageBackground() {
+  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: jsx_dev_runtime20.jsxDEV(Col, {
+      style: {
+        width: "100%",
+        height: "100%",
+        background: OBSIDIAN.toString()
+      }
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function ExplorePageCard({
+  daoAddress
+}) {
+  const [slide, setSlide] = import_react23.useState();
+  const [dao, setDao] = import_react23.useState(new Dao({
+    address: "",
+    name: "",
+    symbol: "",
+    totalAssets: new Quote({
+      best: 0,
+      real: 0,
+      slippage: 0
+    }),
+    totalSupply: 0,
+    quote: new Quote({
+      best: 0,
+      real: 0,
+      slippage: 0
+    })
+  }));
+  const [daoName, setDaoName] = import_react23.useState("****");
+  const [daoSymbol, setDaoSymbol] = import_react23.useState("****");
+  const [daoRealTotalAssets, setDaoRealTotalAssets] = import_react23.useState(0);
+  const [daoTotalSupply, setDaoTotalSupply] = import_react23.useState(0);
+  const [daoQuote, setDaoQuote] = import_react23.useState(0);
+  const [daoQuote24HrPercentageChange, setDaoQuote24HrPercentageChange] = import_react23.useState(0);
+  const [_, setExplorePageCard] = useMachine(import_react24.useMemo(() => createMachine({
+    initial: "loading",
+    states: {
+      loading: {
+        entry: () => {
+          setSlide(jsx_dev_runtime20.jsxDEV(ExplorePageCardLoaderSlide, {}, undefined, false, undefined, this));
+          (async () => {
+            const daoName2 = await query({
+              to: daoAddress,
+              signature: "function name() external view returns (string)"
+            });
+            const daoSymbol2 = await query({
+              to: daoAddress,
+              signature: "function symbol() external view returns (string)"
+            });
+            const daoTotalAssets = await query({
+              to: daoAddress,
+              signature: "function totalAssets() external view returns (uint256)"
+            });
+            const daoTotalSupply2 = await query({
+              to: daoAddress,
+              signature: "function totalSupply() external view returns (uint256)"
+            });
+            const daoQuote2 = await query({
+              to: daoAddress,
+              signature: "function quote() external view returns (uint256, uint256, uint256)"
+            });
+            if (daoName2.err || daoSymbol2.err || daoTotalAssets.err || daoTotalSupply2.err || daoQuote2.err)
+              return setExplorePageCard({ type: "failure" });
+            if (typeof daoName2.unwrap() !== "string" || typeof daoSymbol2.unwrap() !== "string" || typeof daoTotalAssets.unwrap() !== "bigint" || typeof daoTotalSupply2.unwrap() !== "bigint" || typeof daoQuote2.unwrap() !== "bigint")
+              return setExplorePageCard({ type: "failure" });
+            const uDaoName = daoName2.unwrap();
+            const uDaoSymbol = daoSymbol2.unwrap();
+            const uDaoTotalAssets = daoTotalAssets.unwrap();
+            const uDaoTotalSupply = daoTotalSupply2.unwrap();
+            const uDaoQuote = daoQuote2.unwrap();
+            setDaoName(uDaoName);
+            setDaoSymbol(uDaoSymbol);
+            setDaoRealTotalAssets(toHumanReadableNumber(uDaoTotalAssets));
+            setDaoTotalSupply(toHumanReadableNumber(uDaoTotalSupply));
+            setDaoQuote(toHumanReadableNumber(uDaoQuote));
+            function toHumanReadableNumber(bigint) {
+              return Number(bigint) / 1000000000000000000;
+            }
+            return setExplorePageCard({ type: "success" });
+          })();
+          return;
+        },
+        on: {
+          success: "idle",
+          failure: "wait"
+        }
+      },
+      wait: {
+        entry: () => {
+          const ms = 1000;
+          return setTimeout(() => {
+            return setExplorePageCard({ type: "done " });
+          }, ms);
+        },
+        on: {
+          done: "loading"
+        }
+      },
+      idle: {
+        entry: () => {
+          return setSlide(jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+            children: jsx_dev_runtime20.jsxDEV(ExplorePageCardIdleSlide, {
+              daoAddress,
+              daoName,
+              daoSymbol,
+              daoTotalAssets: daoRealTotalAssets,
+              daoTotalSupply,
+              daoQuote,
+              daoQuote24HrPercentageChange
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this));
+        },
+        on: {
+          mintButtonClick: "mintTransactionForm",
+          burnButtonClick: "burnTransactionForm"
+        }
+      },
+      mintTransactionForm: {},
+      burnTransactionForm: {},
+      executingMintTransaction: {}
+    }
+  }), [setSlide, setDaoName, setDaoSymbol, setDaoRealTotalAssets, setDaoTotalSupply, setDaoQuote, setDaoQuote24HrPercentageChange]));
+  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: jsx_dev_runtime20.jsxDEV(Col, {
+      style: {
+        width: RelativeUnit(25),
+        aspectRatio: "2/1",
+        borderRadius: RelativeUnit(0.25),
+        borderColor: GHOST_IRON.toString(),
+        borderWidth: RelativeUnit(0.1),
+        borderStyle: "solid",
+        background: SOFT_OBSIDIAN.toString(),
+        padding: RelativeUnit(1),
+        justifyContent: "center",
+        alignItems: "center"
+      },
+      children: slide
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function ExplorePageCardLoaderSlide() {
+  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: jsx_dev_runtime20.jsxDEV(Image, {
+      src: "../../../img/animation/loader/Infinity.svg",
+      style: {
+        width: RelativeUnit(5),
+        aspectRatio: "1/1"
+      }
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function ExplorePageCardIdleSlide({
+  daoAddress,
+  daoName,
+  daoSymbol,
+  daoTotalAssets,
+  daoTotalSupply,
+  daoQuote,
+  daoQuote24HrPercentageChange
+}) {
+  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {}, undefined, false, undefined, this);
+}
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+
+class Quote {
+  best;
+  real;
+  slippage;
+  constructor({
+    best,
+    real,
+    slippage
+  }) {
+    this.best = best;
+    this.real = real;
+    this.slippage = slippage;
+  }
+}
+
+class Dao {
+  address;
+  name;
+  symbol;
+  totalAssets;
+  totalSupply;
+  quote;
+  constructor({
+    address: address18,
+    name,
+    symbol,
+    totalAssets,
+    totalSupply,
+    quote
+  }) {
+    this.address = address18;
+    this.name = name;
+    this.symbol = symbol;
+    this.totalAssets = totalAssets;
+    this.totalSupply = totalSupply;
+    this.quote = quote;
+  }
 }
 
 // src/public/lib/react/Renderable.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root) {
-    return client.createRoot(root).render(jsx_dev_runtime18.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime21.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   }
@@ -47023,11 +50031,14 @@ function render(routes) {
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime19.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime22.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
 }, {
   path: "/explore",
-  element: jsx_dev_runtime19.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime22.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+}, {
+  path: "*",
+  element: jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {}, undefined, false, undefined, this)
 }]);

@@ -1,24 +1,12 @@
-import { Page } from "@component/Page";
-import { Layer } from "@component/Layer";
-import { Nav } from "@component/Nav";
-import { LandingPageBackgroundLayer } from "./LandingPageBackgroundLayer";
+import type { ReactNode } from "react";
+import { PageTemplate } from "@component/PageTemplate";
+import { LandingPageBackground } from "./LandingPageBackground";
 import { LandingPageHeroSection } from "./LandingPageHeroSection";
-import { Window } from "@component/window/Window";
-import React from "react";
 
-export function LandingPage(): React.JSX.Element {
+export function LandingPage(): ReactNode {
     return <>
-        <Page
-        hlen={1n}
-        vlen={1n}>
-            <LandingPageBackgroundLayer/>
-            <Layer
-            style={{
-                justifyContent: "start"
-            }}>
-                <Nav/>
-                <LandingPageHeroSection/>
-            </Layer>
-        </Page>
+        <PageTemplate
+        content={ <LandingPageHeroSection/> }
+        background={ <LandingPageBackground/> }/>
     </>;
 }

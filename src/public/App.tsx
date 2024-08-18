@@ -3,10 +3,13 @@ import { ExplorePage } from "./component/page/explore/ExplorePage";
 import { render } from "./lib/react/Renderable";
 import React from "react";
 
-render([{
-    path: "/",
-    element: <LandingPage/>
+render([{ 
+    path: "/", 
+    element: <LandingPage/> 
 }, {
     path: "/explore",
     element: <ExplorePage/>
+}, {
+    path: "*",
+    element: <></> 
 }]);

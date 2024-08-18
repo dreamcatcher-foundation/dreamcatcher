@@ -78,10 +78,19 @@ export function compile(_path: string): CompilationResult {
         let exception!:
             | ExecException
             | null;
+        /// note to self before using this function always initialize a bun hardhat
+        /// project or this will not work properly.
+        /// bun hardhat - to check if hardhat is installed.
+        /// if it is it will come up with some options to create a hardhat project just
+        /// initialize with empty config and then everything should work just fine.
+        /// number of times i forgot 7.
         exec(`bun hardhat flatten ${_path} > ${temporaryPath}`, e => exception = e);
+        console.log(exception);
         let beginTimestamp: number = Date.now();
         let nowTimestamp: number = beginTimestamp;
-        while (nowTimestamp - beginTimestamp < 4000) nowTimestamp = Date.now();
+        while (nowTimestamp - beginTimestamp < 4000) {
+            nowTimestamp = Date.now();
+        }
         if (exception) return Err<ExecException>(exception);
         let item: string = readFileSync(temporaryPath, "utf8");
         if (item === "") return Err<"failedToParseFileContent">("failedToParseFileContent");

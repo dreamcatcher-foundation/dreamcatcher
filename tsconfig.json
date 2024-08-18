@@ -25,7 +25,7 @@
 		"allowUnusedLabels": true,
 		"noUnusedParameters": false,
 		"noUnusedLocals": false,
-		"noImplicitAny": true,
+		"noImplicitAny": false,
 		"noStrictGenericChecks": false,
 		"noImplicitReturns": true,
 		"noImplicitOverride": true,
@@ -45,7 +45,8 @@
 					"./src/public/lib/unit/*",
 					"./src/public/lib/unit/relative-unit/*",
 					"./src/public/lib/eda/*",
-					"./src/public/lib/eda/ref/*"
+					"./src/public/lib/eda/ref/*",
+					"./src/public/lib/eda/ref-map/*"
 				],
 				"@component/*": [
 					"./src/public/component/*",
@@ -53,12 +54,14 @@
 					"./src/public/component/config/*",
 					"./src/public/component/misc/*",
 					"./src/public/component/page/*",
+					"./src/public/component/page/landing/*",
+					"./src/public/component/page/explore/*",
 					"./src/public/component/text/*",
 					"./src/public/component/nav/*",
 					"./src/public/component/state/*",
 					"./src/public/component/decoration/*",
 					"./src/public/component/button/*",
-					"./src/public/component/hook/*"
+					"./src/public/component/layout/template/*"
 				]
 		}
 	}

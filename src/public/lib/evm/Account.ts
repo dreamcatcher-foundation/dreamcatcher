@@ -125,7 +125,7 @@ export function Account(_wallet: Wallet): Account {
         try {
             let { to, signature, args: args_ } = args;
             let contract: Contract = new Contract(to, [signature], _wallet);
-            let name: string = signature.split(" ")[1];
+            let name: string = signature.split(" ")[1].split("(")[0];
             return Ok<unknown>(await contract.getFunction(name)(... args_ ?? []));
         }
         catch (e: unknown) {
@@ -149,7 +149,7 @@ export function Account(_wallet: Wallet): Account {
                 = await generateNonce();
             if (nonce.err) return nonce;
             let { to, signature, args: args_, gasPrice, gasLimit, value, chainId, confirmations } = args;
-            let name: string = signature.split(" ")[1];
+            let name: string = signature.split(" ")[1].split("(")[0];
             let maybeReceipt:
                 | TransactionReceipt
                 | null

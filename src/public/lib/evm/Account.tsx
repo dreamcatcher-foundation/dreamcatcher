@@ -174,8 +174,8 @@ export async function Session(): Promise<SessionConstructorResult> {
         try {
             let { to, signature, args: args_ } = args;
             let contract: Contract = new Contract(to, [signature], _provider);
-            let name: string = signature.split(" ")[1];
-            let response: unknown = contract.getFunction(name)(... args_ ?? []);
+            let name: string = signature.split(" ")[1].split("(")[0];
+            let response: unknown = await contract.getFunction(name)(... args_ ?? []);
             return Ok<unknown>(response);
         }
         catch (e: unknown) {
@@ -200,7 +200,7 @@ export async function Session(): Promise<SessionConstructorResult> {
                 = await generateNonce();
             if (nonce.err) return nonce;
             let { to, signature, args: args_, gasPrice, gasLimit, value, chainId, confirmations } = args;
-            let name: string = signature.split(" ")[1];
+            let name: string = signature.split(" ")[1].split("(")[0];
             let maybeReceipt:
                 | TransactionReceipt
                 | null
@@ -281,7 +281,11 @@ export async function Session(): Promise<SessionConstructorResult> {
     }
 }
 
-type NotConnectedErr
+export function isConnected(): boolean {
+    return _session.some;
+}
+
+export type NotConnectedErr
     =
     | Err<"notConnected">;
 
@@ -329,4 +333,34 @@ export async function deploy(args: DeploymentArgs | DeploymentArgsWithArgs):
     > {
     if (_session.none) return Err<"notConnected">("notConnected");
     return await _session.unwrap().deploy(args);
+}
+
+export async function chainId():
+    Promise<
+        | Ok<bigint>
+        | NotConnectedErr
+        | Err<unknown>
+    > {
+    if (_session.none) return Err<"notConnected">("notConnected");
+    return await _session.unwrap().chainId();
+}
+
+export async function signerAddress():
+    Promise<
+        | Ok<string>
+        | NotConnectedErr
+        | Err<unknown>
+    > {
+    if (_session.none) return Err<"notConnected">("notConnected");
+    return await _session.unwrap().signerAddress();
+}
+
+export async function generateNonce():
+    Promise<
+        | Ok<number>
+        | NotConnectedErr
+        | Err<unknown>
+    > {
+    if (_session.none) return Err<"notConnected">("notConnected");
+    return await _session.unwrap().generateNonce();
 }

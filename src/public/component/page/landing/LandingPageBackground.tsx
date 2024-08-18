@@ -1,13 +1,15 @@
-import { Layer } from "@component/Layer";
+import { Col } from "@component/Col";
 import { Blurdot } from "@component/Blurdot";
 import { RelativeUnit } from "@lib/RelativeUnit";
 import * as ColorPalette from "@component/ColorPalette";
 import React from "react";
  
-export function LandingPageBackgroundLayer(): React.JSX.Element {
+export function LandingPageBackground(): React.JSX.Element {
     return <>
-        <Layer
+        <Col
         style={{
+            width: "100%",
+            height: "100%",
             background: ColorPalette.OBSIDIAN.toString()
         }}>
             <Blurdot
@@ -28,6 +30,6 @@ export function LandingPageBackgroundLayer(): React.JSX.Element {
                 position: "absolute",
                 left: RelativeUnit(100)
             }}/>
-        </Layer>
+        </Col>
     </>;
 }

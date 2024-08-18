@@ -7,39 +7,14 @@ import { IErc20 } from "../../../interface/standard/IErc20.sol";
 import { IVToken } from "../../../interface/asset/token/IVToken.sol";
 import { ERC20 } from "../../../import/openzeppelin/token/ERC20/ERC20.sol";
 import { Ownable } from "../../../import/openzeppelin/access/Ownable.sol";
+import { Side } from "./Side.sol";
+import { Asset } from "./Asset.sol";
+import { Quote } from "./Quote.sol";
+import { Pair } from "./Pair.sol";
 
 contract Vault {
     event Mint(address account);
     event Burn(address account);
-
-    enum Side {
-        TKN_CUR_PATH,
-        CUR_TKN_PATH
-    }
-
-    struct Asset {
-        IErc20 token;
-        IErc20 currency;
-        address[] tknCurPath; /// tkn -> curr
-        address[] curTknPath; /// curr -> tkn
-        uint256 targetAllocation;
-    }
-
-    struct Quote {  
-        uint256 real;
-        uint256 best;
-        uint256 slippage;
-    }
-
-    struct Pair {
-        IUniswapV2Pair pair;
-        IErc20 token0;
-        IErc20 token1;
-        uint256 reserve0;
-        uint256 reserve1;
-        uint8 decimals0;
-        uint8 decimals1;
-    }
 
     Asset[] private _assets;
     IVToken private _vToken;
@@ -54,6 +29,14 @@ contract Vault {
             _assets.push(assets[i]);
         }
         _nextRebalanceTimestamp = block.timestamp;
+    }
+
+    function name() public view returns (string memory) {
+        return _vToken.name();
+    }
+
+    function symbol() public view returns (string memory) {
+        return _vToken.symbol();
     }
 
     function secondsLeftToNextRebalance() public view returns (uint256) {
