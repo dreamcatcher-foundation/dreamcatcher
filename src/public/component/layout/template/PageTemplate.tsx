@@ -6,15 +6,19 @@ import { Col } from "@component/Col";
 
 export function PageTemplate({
     content,
-    background
+    background,
+    hlen = 1n,
+    vlen = 1n
 }:{
     content: ReactNode;
     background: ReactNode;
+    hlen?: bigint;
+    vlen?: bigint;
 }): ReactNode {
     return <>
         <Page
-        hlen={ 1n }
-        vlen={ 1n }>
+        hlen={ hlen }
+        vlen={ vlen }>
             <Layer>
                 { background }
             </Layer>

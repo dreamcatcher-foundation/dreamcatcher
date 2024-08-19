@@ -49343,12 +49343,14 @@ function Nav2() {
 var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
 function PageTemplate({
   content,
-  background
+  background,
+  hlen = 1n,
+  vlen = 1n
 }) {
   return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
     children: jsx_dev_runtime13.jsxDEV(Page, {
-      hlen: 1n,
-      vlen: 1n,
+      hlen,
+      vlen,
       children: [
         jsx_dev_runtime13.jsxDEV(Layer, {
           children: background
@@ -49388,14 +49390,209 @@ function Blurdot(props) {
   }, undefined, false, undefined, this);
 }
 
-// src/public/component/page/landing/LandingPageBackground.tsx
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+// src/public/component/page/landing/LandingPage.tsx
+var import_react21 = __toESM(require_react(), 1);
+function LandingPage() {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(PageTemplate, {
+      hlen: 1n,
+      vlen: 1n,
+      content: jsx_dev_runtime15.jsxDEV(LandingPageContent, {}, undefined, false, undefined, this),
+      background: jsx_dev_runtime15.jsxDEV(LandingPageBackground, {}, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function LandingPageContent() {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(LandingPageContentWrapper, {
+      children: [
+        jsx_dev_runtime15.jsxDEV(LandingPageBlockButtonGroup, {
+          button0Label0: "\uD81A\uDDF6",
+          button0Label1: "Get Started",
+          button1Label0: "\uD81A\uDDF6",
+          button1Label1: "Learn More"
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSection, {}, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function LandingPageContentWrapper({
+  children
+}) {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Col, {
+      style: {
+        width: "100%",
+        height: "100%",
+        justifyContent: "start"
+      },
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function LandingPageContentKeyPointsSection() {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSectionContainer, {
+      backgroundColor0: SOFT_OBSIDIAN.toString(),
+      backgroundColor1: OBSIDIAN.toString(),
+      children: [
+        jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSectionCard, {
+          width: RelativeUnit(20),
+          height: "auto",
+          src: "../../../img/shape/Dots.svg",
+          caption: "Transparent",
+          captionFontSize: RelativeUnit(1),
+          captionFontWeight: "bold",
+          captionFontFamily: "satoshiRegular",
+          captionColor: TITANIUM.toString(),
+          description: "Finance should be for everyone and everyone should be able to have ownership. Every single transaction is registered and trusless.",
+          descriptionFontSize: RelativeUnit(0.6),
+          descriptionFontWeight: "bold",
+          descriptionFontFamily: "satoshiRegular",
+          descriptionColor: TITANIUM.toString()
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSectionCard, {
+          width: RelativeUnit(20),
+          height: "auto",
+          src: "../../../img/shape/TwoSquares.svg",
+          caption: "Community",
+          captionFontSize: RelativeUnit(1),
+          captionFontWeight: "bold",
+          captionFontFamily: "satoshiRegular",
+          captionColor: TITANIUM.toString(),
+          description: "The future of business is community driven.",
+          descriptionFontSize: RelativeUnit(0.6),
+          descriptionFontWeight: "bold",
+          descriptionFontFamily: "satoshiRegular",
+          descriptionColor: TITANIUM.toString()
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSectionCard, {
+          width: RelativeUnit(20),
+          height: "auto",
+          src: "../../../img/shape/Composition.svg",
+          caption: "Community",
+          captionFontSize: RelativeUnit(1),
+          captionFontWeight: "bold",
+          captionFontFamily: "satoshiRegular",
+          captionColor: TITANIUM.toString(),
+          description: "The future of business is community driven.",
+          descriptionFontSize: RelativeUnit(0.6),
+          descriptionFontWeight: "bold",
+          descriptionFontFamily: "satoshiRegular",
+          descriptionColor: TITANIUM.toString()
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function LandingPageContentKeyPointsSectionContainer({
+  backgroundColor0,
+  backgroundColor1,
+  children
+}) {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Row, {
+      style: {
+        width: RelativeUnit(100),
+        height: RelativeUnit(10),
+        background: `linear-gradient(to right, ${backgroundColor0}, ${backgroundColor1})`,
+        justifyContent: "space-around",
+        alignItems: "center"
+      },
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function LandingPageContentKeyPointsSectionCard({
+  width,
+  height,
+  src,
+  caption,
+  captionFontSize,
+  captionFontWeight,
+  captionFontFamily,
+  captionColor,
+  description,
+  descriptionFontSize,
+  descriptionFontWeight,
+  descriptionFontFamily,
+  descriptionColor
+}) {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Row, {
+      style: {
+        width,
+        height,
+        gap: RelativeUnit(1)
+      },
+      children: [
+        jsx_dev_runtime15.jsxDEV(Col, {
+          style: {
+            height: "100%"
+          },
+          children: jsx_dev_runtime15.jsxDEV(Image, {
+            src,
+            style: {
+              width: RelativeUnit(7.5),
+              aspectRatio: "1/1"
+            }
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime15.jsxDEV(Col, {
+          style: {
+            width: "100%",
+            height: "100%",
+            justifyContent: "start"
+          },
+          children: [
+            jsx_dev_runtime15.jsxDEV(Row, {
+              style: {
+                width: "100%",
+                height: "auto",
+                justifyContent: "start"
+              },
+              children: jsx_dev_runtime15.jsxDEV(Text, {
+                text: caption,
+                style: {
+                  fontSize: captionFontSize,
+                  fontWeight: captionFontWeight,
+                  fontFamily: captionFontFamily,
+                  color: captionColor,
+                  whiteSpace: "pretty"
+                }
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime15.jsxDEV(Row, {
+              style: {
+                width: "100%",
+                height: "auto",
+                justifyContent: "start",
+                alignItems: "start"
+              },
+              children: jsx_dev_runtime15.jsxDEV(Text, {
+                text: description,
+                style: {
+                  fontSize: descriptionFontSize,
+                  fontWeight: descriptionFontWeight,
+                  fontFamily: descriptionFontFamily,
+                  color: descriptionColor
+                }
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
 function LandingPageBackground() {
   return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
     children: jsx_dev_runtime15.jsxDEV(Col, {
       style: {
         width: "100%",
         height: "100%",
+        position: "absolute",
         background: OBSIDIAN.toString()
       },
       children: [
@@ -49423,97 +49620,206 @@ function LandingPageBackground() {
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
-
-// src/public/component/button/Button.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
-function Button(props) {
-  let { label, borderColor, textColor, onClick, ...more } = props;
-  let [symbolSpring, animateSymbolSpring] = useSpring(() => ({ opacity: "0", config: config.stiff }));
-  let [labelSpring, animateLabelSpring] = useSpring(() => ({ opacity: "1", config: config.stiff }));
-  let [hiddenWrapperSpring, animateHiddenWrapperSpring] = useSpring(() => ({
+function LandingPageBlockButtonGroup({
+  button0Label0 = "",
+  button0Label1 = "",
+  button0LabelColor0 = GHOST_IRON.toString(),
+  button0LabelColor1 = TITANIUM.toString(),
+  button0FontSize = RelativeUnit(1),
+  button0FontWeight = "bold",
+  button0FontFamily = "satoshiRegular",
+  button0BorderColor = GHOST_IRON.toString(),
+  button0OnClick = async () => {
+  },
+  button1Label0 = "",
+  button1Label1 = "",
+  button1LabelColor0 = GHOST_IRON.toString(),
+  button1LabelColor1 = TITANIUM.toString(),
+  button1FontSize = RelativeUnit(1),
+  button1FontWeight = "bold",
+  button1FontFamily = "satoshiRegular",
+  button1BorderColor = GHOST_IRON.toString(),
+  button1OnClick = async () => {
+  }
+}) {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Row, {
+      style: {
+        width: "100%",
+        justifyContent: "start",
+        gap: RelativeUnit(2)
+      },
+      children: [
+        jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButton, {
+          label0: button0Label0,
+          label1: button0Label1,
+          labelColor0: button0LabelColor0,
+          labelColor1: button0LabelColor1,
+          fontSize: button0FontSize,
+          fontWeight: button0FontWeight,
+          fontFamily: button0FontFamily,
+          borderColor: button0BorderColor,
+          onClick: button0OnClick
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButton, {
+          label0: button1Label0,
+          label1: button1Label1,
+          labelColor0: button1LabelColor0,
+          labelColor1: button1LabelColor1,
+          fontSize: button1FontSize,
+          fontWeight: button1FontWeight,
+          fontFamily: button1FontFamily,
+          borderColor: button1BorderColor,
+          onClick: button1OnClick
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+function LandingPageDualLabelButton({
+  label0,
+  label1,
+  labelColor0,
+  labelColor1,
+  fontSize,
+  fontWeight,
+  fontFamily,
+  borderColor,
+  onClick
+}) {
+  let [hiddenWrapperSpring, setHiddenWrapperSpring] = useSpring(() => ({
     width: RelativeUnit(15),
     height: RelativeUnit(7.5),
     top: RelativeUnit(-1.5),
     gap: RelativeUnit(1.5),
     config: config.stiff
   }));
-  let fontSize = RelativeUnit(1.25);
-  let color = textColor ?? TITANIUM.toString();
-  function _Container({ children }) {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(Col, {
-        onMouseEnter: () => {
-          animateHiddenWrapperSpring.start({ top: RelativeUnit(1.5) });
-          animateSymbolSpring.start({ opacity: "1" });
-          animateLabelSpring.start({ opacity: "0" });
+  let [symbolSpring, setSymbolSpring] = useSpring(() => ({
+    opacity: "0",
+    config: config.stiff
+  }));
+  let [labelSpring, setLabelSpring] = useSpring(() => ({
+    opacity: "1",
+    config: config.stiff
+  }));
+  let [_, setLandingPageDualLabelButton] = useMachine(import_react21.useMemo(() => createMachine({
+    initial: "idle",
+    states: {
+      idle: {
+        entry: () => {
+          setHiddenWrapperSpring.start({ top: RelativeUnit(-1.5) });
+          setSymbolSpring.start({ opacity: "0" });
+          setLabelSpring.start({ opacity: "1" });
           return;
         },
-        onMouseLeave: () => {
-          animateHiddenWrapperSpring.start({ top: RelativeUnit(-1.5) });
-          animateSymbolSpring.start({ opacity: "0" });
-          animateLabelSpring.start({ opacity: "1" });
-          return;
-        },
-        onClick: () => {
-          if (onClick)
-            ;
-          return;
-        },
-        style: {
-          width: RelativeUnit(15),
-          aspectRatio: "4/1",
-          borderColor: borderColor ?? GHOST_IRON.toString(),
-          borderWidth: RelativeUnit(0.1),
-          borderStyle: "solid",
-          borderRadius: RelativeUnit(0.5),
-          pointerEvents: "auto",
-          cursor: "pointer",
-          overflow: "hidden",
-          background: DARK_OBSIDIAN.toString()
-        },
-        ...more,
-        children
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _HiddenWrapper({ children }) {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(Col, {
-        style: {
-          position: "relative",
-          ...hiddenWrapperSpring
-        },
-        children
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _Symbol() {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(Text, {
-        text: "\uD81A\uDDF6",
-        style: {
-          fontSize,
-          fontWeight: "bold",
-          fontFamily: "satoshiRegular",
-          color,
-          textShadow: _glow(color, 1),
-          ...symbolSpring
+        on: {
+          mouseEnter: "hovering"
         }
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
-  function _Label() {
-    return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-      children: jsx_dev_runtime16.jsxDEV(Text, {
-        text: label,
-        style: {
-          fontSize,
-          color,
-          ...labelSpring
+      },
+      hovering: {
+        entry: () => {
+          setHiddenWrapperSpring.start({ top: RelativeUnit(1.5) });
+          setSymbolSpring.start({ opacity: "1" });
+          setLabelSpring.start({ opacity: "0" });
+          return;
+        },
+        on: {
+          mouseLeave: "idle",
+          click: "clicked"
         }
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this);
-  }
+      },
+      clicked: {
+        entry: () => {
+          (async () => {
+            if (onClick)
+              await onClick();
+            return setLandingPageDualLabelButton({ type: "done" });
+          })();
+          return;
+        },
+        on: {
+          done: "hovering"
+        }
+      }
+    }
+  }), [setHiddenWrapperSpring, setSymbolSpring, setLabelSpring]));
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButtonContainer, {
+      setLandingPageDualLabelButton,
+      borderColor,
+      children: jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButtonHiddenWrapper, {
+        hiddenWrapperSpring,
+        children: [
+          jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButtonSymbol, {
+            label: label0,
+            fontSize,
+            fontWeight,
+            fontFamily,
+            color: labelColor0,
+            symbolSpring
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButtonLabel, {
+            label: label1,
+            fontSize,
+            fontWeight,
+            fontFamily,
+            color: labelColor1,
+            labelSpring
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function LandingPageDualLabelButtonContainer({
+  setLandingPageDualLabelButton,
+  borderColor,
+  children
+}) {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Col, {
+      onMouseEnter: () => setLandingPageDualLabelButton({ type: "mouseEnter" }),
+      onMouseLeave: () => setLandingPageDualLabelButton({ type: "mouseLeave" }),
+      onClick: () => setLandingPageDualLabelButton({ type: "click" }),
+      style: {
+        width: RelativeUnit(15),
+        aspectRatio: "4/1",
+        borderColor: borderColor ?? GHOST_IRON.toString(),
+        borderWidth: RelativeUnit(0.1),
+        borderStyle: "solid",
+        borderRadius: RelativeUnit(0.5),
+        pointerEvents: "auto",
+        cursor: "pointer",
+        overflow: "hidden",
+        background: DARK_OBSIDIAN.toString()
+      },
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function LandingPageDualLabelButtonHiddenWrapper({
+  hiddenWrapperSpring,
+  children
+}) {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Col, {
+      style: {
+        position: "relative",
+        ...hiddenWrapperSpring
+      },
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function LandingPageDualLabelButtonSymbol({
+  label,
+  fontSize,
+  fontWeight,
+  fontFamily,
+  color,
+  symbolSpring
+}) {
   function _glow(color2, strength) {
     let strength0 = strength * 1;
     let strength1 = strength * 2;
@@ -49535,112 +49841,50 @@ function Button(props) {
     let shadow5 = `0 0 ${distance5} ${color2}`;
     return `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
   }
-  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-    children: jsx_dev_runtime16.jsxDEV(_Container, {
-      children: jsx_dev_runtime16.jsxDEV(_HiddenWrapper, {
-        children: [
-          jsx_dev_runtime16.jsxDEV(_Symbol, {}, undefined, false, undefined, this),
-          jsx_dev_runtime16.jsxDEV(_Label, {}, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this)
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Text, {
+      text: label,
+      style: {
+        fontSize,
+        fontWeight,
+        fontFamily,
+        color,
+        textShadow: _glow(color, 1),
+        ...symbolSpring
+      }
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-
-// src/public/component/page/landing/LandingPageHeroSection.tsx
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
-function LandingPageHeroSection() {
-  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: jsx_dev_runtime17.jsxDEV(Row, {
+function LandingPageDualLabelButtonLabel({
+  label,
+  fontSize,
+  fontWeight,
+  fontFamily,
+  color,
+  labelSpring
+}) {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(Text, {
+      text: label,
       style: {
-        width: RelativeUnit(100),
-        height: "auto",
-        paddingLeft: RelativeUnit(10),
-        paddingRight: RelativeUnit(10),
-        paddingTop: RelativeUnit(2.5),
-        paddingBottom: RelativeUnit(2.5)
-      },
-      children: [
-        jsx_dev_runtime17.jsxDEV(Col, {
-          style: {
-            gap: RelativeUnit(1)
-          },
-          children: [
-            jsx_dev_runtime17.jsxDEV(Col, {
-              children: [
-                jsx_dev_runtime17.jsxDEV(Row, {
-                  children: jsx_dev_runtime17.jsxDEV(Text, {
-                    text: "Shape the Decentralized Enterprise.",
-                    style: {
-                      fontSize: RelativeUnit(4.5)
-                    }
-                  }, undefined, false, undefined, this)
-                }, undefined, false, undefined, this),
-                jsx_dev_runtime17.jsxDEV(Row, {
-                  style: {
-                    width: "100%",
-                    height: "auto",
-                    justifyContent: "start"
-                  },
-                  children: jsx_dev_runtime17.jsxDEV(Text, {
-                    text: "Launch your space-proof code for your autonomous systems.",
-                    style: {
-                      fontSize: RelativeUnit(2)
-                    }
-                  }, undefined, false, undefined, this)
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this),
-            jsx_dev_runtime17.jsxDEV(Row, {
-              style: {
-                width: "100%",
-                justifyContent: "start",
-                gap: RelativeUnit(2)
-              },
-              children: [
-                jsx_dev_runtime17.jsxDEV(Button, {
-                  label: "Test Button",
-                  borderColor: DEEP_PURPLE.toString()
-                }, undefined, false, undefined, this),
-                jsx_dev_runtime17.jsxDEV(Button, {
-                  label: "Learn More",
-                  borderColor: GHOST_IRON.toString()
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
-        jsx_dev_runtime17.jsxDEV(Image, {
-          src: "../../../img/shape/Stripe.svg",
-          style: {
-            width: RelativeUnit(25),
-            aspectRatio: "1/1"
-          }
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-
-// src/public/component/page/landing/LandingPage.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
-function LandingPage() {
-  return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: jsx_dev_runtime18.jsxDEV(PageTemplate, {
-      content: jsx_dev_runtime18.jsxDEV(LandingPageHeroSection, {}, undefined, false, undefined, this),
-      background: jsx_dev_runtime18.jsxDEV(LandingPageBackground, {}, undefined, false, undefined, this)
+        fontSize,
+        fontWeight,
+        fontFamily,
+        color,
+        ...labelSpring
+      }
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 
 // src/public/component/page/explore/ExplorePage.tsx
-var import_react23 = __toESM(require_react(), 1);
 var import_react24 = __toESM(require_react(), 1);
+var import_react25 = __toESM(require_react(), 1);
 
 // src/public/component/layout/template/PagePreConnectTemplate.tsx
-var import_react21 = __toESM(require_react(), 1);
 var import_react22 = __toESM(require_react(), 1);
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react23 = __toESM(require_react(), 1);
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 function PagePreConnectTemplate({
   content,
   background
@@ -49648,15 +49892,15 @@ function PagePreConnectTemplate({
   const connectToYourWeb3WalletLoaderMessage = "Connect to your Web3 Wallet.";
   const changeYourNetworkToPolygonLoaderMessage = "Change your network to polygon.";
   const somethingWentWrongTryAgainLaterLoaderMessage = "Something went wrong. Try again later.";
-  const [loaderMessage, setLoaderMessage] = import_react22.useState(connectToYourWeb3WalletLoaderMessage);
-  const [content_, setContent] = import_react22.useState(() => jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this));
-  const [_, setPagePreConnectTemplate] = useMachine(import_react21.useMemo(() => createMachine({
+  const [loaderMessage, setLoaderMessage] = import_react23.useState(connectToYourWeb3WalletLoaderMessage);
+  const [content_, setContent] = import_react23.useState(() => jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {}, undefined, false, undefined, this));
+  const [_, setPagePreConnectTemplate] = useMachine(import_react22.useMemo(() => createMachine({
     initial: "loading",
     states: {
       loading: {
         entry: () => {
-          setContent(() => jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-            children: jsx_dev_runtime19.jsxDEV(PagePreConnectTemplateLoader, {
+          setContent(() => jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+            children: jsx_dev_runtime16.jsxDEV(PagePreConnectTemplateLoader, {
               message: loaderMessage
             }, undefined, false, undefined, this)
           }, undefined, false, undefined, this));
@@ -49719,8 +49963,8 @@ function PagePreConnectTemplate({
       }
     }
   }), [setLoaderMessage, setContent]));
-  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-    children: jsx_dev_runtime19.jsxDEV(PageTemplate, {
+  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+    children: jsx_dev_runtime16.jsxDEV(PageTemplate, {
       content: content_,
       background
     }, undefined, false, undefined, this)
@@ -49729,16 +49973,16 @@ function PagePreConnectTemplate({
 function PagePreConnectTemplateLoader({
   message
 }) {
-  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
     children: [
-      jsx_dev_runtime19.jsxDEV(Image, {
+      jsx_dev_runtime16.jsxDEV(Image, {
         src: "../../../img/animation/loader/Infinity.svg",
         style: {
           width: RelativeUnit(20),
           aspectRatio: "1/1"
         }
       }, undefined, false, undefined, this),
-      jsx_dev_runtime19.jsxDEV(Text, {
+      jsx_dev_runtime16.jsxDEV(Text, {
         text: message,
         style: {
           fontSize: RelativeUnit(2.5)
@@ -49750,60 +49994,60 @@ function PagePreConnectTemplateLoader({
 
 // src/public/component/page/explore/ExplorePage.tsx
 function ExplorePage() {
-  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
-    children: jsx_dev_runtime20.jsxDEV(PagePreConnectTemplate, {
-      content: jsx_dev_runtime20.jsxDEV(ExplorePageContent, {}, undefined, false, undefined, this),
-      background: jsx_dev_runtime20.jsxDEV(ExplorePageBackground, {}, undefined, false, undefined, this)
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(PagePreConnectTemplate, {
+      content: jsx_dev_runtime17.jsxDEV(ExplorePageContent, {}, undefined, false, undefined, this),
+      background: jsx_dev_runtime17.jsxDEV(ExplorePageBackground, {}, undefined, false, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 function ExplorePageContent() {
-  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
     children: [
-      jsx_dev_runtime20.jsxDEV(Row, {
+      jsx_dev_runtime17.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      jsx_dev_runtime20.jsxDEV(Row, {
+      jsx_dev_runtime17.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      jsx_dev_runtime20.jsxDEV(Row, {
+      jsx_dev_runtime17.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
@@ -49812,8 +50056,8 @@ function ExplorePageContent() {
   }, undefined, true, undefined, this);
 }
 function ExplorePageBackground() {
-  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
-    children: jsx_dev_runtime20.jsxDEV(Col, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(Col, {
       style: {
         width: "100%",
         height: "100%",
@@ -49825,8 +50069,8 @@ function ExplorePageBackground() {
 function ExplorePageCard({
   daoAddress
 }) {
-  const [slide, setSlide] = import_react23.useState();
-  const [dao, setDao] = import_react23.useState(new Dao({
+  const [slide, setSlide] = import_react24.useState();
+  const [dao, setDao] = import_react24.useState(new Dao({
     address: "",
     name: "",
     symbol: "",
@@ -49842,18 +50086,18 @@ function ExplorePageCard({
       slippage: 0
     })
   }));
-  const [daoName, setDaoName] = import_react23.useState("****");
-  const [daoSymbol, setDaoSymbol] = import_react23.useState("****");
-  const [daoRealTotalAssets, setDaoRealTotalAssets] = import_react23.useState(0);
-  const [daoTotalSupply, setDaoTotalSupply] = import_react23.useState(0);
-  const [daoQuote, setDaoQuote] = import_react23.useState(0);
-  const [daoQuote24HrPercentageChange, setDaoQuote24HrPercentageChange] = import_react23.useState(0);
-  const [_, setExplorePageCard] = useMachine(import_react24.useMemo(() => createMachine({
+  const [daoName, setDaoName] = import_react24.useState("****");
+  const [daoSymbol, setDaoSymbol] = import_react24.useState("****");
+  const [daoRealTotalAssets, setDaoRealTotalAssets] = import_react24.useState(0);
+  const [daoTotalSupply, setDaoTotalSupply] = import_react24.useState(0);
+  const [daoQuote, setDaoQuote] = import_react24.useState(0);
+  const [daoQuote24HrPercentageChange, setDaoQuote24HrPercentageChange] = import_react24.useState(0);
+  const [_, setExplorePageCard] = useMachine(import_react25.useMemo(() => createMachine({
     initial: "loading",
     states: {
       loading: {
         entry: () => {
-          setSlide(jsx_dev_runtime20.jsxDEV(ExplorePageCardLoaderSlide, {}, undefined, false, undefined, this));
+          setSlide(jsx_dev_runtime17.jsxDEV(ExplorePageCardLoaderSlide, {}, undefined, false, undefined, this));
           (async () => {
             const daoName2 = await query({
               to: daoAddress,
@@ -49914,8 +50158,8 @@ function ExplorePageCard({
       },
       idle: {
         entry: () => {
-          return setSlide(jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
-            children: jsx_dev_runtime20.jsxDEV(ExplorePageCardIdleSlide, {
+          return setSlide(jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+            children: jsx_dev_runtime17.jsxDEV(ExplorePageCardIdleSlide, {
               daoAddress,
               daoName,
               daoSymbol,
@@ -49936,8 +50180,8 @@ function ExplorePageCard({
       executingMintTransaction: {}
     }
   }), [setSlide, setDaoName, setDaoSymbol, setDaoRealTotalAssets, setDaoTotalSupply, setDaoQuote, setDaoQuote24HrPercentageChange]));
-  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
-    children: jsx_dev_runtime20.jsxDEV(Col, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(Col, {
       style: {
         width: RelativeUnit(25),
         aspectRatio: "2/1",
@@ -49955,8 +50199,8 @@ function ExplorePageCard({
   }, undefined, false, undefined, this);
 }
 function ExplorePageCardLoaderSlide() {
-  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
-    children: jsx_dev_runtime20.jsxDEV(Image, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(Image, {
       src: "../../../img/animation/loader/Infinity.svg",
       style: {
         width: RelativeUnit(5),
@@ -49974,9 +50218,9 @@ function ExplorePageCardIdleSlide({
   daoQuote,
   daoQuote24HrPercentageChange
 }) {
-  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {}, undefined, false, undefined, this);
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {}, undefined, false, undefined, this);
 }
-var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 
 class Quote {
   best;
@@ -50019,11 +50263,11 @@ class Dao {
 
 // src/public/lib/react/Renderable.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root) {
-    return client.createRoot(root).render(jsx_dev_runtime21.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime18.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   }
@@ -50031,14 +50275,14 @@ function render(routes) {
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime22.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime19.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
 }, {
   path: "/explore",
-  element: jsx_dev_runtime22.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime19.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
 }, {
   path: "*",
-  element: jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this)
 }]);

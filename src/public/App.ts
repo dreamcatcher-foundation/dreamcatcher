@@ -41,6 +41,7 @@ import Express from "express";
         .get("/", async (request, response) => response.status(200).sendFile(join(__dirname, "App.html")))
         
         .get("/data", async (request, response) => {
+            
             response
                 .status(200)
                 .send({

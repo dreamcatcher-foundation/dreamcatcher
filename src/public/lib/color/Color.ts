@@ -3,10 +3,10 @@ import { Err } from "@lib/Result";
 import { EmptyOk } from "@lib/Result";
 
 export interface ColorType {
-    toString(): string;
-    toHex(): Hex;
-    toRgb(): Rgb;
-    toRgba(): Rgba;
+    toString() : string;
+    toHex() : Hex;
+    toRgb() : Rgb;
+    toRgba() : Rgba;
 }
 
 export type HexCharSetCheckResult
@@ -32,7 +32,7 @@ export type HexConstructorErr
 
 export interface Hex extends ColorType {}
 
-export function Hex(_string: string): HexConstructorResult {
+export function Hex(_string: string) : HexConstructorResult {
     const _VALID_CHARS: Readonly<string[]> = [
         "0", "1", "2", "3", "4", 
         "5", "6", "7", "8", "9", 
@@ -40,7 +40,7 @@ export function Hex(_string: string): HexConstructorResult {
         "f", "A", "B", "C", "D", 
         "E", "F"
     ];
-    function _checkCharSet(string: string): HexCharSetCheckResult {
+    function _checkCharSet(string: string) : HexCharSetCheckResult {
         for (let i = 1; i < string.length; i++) {
             let char: string = string[i];
             let hasValidChar: boolean = false;
@@ -61,19 +61,19 @@ export function Hex(_string: string): HexConstructorResult {
     function toString(): string {
         return _string;
     }
-    function toHex(): Hex {
+    function toHex() : Hex {
         /// cannot fail because initial state is checked at construction and is immutable
         return Hex(_string).unwrap();
     }
-    function toRgb(): Rgb {
-        let value: string = _string.slice(1);
-        let r: bigint = BigInt(parseInt(value.slice(0, 2), 16));
-        let g: bigint = BigInt(parseInt(value.slice(2, 4), 16));
-        let b: bigint = BigInt(parseInt(value.slice(4, 6), 16));
+    function toRgb() : Rgb {
+        let value : string = _string.slice(1);
+        let r : bigint = BigInt(parseInt(value.slice(0, 2), 16));
+        let g : bigint = BigInt(parseInt(value.slice(2, 4), 16));
+        let b : bigint = BigInt(parseInt(value.slice(4, 6), 16));
         /// cannot fail because initial state is checked at construction and is immutable
         return Rgb(r, g, b).unwrap();
     }
-    function toRgba(): Rgba {
+    function toRgba() : Rgba {
         /// cannot fail because initial state is checked at construction and is immutable
         return Rgba(toRgb(), 1).unwrap();
     }
