@@ -27095,482 +27095,13 @@ function Image(props) {
   }, undefined, false, undefined, this);
 }
 
-// node_modules/ts-results/esm/utils.js
-function toString(val) {
-  var value = String(val);
-  if (value === "[object Object]") {
-    try {
-      value = JSON.stringify(val);
-    } catch (_a) {
-    }
-  }
-  return value;
+// src/public/component/text/TextConfiguration.tsx
+class TextConfiguration {
+  static fontSize = "";
+  static fontWeight = "normal";
+  static fontFamily = "satoshiRegular";
+  static color = "";
 }
-
-// node_modules/ts-results/esm/option.js
-var NoneImpl = function() {
-  function NoneImpl2() {
-    this.some = false;
-    this.none = true;
-  }
-  NoneImpl2.prototype[Symbol.iterator] = function() {
-    return {
-      next: function() {
-        return { done: true, value: undefined };
-      }
-    };
-  };
-  NoneImpl2.prototype.unwrapOr = function(val) {
-    return val;
-  };
-  NoneImpl2.prototype.expect = function(msg) {
-    throw new Error("" + msg);
-  };
-  NoneImpl2.prototype.unwrap = function() {
-    throw new Error("Tried to unwrap None");
-  };
-  NoneImpl2.prototype.map = function(_mapper) {
-    return this;
-  };
-  NoneImpl2.prototype.andThen = function(op) {
-    return this;
-  };
-  NoneImpl2.prototype.toResult = function(error) {
-    return Err(error);
-  };
-  NoneImpl2.prototype.toString = function() {
-    return "None";
-  };
-  return NoneImpl2;
-}();
-var None = new NoneImpl;
-Object.freeze(None);
-var SomeImpl = function() {
-  function SomeImpl2(val) {
-    if (!(this instanceof SomeImpl2)) {
-      return new SomeImpl2(val);
-    }
-    this.some = true;
-    this.none = false;
-    this.val = val;
-  }
-  SomeImpl2.prototype[Symbol.iterator] = function() {
-    var obj = Object(this.val);
-    return Symbol.iterator in obj ? obj[Symbol.iterator]() : {
-      next: function() {
-        return { done: true, value: undefined };
-      }
-    };
-  };
-  SomeImpl2.prototype.unwrapOr = function(_val) {
-    return this.val;
-  };
-  SomeImpl2.prototype.expect = function(_msg) {
-    return this.val;
-  };
-  SomeImpl2.prototype.unwrap = function() {
-    return this.val;
-  };
-  SomeImpl2.prototype.map = function(mapper) {
-    return Some(mapper(this.val));
-  };
-  SomeImpl2.prototype.andThen = function(mapper) {
-    return mapper(this.val);
-  };
-  SomeImpl2.prototype.toResult = function(error) {
-    return Ok(this.val);
-  };
-  SomeImpl2.prototype.safeUnwrap = function() {
-    return this.val;
-  };
-  SomeImpl2.prototype.toString = function() {
-    return "Some(" + toString(this.val) + ")";
-  };
-  SomeImpl2.EMPTY = new SomeImpl2(undefined);
-  return SomeImpl2;
-}();
-var Some = SomeImpl;
-var Option;
-(function(Option2) {
-  function all() {
-    var options = [];
-    for (var _i = 0;_i < arguments.length; _i++) {
-      options[_i] = arguments[_i];
-    }
-    var someOption = [];
-    for (var _a = 0, options_1 = options;_a < options_1.length; _a++) {
-      var option = options_1[_a];
-      if (option.some) {
-        someOption.push(option.val);
-      } else {
-        return option;
-      }
-    }
-    return Some(someOption);
-  }
-  Option2.all = all;
-  function any() {
-    var options = [];
-    for (var _i = 0;_i < arguments.length; _i++) {
-      options[_i] = arguments[_i];
-    }
-    for (var _a = 0, options_2 = options;_a < options_2.length; _a++) {
-      var option = options_2[_a];
-      if (option.some) {
-        return option;
-      } else {
-        return option;
-      }
-    }
-    return None;
-  }
-  Option2.any = any;
-  function isOption(value) {
-    return value instanceof Some || value === None;
-  }
-  Option2.isOption = isOption;
-})(Option || (Option = {}));
-
-// node_modules/ts-results/esm/result.js
-var ErrImpl = function() {
-  function ErrImpl2(val) {
-    if (!(this instanceof ErrImpl2)) {
-      return new ErrImpl2(val);
-    }
-    this.ok = false;
-    this.err = true;
-    this.val = val;
-    var stackLines = new Error().stack.split("\n").slice(2);
-    if (stackLines && stackLines.length > 0 && stackLines[0].includes("ErrImpl")) {
-      stackLines.shift();
-    }
-    this._stack = stackLines.join("\n");
-  }
-  ErrImpl2.prototype[Symbol.iterator] = function() {
-    return {
-      next: function() {
-        return { done: true, value: undefined };
-      }
-    };
-  };
-  ErrImpl2.prototype.else = function(val) {
-    return val;
-  };
-  ErrImpl2.prototype.unwrapOr = function(val) {
-    return val;
-  };
-  ErrImpl2.prototype.expect = function(msg) {
-    throw new Error(msg + " - Error: " + toString(this.val) + "\n" + this._stack);
-  };
-  ErrImpl2.prototype.unwrap = function() {
-    throw new Error("Tried to unwrap Error: " + toString(this.val) + "\n" + this._stack);
-  };
-  ErrImpl2.prototype.map = function(_mapper) {
-    return this;
-  };
-  ErrImpl2.prototype.andThen = function(op) {
-    return this;
-  };
-  ErrImpl2.prototype.mapErr = function(mapper) {
-    return new Err(mapper(this.val));
-  };
-  ErrImpl2.prototype.toOption = function() {
-    return None;
-  };
-  ErrImpl2.prototype.toString = function() {
-    return "Err(" + toString(this.val) + ")";
-  };
-  Object.defineProperty(ErrImpl2.prototype, "stack", {
-    get: function() {
-      return this + "\n" + this._stack;
-    },
-    enumerable: false,
-    configurable: true
-  });
-  ErrImpl2.EMPTY = new ErrImpl2(undefined);
-  return ErrImpl2;
-}();
-var Err = ErrImpl;
-var OkImpl = function() {
-  function OkImpl2(val) {
-    if (!(this instanceof OkImpl2)) {
-      return new OkImpl2(val);
-    }
-    this.ok = true;
-    this.err = false;
-    this.val = val;
-  }
-  OkImpl2.prototype[Symbol.iterator] = function() {
-    var obj = Object(this.val);
-    return Symbol.iterator in obj ? obj[Symbol.iterator]() : {
-      next: function() {
-        return { done: true, value: undefined };
-      }
-    };
-  };
-  OkImpl2.prototype.else = function(_val) {
-    return this.val;
-  };
-  OkImpl2.prototype.unwrapOr = function(_val) {
-    return this.val;
-  };
-  OkImpl2.prototype.expect = function(_msg) {
-    return this.val;
-  };
-  OkImpl2.prototype.unwrap = function() {
-    return this.val;
-  };
-  OkImpl2.prototype.map = function(mapper) {
-    return new Ok(mapper(this.val));
-  };
-  OkImpl2.prototype.andThen = function(mapper) {
-    return mapper(this.val);
-  };
-  OkImpl2.prototype.mapErr = function(_mapper) {
-    return this;
-  };
-  OkImpl2.prototype.toOption = function() {
-    return Some(this.val);
-  };
-  OkImpl2.prototype.safeUnwrap = function() {
-    return this.val;
-  };
-  OkImpl2.prototype.toString = function() {
-    return "Ok(" + toString(this.val) + ")";
-  };
-  OkImpl2.EMPTY = new OkImpl2(undefined);
-  return OkImpl2;
-}();
-var Ok = OkImpl;
-var Result;
-(function(Result2) {
-  function all() {
-    var results = [];
-    for (var _i = 0;_i < arguments.length; _i++) {
-      results[_i] = arguments[_i];
-    }
-    var okResult = [];
-    for (var _a = 0, results_1 = results;_a < results_1.length; _a++) {
-      var result2 = results_1[_a];
-      if (result2.ok) {
-        okResult.push(result2.val);
-      } else {
-        return result2;
-      }
-    }
-    return new Ok(okResult);
-  }
-  Result2.all = all;
-  function any() {
-    var results = [];
-    for (var _i = 0;_i < arguments.length; _i++) {
-      results[_i] = arguments[_i];
-    }
-    var errResult = [];
-    for (var _a = 0, results_2 = results;_a < results_2.length; _a++) {
-      var result2 = results_2[_a];
-      if (result2.ok) {
-        return result2;
-      } else {
-        errResult.push(result2.val);
-      }
-    }
-    return new Err(errResult);
-  }
-  Result2.any = any;
-  function wrap(op) {
-    try {
-      return new Ok(op());
-    } catch (e) {
-      return new Err(e);
-    }
-  }
-  Result2.wrap = wrap;
-  function wrapAsync(op) {
-    try {
-      return op().then(function(val) {
-        return new Ok(val);
-      }).catch(function(e) {
-        return new Err(e);
-      });
-    } catch (e) {
-      return Promise.resolve(new Err(e));
-    }
-  }
-  Result2.wrapAsync = wrapAsync;
-  function isResult(val) {
-    return val instanceof Err || val instanceof Ok;
-  }
-  Result2.isResult = isResult;
-})(Result || (Result = {}));
-// src/public/lib/result/Result.ts
-var { EMPTY: EmptyOk } = Ok;
-
-// src/public/lib/color/Color.ts
-function Hex(_string) {
-  const _VALID_CHARS = [
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F"
-  ];
-  function _checkCharSet(string) {
-    for (let i = 1;i < string.length; i++) {
-      let char = string[i];
-      let hasValidChar = false;
-      for (let x = 0;x < _VALID_CHARS.length; x++) {
-        let validChar = _VALID_CHARS[x];
-        if (char === validChar)
-          hasValidChar = true;
-      }
-      if (!hasValidChar)
-        return Err("invalidCharSet");
-    }
-    return EmptyOk;
-  }
-  if (_string.length < 7)
-    return Err("stringLengthTooShort");
-  if (_string.length > 7)
-    return Err("stringLengthTooLong");
-  if (_string.startsWith("#") === false)
-    return Err("stringMissingHash");
-  let charSetCheck = _checkCharSet(_string);
-  if (charSetCheck.err)
-    return charSetCheck;
-  return Ok({ toString: toString2, toHex, toRgb, toRgba });
-  function toString2() {
-    return _string;
-  }
-  function toHex() {
-    return Hex(_string).unwrap();
-  }
-  function toRgb() {
-    let value = _string.slice(1);
-    let r = BigInt(parseInt(value.slice(0, 2), 16));
-    let g = BigInt(parseInt(value.slice(2, 4), 16));
-    let b = BigInt(parseInt(value.slice(4, 6), 16));
-    return Rgb(r, g, b).unwrap();
-  }
-  function toRgba() {
-    return Rgba(toRgb(), 1).unwrap();
-  }
-}
-function Rgb(_r, _g, _b) {
-  const _MIN_RGB_VALUE = 0n;
-  const _MAX_RGB_VALUE = 255n;
-  if (_r < _MIN_RGB_VALUE)
-    return Err("valueRIsBelowMinRgbValue");
-  if (_g < _MIN_RGB_VALUE)
-    return Err("valueGIsBelowMinRgbValue");
-  if (_b < _MIN_RGB_VALUE)
-    return Err("valueBIsBelowMinRgbValue");
-  if (_r > _MAX_RGB_VALUE)
-    return Err("valueRIsAboveMaxRgbValue");
-  if (_g > _MAX_RGB_VALUE)
-    return Err("valueGIsAboveMaxRgbValue");
-  if (_b > _MAX_RGB_VALUE)
-    return Err("valueBIsAboveMaxRgbValue");
-  return Ok({ r, g, b, toString: toString2, toHex, toRgb, toRgba });
-  function r() {
-    return _r;
-  }
-  function g() {
-    return _g;
-  }
-  function b() {
-    return _b;
-  }
-  function toString2() {
-    return `rgb(${r()}, ${g()}, ${b()})`;
-  }
-  function toHex() {
-    let hex0 = r().toString(16);
-    let hex1 = g().toString(16);
-    let hex2 = b().toString(16);
-    hex0 = hex0.length === 1 ? "0" + hex0 : hex0;
-    hex1 = hex1.length === 1 ? "0" + hex1 : hex1;
-    hex2 = hex2.length === 1 ? "0" + hex2 : hex2;
-    let hex = Hex(`${hex0}${hex1}${hex2}`);
-    return hex.unwrap();
-  }
-  function toRgb() {
-    return Rgb(r(), g(), b()).unwrap();
-  }
-  function toRgba() {
-    return Rgba(toRgb(), 1).unwrap();
-  }
-}
-function Rgba(_rgb, _a) {
-  const _MIN_OPACITY_VALUE = 0;
-  const _MAX_OPACITY_VALUE = 1;
-  if (_a < _MIN_OPACITY_VALUE)
-    return Err("valueAIsBelowMinOpacityValue");
-  if (_a > _MAX_OPACITY_VALUE)
-    return Err("valueAIsAboveMaxOpacityValue");
-  return Ok({ r, g, b, a, toString: toString2, toHex, toRgb, toRgba });
-  function r() {
-    return _rgb.r();
-  }
-  function g() {
-    return _rgb.g();
-  }
-  function b() {
-    return _rgb.b();
-  }
-  function a() {
-    return _a;
-  }
-  function toString2() {
-    return `rgba(${r()}, ${g()}, ${b()}, ${a()})`;
-  }
-  function toHex() {
-    let hex0 = r().toString(16);
-    let hex1 = g().toString(16);
-    let hex2 = b().toString(16);
-    hex0 = hex0.length === 1 ? "0" + hex0 : hex0;
-    hex1 = hex1.length === 1 ? "0" + hex1 : hex1;
-    hex2 = hex2.length === 1 ? "0" + hex2 : hex2;
-    let hex = Hex(`${hex0}${hex1}${hex2}`);
-    return hex.unwrap();
-  }
-  function toRgb() {
-    return _rgb.toRgb();
-  }
-  function toRgba() {
-    return Rgba(toRgb(), a()).unwrap();
-  }
-}
-
-// src/public/component/config/ColorPalette.ts
-var GHOST_IRON = Hex("#2D2D2D").unwrap();
-var SOFT_OBSIDIAN = Hex("#171717").unwrap();
-var DARK_OBSIDIAN = Hex("#111111").unwrap();
-var OBSIDIAN = Hex("#141414").unwrap();
-var TITANIUM = Hex("#D6D5D4").unwrap();
-var TEAL = Hex("#00FFAB").unwrap();
-var PINK = Hex("#FF00FB").unwrap();
-var BLUE = Hex("#0652FE").unwrap();
-var RED = Hex("#FF3200").unwrap();
-var DEEP_PURPLE = Hex("#615FFF").unwrap();
-var DEEP_PURPLE_GRADIENT = [DEEP_PURPLE, Hex("#9662FF").unwrap()];
 
 // src/public/component/text/Text.tsx
 var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
@@ -27579,10 +27110,10 @@ function Text(props) {
   return jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
     children: jsx_dev_runtime6.jsxDEV(Row, {
       style: {
-        fontSize: RelativeUnit(1),
-        fontWeight: "bold",
-        fontFamily: "satoshiRegular",
-        color: TITANIUM.toString(),
+        fontSize: TextConfiguration.fontSize,
+        fontWeight: TextConfiguration.fontWeight,
+        fontFamily: TextConfiguration.fontFamily,
+        color: TextConfiguration.color,
         ...style ?? {}
       },
       ...more,
@@ -27976,12 +27507,12 @@ var explodeOptionalSegments = function(path) {
     return isOptional ? [required, ""] : [required];
   }
   let restExploded = explodeOptionalSegments(rest.join("/"));
-  let result3 = [];
-  result3.push(...restExploded.map((subpath) => subpath === "" ? required : [required, subpath].join("/")));
+  let result = [];
+  result.push(...restExploded.map((subpath) => subpath === "" ? required : [required, subpath].join("/")));
   if (isOptional) {
-    result3.push(...restExploded);
+    result.push(...restExploded);
   }
-  return result3.map((exploded) => path.startsWith("/") && exploded === "" ? "/" : exploded);
+  return result.map((exploded) => path.startsWith("/") && exploded === "" ? "/" : exploded);
 };
 var rankRouteBranches = function(branches) {
   branches.sort((a, b) => a.score !== b.score ? b.score - a.score : compareIndexes(a.routesMeta.map((meta) => meta.childrenIndex), b.routesMeta.map((meta) => meta.childrenIndex)));
@@ -28679,10 +28210,10 @@ var createRouter = function(init) {
     }, {
       flushSync: opts.flushSync === true
     });
-    let result3;
+    let result;
     let actionMatch = getTargetMatch(matches, location);
     if (!actionMatch.route.action && !actionMatch.route.lazy) {
-      result3 = {
+      result = {
         type: ResultType.error,
         error: getInternalRouterError(405, {
           method: request.method,
@@ -28691,21 +28222,21 @@ var createRouter = function(init) {
         })
       };
     } else {
-      result3 = await callLoaderOrAction("action", request, actionMatch, matches, manifest, mapRouteProperties, basename, future.v7_relativeSplatPath);
+      result = await callLoaderOrAction("action", request, actionMatch, matches, manifest, mapRouteProperties, basename, future.v7_relativeSplatPath);
       if (request.signal.aborted) {
         return {
           shortCircuited: true
         };
       }
     }
-    if (isRedirectResult(result3)) {
+    if (isRedirectResult(result)) {
       let replace;
       if (opts && opts.replace != null) {
         replace = opts.replace;
       } else {
-        replace = result3.location === state.location.pathname + state.location.search;
+        replace = result.location === state.location.pathname + state.location.search;
       }
-      await startRedirectNavigation(state, result3, {
+      await startRedirectNavigation(state, result, {
         submission,
         replace
       });
@@ -28713,7 +28244,7 @@ var createRouter = function(init) {
         shortCircuited: true
       };
     }
-    if (isErrorResult(result3)) {
+    if (isErrorResult(result)) {
       let boundaryMatch = findNearestBoundary(matches, actionMatch.route.id);
       if ((opts && opts.replace) !== true) {
         pendingAction = Action.Push;
@@ -28721,18 +28252,18 @@ var createRouter = function(init) {
       return {
         pendingActionData: {},
         pendingActionError: {
-          [boundaryMatch.route.id]: result3.error
+          [boundaryMatch.route.id]: result.error
         }
       };
     }
-    if (isDeferredResult(result3)) {
+    if (isDeferredResult(result)) {
       throw getInternalRouterError(400, {
         type: "defer-action"
       });
     }
     return {
       pendingActionData: {
-        [actionMatch.route.id]: result3.data
+        [actionMatch.route.id]: result.data
       }
     };
   }
@@ -29034,9 +28565,9 @@ var createRouter = function(init) {
     let fetchRequest = createClientSideRequest(init.history, path, abortController.signal);
     fetchControllers.set(key, abortController);
     let originatingLoadId = incrementingLoadId;
-    let result3 = await callLoaderOrAction("loader", fetchRequest, match, matches, manifest, mapRouteProperties, basename, future.v7_relativeSplatPath);
-    if (isDeferredResult(result3)) {
-      result3 = await resolveDeferredData(result3, fetchRequest.signal, true) || result3;
+    let result = await callLoaderOrAction("loader", fetchRequest, match, matches, manifest, mapRouteProperties, basename, future.v7_relativeSplatPath);
+    if (isDeferredResult(result)) {
+      result = await resolveDeferredData(result, fetchRequest.signal, true) || result;
     }
     if (fetchControllers.get(key) === abortController) {
       fetchControllers.delete(key);
@@ -29048,22 +28579,22 @@ var createRouter = function(init) {
       updateFetcherState(key, getDoneFetcher(undefined));
       return;
     }
-    if (isRedirectResult(result3)) {
+    if (isRedirectResult(result)) {
       if (pendingNavigationLoadId > originatingLoadId) {
         updateFetcherState(key, getDoneFetcher(undefined));
         return;
       } else {
         fetchRedirectIds.add(key);
-        await startRedirectNavigation(state, result3);
+        await startRedirectNavigation(state, result);
         return;
       }
     }
-    if (isErrorResult(result3)) {
-      setFetcherError(key, routeId, result3.error);
+    if (isErrorResult(result)) {
+      setFetcherError(key, routeId, result.error);
       return;
     }
-    invariant(!isDeferredResult(result3), "Unhandled fetcher deferred data");
-    updateFetcherState(key, getDoneFetcher(result3.data));
+    invariant(!isDeferredResult(result), "Unhandled fetcher deferred data");
+    updateFetcherState(key, getDoneFetcher(result.data));
   }
   async function startRedirectNavigation(state2, redirect, _temp2) {
     let {
@@ -29687,7 +29218,7 @@ async function callLoaderOrAction(type, request, match, matches, manifest, mapRo
     opts = {};
   }
   let resultType;
-  let result3;
+  let result;
   let onReject;
   let runHandler = (handler) => {
     let reject;
@@ -29714,12 +29245,12 @@ async function callLoaderOrAction(type, request, match, matches, manifest, mapRo
         if (handlerError) {
           throw handlerError;
         }
-        result3 = values[0];
+        result = values[0];
       } else {
         await loadLazyRouteModule(match.route, mapRouteProperties, manifest);
         handler = match.route[type];
         if (handler) {
-          result3 = await runHandler(handler);
+          result = await runHandler(handler);
         } else if (type === "action") {
           let url = new URL(request.url);
           let pathname = url.pathname + url.search;
@@ -29742,21 +29273,21 @@ async function callLoaderOrAction(type, request, match, matches, manifest, mapRo
         pathname
       });
     } else {
-      result3 = await runHandler(handler);
+      result = await runHandler(handler);
     }
-    invariant(result3 !== undefined, "You defined " + (type === "action" ? "an action" : "a loader") + " for route " + ("\"" + match.route.id + "\" but didn't return anything from your `" + type + "` function. Please return a value or `null`."));
+    invariant(result !== undefined, "You defined " + (type === "action" ? "an action" : "a loader") + " for route " + ("\"" + match.route.id + "\" but didn't return anything from your `" + type + "` function. Please return a value or `null`."));
   } catch (e) {
     resultType = ResultType.error;
-    result3 = e;
+    result = e;
   } finally {
     if (onReject) {
       request.signal.removeEventListener("abort", onReject);
     }
   }
-  if (isResponse(result3)) {
-    let status = result3.status;
+  if (isResponse(result)) {
+    let status = result.status;
     if (redirectStatusCodes.has(status)) {
-      let location = result3.headers.get("Location");
+      let location = result.headers.get("Location");
       invariant(location, "Redirects returned/thrown from loaders/actions must have a Location header");
       if (!ABSOLUTE_URL_REGEX.test(location)) {
         location = normalizeTo(new URL(request.url), matches.slice(0, matches.indexOf(match) + 1), basename, true, location, v7_relativeSplatPath);
@@ -29769,35 +29300,35 @@ async function callLoaderOrAction(type, request, match, matches, manifest, mapRo
         }
       }
       if (opts.isStaticRequest) {
-        result3.headers.set("Location", location);
-        throw result3;
+        result.headers.set("Location", location);
+        throw result;
       }
       return {
         type: ResultType.redirect,
         status,
         location,
-        revalidate: result3.headers.get("X-Remix-Revalidate") !== null,
-        reloadDocument: result3.headers.get("X-Remix-Reload-Document") !== null
+        revalidate: result.headers.get("X-Remix-Revalidate") !== null,
+        reloadDocument: result.headers.get("X-Remix-Reload-Document") !== null
       };
     }
     if (opts.isRouteRequest) {
       let queryRouteResponse = {
         type: resultType === ResultType.error ? ResultType.error : ResultType.data,
-        response: result3
+        response: result
       };
       throw queryRouteResponse;
     }
     let data;
     try {
-      let contentType = result3.headers.get("Content-Type");
+      let contentType = result.headers.get("Content-Type");
       if (contentType && /\bapplication\/json\b/.test(contentType)) {
-        if (result3.body == null) {
+        if (result.body == null) {
           data = null;
         } else {
-          data = await result3.json();
+          data = await result.json();
         }
       } else {
-        data = await result3.text();
+        data = await result.text();
       }
     } catch (e) {
       return {
@@ -29808,35 +29339,35 @@ async function callLoaderOrAction(type, request, match, matches, manifest, mapRo
     if (resultType === ResultType.error) {
       return {
         type: resultType,
-        error: new ErrorResponseImpl(status, result3.statusText, data),
-        headers: result3.headers
+        error: new ErrorResponseImpl(status, result.statusText, data),
+        headers: result.headers
       };
     }
     return {
       type: ResultType.data,
       data,
-      statusCode: result3.status,
-      headers: result3.headers
+      statusCode: result.status,
+      headers: result.headers
     };
   }
   if (resultType === ResultType.error) {
     return {
       type: resultType,
-      error: result3
+      error: result
     };
   }
-  if (isDeferredData(result3)) {
+  if (isDeferredData(result)) {
     var _result$init, _result$init2;
     return {
       type: ResultType.deferred,
-      deferredData: result3,
-      statusCode: (_result$init = result3.init) == null ? undefined : _result$init.status,
-      headers: ((_result$init2 = result3.init) == null ? undefined : _result$init2.headers) && new Headers(result3.init.headers)
+      deferredData: result,
+      statusCode: (_result$init = result.init) == null ? undefined : _result$init.status,
+      headers: ((_result$init2 = result.init) == null ? undefined : _result$init2.headers) && new Headers(result.init.headers)
     };
   }
   return {
     type: ResultType.data,
-    data: result3
+    data: result
   };
 }
 var createClientSideRequest = function(history, location, signal, submission) {
@@ -29885,12 +29416,12 @@ var processRouteLoaderData = function(matches, matchesToLoad, results, pendingEr
   let statusCode;
   let foundError = false;
   let loaderHeaders = {};
-  results.forEach((result3, index) => {
+  results.forEach((result, index) => {
     let id = matchesToLoad[index].route.id;
-    invariant(!isRedirectResult(result3), "Cannot handle redirect results in processLoaderData");
-    if (isErrorResult(result3)) {
+    invariant(!isRedirectResult(result), "Cannot handle redirect results in processLoaderData");
+    if (isErrorResult(result)) {
       let boundaryMatch = findNearestBoundary(matches, id);
-      let error = result3.error;
+      let error = result.error;
       if (pendingError) {
         error = Object.values(pendingError)[0];
         pendingError = undefined;
@@ -29902,23 +29433,23 @@ var processRouteLoaderData = function(matches, matchesToLoad, results, pendingEr
       loaderData[id] = undefined;
       if (!foundError) {
         foundError = true;
-        statusCode = isRouteErrorResponse(result3.error) ? result3.error.status : 500;
+        statusCode = isRouteErrorResponse(result.error) ? result.error.status : 500;
       }
-      if (result3.headers) {
-        loaderHeaders[id] = result3.headers;
+      if (result.headers) {
+        loaderHeaders[id] = result.headers;
       }
     } else {
-      if (isDeferredResult(result3)) {
-        activeDeferreds.set(id, result3.deferredData);
-        loaderData[id] = result3.deferredData.data;
+      if (isDeferredResult(result)) {
+        activeDeferreds.set(id, result.deferredData);
+        loaderData[id] = result.deferredData.data;
       } else {
-        loaderData[id] = result3.data;
+        loaderData[id] = result.data;
       }
-      if (result3.statusCode != null && result3.statusCode !== 200 && !foundError) {
-        statusCode = result3.statusCode;
+      if (result.statusCode != null && result.statusCode !== 200 && !foundError) {
+        statusCode = result.statusCode;
       }
-      if (result3.headers) {
-        loaderHeaders[id] = result3.headers;
+      if (result.headers) {
+        loaderHeaders[id] = result.headers;
       }
     }
   });
@@ -29945,23 +29476,23 @@ var processLoaderData = function(state, matches, matchesToLoad, results, pending
       controller
     } = revalidatingFetchers[index];
     invariant(fetcherResults !== undefined && fetcherResults[index] !== undefined, "Did not find corresponding fetcher result");
-    let result3 = fetcherResults[index];
+    let result = fetcherResults[index];
     if (controller && controller.signal.aborted) {
       continue;
-    } else if (isErrorResult(result3)) {
+    } else if (isErrorResult(result)) {
       let boundaryMatch = findNearestBoundary(state.matches, match == null ? undefined : match.route.id);
       if (!(errors && errors[boundaryMatch.route.id])) {
         errors = _extends({}, errors, {
-          [boundaryMatch.route.id]: result3.error
+          [boundaryMatch.route.id]: result.error
         });
       }
       state.fetchers.delete(key);
-    } else if (isRedirectResult(result3)) {
+    } else if (isRedirectResult(result)) {
       invariant(false, "Unhandled fetcher revalidation redirect");
-    } else if (isDeferredResult(result3)) {
+    } else if (isDeferredResult(result)) {
       invariant(false, "Unhandled fetcher deferred data");
     } else {
-      let doneFetcher = getDoneFetcher(result3.data);
+      let doneFetcher = getDoneFetcher(result.data);
       state.fetchers.set(key, doneFetcher);
     }
   }
@@ -30041,10 +29572,10 @@ var getInternalRouterError = function(status, _temp5) {
 };
 var findRedirect = function(results) {
   for (let i = results.length - 1;i >= 0; i--) {
-    let result3 = results[i];
-    if (isRedirectResult(result3)) {
+    let result = results[i];
+    if (isRedirectResult(result)) {
       return {
-        result: result3,
+        result,
         idx: i
       };
     }
@@ -30069,14 +29600,14 @@ var isHashChangeOnly = function(a, b) {
   }
   return false;
 };
-var isDeferredResult = function(result3) {
-  return result3.type === ResultType.deferred;
+var isDeferredResult = function(result) {
+  return result.type === ResultType.deferred;
 };
-var isErrorResult = function(result3) {
-  return result3.type === ResultType.error;
+var isErrorResult = function(result) {
+  return result.type === ResultType.error;
 };
-var isRedirectResult = function(result3) {
-  return (result3 && result3.type) === ResultType.redirect;
+var isRedirectResult = function(result) {
+  return (result && result.type) === ResultType.redirect;
 };
 var isDeferredData = function(value) {
   let deferred = value;
@@ -30093,29 +29624,29 @@ var isMutationMethod = function(method) {
 };
 async function resolveDeferredResults(currentMatches, matchesToLoad, results, signals, isFetcher, currentLoaderData) {
   for (let index = 0;index < results.length; index++) {
-    let result3 = results[index];
+    let result = results[index];
     let match = matchesToLoad[index];
     if (!match) {
       continue;
     }
     let currentMatch = currentMatches.find((m) => m.route.id === match.route.id);
     let isRevalidatingLoader = currentMatch != null && !isNewRouteInstance(currentMatch, match) && (currentLoaderData && currentLoaderData[match.route.id]) !== undefined;
-    if (isDeferredResult(result3) && (isFetcher || isRevalidatingLoader)) {
+    if (isDeferredResult(result) && (isFetcher || isRevalidatingLoader)) {
       let signal = signals[index];
       invariant(signal, "Expected an AbortSignal for revalidating fetcher deferred result");
-      await resolveDeferredData(result3, signal, isFetcher).then((result4) => {
-        if (result4) {
-          results[index] = result4 || results[index];
+      await resolveDeferredData(result, signal, isFetcher).then((result2) => {
+        if (result2) {
+          results[index] = result2 || results[index];
         }
       });
     }
   }
 }
-async function resolveDeferredData(result3, signal, unwrap) {
+async function resolveDeferredData(result, signal, unwrap) {
   if (unwrap === undefined) {
     unwrap = false;
   }
-  let aborted = await result3.deferredData.resolveData(signal);
+  let aborted = await result.deferredData.resolveData(signal);
   if (aborted) {
     return;
   }
@@ -30123,7 +29654,7 @@ async function resolveDeferredData(result3, signal, unwrap) {
     try {
       return {
         type: ResultType.data,
-        data: result3.deferredData.unwrappedData
+        data: result.deferredData.unwrappedData
       };
     } catch (e) {
       return {
@@ -30134,7 +29665,7 @@ async function resolveDeferredData(result3, signal, unwrap) {
   }
   return {
     type: ResultType.data,
-    data: result3.deferredData.data
+    data: result.deferredData.data
   };
 }
 var hasNakedIndexQuery = function(search) {
@@ -31896,7 +31427,7 @@ var SCROLL_RESTORATION_STORAGE_KEY = "react-router-scroll-positions";
 var savedScrollPositions = {};
 
 // src/public/component/nav/NavButton.tsx
-var import_react20 = __toESM(require_react(), 1);
+var import_react17 = __toESM(require_react(), 1);
 
 // node_modules/xstate/dev/dist/xstate-dev.esm.js
 var getGlobal = function() {
@@ -31990,7 +31521,7 @@ var toStatePath = function(stateId) {
   if (isArray(stateId)) {
     return stateId;
   }
-  let result3 = [];
+  let result = [];
   let segment = "";
   for (let i = 0;i < stateId.length; i++) {
     const char = stateId.charCodeAt(i);
@@ -32000,14 +31531,14 @@ var toStatePath = function(stateId) {
         i++;
         continue;
       case 46:
-        result3.push(segment);
+        result.push(segment);
         segment = "";
         continue;
     }
     segment += stateId[i];
   }
-  result3.push(segment);
-  return result3;
+  result.push(segment);
+  return result;
 };
 var toStateValue = function(stateValue) {
   if (isMachineSnapshot(stateValue)) {
@@ -32037,13 +31568,13 @@ var pathToStateValue = function(statePath) {
   return value;
 };
 var mapValues = function(collection, iteratee) {
-  const result3 = {};
+  const result = {};
   const collectionKeys = Object.keys(collection);
   for (let i = 0;i < collectionKeys.length; i++) {
     const key = collectionKeys[i];
-    result3[key] = iteratee(collection[key], key, collection, i);
+    result[key] = iteratee(collection[key], key, collection, i);
   }
-  return result3;
+  return result;
 };
 var toArrayStrict = function(value) {
   if (isArray(value)) {
@@ -32761,11 +32292,11 @@ var getStateNode = function(stateNode, stateKey) {
   if (!stateNode.states) {
     throw new Error(`Unable to retrieve child state '${stateKey}' from '${stateNode.id}'; no child states exist.`);
   }
-  const result3 = stateNode.states[stateKey];
-  if (!result3) {
+  const result = stateNode.states[stateKey];
+  if (!result) {
     throw new Error(`Child state '${stateKey}' does not exist on '${stateNode.id}'`);
   }
-  return result3;
+  return result;
 };
 var getStateNodeByPath = function(stateNode, statePath) {
   if (typeof statePath === "string" && isStateId(statePath)) {
@@ -33413,12 +32944,12 @@ var persistContext = function(contextPart) {
           id: value.id
         };
       } else {
-        const result3 = persistContext(value);
-        if (result3 !== value) {
+        const result = persistContext(value);
+        if (result !== value) {
           copy ??= Array.isArray(contextPart) ? contextPart.slice() : {
             ...contextPart
           };
-          copy[key] = result3;
+          copy[key] = result;
         }
       }
     }
@@ -34533,38 +34064,485 @@ var forEachActor = (actorRef, callback) => {
   }
 };
 
-// src/public/lib/eda/ref/Ref.ts
-var import_fbemitter = __toESM(require_fbemitter(), 1);
-function Ref(_value) {
-  let _em = new import_fbemitter.EventEmitter;
-  return { get, set, onSet };
-  function get() {
-    return _value;
+// node_modules/ts-results/esm/utils.js
+function toString(val) {
+  var value = String(val);
+  if (value === "[object Object]") {
+    try {
+      value = JSON.stringify(val);
+    } catch (_a) {
+    }
   }
-  function set(value) {
-    let oldValue = get();
-    let newValue = value;
-    _value = value;
-    _em.emit("set", newValue, oldValue);
-    return;
+  return value;
+}
+
+// node_modules/ts-results/esm/option.js
+var NoneImpl = function() {
+  function NoneImpl2() {
+    this.some = false;
+    this.none = true;
   }
-  function onSet(listener) {
-    return _em.addListener("set", listener);
+  NoneImpl2.prototype[Symbol.iterator] = function() {
+    return {
+      next: function() {
+        return { done: true, value: undefined };
+      }
+    };
+  };
+  NoneImpl2.prototype.unwrapOr = function(val) {
+    return val;
+  };
+  NoneImpl2.prototype.expect = function(msg) {
+    throw new Error("" + msg);
+  };
+  NoneImpl2.prototype.unwrap = function() {
+    throw new Error("Tried to unwrap None");
+  };
+  NoneImpl2.prototype.map = function(_mapper) {
+    return this;
+  };
+  NoneImpl2.prototype.andThen = function(op) {
+    return this;
+  };
+  NoneImpl2.prototype.toResult = function(error) {
+    return Err(error);
+  };
+  NoneImpl2.prototype.toString = function() {
+    return "None";
+  };
+  return NoneImpl2;
+}();
+var None = new NoneImpl;
+Object.freeze(None);
+var SomeImpl = function() {
+  function SomeImpl2(val) {
+    if (!(this instanceof SomeImpl2)) {
+      return new SomeImpl2(val);
+    }
+    this.some = true;
+    this.none = false;
+    this.val = val;
+  }
+  SomeImpl2.prototype[Symbol.iterator] = function() {
+    var obj = Object(this.val);
+    return Symbol.iterator in obj ? obj[Symbol.iterator]() : {
+      next: function() {
+        return { done: true, value: undefined };
+      }
+    };
+  };
+  SomeImpl2.prototype.unwrapOr = function(_val) {
+    return this.val;
+  };
+  SomeImpl2.prototype.expect = function(_msg) {
+    return this.val;
+  };
+  SomeImpl2.prototype.unwrap = function() {
+    return this.val;
+  };
+  SomeImpl2.prototype.map = function(mapper) {
+    return Some(mapper(this.val));
+  };
+  SomeImpl2.prototype.andThen = function(mapper) {
+    return mapper(this.val);
+  };
+  SomeImpl2.prototype.toResult = function(error) {
+    return Ok(this.val);
+  };
+  SomeImpl2.prototype.safeUnwrap = function() {
+    return this.val;
+  };
+  SomeImpl2.prototype.toString = function() {
+    return "Some(" + toString(this.val) + ")";
+  };
+  SomeImpl2.EMPTY = new SomeImpl2(undefined);
+  return SomeImpl2;
+}();
+var Some = SomeImpl;
+var Option;
+(function(Option2) {
+  function all() {
+    var options = [];
+    for (var _i = 0;_i < arguments.length; _i++) {
+      options[_i] = arguments[_i];
+    }
+    var someOption = [];
+    for (var _a = 0, options_1 = options;_a < options_1.length; _a++) {
+      var option = options_1[_a];
+      if (option.some) {
+        someOption.push(option.val);
+      } else {
+        return option;
+      }
+    }
+    return Some(someOption);
+  }
+  Option2.all = all;
+  function any() {
+    var options = [];
+    for (var _i = 0;_i < arguments.length; _i++) {
+      options[_i] = arguments[_i];
+    }
+    for (var _a = 0, options_2 = options;_a < options_2.length; _a++) {
+      var option = options_2[_a];
+      if (option.some) {
+        return option;
+      } else {
+        return option;
+      }
+    }
+    return None;
+  }
+  Option2.any = any;
+  function isOption(value) {
+    return value instanceof Some || value === None;
+  }
+  Option2.isOption = isOption;
+})(Option || (Option = {}));
+
+// node_modules/ts-results/esm/result.js
+var ErrImpl = function() {
+  function ErrImpl2(val) {
+    if (!(this instanceof ErrImpl2)) {
+      return new ErrImpl2(val);
+    }
+    this.ok = false;
+    this.err = true;
+    this.val = val;
+    var stackLines = new Error().stack.split("\n").slice(2);
+    if (stackLines && stackLines.length > 0 && stackLines[0].includes("ErrImpl")) {
+      stackLines.shift();
+    }
+    this._stack = stackLines.join("\n");
+  }
+  ErrImpl2.prototype[Symbol.iterator] = function() {
+    return {
+      next: function() {
+        return { done: true, value: undefined };
+      }
+    };
+  };
+  ErrImpl2.prototype.else = function(val) {
+    return val;
+  };
+  ErrImpl2.prototype.unwrapOr = function(val) {
+    return val;
+  };
+  ErrImpl2.prototype.expect = function(msg) {
+    throw new Error(msg + " - Error: " + toString(this.val) + "\n" + this._stack);
+  };
+  ErrImpl2.prototype.unwrap = function() {
+    throw new Error("Tried to unwrap Error: " + toString(this.val) + "\n" + this._stack);
+  };
+  ErrImpl2.prototype.map = function(_mapper) {
+    return this;
+  };
+  ErrImpl2.prototype.andThen = function(op) {
+    return this;
+  };
+  ErrImpl2.prototype.mapErr = function(mapper) {
+    return new Err(mapper(this.val));
+  };
+  ErrImpl2.prototype.toOption = function() {
+    return None;
+  };
+  ErrImpl2.prototype.toString = function() {
+    return "Err(" + toString(this.val) + ")";
+  };
+  Object.defineProperty(ErrImpl2.prototype, "stack", {
+    get: function() {
+      return this + "\n" + this._stack;
+    },
+    enumerable: false,
+    configurable: true
+  });
+  ErrImpl2.EMPTY = new ErrImpl2(undefined);
+  return ErrImpl2;
+}();
+var Err = ErrImpl;
+var OkImpl = function() {
+  function OkImpl2(val) {
+    if (!(this instanceof OkImpl2)) {
+      return new OkImpl2(val);
+    }
+    this.ok = true;
+    this.err = false;
+    this.val = val;
+  }
+  OkImpl2.prototype[Symbol.iterator] = function() {
+    var obj = Object(this.val);
+    return Symbol.iterator in obj ? obj[Symbol.iterator]() : {
+      next: function() {
+        return { done: true, value: undefined };
+      }
+    };
+  };
+  OkImpl2.prototype.else = function(_val) {
+    return this.val;
+  };
+  OkImpl2.prototype.unwrapOr = function(_val) {
+    return this.val;
+  };
+  OkImpl2.prototype.expect = function(_msg) {
+    return this.val;
+  };
+  OkImpl2.prototype.unwrap = function() {
+    return this.val;
+  };
+  OkImpl2.prototype.map = function(mapper) {
+    return new Ok(mapper(this.val));
+  };
+  OkImpl2.prototype.andThen = function(mapper) {
+    return mapper(this.val);
+  };
+  OkImpl2.prototype.mapErr = function(_mapper) {
+    return this;
+  };
+  OkImpl2.prototype.toOption = function() {
+    return Some(this.val);
+  };
+  OkImpl2.prototype.safeUnwrap = function() {
+    return this.val;
+  };
+  OkImpl2.prototype.toString = function() {
+    return "Ok(" + toString(this.val) + ")";
+  };
+  OkImpl2.EMPTY = new OkImpl2(undefined);
+  return OkImpl2;
+}();
+var Ok = OkImpl;
+var Result;
+(function(Result2) {
+  function all() {
+    var results = [];
+    for (var _i = 0;_i < arguments.length; _i++) {
+      results[_i] = arguments[_i];
+    }
+    var okResult = [];
+    for (var _a = 0, results_1 = results;_a < results_1.length; _a++) {
+      var result2 = results_1[_a];
+      if (result2.ok) {
+        okResult.push(result2.val);
+      } else {
+        return result2;
+      }
+    }
+    return new Ok(okResult);
+  }
+  Result2.all = all;
+  function any() {
+    var results = [];
+    for (var _i = 0;_i < arguments.length; _i++) {
+      results[_i] = arguments[_i];
+    }
+    var errResult = [];
+    for (var _a = 0, results_2 = results;_a < results_2.length; _a++) {
+      var result2 = results_2[_a];
+      if (result2.ok) {
+        return result2;
+      } else {
+        errResult.push(result2.val);
+      }
+    }
+    return new Err(errResult);
+  }
+  Result2.any = any;
+  function wrap(op) {
+    try {
+      return new Ok(op());
+    } catch (e) {
+      return new Err(e);
+    }
+  }
+  Result2.wrap = wrap;
+  function wrapAsync(op) {
+    try {
+      return op().then(function(val) {
+        return new Ok(val);
+      }).catch(function(e) {
+        return new Err(e);
+      });
+    } catch (e) {
+      return Promise.resolve(new Err(e));
+    }
+  }
+  Result2.wrapAsync = wrapAsync;
+  function isResult(val) {
+    return val instanceof Err || val instanceof Ok;
+  }
+  Result2.isResult = isResult;
+})(Result || (Result = {}));
+// src/public/lib/result/Result.ts
+var { EMPTY: EmptyOk } = Ok;
+
+// src/public/lib/color/Color.ts
+function Hex(_string) {
+  const _VALID_CHARS = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F"
+  ];
+  function _checkCharSet(string) {
+    for (let i = 1;i < string.length; i++) {
+      let char = string[i];
+      let hasValidChar = false;
+      for (let x = 0;x < _VALID_CHARS.length; x++) {
+        let validChar = _VALID_CHARS[x];
+        if (char === validChar)
+          hasValidChar = true;
+      }
+      if (!hasValidChar)
+        return Err("invalidCharSet");
+    }
+    return EmptyOk;
+  }
+  if (_string.length < 7)
+    return Err("stringLengthTooShort");
+  if (_string.length > 7)
+    return Err("stringLengthTooLong");
+  if (_string.startsWith("#") === false)
+    return Err("stringMissingHash");
+  let charSetCheck = _checkCharSet(_string);
+  if (charSetCheck.err)
+    return charSetCheck;
+  return Ok({ toString: toString2, toHex, toRgb, toRgba });
+  function toString2() {
+    return _string;
+  }
+  function toHex() {
+    return Hex(_string).unwrap();
+  }
+  function toRgb() {
+    let value = _string.slice(1);
+    let r = BigInt(parseInt(value.slice(0, 2), 16));
+    let g = BigInt(parseInt(value.slice(2, 4), 16));
+    let b = BigInt(parseInt(value.slice(4, 6), 16));
+    return Rgb(r, g, b).unwrap();
+  }
+  function toRgba() {
+    return Rgba(toRgb(), 1).unwrap();
+  }
+}
+function Rgb(_r, _g, _b) {
+  const _MIN_RGB_VALUE = 0n;
+  const _MAX_RGB_VALUE = 255n;
+  if (_r < _MIN_RGB_VALUE)
+    return Err("valueRIsBelowMinRgbValue");
+  if (_g < _MIN_RGB_VALUE)
+    return Err("valueGIsBelowMinRgbValue");
+  if (_b < _MIN_RGB_VALUE)
+    return Err("valueBIsBelowMinRgbValue");
+  if (_r > _MAX_RGB_VALUE)
+    return Err("valueRIsAboveMaxRgbValue");
+  if (_g > _MAX_RGB_VALUE)
+    return Err("valueGIsAboveMaxRgbValue");
+  if (_b > _MAX_RGB_VALUE)
+    return Err("valueBIsAboveMaxRgbValue");
+  return Ok({ r, g, b, toString: toString2, toHex, toRgb, toRgba });
+  function r() {
+    return _r;
+  }
+  function g() {
+    return _g;
+  }
+  function b() {
+    return _b;
+  }
+  function toString2() {
+    return `rgb(${r()}, ${g()}, ${b()})`;
+  }
+  function toHex() {
+    let hex0 = r().toString(16);
+    let hex1 = g().toString(16);
+    let hex2 = b().toString(16);
+    hex0 = hex0.length === 1 ? "0" + hex0 : hex0;
+    hex1 = hex1.length === 1 ? "0" + hex1 : hex1;
+    hex2 = hex2.length === 1 ? "0" + hex2 : hex2;
+    let hex = Hex(`${hex0}${hex1}${hex2}`);
+    return hex.unwrap();
+  }
+  function toRgb() {
+    return Rgb(r(), g(), b()).unwrap();
+  }
+  function toRgba() {
+    return Rgba(toRgb(), 1).unwrap();
+  }
+}
+function Rgba(_rgb, _a) {
+  const _MIN_OPACITY_VALUE = 0;
+  const _MAX_OPACITY_VALUE = 1;
+  if (_a < _MIN_OPACITY_VALUE)
+    return Err("valueAIsBelowMinOpacityValue");
+  if (_a > _MAX_OPACITY_VALUE)
+    return Err("valueAIsAboveMaxOpacityValue");
+  return Ok({ r, g, b, a, toString: toString2, toHex, toRgb, toRgba });
+  function r() {
+    return _rgb.r();
+  }
+  function g() {
+    return _rgb.g();
+  }
+  function b() {
+    return _rgb.b();
+  }
+  function a() {
+    return _a;
+  }
+  function toString2() {
+    return `rgba(${r()}, ${g()}, ${b()}, ${a()})`;
+  }
+  function toHex() {
+    let hex0 = r().toString(16);
+    let hex1 = g().toString(16);
+    let hex2 = b().toString(16);
+    hex0 = hex0.length === 1 ? "0" + hex0 : hex0;
+    hex1 = hex1.length === 1 ? "0" + hex1 : hex1;
+    hex2 = hex2.length === 1 ? "0" + hex2 : hex2;
+    let hex = Hex(`${hex0}${hex1}${hex2}`);
+    return hex.unwrap();
+  }
+  function toRgb() {
+    return _rgb.toRgb();
+  }
+  function toRgba() {
+    return Rgba(toRgb(), a()).unwrap();
   }
 }
 
-// src/public/component/slide/MainSlide.tsx
-var import_react17 = __toESM(require_react(), 1);
-var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
-
-// src/public/component/Root.tsx
-var import_react18 = __toESM(require_react(), 1);
-var import_react19 = __toESM(require_react(), 1);
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
-var setRootRef = Ref(undefined);
+// src/public/component/config/ColorPalette.ts
+var GHOST_IRON = Hex("#2D2D2D").unwrap();
+var SOFT_OBSIDIAN = Hex("#171717").unwrap();
+var DARK_OBSIDIAN = Hex("#111111").unwrap();
+var OBSIDIAN = Hex("#141414").unwrap();
+var TITANIUM = Hex("#D6D5D4").unwrap();
+var TEAL = Hex("#00FFAB").unwrap();
+var PINK = Hex("#FF00FB").unwrap();
+var BLUE = Hex("#0652FE").unwrap();
+var RED = Hex("#FF3200").unwrap();
+var DEEP_PURPLE = Hex("#615FFF").unwrap();
+var DEEP_PURPLE_GRADIENT = [DEEP_PURPLE, Hex("#9662FF").unwrap()];
 
 // src/public/component/nav/NavButton.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 function NavButton(props) {
   let { label, goto, style, to: to2, children, ...more } = props;
   if (!to2)
@@ -34584,7 +34562,7 @@ function NavButton(props) {
     opacity: "0",
     fontSize: RelativeUnit(1)
   }));
-  let [, send] = useMachine(import_react20.useMemo(() => createMachine({
+  let [, send] = useMachine(import_react17.useMemo(() => createMachine({
     initial: "initial",
     states: {
       initial: {
@@ -34638,18 +34616,11 @@ function NavButton(props) {
     let shadow5 = `0 0 ${distance5} ${color}`;
     return `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
   }
-  return jsx_dev_runtime10.jsxDEV(jsx_dev_runtime10.Fragment, {
-    children: jsx_dev_runtime10.jsxDEV(Link, {
+  return jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
+    children: jsx_dev_runtime8.jsxDEV(Link, {
       to: to2,
       onMouseEnter: () => send({ type: "mouseEnter" }),
       onMouseLeave: () => send({ type: "mouseLeave" }),
-      onClick: () => {
-        if (goto) {
-          setRootRef.get()({ type: goto });
-          return;
-        }
-        return;
-      },
       style: {
         pointerEvents: "auto",
         textDecoration: "none",
@@ -34662,17 +34633,37 @@ function NavButton(props) {
       },
       ...more,
       children: [
-        jsx_dev_runtime10.jsxDEV(Text, {
+        jsx_dev_runtime8.jsxDEV(Text, {
           text: "\u21F4",
           style: { ...symbolSpring }
         }, undefined, false, undefined, this),
-        jsx_dev_runtime10.jsxDEV(Text, {
+        jsx_dev_runtime8.jsxDEV(Text, {
           text: label,
           style: { ...labelSpring }
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
+}
+
+// src/public/lib/eda/ref/Ref.ts
+var import_fbemitter = __toESM(require_fbemitter(), 1);
+function Ref(_value) {
+  let _em = new import_fbemitter.EventEmitter;
+  return { get, set, onSet };
+  function get() {
+    return _value;
+  }
+  function set(value) {
+    let oldValue = get();
+    let newValue = value;
+    _value = value;
+    _em.emit("set", newValue, oldValue);
+    return;
+  }
+  function onSet(listener) {
+    return _em.addListener("set", listener);
+  }
 }
 
 // node_modules/ethers/lib.esm/_version.js
@@ -42629,7 +42620,7 @@ class ParamType {
   }
 }
 
-class Fragment14 {
+class Fragment12 {
   type;
   inputs;
   constructor(guard, type, inputs) {
@@ -42640,10 +42631,10 @@ class Fragment14 {
   static from(obj) {
     if (typeof obj === "string") {
       try {
-        Fragment14.from(JSON.parse(obj));
+        Fragment12.from(JSON.parse(obj));
       } catch (e) {
       }
-      return Fragment14.from(lex(obj));
+      return Fragment12.from(lex(obj));
     }
     if (obj instanceof TokenString) {
       const type = obj.peekKeyword(KwTypes);
@@ -42701,7 +42692,7 @@ class Fragment14 {
   }
 }
 
-class NamedFragment extends Fragment14 {
+class NamedFragment extends Fragment12 {
   name;
   constructor(guard, type, name, inputs) {
     super(guard, type, inputs);
@@ -42817,7 +42808,7 @@ class EventFragment extends NamedFragment {
   }
 }
 
-class ConstructorFragment extends Fragment14 {
+class ConstructorFragment extends Fragment12 {
   payable;
   gas;
   constructor(guard, type, inputs, payable, gas) {
@@ -42870,7 +42861,7 @@ class ConstructorFragment extends Fragment14 {
   }
 }
 
-class FallbackFragment extends Fragment14 {
+class FallbackFragment extends Fragment12 {
   payable;
   constructor(guard, inputs, payable) {
     super(guard, "fallback", inputs);
@@ -43332,7 +43323,7 @@ class Interface {
     const frags = [];
     for (const a of abi) {
       try {
-        frags.push(Fragment14.from(a));
+        frags.push(Fragment12.from(a));
       } catch (error) {
         console.log(`[Warning] Invalid Fragment ${JSON.stringify(a)}:`, error.message);
       }
@@ -49202,7 +49193,7 @@ function postNotification(string2) {
 var _notifications = [];
 
 // src/public/component/nav/NavConnectButton.tsx
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 function NavConnectButton() {
   let [symbolSpring, setSymbolSpring] = useSpring(() => ({ opacity: "0", config: config.gentle }));
   let fontSize = RelativeUnit(1.5);
@@ -49227,8 +49218,8 @@ function NavConnectButton() {
   let shadow4 = `0 0 ${distance4} ${symbolColor}`;
   let shadow5 = `0 0 ${distance5} ${symbolColor}`;
   let textShadow = `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
-  return jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
-    children: jsx_dev_runtime11.jsxDEV(Row, {
+  return jsx_dev_runtime9.jsxDEV(jsx_dev_runtime9.Fragment, {
+    children: jsx_dev_runtime9.jsxDEV(Row, {
       style: {
         pointerEvents: "auto",
         cursor: "pointer",
@@ -49271,7 +49262,7 @@ function NavConnectButton() {
         return postNotification("You are connected.");
       },
       children: [
-        jsx_dev_runtime11.jsxDEV(Text, {
+        jsx_dev_runtime9.jsxDEV(Text, {
           text: "\uD81A\uDDF6",
           style: {
             fontSize,
@@ -49282,7 +49273,7 @@ function NavConnectButton() {
             ...symbolSpring
           }
         }, undefined, false, undefined, this),
-        jsx_dev_runtime11.jsxDEV(Text, {
+        jsx_dev_runtime9.jsxDEV(Text, {
           text: "Connect",
           style: {
             fontSize
@@ -49295,70 +49286,70 @@ function NavConnectButton() {
 var _isConnecting = Ref(false);
 
 // src/public/component/nav/Nav.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
-function Nav2() {
-  return jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
-    children: jsx_dev_runtime12.jsxDEV(Row, {
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
+function Nav() {
+  return jsx_dev_runtime10.jsxDEV(jsx_dev_runtime10.Fragment, {
+    children: jsx_dev_runtime10.jsxDEV(Row, {
       style: {
         width: RelativeUnit(100),
         justifyContent: "space-between",
         padding: RelativeUnit(2)
       },
       children: [
-        jsx_dev_runtime12.jsxDEV(NavBrand, {}, undefined, false, undefined, this),
-        jsx_dev_runtime12.jsxDEV(Row, {
+        jsx_dev_runtime10.jsxDEV(NavBrand, {}, undefined, false, undefined, this),
+        jsx_dev_runtime10.jsxDEV(Row, {
           style: {
             gap: RelativeUnit(2)
           },
           children: [
-            jsx_dev_runtime12.jsxDEV(NavButton, {
+            jsx_dev_runtime10.jsxDEV(NavButton, {
               label: "Home",
               to: "/"
             }, undefined, false, undefined, this),
-            jsx_dev_runtime12.jsxDEV(NavButton, {
+            jsx_dev_runtime10.jsxDEV(NavButton, {
               label: "Whitepaper",
               to: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
             }, undefined, false, undefined, this),
-            jsx_dev_runtime12.jsxDEV(NavButton, {
+            jsx_dev_runtime10.jsxDEV(NavButton, {
               label: "Explore",
               to: "/explore"
             }, undefined, false, undefined, this),
-            jsx_dev_runtime12.jsxDEV(NavButton, {
+            jsx_dev_runtime10.jsxDEV(NavButton, {
               label: "Launch",
               to: "/launch"
             }, undefined, false, undefined, this),
-            jsx_dev_runtime12.jsxDEV(NavButton, {
+            jsx_dev_runtime10.jsxDEV(NavButton, {
               label: "Github",
               to: "/"
             }, undefined, false, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        jsx_dev_runtime12.jsxDEV(NavConnectButton, {}, undefined, false, undefined, this)
+        jsx_dev_runtime10.jsxDEV(NavConnectButton, {}, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
 
 // src/public/component/layout/template/PageTemplate.tsx
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 function PageTemplate({
   content,
   background,
   hlen = 1n,
   vlen = 1n
 }) {
-  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-    children: jsx_dev_runtime13.jsxDEV(Page, {
+  return jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
+    children: jsx_dev_runtime11.jsxDEV(Page, {
       hlen,
       vlen,
       children: [
-        jsx_dev_runtime13.jsxDEV(Layer, {
+        jsx_dev_runtime11.jsxDEV(Layer, {
           children: background
         }, undefined, false, undefined, this),
-        jsx_dev_runtime13.jsxDEV(Layer, {
+        jsx_dev_runtime11.jsxDEV(Layer, {
           children: [
-            jsx_dev_runtime13.jsxDEV(Nav2, {}, undefined, false, undefined, this),
-            jsx_dev_runtime13.jsxDEV(Col, {
+            jsx_dev_runtime11.jsxDEV(Nav, {}, undefined, false, undefined, this),
+            jsx_dev_runtime11.jsxDEV(Col, {
               style: {
                 width: "100%",
                 height: "100%",
@@ -49374,517 +49365,138 @@ function PageTemplate({
   }, undefined, false, undefined, this);
 }
 
-// src/public/component/decoration/Blurdot.tsx
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
-function Blurdot(props) {
-  let { color0, color1, style, ...more } = props;
-  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
-    children: jsx_dev_runtime14.jsxDEV(Col, {
-      style: {
-        background: `radial-gradient(closest-side, ${color0}, ${color1})`,
-        opacity: "0.05",
-        ...style ?? {}
-      },
-      ...more
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
+// src/public/component/config/Config.ts
+var ColorPalette;
+(function(ColorPalette) {
+  ColorPalette.graphite = Hex("#2D2D2D").unwrap();
+  ColorPalette.softObsidian = Hex("#171717").unwrap();
+  ColorPalette.darkObsidian = Hex("#111111").unwrap();
+  ColorPalette.obsidian = Hex("#141414").unwrap();
+  ColorPalette.titanium = Hex("#D6D5D4").unwrap();
+  ColorPalette.teal = Hex("#00FFAB").unwrap();
+  ColorPalette.pink = Hex("#FF00FB").unwrap();
+  ColorPalette.blue = Hex("#0652FE").unwrap();
+  ColorPalette.red = Hex("#FF3200").unwrap();
+  ColorPalette.deepPurple = Hex("#615FFF").unwrap();
+  ColorPalette.deepPurpleGradient = [ColorPalette.deepPurple, Hex("#9662FF").unwrap()];
+  ColorPalette.redToPinkGradient = [ColorPalette.red, ColorPalette.pink];
+})(ColorPalette || (ColorPalette = {}));
+var Text5;
+(function(Text) {
+  Text.fontSize = "";
+  Text.fontWeight = "";
+  Text.fontFamily = "";
+  Text.color = "";
+})(Text5 || (Text5 = {}));
 
 // src/public/component/page/landing/LandingPage.tsx
-var import_react21 = __toESM(require_react(), 1);
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 function LandingPage() {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(PageTemplate, {
-      hlen: 1n,
-      vlen: 1n,
-      content: jsx_dev_runtime15.jsxDEV(LandingPageContent, {}, undefined, false, undefined, this),
-      background: jsx_dev_runtime15.jsxDEV(LandingPageBackground, {}, undefined, false, undefined, this)
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageContent() {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(LandingPageContentWrapper, {
-      children: [
-        jsx_dev_runtime15.jsxDEV(LandingPageBlockButtonGroup, {
-          button0Label0: "\uD81A\uDDF6",
-          button0Label1: "Get Started",
-          button1Label0: "\uD81A\uDDF6",
-          button1Label1: "Learn More"
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSection, {}, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageContentWrapper({
-  children
-}) {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Col, {
-      style: {
-        width: "100%",
-        height: "100%",
-        justifyContent: "start"
-      },
-      children
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageContentKeyPointsSection() {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSectionContainer, {
-      backgroundColor0: SOFT_OBSIDIAN.toString(),
-      backgroundColor1: OBSIDIAN.toString(),
-      children: [
-        jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSectionCard, {
-          width: RelativeUnit(20),
-          height: "auto",
-          src: "../../../img/shape/Dots.svg",
-          caption: "Transparent",
-          captionFontSize: RelativeUnit(1),
-          captionFontWeight: "bold",
-          captionFontFamily: "satoshiRegular",
-          captionColor: TITANIUM.toString(),
-          description: "Finance should be for everyone and everyone should be able to have ownership. Every single transaction is registered and trusless.",
-          descriptionFontSize: RelativeUnit(0.6),
-          descriptionFontWeight: "bold",
-          descriptionFontFamily: "satoshiRegular",
-          descriptionColor: TITANIUM.toString()
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSectionCard, {
-          width: RelativeUnit(20),
-          height: "auto",
-          src: "../../../img/shape/TwoSquares.svg",
-          caption: "Community",
-          captionFontSize: RelativeUnit(1),
-          captionFontWeight: "bold",
-          captionFontFamily: "satoshiRegular",
-          captionColor: TITANIUM.toString(),
-          description: "The future of business is community driven.",
-          descriptionFontSize: RelativeUnit(0.6),
-          descriptionFontWeight: "bold",
-          descriptionFontFamily: "satoshiRegular",
-          descriptionColor: TITANIUM.toString()
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime15.jsxDEV(LandingPageContentKeyPointsSectionCard, {
-          width: RelativeUnit(20),
-          height: "auto",
-          src: "../../../img/shape/Composition.svg",
-          caption: "Community",
-          captionFontSize: RelativeUnit(1),
-          captionFontWeight: "bold",
-          captionFontFamily: "satoshiRegular",
-          captionColor: TITANIUM.toString(),
-          description: "The future of business is community driven.",
-          descriptionFontSize: RelativeUnit(0.6),
-          descriptionFontWeight: "bold",
-          descriptionFontFamily: "satoshiRegular",
-          descriptionColor: TITANIUM.toString()
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageContentKeyPointsSectionContainer({
-  backgroundColor0,
-  backgroundColor1,
-  children
-}) {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Row, {
-      style: {
-        width: RelativeUnit(100),
-        height: RelativeUnit(10),
-        background: `linear-gradient(to right, ${backgroundColor0}, ${backgroundColor1})`,
-        justifyContent: "space-around",
-        alignItems: "center"
-      },
-      children
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageContentKeyPointsSectionCard({
-  width,
-  height,
-  src,
-  caption,
-  captionFontSize,
-  captionFontWeight,
-  captionFontFamily,
-  captionColor,
-  description,
-  descriptionFontSize,
-  descriptionFontWeight,
-  descriptionFontFamily,
-  descriptionColor
-}) {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Row, {
-      style: {
-        width,
-        height,
-        gap: RelativeUnit(1)
-      },
-      children: [
-        jsx_dev_runtime15.jsxDEV(Col, {
+  return jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+    children: jsx_dev_runtime12.jsxDEV(PageTemplate, {
+      background: jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+        children: jsx_dev_runtime12.jsxDEV(Col, {
           style: {
-            height: "100%"
-          },
-          children: jsx_dev_runtime15.jsxDEV(Image, {
-            src,
-            style: {
-              width: RelativeUnit(7.5),
-              aspectRatio: "1/1"
-            }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime15.jsxDEV(Col, {
-          style: {
-            width: "100%",
-            height: "100%",
-            justifyContent: "start"
-          },
-          children: [
-            jsx_dev_runtime15.jsxDEV(Row, {
-              style: {
-                width: "100%",
-                height: "auto",
-                justifyContent: "start"
-              },
-              children: jsx_dev_runtime15.jsxDEV(Text, {
-                text: caption,
-                style: {
-                  fontSize: captionFontSize,
-                  fontWeight: captionFontWeight,
-                  fontFamily: captionFontFamily,
-                  color: captionColor,
-                  whiteSpace: "pretty"
-                }
-              }, undefined, false, undefined, this)
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime15.jsxDEV(Row, {
-              style: {
-                width: "100%",
-                height: "auto",
-                justifyContent: "start",
-                alignItems: "start"
-              },
-              children: jsx_dev_runtime15.jsxDEV(Text, {
-                text: description,
-                style: {
-                  fontSize: descriptionFontSize,
-                  fontWeight: descriptionFontWeight,
-                  fontFamily: descriptionFontFamily,
-                  color: descriptionColor
-                }
-              }, undefined, false, undefined, this)
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageBackground() {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Col, {
-      style: {
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        background: OBSIDIAN.toString()
-      },
-      children: [
-        jsx_dev_runtime15.jsxDEV(Blurdot, {
-          color0: DEEP_PURPLE.toString(),
-          color1: OBSIDIAN.toString(),
-          style: {
-            width: RelativeUnit(500),
-            aspectRatio: "1/1",
-            position: "absolute",
-            right: RelativeUnit(100)
-          }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime15.jsxDEV(Blurdot, {
-          color0: "#0652FE",
-          color1: OBSIDIAN.toString(),
-          style: {
-            width: RelativeUnit(500),
-            aspectRatio: "1/1",
-            position: "absolute",
-            left: RelativeUnit(100)
+            minWidth: "100%",
+            maxWidth: "100%",
+            minHeight: "100%",
+            maxHeight: "100%",
+            background: ColorPalette.obsidian.toString()
           }
         }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageBlockButtonGroup({
-  button0Label0 = "",
-  button0Label1 = "",
-  button0LabelColor0 = GHOST_IRON.toString(),
-  button0LabelColor1 = TITANIUM.toString(),
-  button0FontSize = RelativeUnit(1),
-  button0FontWeight = "bold",
-  button0FontFamily = "satoshiRegular",
-  button0BorderColor = GHOST_IRON.toString(),
-  button0OnClick = async () => {
-  },
-  button1Label0 = "",
-  button1Label1 = "",
-  button1LabelColor0 = GHOST_IRON.toString(),
-  button1LabelColor1 = TITANIUM.toString(),
-  button1FontSize = RelativeUnit(1),
-  button1FontWeight = "bold",
-  button1FontFamily = "satoshiRegular",
-  button1BorderColor = GHOST_IRON.toString(),
-  button1OnClick = async () => {
-  }
-}) {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Row, {
-      style: {
-        width: "100%",
-        justifyContent: "start",
-        gap: RelativeUnit(2)
-      },
-      children: [
-        jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButton, {
-          label0: button0Label0,
-          label1: button0Label1,
-          labelColor0: button0LabelColor0,
-          labelColor1: button0LabelColor1,
-          fontSize: button0FontSize,
-          fontWeight: button0FontWeight,
-          fontFamily: button0FontFamily,
-          borderColor: button0BorderColor,
-          onClick: button0OnClick
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButton, {
-          label0: button1Label0,
-          label1: button1Label1,
-          labelColor0: button1LabelColor0,
-          labelColor1: button1LabelColor1,
-          fontSize: button1FontSize,
-          fontWeight: button1FontWeight,
-          fontFamily: button1FontFamily,
-          borderColor: button1BorderColor,
-          onClick: button1OnClick
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
-function LandingPageDualLabelButton({
-  label0,
-  label1,
-  labelColor0,
-  labelColor1,
-  fontSize,
-  fontWeight,
-  fontFamily,
-  borderColor,
-  onClick
-}) {
-  let [hiddenWrapperSpring, setHiddenWrapperSpring] = useSpring(() => ({
-    width: RelativeUnit(15),
-    height: RelativeUnit(7.5),
-    top: RelativeUnit(-1.5),
-    gap: RelativeUnit(1.5),
-    config: config.stiff
-  }));
-  let [symbolSpring, setSymbolSpring] = useSpring(() => ({
-    opacity: "0",
-    config: config.stiff
-  }));
-  let [labelSpring, setLabelSpring] = useSpring(() => ({
-    opacity: "1",
-    config: config.stiff
-  }));
-  let [_, setLandingPageDualLabelButton] = useMachine(import_react21.useMemo(() => createMachine({
-    initial: "idle",
-    states: {
-      idle: {
-        entry: () => {
-          setHiddenWrapperSpring.start({ top: RelativeUnit(-1.5) });
-          setSymbolSpring.start({ opacity: "0" });
-          setLabelSpring.start({ opacity: "1" });
-          return;
-        },
-        on: {
-          mouseEnter: "hovering"
-        }
-      },
-      hovering: {
-        entry: () => {
-          setHiddenWrapperSpring.start({ top: RelativeUnit(1.5) });
-          setSymbolSpring.start({ opacity: "1" });
-          setLabelSpring.start({ opacity: "0" });
-          return;
-        },
-        on: {
-          mouseLeave: "idle",
-          click: "clicked"
-        }
-      },
-      clicked: {
-        entry: () => {
-          (async () => {
-            if (onClick)
-              await onClick();
-            return setLandingPageDualLabelButton({ type: "done" });
-          })();
-          return;
-        },
-        on: {
-          done: "hovering"
-        }
-      }
-    }
-  }), [setHiddenWrapperSpring, setSymbolSpring, setLabelSpring]));
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButtonContainer, {
-      setLandingPageDualLabelButton,
-      borderColor,
-      children: jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButtonHiddenWrapper, {
-        hiddenWrapperSpring,
+      }, undefined, false, undefined, this),
+      content: jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
         children: [
-          jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButtonSymbol, {
-            label: label0,
-            fontSize,
-            fontWeight,
-            fontFamily,
-            color: labelColor0,
-            symbolSpring
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime15.jsxDEV(LandingPageDualLabelButtonLabel, {
-            label: label1,
-            fontSize,
-            fontWeight,
-            fontFamily,
-            color: labelColor1,
-            labelSpring
+          jsx_dev_runtime12.jsxDEV(Col, {
+            style: {
+              display: "grid",
+              gridTemplateRows: "100px 100px 100px 100px",
+              gridTemplateColumns: "100px 100px 100px 100px",
+              minWidth: "100%",
+              maxWidth: "100%",
+              minHeight: "30%",
+              maxHeight: "30%"
+            },
+            children: [
+              jsx_dev_runtime12.jsxDEV(Text, {
+                text: "Imons0nu su 0su 0su s0 s",
+                style: {
+                  fontSize: "50%",
+                  fontWeight: "bolder",
+                  fontFamily: "satoshiRegular",
+                  color: ColorPalette.titanium.toString()
+                }
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime12.jsxDEV(Text, {
+                text: "ojsjijs0js0js0js0s",
+                style: {
+                  fontSize: RelativeUnit(2.5),
+                  fontWeight: "bold",
+                  fontFamily: "satoshiRegular",
+                  color: ColorPalette.titanium.toString()
+                }
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          jsx_dev_runtime12.jsxDEV(Row, {
+            style: {
+              minWidth: RelativeUnit(100),
+              maxWidth: RelativeUnit(100),
+              minHeight: RelativeUnit(20),
+              maxHeight: RelativeUnit(20),
+              background: ColorPalette.softObsidian.toString()
+            },
+            children: jsx_dev_runtime12.jsxDEV(Row, {
+              style: {
+                minWidth: RelativeUnit(20),
+                maxWidth: RelativeUnit(20),
+                minHeight: RelativeUnit(10),
+                maxHeight: RelativeUnit(10)
+              },
+              children: jsx_dev_runtime12.jsxDEV(Col, {
+                style: {
+                  minWidth: RelativeUnit(10),
+                  maxWidth: RelativeUnit(10),
+                  minHeight: RelativeUnit(10),
+                  maxHeight: RelativeUnit(10)
+                },
+                children: [
+                  jsx_dev_runtime12.jsxDEV(Text, {
+                    text: "My First Point",
+                    style: {
+                      fontSize: RelativeUnit(1),
+                      fontWeight: "bold",
+                      fontFamily: "satoshiRegular",
+                      color: ColorPalette.titanium.toString()
+                    }
+                  }, undefined, false, undefined, this),
+                  jsx_dev_runtime12.jsxDEV(Text, {
+                    text: "J0 sjs dj d d0u d0ud 0ud d0 d0ud 0du ud0uud0 ud 0du 0du0d ud0u0ud du0 ud0ud0 ud0 dud0ud 0u0du d0u0du0d u0d u0du 0du0du 0du0du du d0d",
+                    style: {
+                      fontSize: RelativeUnit(0.75),
+                      fontWeight: "normal",
+                      fontFamily: "satoshiRegular",
+                      color: ColorPalette.titanium.toString()
+                    }
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
+            }, undefined, false, undefined, this)
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-function LandingPageDualLabelButtonContainer({
-  setLandingPageDualLabelButton,
-  borderColor,
-  children
-}) {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Col, {
-      onMouseEnter: () => setLandingPageDualLabelButton({ type: "mouseEnter" }),
-      onMouseLeave: () => setLandingPageDualLabelButton({ type: "mouseLeave" }),
-      onClick: () => setLandingPageDualLabelButton({ type: "click" }),
-      style: {
-        width: RelativeUnit(15),
-        aspectRatio: "4/1",
-        borderColor: borderColor ?? GHOST_IRON.toString(),
-        borderWidth: RelativeUnit(0.1),
-        borderStyle: "solid",
-        borderRadius: RelativeUnit(0.5),
-        pointerEvents: "auto",
-        cursor: "pointer",
-        overflow: "hidden",
-        background: DARK_OBSIDIAN.toString()
-      },
-      children
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageDualLabelButtonHiddenWrapper({
-  hiddenWrapperSpring,
-  children
-}) {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Col, {
-      style: {
-        position: "relative",
-        ...hiddenWrapperSpring
-      },
-      children
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageDualLabelButtonSymbol({
-  label,
-  fontSize,
-  fontWeight,
-  fontFamily,
-  color,
-  symbolSpring
-}) {
-  function _glow(color2, strength) {
-    let strength0 = strength * 1;
-    let strength1 = strength * 2;
-    let strength2 = strength * 3;
-    let strength3 = strength * 4;
-    let strength4 = strength * 5;
-    let strength5 = strength * 6;
-    let distance0 = RelativeUnit(strength0);
-    let distance1 = RelativeUnit(strength1);
-    let distance2 = RelativeUnit(strength2);
-    let distance3 = RelativeUnit(strength3);
-    let distance4 = RelativeUnit(strength4);
-    let distance5 = RelativeUnit(strength5);
-    let shadow0 = `0 0 ${distance0} ${color2}`;
-    let shadow1 = `0 0 ${distance1} ${color2}`;
-    let shadow2 = `0 0 ${distance2} ${color2}`;
-    let shadow3 = `0 0 ${distance3} ${color2}`;
-    let shadow4 = `0 0 ${distance4} ${color2}`;
-    let shadow5 = `0 0 ${distance5} ${color2}`;
-    return `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
-  }
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Text, {
-      text: label,
-      style: {
-        fontSize,
-        fontWeight,
-        fontFamily,
-        color,
-        textShadow: _glow(color, 1),
-        ...symbolSpring
-      }
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function LandingPageDualLabelButtonLabel({
-  label,
-  fontSize,
-  fontWeight,
-  fontFamily,
-  color,
-  labelSpring
-}) {
-  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
-    children: jsx_dev_runtime15.jsxDEV(Text, {
-      text: label,
-      style: {
-        fontSize,
-        fontWeight,
-        fontFamily,
-        color,
-        ...labelSpring
-      }
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
 
 // src/public/component/page/explore/ExplorePage.tsx
-var import_react24 = __toESM(require_react(), 1);
-var import_react25 = __toESM(require_react(), 1);
+var import_react20 = __toESM(require_react(), 1);
+var import_react21 = __toESM(require_react(), 1);
 
 // src/public/component/layout/template/PagePreConnectTemplate.tsx
-var import_react22 = __toESM(require_react(), 1);
-var import_react23 = __toESM(require_react(), 1);
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react18 = __toESM(require_react(), 1);
+var import_react19 = __toESM(require_react(), 1);
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
 function PagePreConnectTemplate({
   content,
   background
@@ -49892,15 +49504,15 @@ function PagePreConnectTemplate({
   const connectToYourWeb3WalletLoaderMessage = "Connect to your Web3 Wallet.";
   const changeYourNetworkToPolygonLoaderMessage = "Change your network to polygon.";
   const somethingWentWrongTryAgainLaterLoaderMessage = "Something went wrong. Try again later.";
-  const [loaderMessage, setLoaderMessage] = import_react23.useState(connectToYourWeb3WalletLoaderMessage);
-  const [content_, setContent] = import_react23.useState(() => jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {}, undefined, false, undefined, this));
-  const [_, setPagePreConnectTemplate] = useMachine(import_react22.useMemo(() => createMachine({
+  const [loaderMessage, setLoaderMessage] = import_react19.useState(connectToYourWeb3WalletLoaderMessage);
+  const [content_, setContent] = import_react19.useState(() => jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {}, undefined, false, undefined, this));
+  const [_, setPagePreConnectTemplate] = useMachine(import_react18.useMemo(() => createMachine({
     initial: "loading",
     states: {
       loading: {
         entry: () => {
-          setContent(() => jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-            children: jsx_dev_runtime16.jsxDEV(PagePreConnectTemplateLoader, {
+          setContent(() => jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
+            children: jsx_dev_runtime13.jsxDEV(PagePreConnectTemplateLoader, {
               message: loaderMessage
             }, undefined, false, undefined, this)
           }, undefined, false, undefined, this));
@@ -49963,8 +49575,8 @@ function PagePreConnectTemplate({
       }
     }
   }), [setLoaderMessage, setContent]));
-  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
-    children: jsx_dev_runtime16.jsxDEV(PageTemplate, {
+  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
+    children: jsx_dev_runtime13.jsxDEV(PageTemplate, {
       content: content_,
       background
     }, undefined, false, undefined, this)
@@ -49973,16 +49585,16 @@ function PagePreConnectTemplate({
 function PagePreConnectTemplateLoader({
   message
 }) {
-  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
     children: [
-      jsx_dev_runtime16.jsxDEV(Image, {
+      jsx_dev_runtime13.jsxDEV(Image, {
         src: "../../../img/animation/loader/Infinity.svg",
         style: {
           width: RelativeUnit(20),
           aspectRatio: "1/1"
         }
       }, undefined, false, undefined, this),
-      jsx_dev_runtime16.jsxDEV(Text, {
+      jsx_dev_runtime13.jsxDEV(Text, {
         text: message,
         style: {
           fontSize: RelativeUnit(2.5)
@@ -49994,60 +49606,60 @@ function PagePreConnectTemplateLoader({
 
 // src/public/component/page/explore/ExplorePage.tsx
 function ExplorePage() {
-  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: jsx_dev_runtime17.jsxDEV(PagePreConnectTemplate, {
-      content: jsx_dev_runtime17.jsxDEV(ExplorePageContent, {}, undefined, false, undefined, this),
-      background: jsx_dev_runtime17.jsxDEV(ExplorePageBackground, {}, undefined, false, undefined, this)
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+    children: jsx_dev_runtime14.jsxDEV(PagePreConnectTemplate, {
+      content: jsx_dev_runtime14.jsxDEV(ExplorePageContent, {}, undefined, false, undefined, this),
+      background: jsx_dev_runtime14.jsxDEV(ExplorePageBackground, {}, undefined, false, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 function ExplorePageContent() {
-  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
     children: [
-      jsx_dev_runtime17.jsxDEV(Row, {
+      jsx_dev_runtime14.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      jsx_dev_runtime17.jsxDEV(Row, {
+      jsx_dev_runtime14.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      jsx_dev_runtime17.jsxDEV(Row, {
+      jsx_dev_runtime14.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
@@ -50056,8 +49668,8 @@ function ExplorePageContent() {
   }, undefined, true, undefined, this);
 }
 function ExplorePageBackground() {
-  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: jsx_dev_runtime17.jsxDEV(Col, {
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+    children: jsx_dev_runtime14.jsxDEV(Col, {
       style: {
         width: "100%",
         height: "100%",
@@ -50069,8 +49681,8 @@ function ExplorePageBackground() {
 function ExplorePageCard({
   daoAddress
 }) {
-  const [slide, setSlide] = import_react24.useState();
-  const [dao, setDao] = import_react24.useState(new Dao({
+  const [slide, setSlide] = import_react20.useState();
+  const [dao, setDao] = import_react20.useState(new Dao({
     address: "",
     name: "",
     symbol: "",
@@ -50086,18 +49698,18 @@ function ExplorePageCard({
       slippage: 0
     })
   }));
-  const [daoName, setDaoName] = import_react24.useState("****");
-  const [daoSymbol, setDaoSymbol] = import_react24.useState("****");
-  const [daoRealTotalAssets, setDaoRealTotalAssets] = import_react24.useState(0);
-  const [daoTotalSupply, setDaoTotalSupply] = import_react24.useState(0);
-  const [daoQuote, setDaoQuote] = import_react24.useState(0);
-  const [daoQuote24HrPercentageChange, setDaoQuote24HrPercentageChange] = import_react24.useState(0);
-  const [_, setExplorePageCard] = useMachine(import_react25.useMemo(() => createMachine({
+  const [daoName, setDaoName] = import_react20.useState("****");
+  const [daoSymbol, setDaoSymbol] = import_react20.useState("****");
+  const [daoRealTotalAssets, setDaoRealTotalAssets] = import_react20.useState(0);
+  const [daoTotalSupply, setDaoTotalSupply] = import_react20.useState(0);
+  const [daoQuote, setDaoQuote] = import_react20.useState(0);
+  const [daoQuote24HrPercentageChange, setDaoQuote24HrPercentageChange] = import_react20.useState(0);
+  const [_, setExplorePageCard] = useMachine(import_react21.useMemo(() => createMachine({
     initial: "loading",
     states: {
       loading: {
         entry: () => {
-          setSlide(jsx_dev_runtime17.jsxDEV(ExplorePageCardLoaderSlide, {}, undefined, false, undefined, this));
+          setSlide(jsx_dev_runtime14.jsxDEV(ExplorePageCardLoaderSlide, {}, undefined, false, undefined, this));
           (async () => {
             const daoName2 = await query({
               to: daoAddress,
@@ -50158,8 +49770,8 @@ function ExplorePageCard({
       },
       idle: {
         entry: () => {
-          return setSlide(jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-            children: jsx_dev_runtime17.jsxDEV(ExplorePageCardIdleSlide, {
+          return setSlide(jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+            children: jsx_dev_runtime14.jsxDEV(ExplorePageCardIdleSlide, {
               daoAddress,
               daoName,
               daoSymbol,
@@ -50180,8 +49792,8 @@ function ExplorePageCard({
       executingMintTransaction: {}
     }
   }), [setSlide, setDaoName, setDaoSymbol, setDaoRealTotalAssets, setDaoTotalSupply, setDaoQuote, setDaoQuote24HrPercentageChange]));
-  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: jsx_dev_runtime17.jsxDEV(Col, {
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+    children: jsx_dev_runtime14.jsxDEV(Col, {
       style: {
         width: RelativeUnit(25),
         aspectRatio: "2/1",
@@ -50199,8 +49811,8 @@ function ExplorePageCard({
   }, undefined, false, undefined, this);
 }
 function ExplorePageCardLoaderSlide() {
-  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: jsx_dev_runtime17.jsxDEV(Image, {
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+    children: jsx_dev_runtime14.jsxDEV(Image, {
       src: "../../../img/animation/loader/Infinity.svg",
       style: {
         width: RelativeUnit(5),
@@ -50218,9 +49830,9 @@ function ExplorePageCardIdleSlide({
   daoQuote,
   daoQuote24HrPercentageChange
 }) {
-  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {}, undefined, false, undefined, this);
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {}, undefined, false, undefined, this);
 }
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 
 class Quote {
   best;
@@ -50263,11 +49875,11 @@ class Dao {
 
 // src/public/lib/react/Renderable.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root) {
-    return client.createRoot(root).render(jsx_dev_runtime18.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime15.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   }
@@ -50275,14 +49887,14 @@ function render(routes) {
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime19.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime16.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
 }, {
   path: "/explore",
-  element: jsx_dev_runtime19.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime16.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
 }, {
   path: "*",
-  element: jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {}, undefined, false, undefined, this)
 }]);

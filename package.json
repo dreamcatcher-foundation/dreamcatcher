@@ -58,6 +58,7 @@
     "solidity_flattener": "^1.0.0",
     "storeon": "^3.1.5",
     "styled-components": "^6.1.12",
+    "tailwindcss": "^3.4.10",
     "truffle": "^5.11.5",
     "truffle-flattener": "^1.6.0",
     "ts-mixer": "^6.0.4",

@@ -8,6 +8,7 @@ import { compile } from "@lib/Solc";
 import Express from "express";
 
 (async function() {
+    /**
     let ownableTokenCompilation:
         | Sol
         | SolFailed 
@@ -24,6 +25,7 @@ import Express from "express";
         vaultCompilation.errors.forEach(e => console.error(e));
         return;
     }
+    */
     let transpilation:
         | Ok<Buffer>
         | Err<"tsxScriptNotFound">
@@ -39,7 +41,7 @@ import Express from "express";
         .use(Express.json())
         
         .get("/", async (request, response) => response.status(200).sendFile(join(__dirname, "App.html")))
-        
+        /**
         .get("/data", async (request, response) => {
             
             response
@@ -51,6 +53,6 @@ import Express from "express";
                     vaultTokenAbi: vaultCompilation.abi
                 });
         })
-
+        */
         .listen(3000);
 })();

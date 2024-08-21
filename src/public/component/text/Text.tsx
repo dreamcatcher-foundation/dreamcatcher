@@ -1,6 +1,7 @@
 import type { RowProps } from "@component/Row";
 import { Row } from "@component/Row";
 import { RelativeUnit } from "@lib/RelativeUnit";
+import {TextConfiguration} from "./TextConfiguration";
 import * as ColorPalette from "@component/ColorPalette";
 import React from "react";
 
@@ -13,10 +14,10 @@ export function Text(props: TextProps): React.JSX.Element {
     return <>
         <Row
         style={{
-            fontSize: RelativeUnit(1),
-            fontWeight: "bold",
-            fontFamily: "satoshiRegular",
-            color: ColorPalette.TITANIUM.toString(),
+            fontSize: TextConfiguration.fontSize,
+            fontWeight: TextConfiguration.fontWeight,
+            fontFamily: TextConfiguration.fontFamily,
+            color: TextConfiguration.color,
             ... style ?? {}
         }}
         { ... more }>

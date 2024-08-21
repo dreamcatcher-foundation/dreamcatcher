@@ -8,7 +8,6 @@ import { config } from "react-spring";
 import { useMemo, useState } from "react";
 import { createMachine as Machine } from "xstate";
 import { useMachine } from "@xstate/react";
-import { setRootRef } from "@component/Root";
 import * as ColorPalette from "@component/ColorPalette";
 
 export interface NavButtonProps extends Omit<ComponentPropsWithRef<typeof Link>, "to"> {
@@ -94,13 +93,6 @@ export function NavButton(props: NavButtonProps): ReactNode {
         to={ to }
         onMouseEnter={ () => send({ type: "mouseEnter" }) }
         onMouseLeave={ () => send({ type: "mouseLeave" }) }
-        onClick={ () => {
-            if (goto) {
-                setRootRef.get()!({ type: goto });
-                return;
-            }
-            return;
-        } }
         style={{
             pointerEvents: "auto",
             textDecoration: "none",
