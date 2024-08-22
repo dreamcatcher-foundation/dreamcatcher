@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 import type { ColProps } from "@component/Col";
 import { Col } from "@component/Col";
-import { Text } from "@component/Text";
+import { Text } from "src/public/component_/text/Text";
 import { U } from "@lib/RelativeUnit";
 import { useSpring } from "react-spring";
 import { config } from "react-spring";
-import * as ColorPalette from "@component/ColorPalette";
+import * as ColorPalette from "src/public/component_/config/ColorPalette";
 import React from "react";
 
 export type ButtonProps = ColProps & {

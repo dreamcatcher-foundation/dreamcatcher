@@ -48,29 +48,42 @@
 					"./src/public/lib/eda/ref/*",
 					"./src/public/lib/eda/ref-map/*"
 				],
+
 				"@component/*": [
+					"./src/public/component/*",
+					"./src/public/component/structure/*",
+					"./src/public/component/structure/layout/*",
+					"./src/public/component/structure/layout/grid/*",
+					"./src/public/component/structure/layout/flex/*",
+					"./src/public/component/structure/template/*",
+					"./src/public/component/base/*",
+					"./src/public/component/type/*",
+					"./src/public/component/type/css/*"
+				],
+
+				"@components/*": [
 					/// layout
 					"./src/public/layout/*",
 					"./src/public/layout/grid/*",
 					"./src/public/layout/flex/*",
 
-					"./src/public/component/*",
-					"./src/public/component/config/*",
-					"./src/public/component/misc/*",
-					"./src/public/component/page/*",
-					"./src/public/component/page/landing/*",
-					"./src/public/component/page/explore/*",
-					"./src/public/component/text/*",
-					"./src/public/component/nav/*",
-					"./src/public/component/state/*",
-					"./src/public/component/decoration/*",
-					"./src/public/component/button/*",
-					"./src/public/component/layout/template/*",
-					"./src/public/component/type/*",
-					"./src/public/component/base/*"
+					"src/public/component_/*",
+					"src/public/component_/config/*",
+					"src/public/component_/misc/*",
+					"src/public/component_/page/*",
+					"src/public/component_/page/landing/*",
+					"src/public/component_/page/explore/*",
+					"src/public/component_/text/*",
+					"src/public/component_/nav/*",
+					"src/public/component_/state/*",
+					"src/public/component_/decoration/*",
+					"src/public/component_/button/*",
+					"src/public/component_/layout/template/*",
+					"src/public/component_/type/*",
+					"src/public/component_/base/*"
 				],
 				"@component::layout": [
-					"./src/public/component/layout/grid/*"
+					"src/public/component_/layout/grid/*"
 				]
 		}
 	}
