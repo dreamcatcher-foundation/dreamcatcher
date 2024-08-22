@@ -61,7 +61,12 @@
 					"./src/public/component/state/*",
 					"./src/public/component/decoration/*",
 					"./src/public/component/button/*",
-					"./src/public/component/layout/template/*"
+					"./src/public/component/layout/template/*",
+					"./src/public/component/type/*",
+					"./src/public/component/base/*"
+				],
+				"@component::layout": [
+					"./src/public/component/layout/grid/*"
 				]
 		}
 	}

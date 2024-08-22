@@ -11235,7 +11235,7 @@ var require_react_dom_development = __commonJS((exports) => {
               if (dependency.context === context) {
                 if (fiber.tag === ClassComponent) {
                   var lane = pickArbitraryLane(renderLanes2);
-                  var update3 = createUpdate2(NoTimestamp, lane);
+                  var update3 = createUpdate(NoTimestamp, lane);
                   update3.tag = ForceUpdate;
                   var updateQueue2 = fiber.updateQueue;
                   if (updateQueue2 === null)
@@ -11489,7 +11489,7 @@ var require_react_dom_development = __commonJS((exports) => {
           workInProgress2.updateQueue = clone;
         }
       }
-      function createUpdate2(eventTime, lane) {
+      function createUpdate(eventTime, lane) {
         var update3 = {
           eventTime,
           lane,
@@ -11882,7 +11882,7 @@ var require_react_dom_development = __commonJS((exports) => {
           var fiber = get(inst);
           var eventTime = requestEventTime();
           var lane = requestUpdateLane(fiber);
-          var update3 = createUpdate2(eventTime, lane);
+          var update3 = createUpdate(eventTime, lane);
           update3.payload = payload;
           if (callback !== undefined && callback !== null) {
             {
@@ -11903,7 +11903,7 @@ var require_react_dom_development = __commonJS((exports) => {
           var fiber = get(inst);
           var eventTime = requestEventTime();
           var lane = requestUpdateLane(fiber);
-          var update3 = createUpdate2(eventTime, lane);
+          var update3 = createUpdate(eventTime, lane);
           update3.tag = ReplaceState;
           update3.payload = payload;
           if (callback !== undefined && callback !== null) {
@@ -11925,7 +11925,7 @@ var require_react_dom_development = __commonJS((exports) => {
           var fiber = get(inst);
           var eventTime = requestEventTime();
           var lane = requestUpdateLane(fiber);
-          var update3 = createUpdate2(eventTime, lane);
+          var update3 = createUpdate(eventTime, lane);
           update3.tag = ForceUpdate;
           if (callback !== undefined && callback !== null) {
             {
@@ -15271,7 +15271,7 @@ var require_react_dom_development = __commonJS((exports) => {
       }
       var PossiblyWeakMap$1 = typeof WeakMap === "function" ? WeakMap : Map;
       function createRootErrorUpdate(fiber, errorInfo, lane) {
-        var update3 = createUpdate2(NoTimestamp, lane);
+        var update3 = createUpdate(NoTimestamp, lane);
         update3.tag = CaptureUpdate;
         update3.payload = {
           element: null
@@ -15284,7 +15284,7 @@ var require_react_dom_development = __commonJS((exports) => {
         return update3;
       }
       function createClassErrorUpdate(fiber, errorInfo, lane) {
-        var update3 = createUpdate2(NoTimestamp, lane);
+        var update3 = createUpdate(NoTimestamp, lane);
         update3.tag = CaptureUpdate;
         var getDerivedStateFromError = fiber.type.getDerivedStateFromError;
         if (typeof getDerivedStateFromError === "function") {
@@ -15397,7 +15397,7 @@ var require_react_dom_development = __commonJS((exports) => {
               if (currentSourceFiber === null) {
                 sourceFiber.tag = IncompleteClassComponent;
               } else {
-                var update3 = createUpdate2(NoTimestamp, SyncLane);
+                var update3 = createUpdate(NoTimestamp, SyncLane);
                 update3.tag = ForceUpdate;
                 enqueueUpdate(sourceFiber, update3, SyncLane);
               }
@@ -21795,7 +21795,7 @@ var require_react_dom_development = __commonJS((exports) => {
         var current2 = root2.current;
         var eventTime = requestEventTime();
         var lane = requestUpdateLane(current2);
-        var update3 = createUpdate2(eventTime, lane);
+        var update3 = createUpdate(eventTime, lane);
         update3.callback = callback !== undefined && callback !== null ? callback : null;
         enqueueUpdate(current2, update3, lane);
         scheduleInitialHydrationOnRoot(root2, lane, eventTime);
@@ -21823,7 +21823,7 @@ var require_react_dom_development = __commonJS((exports) => {
             error("Render methods should be a pure function of props and state; triggering nested component updates from render is not allowed. If necessary, trigger nested updates in componentDidUpdate.\n\nCheck the render method of %s.", getComponentNameFromFiber(current) || "Unknown");
           }
         }
-        var update3 = createUpdate2(eventTime, lane);
+        var update3 = createUpdate(eventTime, lane);
         update3.payload = {
           element
         };
@@ -23065,7 +23065,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         }
       }
       var ReactCurrentOwner = ReactSharedInternals.ReactCurrentOwner;
-      var RESERVED_PROPS2 = {
+      var RESERVED_PROPS = {
         key: true,
         ref: true,
         __self: true,
@@ -23199,7 +23199,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
             warnIfStringRefCannotBeAutoConverted(config2, self2);
           }
           for (propName in config2) {
-            if (hasOwnProperty.call(config2, propName) && !RESERVED_PROPS2.hasOwnProperty(propName)) {
+            if (hasOwnProperty.call(config2, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
               props[propName] = config2[propName];
             }
           }
@@ -24003,13 +24003,6 @@ var eachProp = function(obj, fn, ctx) {
     }
   }
 };
-var flush = function(queue, iterator) {
-  if (queue.size) {
-    const items = Array.from(queue);
-    queue.clear();
-    each(items, iterator);
-  }
-};
 var flushStartQueue = function() {
   startQueue.forEach(startSafely);
   startQueue.clear();
@@ -24226,9 +24219,6 @@ var removeFluidObserver = function(target, observer2) {
 var deprecateInterpolate = function() {
   warnInterpolate(`${prefix}The "interpolate" function is deprecated in v9 (use "to" instead)`);
 };
-var deprecateDirectCall = function() {
-  warnDirectCall(`${prefix}Directly calling start instead of using the api object is deprecated in v9 (use ".start" instead), this will be removed in later 0.X.0 versions`);
-};
 var isAnimatedString = function(value) {
   return is.str(value) && (value[0] == "#" || /\d/.test(value) || !isSSR() && cssVariableRegex.test(value) || (value in (colors || {})));
 };
@@ -24239,7 +24229,6 @@ var import_react4 = __toESM(require_react(), 1);
 var import_react5 = __toESM(require_react(), 1);
 var import_react6 = __toESM(require_react(), 1);
 var import_react7 = __toESM(require_react(), 1);
-var import_react8 = __toESM(require_react(), 1);
 var useForceUpdate = function() {
   const update2 = import_react2.useState()[1];
   const isMounted = useIsMounted();
@@ -24287,13 +24276,7 @@ var areInputsEqual = function(next, prev) {
   }
   return true;
 };
-var usePrev = function(value) {
-  const prevRef = import_react7.useRef();
-  import_react7.useEffect(() => {
-    prevRef.current = value;
-  });
-  return prevRef.current;
-};
+var import_react8 = __toESM(require_react(), 1);
 var __defProp2 = Object.defineProperty;
 var __export2 = (target, all) => {
   for (var name in all)
@@ -24394,7 +24377,6 @@ var is = {
 };
 var each = (obj, fn) => obj.forEach(fn);
 var toArray = (a) => is.und(a) ? [] : is.arr(a) ? a : [a];
-var flushCalls = (queue, ...args) => flush(queue, (fn) => fn(...args));
 var isSSR = () => typeof window === "undefined" || !window.navigator || /ServerSideRendering|^Deno\//.test(window.navigator.userAgent);
 var createStringInterpolator;
 var to;
@@ -24705,7 +24687,6 @@ var $get = Symbol.for("FluidValue.get");
 var $observers = Symbol.for("FluidValue.observers");
 var hasFluidValue = (arg) => Boolean(arg && arg[$get]);
 var getFluidValue = (arg) => arg && arg[$get] ? arg[$get]() : arg;
-var getFluidObservers = (target) => target[$observers] || null;
 var FluidValue = class {
   constructor(get) {
     if (!get && !(get = this.get)) {
@@ -24807,57 +24788,6 @@ var useOnce = (effect) => import_react6.useEffect(effect, emptyDeps);
 var emptyDeps = [];
 
 // node_modules/@react-spring/core/dist/react-spring_core.modern.mjs
-var callProp = function(value, ...args) {
-  return is.fun(value) ? value(...args) : value;
-};
-var getForwardProps = function(props) {
-  const forward = {};
-  let count = 0;
-  eachProp(props, (value, prop) => {
-    if (!RESERVED_PROPS[prop]) {
-      forward[prop] = value;
-      count++;
-    }
-  });
-  if (count) {
-    return forward;
-  }
-};
-var inferTo = function(props) {
-  const to2 = getForwardProps(props);
-  if (to2) {
-    const out = { to: to2 };
-    eachProp(props, (val, key) => (key in to2) || (out[key] = val));
-    return out;
-  }
-  return { ...props };
-};
-var computeGoal = function(value) {
-  value = getFluidValue(value);
-  return is.arr(value) ? value.map(computeGoal) : isAnimatedString(value) ? globals_exports.createStringInterpolator({
-    range: [0, 1],
-    output: [value, value]
-  })(1) : value;
-};
-var hasProps = function(props) {
-  for (const _ in props)
-    return true;
-  return false;
-};
-var isAsyncTo = function(to2) {
-  return is.fun(to2) || is.arr(to2) && is.obj(to2[0]);
-};
-var detachRefs = function(ctrl, ref) {
-  ctrl.ref?.delete(ctrl);
-  ref?.delete(ctrl);
-};
-var replaceRef = function(ctrl, ref) {
-  if (ref && ctrl.ref !== ref) {
-    ctrl.ref?.delete(ctrl);
-    ref.add(ctrl);
-    ctrl.ref = ref;
-  }
-};
 var import_react10 = __toESM(require_react(), 1);
 
 // node_modules/@react-spring/animated/dist/react-spring_animated.modern.mjs
@@ -25142,393 +25072,8 @@ var createHost = (components, {
 var getDisplayName = (arg) => is.str(arg) ? arg : arg && is.str(arg.displayName) ? arg.displayName : is.fun(arg) && arg.name || null;
 
 // node_modules/@react-spring/core/dist/react-spring_core.modern.mjs
-var mergeConfig = function(config2, newConfig, defaultConfig) {
-  if (defaultConfig) {
-    defaultConfig = { ...defaultConfig };
-    sanitizeConfig(defaultConfig, newConfig);
-    newConfig = { ...defaultConfig, ...newConfig };
-  }
-  sanitizeConfig(config2, newConfig);
-  Object.assign(config2, newConfig);
-  for (const key in defaults) {
-    if (config2[key] == null) {
-      config2[key] = defaults[key];
-    }
-  }
-  let { frequency, damping } = config2;
-  const { mass } = config2;
-  if (!is.und(frequency)) {
-    if (frequency < 0.01)
-      frequency = 0.01;
-    if (damping < 0)
-      damping = 0;
-    config2.tension = Math.pow(2 * Math.PI / frequency, 2) * mass;
-    config2.friction = 4 * Math.PI * damping * mass / frequency;
-  }
-  return config2;
-};
-var sanitizeConfig = function(config2, props) {
-  if (!is.und(props.decay)) {
-    config2.duration = undefined;
-  } else {
-    const isTensionConfig = !is.und(props.tension) || !is.und(props.friction);
-    if (isTensionConfig || !is.und(props.frequency) || !is.und(props.damping) || !is.und(props.mass)) {
-      config2.duration = undefined;
-      config2.decay = undefined;
-    }
-    if (isTensionConfig) {
-      config2.frequency = undefined;
-    }
-  }
-};
-var scheduleProps = function(callId, { key, props, defaultProps, state, actions }) {
-  return new Promise((resolve, reject) => {
-    let delay;
-    let timeout;
-    let cancel = matchProp(props.cancel ?? defaultProps?.cancel, key);
-    if (cancel) {
-      onStart();
-    } else {
-      if (!is.und(props.pause)) {
-        state.paused = matchProp(props.pause, key);
-      }
-      let pause = defaultProps?.pause;
-      if (pause !== true) {
-        pause = state.paused || matchProp(pause, key);
-      }
-      delay = callProp(props.delay || 0, key);
-      if (pause) {
-        state.resumeQueue.add(onResume);
-        actions.pause();
-      } else {
-        actions.resume();
-        onResume();
-      }
-    }
-    function onPause() {
-      state.resumeQueue.add(onResume);
-      state.timeouts.delete(timeout);
-      timeout.cancel();
-      delay = timeout.time - raf.now();
-    }
-    function onResume() {
-      if (delay > 0 && !globals_exports.skipAnimation) {
-        state.delayed = true;
-        timeout = raf.setTimeout(onStart, delay);
-        state.pauseQueue.add(onPause);
-        state.timeouts.add(timeout);
-      } else {
-        onStart();
-      }
-    }
-    function onStart() {
-      if (state.delayed) {
-        state.delayed = false;
-      }
-      state.pauseQueue.delete(onPause);
-      state.timeouts.delete(timeout);
-      if (callId <= (state.cancelId || 0)) {
-        cancel = true;
-      }
-      try {
-        actions.start({ ...props, callId, cancel }, resolve);
-      } catch (err) {
-        reject(err);
-      }
-    }
-  });
-};
-var runAsync = function(to2, props, state, target) {
-  const { callId, parentId, onRest } = props;
-  const { asyncTo: prevTo, promise: prevPromise } = state;
-  if (!parentId && to2 === prevTo && !props.reset) {
-    return prevPromise;
-  }
-  return state.promise = (async () => {
-    state.asyncId = callId;
-    state.asyncTo = to2;
-    const defaultProps = getDefaultProps(props, (value, key) => key === "onRest" ? undefined : value);
-    let preventBail;
-    let bail;
-    const bailPromise = new Promise((resolve, reject) => (preventBail = resolve, bail = reject));
-    const bailIfEnded = (bailSignal) => {
-      const bailResult = callId <= (state.cancelId || 0) && getCancelledResult(target) || callId !== state.asyncId && getFinishedResult(target, false);
-      if (bailResult) {
-        bailSignal.result = bailResult;
-        bail(bailSignal);
-        throw bailSignal;
-      }
-    };
-    const animate = (arg1, arg2) => {
-      const bailSignal = new BailSignal;
-      const skipAnimationSignal = new SkipAnimationSignal;
-      return (async () => {
-        if (globals_exports.skipAnimation) {
-          stopAsync(state);
-          skipAnimationSignal.result = getFinishedResult(target, false);
-          bail(skipAnimationSignal);
-          throw skipAnimationSignal;
-        }
-        bailIfEnded(bailSignal);
-        const props2 = is.obj(arg1) ? { ...arg1 } : { ...arg2, to: arg1 };
-        props2.parentId = callId;
-        eachProp(defaultProps, (value, key) => {
-          if (is.und(props2[key])) {
-            props2[key] = value;
-          }
-        });
-        const result2 = await target.start(props2);
-        bailIfEnded(bailSignal);
-        if (state.paused) {
-          await new Promise((resume) => {
-            state.resumeQueue.add(resume);
-          });
-        }
-        return result2;
-      })();
-    };
-    let result;
-    if (globals_exports.skipAnimation) {
-      stopAsync(state);
-      return getFinishedResult(target, false);
-    }
-    try {
-      let animating;
-      if (is.arr(to2)) {
-        animating = (async (queue) => {
-          for (const props2 of queue) {
-            await animate(props2);
-          }
-        })(to2);
-      } else {
-        animating = Promise.resolve(to2(animate, target.stop.bind(target)));
-      }
-      await Promise.all([animating.then(preventBail), bailPromise]);
-      result = getFinishedResult(target.get(), true, false);
-    } catch (err) {
-      if (err instanceof BailSignal) {
-        result = err.result;
-      } else if (err instanceof SkipAnimationSignal) {
-        result = err.result;
-      } else {
-        throw err;
-      }
-    } finally {
-      if (callId == state.asyncId) {
-        state.asyncId = parentId;
-        state.asyncTo = parentId ? prevTo : undefined;
-        state.promise = parentId ? prevPromise : undefined;
-      }
-    }
-    if (is.fun(onRest)) {
-      raf.batchedUpdates(() => {
-        onRest(result, target, target.item);
-      });
-    }
-    return result;
-  })();
-};
-var stopAsync = function(state, cancelId) {
-  flush(state.timeouts, (t) => t.cancel());
-  state.pauseQueue.clear();
-  state.resumeQueue.clear();
-  state.asyncId = state.asyncTo = state.promise = undefined;
-  if (cancelId)
-    state.cancelId = cancelId;
-};
-var checkFinished = function(target, to2) {
-  const goal = computeGoal(to2);
-  const value = computeGoal(target.get());
-  return isEqual(value, goal);
-};
-var createLoopUpdate = function(props, loop2 = props.loop, to2 = props.to) {
-  const loopRet = callProp(loop2);
-  if (loopRet) {
-    const overrides = loopRet !== true && inferTo(loopRet);
-    const reverse = (overrides || props).reverse;
-    const reset = !overrides || overrides.reset;
-    return createUpdate({
-      ...props,
-      loop: loop2,
-      default: false,
-      pause: undefined,
-      to: !reverse || isAsyncTo(to2) ? to2 : undefined,
-      from: reset ? props.from : undefined,
-      reset,
-      ...overrides
-    });
-  }
-};
-var createUpdate = function(props) {
-  const { to: to2, from } = props = inferTo(props);
-  const keys = new Set;
-  if (is.obj(to2))
-    findDefined(to2, keys);
-  if (is.obj(from))
-    findDefined(from, keys);
-  props.keys = keys.size ? Array.from(keys) : null;
-  return props;
-};
-var declareUpdate = function(props) {
-  const update2 = createUpdate(props);
-  if (is.und(update2.default)) {
-    update2.default = getDefaultProps(update2);
-  }
-  return update2;
-};
-var findDefined = function(values, keys) {
-  eachProp(values, (value, key) => value != null && keys.add(key));
-};
-var mergeActiveFn = function(target, props, type) {
-  target.animation[type] = props[type] !== getDefaultProp(props, type) ? resolveProp(props[type], target.key) : undefined;
-};
-var sendEvent = function(target, type, ...args) {
-  target.animation[type]?.(...args);
-  target.defaultProps[type]?.(...args);
-};
 var React2 = __toESM(require_react(), 1);
 var import_react11 = __toESM(require_react(), 1);
-var flushUpdateQueue = function(ctrl, queue) {
-  return Promise.all(queue.map((props) => flushUpdate(ctrl, props))).then((results) => getCombinedResult(ctrl, results));
-};
-async function flushUpdate(ctrl, props, isLoop) {
-  const { keys, to: to2, from, loop: loop2, onRest, onResolve } = props;
-  const defaults2 = is.obj(props.default) && props.default;
-  if (loop2) {
-    props.loop = false;
-  }
-  if (to2 === false)
-    props.to = null;
-  if (from === false)
-    props.from = null;
-  const asyncTo = is.arr(to2) || is.fun(to2) ? to2 : undefined;
-  if (asyncTo) {
-    props.to = undefined;
-    props.onRest = undefined;
-    if (defaults2) {
-      defaults2.onRest = undefined;
-    }
-  } else {
-    each(BATCHED_EVENTS, (key) => {
-      const handler = props[key];
-      if (is.fun(handler)) {
-        const queue = ctrl["_events"][key];
-        props[key] = ({ finished, cancelled }) => {
-          const result2 = queue.get(handler);
-          if (result2) {
-            if (!finished)
-              result2.finished = false;
-            if (cancelled)
-              result2.cancelled = true;
-          } else {
-            queue.set(handler, {
-              value: null,
-              finished: finished || false,
-              cancelled: cancelled || false
-            });
-          }
-        };
-        if (defaults2) {
-          defaults2[key] = props[key];
-        }
-      }
-    });
-  }
-  const state = ctrl["_state"];
-  if (props.pause === !state.paused) {
-    state.paused = props.pause;
-    flushCalls(props.pause ? state.pauseQueue : state.resumeQueue);
-  } else if (state.paused) {
-    props.pause = true;
-  }
-  const promises = (keys || Object.keys(ctrl.springs)).map((key) => ctrl.springs[key].start(props));
-  const cancel = props.cancel === true || getDefaultProp(props, "cancel") === true;
-  if (asyncTo || cancel && state.asyncId) {
-    promises.push(scheduleProps(++ctrl["_lastAsyncId"], {
-      props,
-      state,
-      actions: {
-        pause: noop,
-        resume: noop,
-        start(props2, resolve) {
-          if (cancel) {
-            stopAsync(state, ctrl["_lastAsyncId"]);
-            resolve(getCancelledResult(ctrl));
-          } else {
-            props2.onRest = onRest;
-            resolve(runAsync(asyncTo, props2, state, ctrl));
-          }
-        }
-      }
-    }));
-  }
-  if (state.paused) {
-    await new Promise((resume) => {
-      state.resumeQueue.add(resume);
-    });
-  }
-  const result = getCombinedResult(ctrl, await Promise.all(promises));
-  if (loop2 && result.finished && !(isLoop && result.noop)) {
-    const nextProps = createLoopUpdate(props, loop2, to2);
-    if (nextProps) {
-      prepareKeys(ctrl, [nextProps]);
-      return flushUpdate(ctrl, nextProps, true);
-    }
-  }
-  if (onResolve) {
-    raf.batchedUpdates(() => onResolve(result, ctrl, ctrl.item));
-  }
-  return result;
-}
-var getSprings = function(ctrl, props) {
-  const springs = { ...ctrl.springs };
-  if (props) {
-    each(toArray(props), (props2) => {
-      if (is.und(props2.keys)) {
-        props2 = createUpdate(props2);
-      }
-      if (!is.obj(props2.to)) {
-        props2 = { ...props2, to: undefined };
-      }
-      prepareSprings(springs, props2, (key) => {
-        return createSpring(key);
-      });
-    });
-  }
-  setSprings(ctrl, springs);
-  return springs;
-};
-var setSprings = function(ctrl, springs) {
-  eachProp(springs, (spring, key) => {
-    if (!ctrl.springs[key]) {
-      ctrl.springs[key] = spring;
-      addFluidObserver(spring, ctrl);
-    }
-  });
-};
-var createSpring = function(key, observer) {
-  const spring = new SpringValue;
-  spring.key = key;
-  if (observer) {
-    addFluidObserver(spring, observer);
-  }
-  return spring;
-};
-var prepareSprings = function(springs, props, create) {
-  if (props.keys) {
-    each(props.keys, (key) => {
-      const spring = springs[key] || (springs[key] = create(key));
-      spring["_prepareNode"](props);
-    });
-  }
-};
-var prepareKeys = function(ctrl, queue) {
-  each(queue, (props) => {
-    prepareSprings(ctrl.springs, props, (key) => {
-      return createSpring(key, ctrl);
-    });
-  });
-};
 var makeContext = function(target, init) {
   Object.assign(target, React2.createContext(init));
   target.Provider._context = target;
@@ -25536,90 +25081,6 @@ var makeContext = function(target, init) {
   return target;
 };
 var import_react12 = __toESM(require_react(), 1);
-var useSprings = function(length, props, deps) {
-  const propsFn = is.fun(props) && props;
-  if (propsFn && !deps)
-    deps = [];
-  const ref = import_react10.useMemo(() => propsFn || arguments.length == 3 ? SpringRef() : undefined, []);
-  const layoutId = import_react10.useRef(0);
-  const forceUpdate = useForceUpdate();
-  const state = import_react10.useMemo(() => ({
-    ctrls: [],
-    queue: [],
-    flush(ctrl, updates2) {
-      const springs2 = getSprings(ctrl, updates2);
-      const canFlushSync = layoutId.current > 0 && !state.queue.length && !Object.keys(springs2).some((key) => !ctrl.springs[key]);
-      return canFlushSync ? flushUpdateQueue(ctrl, updates2) : new Promise((resolve) => {
-        setSprings(ctrl, springs2);
-        state.queue.push(() => {
-          resolve(flushUpdateQueue(ctrl, updates2));
-        });
-        forceUpdate();
-      });
-    }
-  }), []);
-  const ctrls = import_react10.useRef([...state.ctrls]);
-  const updates = [];
-  const prevLength = usePrev(length) || 0;
-  import_react10.useMemo(() => {
-    each(ctrls.current.slice(length, prevLength), (ctrl) => {
-      detachRefs(ctrl, ref);
-      ctrl.stop(true);
-    });
-    ctrls.current.length = length;
-    declareUpdates(prevLength, length);
-  }, [length]);
-  import_react10.useMemo(() => {
-    declareUpdates(0, Math.min(prevLength, length));
-  }, deps);
-  function declareUpdates(startIndex, endIndex) {
-    for (let i = startIndex;i < endIndex; i++) {
-      const ctrl = ctrls.current[i] || (ctrls.current[i] = new Controller(null, state.flush));
-      const update2 = propsFn ? propsFn(i, ctrl) : props[i];
-      if (update2) {
-        updates[i] = declareUpdate(update2);
-      }
-    }
-  }
-  const springs = ctrls.current.map((ctrl, i) => getSprings(ctrl, updates[i]));
-  const context = import_react10.useContext(SpringContext);
-  const prevContext = usePrev(context);
-  const hasContext = context !== prevContext && hasProps(context);
-  useIsomorphicLayoutEffect(() => {
-    layoutId.current++;
-    state.ctrls = ctrls.current;
-    const { queue } = state;
-    if (queue.length) {
-      state.queue = [];
-      each(queue, (cb) => cb());
-    }
-    each(ctrls.current, (ctrl, i) => {
-      ref?.add(ctrl);
-      if (hasContext) {
-        ctrl.start({ default: context });
-      }
-      const update2 = updates[i];
-      if (update2) {
-        replaceRef(ctrl, update2.ref);
-        if (ctrl.ref) {
-          ctrl.queue.push(update2);
-        } else {
-          ctrl.start(update2);
-        }
-      }
-    });
-  });
-  useOnce(() => () => {
-    each(state.ctrls, (ctrl) => ctrl.stop(true));
-  });
-  const values = springs.map((x) => ({ ...x }));
-  return ref ? [values, ref] : values;
-};
-var useSpring = function(props, deps) {
-  const isFn = is.fun(props);
-  const [[values], ref] = useSprings(1, isFn ? props : [props], isFn ? deps || [] : deps);
-  return isFn || arguments.length == 2 ? [values, ref] : values;
-};
 var React22 = __toESM(require_react(), 1);
 var import_react13 = __toESM(require_react(), 1);
 var import_react14 = __toESM(require_react(), 1);
@@ -25641,68 +25102,6 @@ var becomeIdle = function(self2) {
     });
   }
 };
-var matchProp = (value, key) => value === true || !!(key && value && (is.fun(value) ? value(key) : toArray(value).includes(key)));
-var resolveProp = (prop, key) => is.obj(prop) ? key && prop[key] : prop;
-var getDefaultProp = (props, key) => props.default === true ? props[key] : props.default ? props.default[key] : undefined;
-var noopTransform = (value) => value;
-var getDefaultProps = (props, transform = noopTransform) => {
-  let keys = DEFAULT_PROPS;
-  if (props.default && props.default !== true) {
-    props = props.default;
-    keys = Object.keys(props);
-  }
-  const defaults2 = {};
-  for (const key of keys) {
-    const value = transform(props[key], key);
-    if (!is.und(value)) {
-      defaults2[key] = value;
-    }
-  }
-  return defaults2;
-};
-var DEFAULT_PROPS = [
-  "config",
-  "onProps",
-  "onStart",
-  "onChange",
-  "onPause",
-  "onResume",
-  "onRest"
-];
-var RESERVED_PROPS = {
-  config: 1,
-  from: 1,
-  to: 1,
-  ref: 1,
-  loop: 1,
-  reset: 1,
-  pause: 1,
-  cancel: 1,
-  reverse: 1,
-  immediate: 1,
-  default: 1,
-  delay: 1,
-  onProps: 1,
-  onStart: 1,
-  onChange: 1,
-  onPause: 1,
-  onResume: 1,
-  onRest: 1,
-  onResolve: 1,
-  items: 1,
-  trail: 1,
-  sort: 1,
-  expires: 1,
-  initial: 1,
-  enter: 1,
-  update: 1,
-  leave: 1,
-  children: 1,
-  onDestroyed: 1,
-  keys: 1,
-  callId: 1,
-  parentId: 1
-};
 var config = {
   default: { tension: 170, friction: 26 },
   gentle: { tension: 120, friction: 14 },
@@ -25717,50 +25116,6 @@ var defaults = {
   damping: 1,
   easing: easings.linear,
   clamp: false
-};
-var AnimationConfig = class {
-  constructor() {
-    this.velocity = 0;
-    Object.assign(this, defaults);
-  }
-};
-var emptyArray = [];
-var Animation = class {
-  constructor() {
-    this.changed = false;
-    this.values = emptyArray;
-    this.toValues = null;
-    this.fromValues = emptyArray;
-    this.config = new AnimationConfig;
-    this.immediate = false;
-  }
-};
-var getCombinedResult = (target, results) => results.length == 1 ? results[0] : results.some((result) => result.cancelled) ? getCancelledResult(target.get()) : results.every((result) => result.noop) ? getNoopResult(target.get()) : getFinishedResult(target.get(), results.every((result) => result.finished));
-var getNoopResult = (value) => ({
-  value,
-  noop: true,
-  finished: true,
-  cancelled: false
-});
-var getFinishedResult = (value, finished, cancelled = false) => ({
-  value,
-  finished,
-  cancelled
-});
-var getCancelledResult = (value) => ({
-  value,
-  cancelled: true,
-  finished: false
-});
-var BailSignal = class extends Error {
-  constructor() {
-    super("An async animation has been interrupted. You see this error because you forgot to use `await` or `.catch(...)` on its returned promise.");
-  }
-};
-var SkipAnimationSignal = class extends Error {
-  constructor() {
-    super("SkipAnimationSignal");
-  }
 };
 var isFrameValue = (value) => value instanceof FrameValue;
 var nextId = 1;
@@ -25825,688 +25180,6 @@ var FrameValue = class extends FluidValue {
   }
 };
 var $P = Symbol.for("SpringPhase");
-var HAS_ANIMATED = 1;
-var IS_ANIMATING = 2;
-var IS_PAUSED = 4;
-var hasAnimated = (target) => (target[$P] & HAS_ANIMATED) > 0;
-var isAnimating = (target) => (target[$P] & IS_ANIMATING) > 0;
-var isPaused = (target) => (target[$P] & IS_PAUSED) > 0;
-var setActiveBit = (target, active) => active ? target[$P] |= IS_ANIMATING | HAS_ANIMATED : target[$P] &= ~IS_ANIMATING;
-var setPausedBit = (target, paused) => paused ? target[$P] |= IS_PAUSED : target[$P] &= ~IS_PAUSED;
-var SpringValue = class extends FrameValue {
-  constructor(arg1, arg2) {
-    super();
-    this.animation = new Animation;
-    this.defaultProps = {};
-    this._state = {
-      paused: false,
-      delayed: false,
-      pauseQueue: new Set,
-      resumeQueue: new Set,
-      timeouts: new Set
-    };
-    this._pendingCalls = new Set;
-    this._lastCallId = 0;
-    this._lastToId = 0;
-    this._memoizedDuration = 0;
-    if (!is.und(arg1) || !is.und(arg2)) {
-      const props = is.obj(arg1) ? { ...arg1 } : { ...arg2, from: arg1 };
-      if (is.und(props.default)) {
-        props.default = true;
-      }
-      this.start(props);
-    }
-  }
-  get idle() {
-    return !(isAnimating(this) || this._state.asyncTo) || isPaused(this);
-  }
-  get goal() {
-    return getFluidValue(this.animation.to);
-  }
-  get velocity() {
-    const node = getAnimated(this);
-    return node instanceof AnimatedValue ? node.lastVelocity || 0 : node.getPayload().map((node2) => node2.lastVelocity || 0);
-  }
-  get hasAnimated() {
-    return hasAnimated(this);
-  }
-  get isAnimating() {
-    return isAnimating(this);
-  }
-  get isPaused() {
-    return isPaused(this);
-  }
-  get isDelayed() {
-    return this._state.delayed;
-  }
-  advance(dt) {
-    let idle = true;
-    let changed = false;
-    const anim = this.animation;
-    let { toValues } = anim;
-    const { config: config2 } = anim;
-    const payload = getPayload(anim.to);
-    if (!payload && hasFluidValue(anim.to)) {
-      toValues = toArray(getFluidValue(anim.to));
-    }
-    anim.values.forEach((node2, i) => {
-      if (node2.done)
-        return;
-      const to2 = node2.constructor == AnimatedString ? 1 : payload ? payload[i].lastPosition : toValues[i];
-      let finished = anim.immediate;
-      let position = to2;
-      if (!finished) {
-        position = node2.lastPosition;
-        if (config2.tension <= 0) {
-          node2.done = true;
-          return;
-        }
-        let elapsed = node2.elapsedTime += dt;
-        const from = anim.fromValues[i];
-        const v0 = node2.v0 != null ? node2.v0 : node2.v0 = is.arr(config2.velocity) ? config2.velocity[i] : config2.velocity;
-        let velocity;
-        const precision = config2.precision || (from == to2 ? 0.005 : Math.min(1, Math.abs(to2 - from) * 0.001));
-        if (!is.und(config2.duration)) {
-          let p = 1;
-          if (config2.duration > 0) {
-            if (this._memoizedDuration !== config2.duration) {
-              this._memoizedDuration = config2.duration;
-              if (node2.durationProgress > 0) {
-                node2.elapsedTime = config2.duration * node2.durationProgress;
-                elapsed = node2.elapsedTime += dt;
-              }
-            }
-            p = (config2.progress || 0) + elapsed / this._memoizedDuration;
-            p = p > 1 ? 1 : p < 0 ? 0 : p;
-            node2.durationProgress = p;
-          }
-          position = from + config2.easing(p) * (to2 - from);
-          velocity = (position - node2.lastPosition) / dt;
-          finished = p == 1;
-        } else if (config2.decay) {
-          const decay = config2.decay === true ? 0.998 : config2.decay;
-          const e = Math.exp(-(1 - decay) * elapsed);
-          position = from + v0 / (1 - decay) * (1 - e);
-          finished = Math.abs(node2.lastPosition - position) <= precision;
-          velocity = v0 * e;
-        } else {
-          velocity = node2.lastVelocity == null ? v0 : node2.lastVelocity;
-          const restVelocity = config2.restVelocity || precision / 10;
-          const bounceFactor = config2.clamp ? 0 : config2.bounce;
-          const canBounce = !is.und(bounceFactor);
-          const isGrowing = from == to2 ? node2.v0 > 0 : from < to2;
-          let isMoving;
-          let isBouncing = false;
-          const step = 1;
-          const numSteps = Math.ceil(dt / step);
-          for (let n = 0;n < numSteps; ++n) {
-            isMoving = Math.abs(velocity) > restVelocity;
-            if (!isMoving) {
-              finished = Math.abs(to2 - position) <= precision;
-              if (finished) {
-                break;
-              }
-            }
-            if (canBounce) {
-              isBouncing = position == to2 || position > to2 == isGrowing;
-              if (isBouncing) {
-                velocity = -velocity * bounceFactor;
-                position = to2;
-              }
-            }
-            const springForce = -config2.tension * 0.000001 * (position - to2);
-            const dampingForce = -config2.friction * 0.001 * velocity;
-            const acceleration = (springForce + dampingForce) / config2.mass;
-            velocity = velocity + acceleration * step;
-            position = position + velocity * step;
-          }
-        }
-        node2.lastVelocity = velocity;
-        if (Number.isNaN(position)) {
-          console.warn(`Got NaN while animating:`, this);
-          finished = true;
-        }
-      }
-      if (payload && !payload[i].done) {
-        finished = false;
-      }
-      if (finished) {
-        node2.done = true;
-      } else {
-        idle = false;
-      }
-      if (node2.setValue(position, config2.round)) {
-        changed = true;
-      }
-    });
-    const node = getAnimated(this);
-    const currVal = node.getValue();
-    if (idle) {
-      const finalVal = getFluidValue(anim.to);
-      if ((currVal !== finalVal || changed) && !config2.decay) {
-        node.setValue(finalVal);
-        this._onChange(finalVal);
-      } else if (changed && config2.decay) {
-        this._onChange(currVal);
-      }
-      this._stop();
-    } else if (changed) {
-      this._onChange(currVal);
-    }
-  }
-  set(value) {
-    raf.batchedUpdates(() => {
-      this._stop();
-      this._focus(value);
-      this._set(value);
-    });
-    return this;
-  }
-  pause() {
-    this._update({ pause: true });
-  }
-  resume() {
-    this._update({ pause: false });
-  }
-  finish() {
-    if (isAnimating(this)) {
-      const { to: to2, config: config2 } = this.animation;
-      raf.batchedUpdates(() => {
-        this._onStart();
-        if (!config2.decay) {
-          this._set(to2, false);
-        }
-        this._stop();
-      });
-    }
-    return this;
-  }
-  update(props) {
-    const queue = this.queue || (this.queue = []);
-    queue.push(props);
-    return this;
-  }
-  start(to2, arg2) {
-    let queue;
-    if (!is.und(to2)) {
-      queue = [is.obj(to2) ? to2 : { ...arg2, to: to2 }];
-    } else {
-      queue = this.queue || [];
-      this.queue = [];
-    }
-    return Promise.all(queue.map((props) => {
-      const up = this._update(props);
-      return up;
-    })).then((results) => getCombinedResult(this, results));
-  }
-  stop(cancel) {
-    const { to: to2 } = this.animation;
-    this._focus(this.get());
-    stopAsync(this._state, cancel && this._lastCallId);
-    raf.batchedUpdates(() => this._stop(to2, cancel));
-    return this;
-  }
-  reset() {
-    this._update({ reset: true });
-  }
-  eventObserved(event) {
-    if (event.type == "change") {
-      this._start();
-    } else if (event.type == "priority") {
-      this.priority = event.priority + 1;
-    }
-  }
-  _prepareNode(props) {
-    const key = this.key || "";
-    let { to: to2, from } = props;
-    to2 = is.obj(to2) ? to2[key] : to2;
-    if (to2 == null || isAsyncTo(to2)) {
-      to2 = undefined;
-    }
-    from = is.obj(from) ? from[key] : from;
-    if (from == null) {
-      from = undefined;
-    }
-    const range = { to: to2, from };
-    if (!hasAnimated(this)) {
-      if (props.reverse)
-        [to2, from] = [from, to2];
-      from = getFluidValue(from);
-      if (!is.und(from)) {
-        this._set(from);
-      } else if (!getAnimated(this)) {
-        this._set(to2);
-      }
-    }
-    return range;
-  }
-  _update({ ...props }, isLoop) {
-    const { key, defaultProps } = this;
-    if (props.default)
-      Object.assign(defaultProps, getDefaultProps(props, (value, prop) => /^on/.test(prop) ? resolveProp(value, key) : value));
-    mergeActiveFn(this, props, "onProps");
-    sendEvent(this, "onProps", props, this);
-    const range = this._prepareNode(props);
-    if (Object.isFrozen(this)) {
-      throw Error("Cannot animate a `SpringValue` object that is frozen. Did you forget to pass your component to `animated(...)` before animating its props?");
-    }
-    const state = this._state;
-    return scheduleProps(++this._lastCallId, {
-      key,
-      props,
-      defaultProps,
-      state,
-      actions: {
-        pause: () => {
-          if (!isPaused(this)) {
-            setPausedBit(this, true);
-            flushCalls(state.pauseQueue);
-            sendEvent(this, "onPause", getFinishedResult(this, checkFinished(this, this.animation.to)), this);
-          }
-        },
-        resume: () => {
-          if (isPaused(this)) {
-            setPausedBit(this, false);
-            if (isAnimating(this)) {
-              this._resume();
-            }
-            flushCalls(state.resumeQueue);
-            sendEvent(this, "onResume", getFinishedResult(this, checkFinished(this, this.animation.to)), this);
-          }
-        },
-        start: this._merge.bind(this, range)
-      }
-    }).then((result) => {
-      if (props.loop && result.finished && !(isLoop && result.noop)) {
-        const nextProps = createLoopUpdate(props);
-        if (nextProps) {
-          return this._update(nextProps, true);
-        }
-      }
-      return result;
-    });
-  }
-  _merge(range, props, resolve) {
-    if (props.cancel) {
-      this.stop(true);
-      return resolve(getCancelledResult(this));
-    }
-    const hasToProp = !is.und(range.to);
-    const hasFromProp = !is.und(range.from);
-    if (hasToProp || hasFromProp) {
-      if (props.callId > this._lastToId) {
-        this._lastToId = props.callId;
-      } else {
-        return resolve(getCancelledResult(this));
-      }
-    }
-    const { key, defaultProps, animation: anim } = this;
-    const { to: prevTo, from: prevFrom } = anim;
-    let { to: to2 = prevTo, from = prevFrom } = range;
-    if (hasFromProp && !hasToProp && (!props.default || is.und(to2))) {
-      to2 = from;
-    }
-    if (props.reverse)
-      [to2, from] = [from, to2];
-    const hasFromChanged = !isEqual(from, prevFrom);
-    if (hasFromChanged) {
-      anim.from = from;
-    }
-    from = getFluidValue(from);
-    const hasToChanged = !isEqual(to2, prevTo);
-    if (hasToChanged) {
-      this._focus(to2);
-    }
-    const hasAsyncTo = isAsyncTo(props.to);
-    const { config: config2 } = anim;
-    const { decay, velocity } = config2;
-    if (hasToProp || hasFromProp) {
-      config2.velocity = 0;
-    }
-    if (props.config && !hasAsyncTo) {
-      mergeConfig(config2, callProp(props.config, key), props.config !== defaultProps.config ? callProp(defaultProps.config, key) : undefined);
-    }
-    let node = getAnimated(this);
-    if (!node || is.und(to2)) {
-      return resolve(getFinishedResult(this, true));
-    }
-    const reset = is.und(props.reset) ? hasFromProp && !props.default : !is.und(from) && matchProp(props.reset, key);
-    const value = reset ? from : this.get();
-    const goal = computeGoal(to2);
-    const isAnimatable = is.num(goal) || is.arr(goal) || isAnimatedString(goal);
-    const immediate = !hasAsyncTo && (!isAnimatable || matchProp(defaultProps.immediate || props.immediate, key));
-    if (hasToChanged) {
-      const nodeType = getAnimatedType(to2);
-      if (nodeType !== node.constructor) {
-        if (immediate) {
-          node = this._set(goal);
-        } else
-          throw Error(`Cannot animate between ${node.constructor.name} and ${nodeType.name}, as the "to" prop suggests`);
-      }
-    }
-    const goalType = node.constructor;
-    let started = hasFluidValue(to2);
-    let finished = false;
-    if (!started) {
-      const hasValueChanged = reset || !hasAnimated(this) && hasFromChanged;
-      if (hasToChanged || hasValueChanged) {
-        finished = isEqual(computeGoal(value), goal);
-        started = !finished;
-      }
-      if (!isEqual(anim.immediate, immediate) && !immediate || !isEqual(config2.decay, decay) || !isEqual(config2.velocity, velocity)) {
-        started = true;
-      }
-    }
-    if (finished && isAnimating(this)) {
-      if (anim.changed && !reset) {
-        started = true;
-      } else if (!started) {
-        this._stop(prevTo);
-      }
-    }
-    if (!hasAsyncTo) {
-      if (started || hasFluidValue(prevTo)) {
-        anim.values = node.getPayload();
-        anim.toValues = hasFluidValue(to2) ? null : goalType == AnimatedString ? [1] : toArray(goal);
-      }
-      if (anim.immediate != immediate) {
-        anim.immediate = immediate;
-        if (!immediate && !reset) {
-          this._set(prevTo);
-        }
-      }
-      if (started) {
-        const { onRest } = anim;
-        each(ACTIVE_EVENTS, (type) => mergeActiveFn(this, props, type));
-        const result = getFinishedResult(this, checkFinished(this, prevTo));
-        flushCalls(this._pendingCalls, result);
-        this._pendingCalls.add(resolve);
-        if (anim.changed)
-          raf.batchedUpdates(() => {
-            anim.changed = !reset;
-            onRest?.(result, this);
-            if (reset) {
-              callProp(defaultProps.onRest, result);
-            } else {
-              anim.onStart?.(result, this);
-            }
-          });
-      }
-    }
-    if (reset) {
-      this._set(value);
-    }
-    if (hasAsyncTo) {
-      resolve(runAsync(props.to, props, this._state, this));
-    } else if (started) {
-      this._start();
-    } else if (isAnimating(this) && !hasToChanged) {
-      this._pendingCalls.add(resolve);
-    } else {
-      resolve(getNoopResult(value));
-    }
-  }
-  _focus(value) {
-    const anim = this.animation;
-    if (value !== anim.to) {
-      if (getFluidObservers(this)) {
-        this._detach();
-      }
-      anim.to = value;
-      if (getFluidObservers(this)) {
-        this._attach();
-      }
-    }
-  }
-  _attach() {
-    let priority2 = 0;
-    const { to: to2 } = this.animation;
-    if (hasFluidValue(to2)) {
-      addFluidObserver(to2, this);
-      if (isFrameValue(to2)) {
-        priority2 = to2.priority + 1;
-      }
-    }
-    this.priority = priority2;
-  }
-  _detach() {
-    const { to: to2 } = this.animation;
-    if (hasFluidValue(to2)) {
-      removeFluidObserver(to2, this);
-    }
-  }
-  _set(arg, idle = true) {
-    const value = getFluidValue(arg);
-    if (!is.und(value)) {
-      const oldNode = getAnimated(this);
-      if (!oldNode || !isEqual(value, oldNode.getValue())) {
-        const nodeType = getAnimatedType(value);
-        if (!oldNode || oldNode.constructor != nodeType) {
-          setAnimated(this, nodeType.create(value));
-        } else {
-          oldNode.setValue(value);
-        }
-        if (oldNode) {
-          raf.batchedUpdates(() => {
-            this._onChange(value, idle);
-          });
-        }
-      }
-    }
-    return getAnimated(this);
-  }
-  _onStart() {
-    const anim = this.animation;
-    if (!anim.changed) {
-      anim.changed = true;
-      sendEvent(this, "onStart", getFinishedResult(this, checkFinished(this, anim.to)), this);
-    }
-  }
-  _onChange(value, idle) {
-    if (!idle) {
-      this._onStart();
-      callProp(this.animation.onChange, value, this);
-    }
-    callProp(this.defaultProps.onChange, value, this);
-    super._onChange(value, idle);
-  }
-  _start() {
-    const anim = this.animation;
-    getAnimated(this).reset(getFluidValue(anim.to));
-    if (!anim.immediate) {
-      anim.fromValues = anim.values.map((node) => node.lastPosition);
-    }
-    if (!isAnimating(this)) {
-      setActiveBit(this, true);
-      if (!isPaused(this)) {
-        this._resume();
-      }
-    }
-  }
-  _resume() {
-    if (globals_exports.skipAnimation) {
-      this.finish();
-    } else {
-      frameLoop.start(this);
-    }
-  }
-  _stop(goal, cancel) {
-    if (isAnimating(this)) {
-      setActiveBit(this, false);
-      const anim = this.animation;
-      each(anim.values, (node) => {
-        node.done = true;
-      });
-      if (anim.toValues) {
-        anim.onChange = anim.onPause = anim.onResume = undefined;
-      }
-      callFluidObservers(this, {
-        type: "idle",
-        parent: this
-      });
-      const result = cancel ? getCancelledResult(this.get()) : getFinishedResult(this.get(), checkFinished(this, goal ?? anim.to));
-      flushCalls(this._pendingCalls, result);
-      if (anim.changed) {
-        anim.changed = false;
-        sendEvent(this, "onRest", result, this);
-      }
-    }
-  }
-};
-var ACTIVE_EVENTS = [
-  "onStart",
-  "onRest",
-  "onChange",
-  "onPause",
-  "onResume"
-];
-var BATCHED_EVENTS = ["onStart", "onChange", "onRest"];
-var nextId2 = 1;
-var Controller = class {
-  constructor(props, flush3) {
-    this.id = nextId2++;
-    this.springs = {};
-    this.queue = [];
-    this._lastAsyncId = 0;
-    this._active = new Set;
-    this._changed = new Set;
-    this._started = false;
-    this._state = {
-      paused: false,
-      pauseQueue: new Set,
-      resumeQueue: new Set,
-      timeouts: new Set
-    };
-    this._events = {
-      onStart: new Map,
-      onChange: new Map,
-      onRest: new Map
-    };
-    this._onFrame = this._onFrame.bind(this);
-    if (flush3) {
-      this._flush = flush3;
-    }
-    if (props) {
-      this.start({ default: true, ...props });
-    }
-  }
-  get idle() {
-    return !this._state.asyncTo && Object.values(this.springs).every((spring) => {
-      return spring.idle && !spring.isDelayed && !spring.isPaused;
-    });
-  }
-  get item() {
-    return this._item;
-  }
-  set item(item) {
-    this._item = item;
-  }
-  get() {
-    const values = {};
-    this.each((spring, key) => values[key] = spring.get());
-    return values;
-  }
-  set(values) {
-    for (const key in values) {
-      const value = values[key];
-      if (!is.und(value)) {
-        this.springs[key].set(value);
-      }
-    }
-  }
-  update(props) {
-    if (props) {
-      this.queue.push(createUpdate(props));
-    }
-    return this;
-  }
-  start(props) {
-    let { queue } = this;
-    if (props) {
-      queue = toArray(props).map(createUpdate);
-    } else {
-      this.queue = [];
-    }
-    if (this._flush) {
-      return this._flush(this, queue);
-    }
-    prepareKeys(this, queue);
-    return flushUpdateQueue(this, queue);
-  }
-  stop(arg, keys) {
-    if (arg !== !!arg) {
-      keys = arg;
-    }
-    if (keys) {
-      const springs = this.springs;
-      each(toArray(keys), (key) => springs[key].stop(!!arg));
-    } else {
-      stopAsync(this._state, this._lastAsyncId);
-      this.each((spring) => spring.stop(!!arg));
-    }
-    return this;
-  }
-  pause(keys) {
-    if (is.und(keys)) {
-      this.start({ pause: true });
-    } else {
-      const springs = this.springs;
-      each(toArray(keys), (key) => springs[key].pause());
-    }
-    return this;
-  }
-  resume(keys) {
-    if (is.und(keys)) {
-      this.start({ pause: false });
-    } else {
-      const springs = this.springs;
-      each(toArray(keys), (key) => springs[key].resume());
-    }
-    return this;
-  }
-  each(iterator) {
-    eachProp(this.springs, iterator);
-  }
-  _onFrame() {
-    const { onStart, onChange, onRest } = this._events;
-    const active = this._active.size > 0;
-    const changed = this._changed.size > 0;
-    if (active && !this._started || changed && !this._started) {
-      this._started = true;
-      flush(onStart, ([onStart2, result]) => {
-        result.value = this.get();
-        onStart2(result, this, this._item);
-      });
-    }
-    const idle = !active && this._started;
-    const values = changed || idle && onRest.size ? this.get() : null;
-    if (changed && onChange.size) {
-      flush(onChange, ([onChange2, result]) => {
-        result.value = values;
-        onChange2(result, this, this._item);
-      });
-    }
-    if (idle) {
-      this._started = false;
-      flush(onRest, ([onRest2, result]) => {
-        result.value = values;
-        onRest2(result, this, this._item);
-      });
-    }
-  }
-  eventObserved(event) {
-    if (event.type == "change") {
-      this._changed.add(event.parent);
-      if (!event.idle) {
-        this._active.add(event.parent);
-      }
-    } else if (event.type == "idle") {
-      this._active.delete(event.parent);
-    } else
-      return;
-    raf.onFrame(this._onFrame);
-  }
-};
 var SpringContext = ({
   children,
   ...props
@@ -26520,78 +25193,6 @@ var SpringContext = ({
 var ctx = makeContext(SpringContext, {});
 SpringContext.Provider = ctx.Provider;
 SpringContext.Consumer = ctx.Consumer;
-var SpringRef = () => {
-  const current = [];
-  const SpringRef2 = function(props) {
-    deprecateDirectCall();
-    const results = [];
-    each(current, (ctrl, i) => {
-      if (is.und(props)) {
-        results.push(ctrl.start());
-      } else {
-        const update2 = _getProps(props, ctrl, i);
-        if (update2) {
-          results.push(ctrl.start(update2));
-        }
-      }
-    });
-    return results;
-  };
-  SpringRef2.current = current;
-  SpringRef2.add = function(ctrl) {
-    if (!current.includes(ctrl)) {
-      current.push(ctrl);
-    }
-  };
-  SpringRef2.delete = function(ctrl) {
-    const i = current.indexOf(ctrl);
-    if (~i)
-      current.splice(i, 1);
-  };
-  SpringRef2.pause = function() {
-    each(current, (ctrl) => ctrl.pause(...arguments));
-    return this;
-  };
-  SpringRef2.resume = function() {
-    each(current, (ctrl) => ctrl.resume(...arguments));
-    return this;
-  };
-  SpringRef2.set = function(values) {
-    each(current, (ctrl, i) => {
-      const update2 = is.fun(values) ? values(i, ctrl) : values;
-      if (update2) {
-        ctrl.set(update2);
-      }
-    });
-  };
-  SpringRef2.start = function(props) {
-    const results = [];
-    each(current, (ctrl, i) => {
-      if (is.und(props)) {
-        results.push(ctrl.start());
-      } else {
-        const update2 = this._getProps(props, ctrl, i);
-        if (update2) {
-          results.push(ctrl.start(update2));
-        }
-      }
-    });
-    return results;
-  };
-  SpringRef2.stop = function() {
-    each(current, (ctrl) => ctrl.stop(...arguments));
-    return this;
-  };
-  SpringRef2.update = function(props) {
-    each(current, (ctrl, i) => ctrl.update(this._getProps(props, ctrl, i)));
-    return this;
-  };
-  const _getProps = function(arg, ctrl, index) {
-    return is.fun(arg) ? arg(index, ctrl) : arg;
-  };
-  SpringRef2._getProps = _getProps;
-  return SpringRef2;
-};
 var Interpolation = class extends FrameValue {
   constructor(source, args) {
     super();
@@ -27059,12 +25660,83 @@ function Layer(props) {
   }, undefined, false, undefined, this);
 }
 
-// src/public/component/layout/Row.tsx
+// src/public/component/base/Base.tsx
 var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
+function Base(props) {
+  return jsx_dev_runtime4.jsxDEV(jsx_dev_runtime4.Fragment, {
+    children: jsx_dev_runtime4.jsxDEV(animated6.div, {
+      ...props
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/layout/grid/Grid.tsx
+var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+function Grid(props) {
+  let { width, height, rowCount, colCount, style, ...more } = props;
+  return jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
+    children: jsx_dev_runtime5.jsxDEV(Base, {
+      style: {
+        width,
+        height,
+        display: "grid",
+        gridTemplateRows: `repeat(${Number(rowCount)}, 1fr)`,
+        gridTemplateColumns: `repeat(${Number(colCount)}, 1fr)`,
+        ...style ?? {}
+      },
+      ...more
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/layout/grid/GridItem.tsx
+var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+function GridItem(props) {
+  let { coordinate0, coordinate1, style, ...more } = props;
+  return jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
+    children: jsx_dev_runtime6.jsxDEV(Base, {
+      style: {
+        gridRowStart: Number(coordinate0.x),
+        gridRowEnd: Number(coordinate1.x),
+        gridColumnStart: Number(coordinate0.y),
+        gridColumnEnd: Number(coordinate1.y),
+        ...style ?? {}
+      },
+      ...more
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/layout/grid/GridItemCoordinate.tsx
+function GridItemCoordinate(_) {
+  return _;
+}
+
+// src/public/component/nav/Nav.tsx
+function Nav() {
+  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
+    children: jsx_dev_runtime13.jsxDEV(Grid, {
+      width: "100%",
+      height: "100px",
+      rowCount: 4n,
+      colCount: 2n,
+      children: jsx_dev_runtime13.jsxDEV(GridItem, {
+        coordinate0: GridItemCoordinate({ x: 1n, y: 1n }),
+        coordinate1: GridItemCoordinate({ x: 2n, y: 3n }),
+        style: {
+          background: "#FFF"
+        }
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/layout/Row.tsx
+var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
 function Row(props) {
   let { style, ...more } = props;
-  return jsx_dev_runtime4.jsxDEV(jsx_dev_runtime4.Fragment, {
-    children: jsx_dev_runtime4.jsxDEV(Col, {
+  return jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {
+    children: jsx_dev_runtime7.jsxDEV(Col, {
       style: {
         flexDirection: "row",
         ...style ?? {}
@@ -27080,11 +25752,11 @@ function RelativeUnit(number) {
 }
 
 // src/public/component/misc/Image.tsx
-var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 function Image(props) {
   let { src, style, children, ...more } = props;
-  return jsx_dev_runtime5.jsxDEV(jsx_dev_runtime5.Fragment, {
-    children: jsx_dev_runtime5.jsxDEV(Row, {
+  return jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
+    children: jsx_dev_runtime8.jsxDEV(Row, {
       style: {
         backgroundImage: `url(${src})`,
         backgroundSize: "cover",
@@ -27104,11 +25776,11 @@ class TextConfiguration {
 }
 
 // src/public/component/text/Text.tsx
-var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 function Text(props) {
   let { text, style, ...more } = props;
-  return jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
-    children: jsx_dev_runtime6.jsxDEV(Row, {
+  return jsx_dev_runtime9.jsxDEV(jsx_dev_runtime9.Fragment, {
+    children: jsx_dev_runtime9.jsxDEV(Row, {
       style: {
         fontSize: TextConfiguration.fontSize,
         fontWeight: TextConfiguration.fontWeight,
@@ -27123,28 +25795,7 @@ function Text(props) {
 }
 
 // src/public/component/nav/NavBrand.tsx
-var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
-function NavBrand() {
-  return jsx_dev_runtime7.jsxDEV(jsx_dev_runtime7.Fragment, {
-    children: jsx_dev_runtime7.jsxDEV(Col, {
-      children: [
-        jsx_dev_runtime7.jsxDEV(Image, {
-          src: "../../img/press-kit/Logo.png",
-          style: {
-            width: RelativeUnit(2),
-            aspectRatio: "1/1"
-          }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime7.jsxDEV(Text, {
-          text: "Dreamcatcher",
-          style: {
-            fontSize: RelativeUnit(1.5)
-          }
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
+var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
 
 // node_modules/react-router-dom/dist/index.js
 var React4 = __toESM(require_react(), 1);
@@ -34542,109 +33193,7 @@ var DEEP_PURPLE = Hex("#615FFF").unwrap();
 var DEEP_PURPLE_GRADIENT = [DEEP_PURPLE, Hex("#9662FF").unwrap()];
 
 // src/public/component/nav/NavButton.tsx
-var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
-function NavButton(props) {
-  let { label, goto, style, to: to2, children, ...more } = props;
-  if (!to2)
-    to2 = "/";
-  if (goto)
-    to2 = "/";
-  let [symbolSpring, setSymbolSpring] = useSpring(() => ({
-    opacity: "0",
-    fontSize: RelativeUnit(1),
-    fontWeight: "bold",
-    fontFamily: "satoshiRegular",
-    color: DEEP_PURPLE.toString(),
-    textShadow: glow(DEEP_PURPLE.toString(), 1),
-    config: config.gentle
-  }));
-  let [labelSpring, setLabelSpring] = useSpring(() => ({
-    opacity: "0",
-    fontSize: RelativeUnit(1)
-  }));
-  let [, send] = useMachine(import_react17.useMemo(() => createMachine({
-    initial: "initial",
-    states: {
-      initial: {
-        entry: () => {
-          setLabelSpring.start({ opacity: "1" });
-          send({ type: "done" });
-          return;
-        },
-        on: {
-          done: "idle"
-        }
-      },
-      idle: {
-        entry: () => {
-          setSymbolSpring.start({ opacity: "0" });
-          return;
-        },
-        on: {
-          mouseEnter: "hover"
-        }
-      },
-      hover: {
-        entry: () => {
-          setSymbolSpring.start({ opacity: "1" });
-          return;
-        },
-        on: {
-          mouseLeave: "idle"
-        }
-      }
-    }
-  }), []));
-  function glow(color, strength) {
-    let strength0 = strength * 1;
-    let strength1 = strength * 2;
-    let strength2 = strength * 3;
-    let strength3 = strength * 4;
-    let strength4 = strength * 5;
-    let strength5 = strength * 6;
-    let distance0 = RelativeUnit(strength0);
-    let distance1 = RelativeUnit(strength1);
-    let distance2 = RelativeUnit(strength2);
-    let distance3 = RelativeUnit(strength3);
-    let distance4 = RelativeUnit(strength4);
-    let distance5 = RelativeUnit(strength5);
-    let shadow0 = `0 0 ${distance0} ${color}`;
-    let shadow1 = `0 0 ${distance1} ${color}`;
-    let shadow2 = `0 0 ${distance2} ${color}`;
-    let shadow3 = `0 0 ${distance3} ${color}`;
-    let shadow4 = `0 0 ${distance4} ${color}`;
-    let shadow5 = `0 0 ${distance5} ${color}`;
-    return `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
-  }
-  return jsx_dev_runtime8.jsxDEV(jsx_dev_runtime8.Fragment, {
-    children: jsx_dev_runtime8.jsxDEV(Link, {
-      to: to2,
-      onMouseEnter: () => send({ type: "mouseEnter" }),
-      onMouseLeave: () => send({ type: "mouseLeave" }),
-      style: {
-        pointerEvents: "auto",
-        textDecoration: "none",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: RelativeUnit(1),
-        ...style
-      },
-      ...more,
-      children: [
-        jsx_dev_runtime8.jsxDEV(Text, {
-          text: "\u21F4",
-          style: { ...symbolSpring }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime8.jsxDEV(Text, {
-          text: label,
-          style: { ...labelSpring }
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
+var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 
 // src/public/lib/eda/ref/Ref.ts
 var import_fbemitter = __toESM(require_fbemitter(), 1);
@@ -36408,10 +34957,10 @@ var hash = function(hash2) {
   number(hash2.outputLen);
   number(hash2.blockLen);
 };
-var exists = function(instance, checkFinished2 = true) {
+var exists = function(instance, checkFinished = true) {
   if (instance.destroyed)
     throw new Error("Hash instance has been destroyed");
-  if (checkFinished2 && instance.finished)
+  if (checkFinished && instance.finished)
     throw new Error("Hash#digest() has already been called");
 };
 var output = function(out, instance) {
@@ -42620,7 +41169,7 @@ class ParamType {
   }
 }
 
-class Fragment12 {
+class Fragment15 {
   type;
   inputs;
   constructor(guard, type, inputs) {
@@ -42631,10 +41180,10 @@ class Fragment12 {
   static from(obj) {
     if (typeof obj === "string") {
       try {
-        Fragment12.from(JSON.parse(obj));
+        Fragment15.from(JSON.parse(obj));
       } catch (e) {
       }
-      return Fragment12.from(lex(obj));
+      return Fragment15.from(lex(obj));
     }
     if (obj instanceof TokenString) {
       const type = obj.peekKeyword(KwTypes);
@@ -42692,7 +41241,7 @@ class Fragment12 {
   }
 }
 
-class NamedFragment extends Fragment12 {
+class NamedFragment extends Fragment15 {
   name;
   constructor(guard, type, name, inputs) {
     super(guard, type, inputs);
@@ -42808,7 +41357,7 @@ class EventFragment extends NamedFragment {
   }
 }
 
-class ConstructorFragment extends Fragment12 {
+class ConstructorFragment extends Fragment15 {
   payable;
   gas;
   constructor(guard, type, inputs, payable, gas) {
@@ -42861,7 +41410,7 @@ class ConstructorFragment extends Fragment12 {
   }
 }
 
-class FallbackFragment extends Fragment12 {
+class FallbackFragment extends Fragment15 {
   payable;
   constructor(guard, inputs, payable) {
     super(guard, "fallback", inputs);
@@ -43323,7 +41872,7 @@ class Interface {
     const frags = [];
     for (const a of abi) {
       try {
-        frags.push(Fragment12.from(a));
+        frags.push(Fragment15.from(a));
       } catch (error) {
         console.log(`[Warning] Invalid Fragment ${JSON.stringify(a)}:`, error.message);
       }
@@ -49185,171 +47734,33 @@ async function chainId() {
 }
 var _session = None;
 
-// src/public/component/state/Notifications.ts
-function postNotification(string2) {
-  _notifications.push(string2);
-  return;
-}
-var _notifications = [];
-
 // src/public/component/nav/NavConnectButton.tsx
-var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
-function NavConnectButton() {
-  let [symbolSpring, setSymbolSpring] = useSpring(() => ({ opacity: "0", config: config.gentle }));
-  let fontSize = RelativeUnit(1.5);
-  let symbolColor = DEEP_PURPLE.toString();
-  let shadowSize = 1;
-  let shadowSize0 = shadowSize * 1;
-  let shadowSize1 = shadowSize * 2;
-  let shadowSize2 = shadowSize * 3;
-  let shadowSize3 = shadowSize * 4;
-  let shadowSize4 = shadowSize * 5;
-  let shadowSize5 = shadowSize * 6;
-  let distance0 = RelativeUnit(shadowSize0);
-  let distance1 = RelativeUnit(shadowSize1);
-  let distance2 = RelativeUnit(shadowSize2);
-  let distance3 = RelativeUnit(shadowSize3);
-  let distance4 = RelativeUnit(shadowSize4);
-  let distance5 = RelativeUnit(shadowSize5);
-  let shadow0 = `0 0 ${distance0} ${symbolColor}`;
-  let shadow1 = `0 0 ${distance1} ${symbolColor}`;
-  let shadow2 = `0 0 ${distance2} ${symbolColor}`;
-  let shadow3 = `0 0 ${distance3} ${symbolColor}`;
-  let shadow4 = `0 0 ${distance4} ${symbolColor}`;
-  let shadow5 = `0 0 ${distance5} ${symbolColor}`;
-  let textShadow = `${shadow0}, ${shadow1}, ${shadow2}, ${shadow3}, ${shadow4}, ${shadow5}`;
-  return jsx_dev_runtime9.jsxDEV(jsx_dev_runtime9.Fragment, {
-    children: jsx_dev_runtime9.jsxDEV(Row, {
-      style: {
-        pointerEvents: "auto",
-        cursor: "pointer",
-        width: "auto",
-        height: "auto",
-        gap: RelativeUnit(1)
-      },
-      onMouseEnter: () => setSymbolSpring.start({ opacity: "1" }),
-      onMouseLeave: () => setSymbolSpring.start({ opacity: "0" }),
-      onClick: async () => {
-        if (_isConnecting.get())
-          return;
-        _isConnecting.set(true);
-        let connection = await connect();
-        if (connection.err) {
-          let notification = "";
-          let e = connection.val;
-          if (typeof e === "string") {
-            switch (e) {
-              case "missingWindow":
-                notification = "Unable to connect to your account because you are not on a browser.";
-                break;
-              case "missingProvider":
-                notification = "Unable to connect to your account because a provider was not found.";
-                break;
-              case "missingAccounts":
-                notification = "Unable to connect to your account because your have no accounts";
-                break;
-              default:
-                notification = "Something went wrong while trying to connct to your account.";
-                break;
-            }
-          } else {
-            notification = "Something went wrong while trying to connct to your account.";
-          }
-          _isConnecting.set(false);
-          return postNotification(notification);
-        }
-        _isConnecting.set(false);
-        return postNotification("You are connected.");
-      },
-      children: [
-        jsx_dev_runtime9.jsxDEV(Text, {
-          text: "\uD81A\uDDF6",
-          style: {
-            fontSize,
-            fontWeight: "bold",
-            fontFamily: "satoshiRegular",
-            color: symbolColor,
-            textShadow,
-            ...symbolSpring
-          }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime9.jsxDEV(Text, {
-          text: "Connect",
-          style: {
-            fontSize
-          }
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 var _isConnecting = Ref(false);
 
 // src/public/component/nav/Nav.tsx
-var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-function Nav() {
-  return jsx_dev_runtime10.jsxDEV(jsx_dev_runtime10.Fragment, {
-    children: jsx_dev_runtime10.jsxDEV(Row, {
-      style: {
-        width: RelativeUnit(100),
-        justifyContent: "space-between",
-        padding: RelativeUnit(2)
-      },
-      children: [
-        jsx_dev_runtime10.jsxDEV(NavBrand, {}, undefined, false, undefined, this),
-        jsx_dev_runtime10.jsxDEV(Row, {
-          style: {
-            gap: RelativeUnit(2)
-          },
-          children: [
-            jsx_dev_runtime10.jsxDEV(NavButton, {
-              label: "Home",
-              to: "/"
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime10.jsxDEV(NavButton, {
-              label: "Whitepaper",
-              to: "https://dreamcatcher-1.gitbook.io/dreamcatcher"
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime10.jsxDEV(NavButton, {
-              label: "Explore",
-              to: "/explore"
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime10.jsxDEV(NavButton, {
-              label: "Launch",
-              to: "/launch"
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime10.jsxDEV(NavButton, {
-              label: "Github",
-              to: "/"
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
-        jsx_dev_runtime10.jsxDEV(NavConnectButton, {}, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
 
 // src/public/component/layout/template/PageTemplate.tsx
-var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 function PageTemplate({
   content,
   background,
   hlen = 1n,
   vlen = 1n
 }) {
-  return jsx_dev_runtime11.jsxDEV(jsx_dev_runtime11.Fragment, {
-    children: jsx_dev_runtime11.jsxDEV(Page, {
+  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+    children: jsx_dev_runtime14.jsxDEV(Page, {
       hlen,
       vlen,
       children: [
-        jsx_dev_runtime11.jsxDEV(Layer, {
+        jsx_dev_runtime14.jsxDEV(Layer, {
           children: background
         }, undefined, false, undefined, this),
-        jsx_dev_runtime11.jsxDEV(Layer, {
+        jsx_dev_runtime14.jsxDEV(Layer, {
           children: [
-            jsx_dev_runtime11.jsxDEV(Nav, {}, undefined, false, undefined, this),
-            jsx_dev_runtime11.jsxDEV(Col, {
+            jsx_dev_runtime14.jsxDEV(Nav, {}, undefined, false, undefined, this),
+            jsx_dev_runtime14.jsxDEV(Col, {
               style: {
                 width: "100%",
                 height: "100%",
@@ -49390,12 +47801,12 @@ var Text5;
 })(Text5 || (Text5 = {}));
 
 // src/public/component/page/landing/LandingPage.tsx
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
 function LandingPage() {
-  return jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
-    children: jsx_dev_runtime12.jsxDEV(PageTemplate, {
-      background: jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
-        children: jsx_dev_runtime12.jsxDEV(Col, {
+  return jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+    children: jsx_dev_runtime15.jsxDEV(PageTemplate, {
+      background: jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+        children: jsx_dev_runtime15.jsxDEV(Col, {
           style: {
             minWidth: "100%",
             maxWidth: "100%",
@@ -49405,9 +47816,9 @@ function LandingPage() {
           }
         }, undefined, false, undefined, this)
       }, undefined, false, undefined, this),
-      content: jsx_dev_runtime12.jsxDEV(jsx_dev_runtime12.Fragment, {
+      content: jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
         children: [
-          jsx_dev_runtime12.jsxDEV(Col, {
+          jsx_dev_runtime15.jsxDEV(Col, {
             style: {
               display: "grid",
               gridTemplateRows: "100px 100px 100px 100px",
@@ -49418,7 +47829,7 @@ function LandingPage() {
               maxHeight: "30%"
             },
             children: [
-              jsx_dev_runtime12.jsxDEV(Text, {
+              jsx_dev_runtime15.jsxDEV(Text, {
                 text: "Imons0nu su 0su 0su s0 s",
                 style: {
                   fontSize: "50%",
@@ -49427,7 +47838,7 @@ function LandingPage() {
                   color: ColorPalette.titanium.toString()
                 }
               }, undefined, false, undefined, this),
-              jsx_dev_runtime12.jsxDEV(Text, {
+              jsx_dev_runtime15.jsxDEV(Text, {
                 text: "ojsjijs0js0js0js0s",
                 style: {
                   fontSize: RelativeUnit(2.5),
@@ -49438,7 +47849,7 @@ function LandingPage() {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          jsx_dev_runtime12.jsxDEV(Row, {
+          jsx_dev_runtime15.jsxDEV(Row, {
             style: {
               minWidth: RelativeUnit(100),
               maxWidth: RelativeUnit(100),
@@ -49446,14 +47857,14 @@ function LandingPage() {
               maxHeight: RelativeUnit(20),
               background: ColorPalette.softObsidian.toString()
             },
-            children: jsx_dev_runtime12.jsxDEV(Row, {
+            children: jsx_dev_runtime15.jsxDEV(Row, {
               style: {
                 minWidth: RelativeUnit(20),
                 maxWidth: RelativeUnit(20),
                 minHeight: RelativeUnit(10),
                 maxHeight: RelativeUnit(10)
               },
-              children: jsx_dev_runtime12.jsxDEV(Col, {
+              children: jsx_dev_runtime15.jsxDEV(Col, {
                 style: {
                   minWidth: RelativeUnit(10),
                   maxWidth: RelativeUnit(10),
@@ -49461,7 +47872,7 @@ function LandingPage() {
                   maxHeight: RelativeUnit(10)
                 },
                 children: [
-                  jsx_dev_runtime12.jsxDEV(Text, {
+                  jsx_dev_runtime15.jsxDEV(Text, {
                     text: "My First Point",
                     style: {
                       fontSize: RelativeUnit(1),
@@ -49470,7 +47881,7 @@ function LandingPage() {
                       color: ColorPalette.titanium.toString()
                     }
                   }, undefined, false, undefined, this),
-                  jsx_dev_runtime12.jsxDEV(Text, {
+                  jsx_dev_runtime15.jsxDEV(Text, {
                     text: "J0 sjs dj d d0u d0ud 0ud d0 d0ud 0du ud0uud0 ud 0du 0du0d ud0u0ud du0 ud0ud0 ud0 dud0ud 0u0du d0u0du0d u0d u0du 0du0du 0du0du du d0d",
                     style: {
                       fontSize: RelativeUnit(0.75),
@@ -49496,7 +47907,7 @@ var import_react21 = __toESM(require_react(), 1);
 // src/public/component/layout/template/PagePreConnectTemplate.tsx
 var import_react18 = __toESM(require_react(), 1);
 var import_react19 = __toESM(require_react(), 1);
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 function PagePreConnectTemplate({
   content,
   background
@@ -49505,14 +47916,14 @@ function PagePreConnectTemplate({
   const changeYourNetworkToPolygonLoaderMessage = "Change your network to polygon.";
   const somethingWentWrongTryAgainLaterLoaderMessage = "Something went wrong. Try again later.";
   const [loaderMessage, setLoaderMessage] = import_react19.useState(connectToYourWeb3WalletLoaderMessage);
-  const [content_, setContent] = import_react19.useState(() => jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {}, undefined, false, undefined, this));
+  const [content_, setContent] = import_react19.useState(() => jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {}, undefined, false, undefined, this));
   const [_, setPagePreConnectTemplate] = useMachine(import_react18.useMemo(() => createMachine({
     initial: "loading",
     states: {
       loading: {
         entry: () => {
-          setContent(() => jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-            children: jsx_dev_runtime13.jsxDEV(PagePreConnectTemplateLoader, {
+          setContent(() => jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+            children: jsx_dev_runtime16.jsxDEV(PagePreConnectTemplateLoader, {
               message: loaderMessage
             }, undefined, false, undefined, this)
           }, undefined, false, undefined, this));
@@ -49575,8 +47986,8 @@ function PagePreConnectTemplate({
       }
     }
   }), [setLoaderMessage, setContent]));
-  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
-    children: jsx_dev_runtime13.jsxDEV(PageTemplate, {
+  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+    children: jsx_dev_runtime16.jsxDEV(PageTemplate, {
       content: content_,
       background
     }, undefined, false, undefined, this)
@@ -49585,16 +47996,16 @@ function PagePreConnectTemplate({
 function PagePreConnectTemplateLoader({
   message
 }) {
-  return jsx_dev_runtime13.jsxDEV(jsx_dev_runtime13.Fragment, {
+  return jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
     children: [
-      jsx_dev_runtime13.jsxDEV(Image, {
+      jsx_dev_runtime16.jsxDEV(Image, {
         src: "../../../img/animation/loader/Infinity.svg",
         style: {
           width: RelativeUnit(20),
           aspectRatio: "1/1"
         }
       }, undefined, false, undefined, this),
-      jsx_dev_runtime13.jsxDEV(Text, {
+      jsx_dev_runtime16.jsxDEV(Text, {
         text: message,
         style: {
           fontSize: RelativeUnit(2.5)
@@ -49606,60 +48017,60 @@ function PagePreConnectTemplateLoader({
 
 // src/public/component/page/explore/ExplorePage.tsx
 function ExplorePage() {
-  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
-    children: jsx_dev_runtime14.jsxDEV(PagePreConnectTemplate, {
-      content: jsx_dev_runtime14.jsxDEV(ExplorePageContent, {}, undefined, false, undefined, this),
-      background: jsx_dev_runtime14.jsxDEV(ExplorePageBackground, {}, undefined, false, undefined, this)
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(PagePreConnectTemplate, {
+      content: jsx_dev_runtime17.jsxDEV(ExplorePageContent, {}, undefined, false, undefined, this),
+      background: jsx_dev_runtime17.jsxDEV(ExplorePageBackground, {}, undefined, false, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 function ExplorePageContent() {
-  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
     children: [
-      jsx_dev_runtime14.jsxDEV(Row, {
+      jsx_dev_runtime17.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      jsx_dev_runtime14.jsxDEV(Row, {
+      jsx_dev_runtime17.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      jsx_dev_runtime14.jsxDEV(Row, {
+      jsx_dev_runtime17.jsxDEV(Row, {
         style: {
           gap: RelativeUnit(2)
         },
         children: [
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this),
-          jsx_dev_runtime14.jsxDEV(ExplorePageCard, {
+          jsx_dev_runtime17.jsxDEV(ExplorePageCard, {
             daoAddress: "999"
           }, undefined, false, undefined, this)
         ]
@@ -49668,8 +48079,8 @@ function ExplorePageContent() {
   }, undefined, true, undefined, this);
 }
 function ExplorePageBackground() {
-  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
-    children: jsx_dev_runtime14.jsxDEV(Col, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(Col, {
       style: {
         width: "100%",
         height: "100%",
@@ -49709,7 +48120,7 @@ function ExplorePageCard({
     states: {
       loading: {
         entry: () => {
-          setSlide(jsx_dev_runtime14.jsxDEV(ExplorePageCardLoaderSlide, {}, undefined, false, undefined, this));
+          setSlide(jsx_dev_runtime17.jsxDEV(ExplorePageCardLoaderSlide, {}, undefined, false, undefined, this));
           (async () => {
             const daoName2 = await query({
               to: daoAddress,
@@ -49770,8 +48181,8 @@ function ExplorePageCard({
       },
       idle: {
         entry: () => {
-          return setSlide(jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
-            children: jsx_dev_runtime14.jsxDEV(ExplorePageCardIdleSlide, {
+          return setSlide(jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+            children: jsx_dev_runtime17.jsxDEV(ExplorePageCardIdleSlide, {
               daoAddress,
               daoName,
               daoSymbol,
@@ -49792,8 +48203,8 @@ function ExplorePageCard({
       executingMintTransaction: {}
     }
   }), [setSlide, setDaoName, setDaoSymbol, setDaoRealTotalAssets, setDaoTotalSupply, setDaoQuote, setDaoQuote24HrPercentageChange]));
-  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
-    children: jsx_dev_runtime14.jsxDEV(Col, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(Col, {
       style: {
         width: RelativeUnit(25),
         aspectRatio: "2/1",
@@ -49811,8 +48222,8 @@ function ExplorePageCard({
   }, undefined, false, undefined, this);
 }
 function ExplorePageCardLoaderSlide() {
-  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {
-    children: jsx_dev_runtime14.jsxDEV(Image, {
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: jsx_dev_runtime17.jsxDEV(Image, {
       src: "../../../img/animation/loader/Infinity.svg",
       style: {
         width: RelativeUnit(5),
@@ -49830,9 +48241,9 @@ function ExplorePageCardIdleSlide({
   daoQuote,
   daoQuote24HrPercentageChange
 }) {
-  return jsx_dev_runtime14.jsxDEV(jsx_dev_runtime14.Fragment, {}, undefined, false, undefined, this);
+  return jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {}, undefined, false, undefined, this);
 }
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 
 class Quote {
   best;
@@ -49875,11 +48286,11 @@ class Dao {
 
 // src/public/lib/react/Renderable.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root) {
-    return client.createRoot(root).render(jsx_dev_runtime15.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime18.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   }
@@ -49887,14 +48298,14 @@ function render(routes) {
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime16.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime19.jsxDEV(LandingPage, {}, undefined, false, undefined, this)
 }, {
   path: "/explore",
-  element: jsx_dev_runtime16.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime19.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
 }, {
   path: "*",
-  element: jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this)
 }]);

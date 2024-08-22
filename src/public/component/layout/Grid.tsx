@@ -113,8 +113,8 @@ export function Grid(props: GridProps): ReactNode {
             width: w,
             height: h,
             display: "grid",
-            gridTemplateRows: parsed0,
-            gridTemplateColumns: parsed1,
+            gridTemplateRows: parsed1,
+            gridTemplateColumns: parsed0,
             ... style ?? {}
         }}
         {... more}/>
@@ -314,26 +314,3 @@ export function Text(props: TextProps): ReactNode {
     </>;
 }
 
-export type H1Props = Omit<TextProps, "fontSize">;
-
-export function H1(props: H1Props): ReactNode {
-    let {content, fontWeight, fontFamily, color, ... more} = props;
-    return <>
-        <Text
-        content={content}
-        fontSize="1vw"
-        fontWeight={fontWeight}
-        fontFamily={fontFamily}
-        color={color}
-        {... more}/>
-    </>;
-}
-
-export type H2Props = Omit<TextProps, "fontSize">;
-
-export function H2(props: H2Props): ReactNode {
-    let {content, fontWeight, fontFamily, color, ... more} = props;
-    return <>
-    
-    </>;
-}
