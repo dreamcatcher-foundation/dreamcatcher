@@ -49,8 +49,12 @@
 					"./src/public/lib/eda/ref-map/*"
 				],
 				"@component/*": [
+					/// layout
+					"./src/public/layout/*",
+					"./src/public/layout/grid/*",
+					"./src/public/layout/flex/*",
+
 					"./src/public/component/*",
-					"./src/public/component/layout/*",
 					"./src/public/component/config/*",
 					"./src/public/component/misc/*",
 					"./src/public/component/page/*",
