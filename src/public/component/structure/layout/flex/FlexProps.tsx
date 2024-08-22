@@ -1,8 +1,10 @@
 import type {CssPropOptions} from "@component/CssPropOptions";
 import type {SizeProps} from "@component/SizeProps";
+import type {ChildrenProps} from "@component/ChildrenProps";
 
 export type FlexProps
     = 
+    & ChildrenProps
     & SizeProps
     & {
         flexDirection:
