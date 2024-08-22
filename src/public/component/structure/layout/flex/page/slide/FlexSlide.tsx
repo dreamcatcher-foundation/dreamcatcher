@@ -15,6 +15,8 @@ export function FlexSlide(props: FlexSlideProps): ReactNode {
             maxHeight: "100vh",
             justifyContent: "center",
             alignItems: "center",
+            overflowX: "hidden",
+            overflowY: "hidden",
             ... style ?? {}
         }}
         {... more}/>

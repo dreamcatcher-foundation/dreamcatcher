@@ -62,6 +62,8 @@
 					"./src/public/component/type/*",
 					"./src/public/component/type/css/*",
 					"./src/public/component/type/prop/*",
+					"./src/public/component/styled/*",
+					"./src/public/component/styled/nav/*"
 				],
 
 				"@components/*": [
