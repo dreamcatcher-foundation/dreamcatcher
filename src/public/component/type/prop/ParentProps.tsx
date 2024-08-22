@@ -1,6 +1,6 @@
 import type {ReactNode} from "react";
 
-export type ChildrenProps
+export type ParentProps
     = {
         children?: ReactNode;
     };

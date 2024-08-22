@@ -2,13 +2,11 @@ import type {ReactNode} from "react";
 import type {FlexRowProps} from "@component/FlexRowProps";
 import {Flex} from "@component/Flex";
 
-export function FlexRow({width, height, justifyContent, alignItems, children}: FlexRowProps): ReactNode {
-    return <Flex
-    width={width}
-    height={height}
-    flexDirection="row"
-    justifyContent={justifyContent}
-    alignItems={alignItems}>
-        {children}
-    </Flex>;
+export function FlexRow(props: FlexRowProps): ReactNode {
+    let {... more} = props;
+    return <>
+        <Flex
+        flexDirection="row"
+        {... more}/>
+    </>;
 }

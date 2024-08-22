@@ -1,9 +1,9 @@
+import type {BaseProps} from "@component/BaseProps";
 import type {SizeProps} from "@component/SizeProps";
-import type {ChildrenProps} from "@component/ChildrenProps";
 
-export type GridProps
+export type SimpleGridProps
     =
-    & ChildrenProps
+    & BaseProps
     & SizeProps
     & {
         rowCount: bigint;

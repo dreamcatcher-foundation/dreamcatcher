@@ -8,7 +8,7 @@ export interface PageProps extends ColProps {
 }
 
 export function Page(props: PageProps): React.JSX.Element {
-    let { hlen, vlen, style, ... more } = props;
+    let { hlen, vlen, ... more } = props;
     hlen = hlen ?? 1n;
     vlen = vlen ?? 1n;
     let hlenNum: number = Number(hlen);
@@ -24,6 +24,7 @@ export function Page(props: PageProps): React.JSX.Element {
             height: height,
             overflow: "hidden",
             pointerEvents: "none",
+            minWidth:4,
             ... style ?? {}
         }}
         {... more}/>

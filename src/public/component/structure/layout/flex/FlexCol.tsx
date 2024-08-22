@@ -2,13 +2,11 @@ import type {ReactNode} from "react";
 import type {FlexColProps} from "@component/FlexColProps";
 import {Flex} from "@component/Flex";
 
-export function FlexCol({width, height, justifyContent, alignItems, children}: FlexColProps): ReactNode {
-    return <Flex
-    width={width}
-    height={height}
-    flexDirection="column"
-    justifyContent={justifyContent}
-    alignItems={alignItems}>
-        {children}
-    </Flex>;
+export function FlexCol(props: FlexColProps): ReactNode {
+    let {... more} = props;
+    return <>
+        <Flex
+        flexDirection="column"
+        {... more}/>
+    </>;
 }
