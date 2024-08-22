@@ -58,7 +58,8 @@
 					"./src/public/component/structure/template/*",
 					"./src/public/component/base/*",
 					"./src/public/component/type/*",
-					"./src/public/component/type/css/*"
+					"./src/public/component/type/css/*",
+					"./src/public/component/type/prop/*",
 				],
 
 				"@components/*": [
