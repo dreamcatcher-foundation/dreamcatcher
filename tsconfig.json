@@ -56,6 +56,7 @@
 					"./src/public/component/structure/layout/grid/*",
 					"./src/public/component/structure/layout/flex/*",
 					"./src/public/component/structure/layout/flex/page/*",
+					"./src/public/component/structure/layout/flex/page/slide/*",
 					"./src/public/component/structure/template/*",
 					"./src/public/component/base/*",
 					"./src/public/component/type/*",

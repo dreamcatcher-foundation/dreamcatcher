@@ -1,19 +1,20 @@
 import type {ReactNode} from "react";
-import type {HorizontalFlexPageProps} from "@component/HorizontalFlexPageProps";
-import {FlexRow} from "@component/FlexRow";
+import type {FlexSlideProps} from "@component/structure/layout/flex/page/slide/FlexSlideProps";
+import {FlexCol} from "@component/FlexCol";
 
-export function HorizontalFlexPage(props: HorizontalFlexPageProps): ReactNode {
+export function FlexSlide(props: FlexSlideProps): ReactNode {
     let {style, ... more} = props;
     return <>
-        <FlexRow
+        <FlexCol
         style={{
             width: "100vw",
             minWidth: "100vw",
+            maxWidth: "100vw",
             height: "100vh",
             minHeight: "100vh",
             maxHeight: "100vh",
-            justifyContent: "start",
-            alignItems: "start",
+            justifyContent: "center",
+            alignItems: "center",
             ... style ?? {}
         }}
         {... more}/>

@@ -1,0 +1,1 @@
+Slides are built to be passed or mounted as children on pages. They are build as to fit the viewport. You can stack them vertically to the right and horizontally to the bottom using the respective page types.
