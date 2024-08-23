@@ -67,7 +67,13 @@
 					"./src/public/component/sprite/*",
 					"./src/public/component/typography/*",
 					"./src/public/component/config/*",
-					"./src/public/component/effect/*"
+					"./src/public/component/effect/*",
+					"./src/public/component/module/*",
+					"./src/public/component/module/client/*",
+					"./src/publoc/component/module/client/struct/*",
+					"./src/public/component/module/client/session/*",
+					"./src/public/component/module/client/wrapper/*",
+					"./src/public/component/error/*"
 				],
 
 				"@components/*": [
