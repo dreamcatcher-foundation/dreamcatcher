@@ -91,6 +91,40 @@ export interface Account {
         >;
 }
 
+
+interface IQuery {
+    to: string;
+    signature: string;
+    args?: unknown[];
+}
+
+class Query implements IQuery {
+    public constructor(
+        public readonly to: string,
+        public readonly signature: string,
+        public readonly args?: unknown[]
+    ) {}
+}
+
+class Session {
+    public constructor(private readonly _wallet: Wallet) {}
+
+    public async walletAddress(): Promise<string> {
+        return await this._wallet.getAddress();
+    }
+
+    public async generateNonce(): Promise<number> {
+        return await this._wallet.getNonce();
+    }
+
+    public async query(query: IQuery): Promise<unknown> {
+        let contract: Contract = new Contract(query.to, [query.signature], this._wallet);
+        return await contract.getFunction(query.name)(... query.args ?? []);
+    }
+}
+
+
+
 export function Account(_wallet: Wallet): Account {
     return { walletAddress, generateNonce, query, call, deploy };
     async function walletAddress():

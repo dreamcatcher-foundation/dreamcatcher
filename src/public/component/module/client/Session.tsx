@@ -1,13 +1,12 @@
-import type {SessionConstructorResult} from "@component/SessionConstructorResult";
 import type {ContractDeployTransaction} from "ethers";
 import {Ok} from "@lib/Result";
 import {Err} from "@lib/Result";
 import {Option} from "@lib/Result"
 import {Some} from "@lib/Result";
 import {None} from "@lib/Result";
-import {Query} from "@component/Query"
-import {Call} from "@component/Call";
-import {Deployment} from "@component/Deployment";
+import {Query} from "@component/module/client/Query"
+import {Call} from "@component/module/client/Call";
+import {Deployment} from "@component/module/client/Deployment";
 import {BrowserProvider} from "ethers";
 import {TransactionReceipt} from "ethers";
 import {ContractFactory} from "ethers";
@@ -49,19 +48,29 @@ export type Session
             >;
     };
 
-export async function Session(): Promise<SessionConstructorResult> {
+export async function Session(): 
+    Promise<
+        | Ok<Session>
+        | Err<"missingWindow">
+        | Err<"missingProvider">
+        | Err<"missingAccounts">
+        | Err<unknown>
+    > {
     let _provider!: BrowserProvider;
     try {
         let ethereum: unknown = (window as any).ethereum;
-        if (!window) return Err<"missingWindow">("missingWindow");
-        if (!ethereum) return Err<"missingProvider">("missingProvider");
+        if (!window) 
+            return Err<"missingWindow">("missingWindow");
+        if (!ethereum) 
+            return Err<"missingProvider">("missingProvider");
         _provider = new BrowserProvider(ethereum as any);
         let accounts: string[];
         accounts = await _provider.send("eth_accounts", []);
         if (accounts.length === 0) {
             accounts = await _provider.send("eth_requestAccounts", []);
         }
-        if (accounts.length === 0) return Err<"missingAccounts">("missingAccounts");
+        if (accounts.length === 0) 
+            return Err<"missingAccounts">("missingAccounts");
     }
     catch (e: unknown) {
         return Err<unknown>(e);

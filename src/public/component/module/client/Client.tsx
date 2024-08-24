@@ -1,6 +1,3 @@
-import type {NotConnectedErr} from "@component/NotConnectedErr";
-import type {SessionConstructorErr} from "@component/SessionConstructorErr";
-import type {SessionConstructorResult} from "@component/SessionConstructorResult";
 import {Option} from "@lib/Result";
 import {Some} from "@lib/Result";
 import {None} from "@lib/Result";
@@ -9,9 +6,9 @@ import {Err} from "@lib/Result";
 import {EmptyOk} from "@lib/Result";
 import {Session} from "@component/Session";
 import {TransactionReceipt} from "ethers";
-import {Query} from "@component/Query";
-import {Call} from "@component/Call";
-import {Deployment} from "@component/Deployment";
+import {Query} from "@component/module/client/Query";
+import {Call} from "@component/module/client/Call";
+import {Deployment} from "@component/module/client/Deployment";
 
 let _session: Option<Session> = None;
 
@@ -22,9 +19,18 @@ export function connected(): boolean {
 export async function connect():
     Promise<
         | typeof EmptyOk
-        | SessionConstructorErr
+        | Err<"missingWindow">
+        | Err<"missingProvider">
+        | Err<"missingAccounts">
+        | Err<unknown>
     > {
-    let session: SessionConstructorResult = await Session();
+    let session:
+        | Ok<Session>
+        | Err<"missingWindow">
+        | Err<"missingProvider">
+        | Err<"missingAccounts">
+        | Err<unknown>
+        = await Session();
     if (session.err) return session;
     _session = Some<Session>(session.unwrap());
     return EmptyOk;
@@ -38,7 +44,7 @@ export function disconnect(): void {
 export async function chainId():
     Promise<
         | Ok<bigint>
-        | NotConnectedErr
+        | Err<"notConnected">
         | Err<unknown>
     > {
     if (_session.none) return Err<"notConnected">("notConnected");
@@ -48,7 +54,7 @@ export async function chainId():
 export async function signerAddress():
     Promise<
         | Ok<string>
-        | NotConnectedErr
+        | Err<"notConnected">
         | Err<unknown>
     > {
     if (_session.none) return Err<"notConnected">("notConnected");
@@ -58,7 +64,7 @@ export async function signerAddress():
 export async function generateNonce():
     Promise<
         | Ok<number>
-        | NotConnectedErr
+        | Err<"notConnected">
         | Err<unknown>
     > {
     if (_session.none) return Err<"notConnected">("notConnected");
@@ -68,7 +74,7 @@ export async function generateNonce():
 export async function query(query: Query):
     Promise<
         | Ok<unknown>
-        | NotConnectedErr
+        | Err<"notConnected">
         | Err<unknown>  
     > {
     if (_session.none) return Err<"notConnected">("notConnected");
@@ -78,7 +84,7 @@ export async function query(query: Query):
 export async function call(call: Call):
     Promise<
         | Ok<Option<TransactionReceipt>>
-        | NotConnectedErr
+        | Err<"notConnected">
         | Err<unknown>
     > {
     if (_session.none) return Err<"notConnected">("notConnected");
@@ -88,7 +94,7 @@ export async function call(call: Call):
 export async function deploy(deployment: Deployment):
     Promise<
         | Ok<Option<TransactionReceipt>>
-        | NotConnectedErr
+        | Err<"notConnected">
         | Err<unknown>
     > {
     if (_session.none) return Err<"notConnected">("notConnected");
