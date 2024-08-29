@@ -5,5 +5,6 @@ export type NavButtonProps
     =
     & ComponentPropsWithRef<typeof Link>
     & {
-        caption: string;
+        caption0: string;
+        caption1: string;
     };

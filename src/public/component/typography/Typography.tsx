@@ -11,7 +11,8 @@ export function Typography(props: TypographyProps): ReactNode {
             fontSize: "1em",
             fontWeight: "bold",
             fontFamily: "satoshiRegular",
-            color: ColorPalette.TITANIUM.toString()
+            color: ColorPalette.TITANIUM.toString(),
+            ... style ?? {}
         }}
         {... more}>
             {content}

@@ -11,10 +11,10 @@ import {textShadowGlow} from "@component/TextShadowGlow";
 import * as ColorPalette from "@component/ColorPalette";
 
 export function NavButton(props: NavButtonProps): ReactNode {
-    let {caption, style, ... more} = props;
+    let {caption0, caption1, style, ... more} = props;
     let [spring, setSpring] = useSpring(() => ({
         fontSize: "1em",
-        fontWeight: "bold",
+        fontWeight: "normal",
         fontFamily: "satoshiRegular",
         color: ColorPalette.TITANIUM.toString(),
         textShadow: textShadowGlow(ColorPalette.TITANIUM.toString(), 0),
@@ -31,7 +31,7 @@ export function NavButton(props: NavButtonProps): ReactNode {
                 }
             },
             hovering: {
-                entry: () => setSpring.start({textShadow: textShadowGlow(ColorPalette.TITANIUM.toString(), 1)}),
+                entry: () => setSpring.start({textShadow: textShadowGlow(ColorPalette.TITANIUM.toString(), 0.25)}),
                 on: {
                     mouseLeave: "idle"
                 }
@@ -54,7 +54,15 @@ export function NavButton(props: NavButtonProps): ReactNode {
         }}
         {... more}>
             <Typography
-            content={caption}
+            content={caption0}
+            style={{
+                fontSize: "1em",
+                fontWeight: "bold",
+                fontFamily: "satoshiRegular",
+                color: ColorPalette.DEEP_PURPLE.toString()
+            }}/>
+            <Typography
+            content={caption1}
             style={{
                 ... spring
             }}/>

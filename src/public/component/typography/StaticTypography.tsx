@@ -8,7 +8,7 @@ export function StaticTypography(props: StaticTypographyProps): ReactNode {
     return <>
         <Base
         style={{
-            backgroundImage: ColorPalette.TITANIUM.toString(),
+            backgroundImage: `linear-gradient(${ColorPalette.TITANIUM.toString()}, ${ColorPalette.TITANIUM.toString()})`,
             backgroundClip: "text",
             WebkitBackgroundClip: "text",
             color: "transparent",

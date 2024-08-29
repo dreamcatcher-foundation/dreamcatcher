@@ -46,7 +46,8 @@
 					"./src/public/lib/unit/relative-unit/*",
 					"./src/public/lib/eda/*",
 					"./src/public/lib/eda/ref/*",
-					"./src/public/lib/eda/ref-map/*"
+					"./src/public/lib/eda/ref-map/*",
+					"./src/public/lib/error/*"
 				],
 
 				"@component/*": [
@@ -64,13 +65,15 @@
 					"./src/public/component/type/prop/*",
 					"./src/public/component/styled/*",
 					"./src/public/component/styled/nav/*",
+					"./src/public/component/styled/page/*",
 					"./src/public/component/sprite/*",
 					"./src/public/component/typography/*",
 					"./src/public/component/config/*",
 					"./src/public/component/effect/*",
 					"./src/public/component/module/*",
 					"./src/public/component/module/client/*",
-					"./src/public/component/module/client/interface/*"
+					"./src/public/component/module/client/interface/*",
+					"./src/public/component/decoration/*"
 				],
 
 				"@components/*": [

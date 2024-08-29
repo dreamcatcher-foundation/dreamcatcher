@@ -8,8 +8,8 @@ export function SimpleGrid(props: SimpleGridProps): ReactNode {
         <Base
         style={{
             display: "grid",
-            gridTemplateRows: `repeat(${Number(rowCount)}), 1fr`,
-            gridTemplateColumns: `repeat(${Number(colCount)}), 1fr`,
+            gridTemplateRows: `repeat(${Number(rowCount)}, 1fr)`,
+            gridTemplateColumns: `repeat(${Number(colCount)}, 1fr)`,
             ... style ?? {}
         }}
         {... more}/>

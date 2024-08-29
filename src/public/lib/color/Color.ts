@@ -1,201 +1,215 @@
-import { Ok } from "@lib/Result";
-import { Err } from "@lib/Result";
-import { EmptyOk } from "@lib/Result";
+import { require } from "@lib/ErrorHandler";
 
-export interface ColorType {
-    toString() : string;
-    toHex() : Hex;
-    toRgb() : Rgb;
-    toRgba() : Rgba;
-}
-
-export type HexCharSetCheckResult
+export type ColorErrorCode
     =
-    | Ok<void>
-    | HexCharSetCheckErr;
+    | "hex-void-string-length"
+    | "hex-void-string"
+    | "hex-void-char-set"
+    | "rgb-value-is-below-min"
+    | "rgb-value-is-above-max"
+    | "rgba-alpha-is-below-min-bounds"
+    | "rgba-alpha-is-above-max-bounds";
 
-export type HexCharSetCheckErr 
-    = 
-    | Err<"invalidCharSet">;
+export type ColorType 
+    ={
+        toString(): string;
+        toHex(): Hex;
+        toRgb(): Rgb;
+        toRgba(): Rgba;
+    };
 
-export type HexConstructorResult
+export type Hex
     =
-    | Ok<Hex>
-    | HexConstructorErr;
+    & ColorType
+    & {};
 
-export type HexConstructorErr 
-    =
-    | HexCharSetCheckErr
-    | Err<"stringLengthTooShort">
-    | Err<"stringLengthTooLong">
-    | Err<"stringMissingHash">;
-
-export interface Hex extends ColorType {}
-
-export function Hex(_string: string) : HexConstructorResult {
-    const _VALID_CHARS: Readonly<string[]> = [
+export function Hex(_string: string): Hex {
+    let _charSet: string[] = [
         "0", "1", "2", "3", "4", 
         "5", "6", "7", "8", "9", 
         "a", "b", "c", "d", "e", 
         "f", "A", "B", "C", "D", 
         "E", "F"
     ];
-    function _checkCharSet(string: string) : HexCharSetCheckResult {
-        for (let i = 1; i < string.length; i++) {
-            let char: string = string[i];
-            let hasValidChar: boolean = false;
-            for (let x = 0; x < _VALID_CHARS.length; x++) {
-                let validChar: string = _VALID_CHARS[x];
-                if (char === validChar) hasValidChar = true;
-            }
-            if (!hasValidChar) return Err<"invalidCharSet">("invalidCharSet");
-        }
-        return EmptyOk;
-    }
-    if (_string.length < 7) return Err<"stringLengthTooShort">("stringLengthTooShort");
-    if (_string.length > 7) return Err<"stringLengthTooLong">("stringLengthTooLong");
-    if (_string.startsWith("#") === false) return Err<"stringMissingHash">("stringMissingHash");
-    let charSetCheck: HexCharSetCheckResult = _checkCharSet(_string);
-    if (charSetCheck.err) return charSetCheck;
-    return Ok<Hex>({ toString, toHex, toRgb, toRgba });
+    
+    _check(_string, _charSet);
+    
     function toString(): string {
         return _string;
     }
-    function toHex() : Hex {
-        /// cannot fail because initial state is checked at construction and is immutable
-        return Hex(_string).unwrap();
+
+    function toHex(): Hex {
+        return Hex(toString());
     }
-    function toRgb() : Rgb {
-        let value : string = _string.slice(1);
-        let r : bigint = BigInt(parseInt(value.slice(0, 2), 16));
-        let g : bigint = BigInt(parseInt(value.slice(2, 4), 16));
-        let b : bigint = BigInt(parseInt(value.slice(4, 6), 16));
-        /// cannot fail because initial state is checked at construction and is immutable
-        return Rgb(r, g, b).unwrap();
+
+    function toRgb(): Rgb {
+        let x: string = toString().slice(1);
+        let r: bigint = BigInt(parseInt(x.slice(0, 2), 16));
+        let g: bigint = BigInt(parseInt(x.slice(2, 4), 16));
+        let b: bigint = BigInt(parseInt(x.slice(4, 6), 16));
+        return Rgb(r, g, b);
     }
-    function toRgba() : Rgba {
-        /// cannot fail because initial state is checked at construction and is immutable
-        return Rgba(toRgb(), 1).unwrap();
+
+    function toRgba(): Rgba {
+        return Rgba(toRgb(), 1);
     }
+
+    function _check(string: string, charSet: string[]): void {
+        require<ColorErrorCode>(string.length === 7, "hex-void-string-length");
+        require<ColorErrorCode>(string.startsWith("#"), "hex-void-string");
+        _checkCharSet(string, charSet);
+    }
+
+    function _checkCharSet(string: string, charSet: string[]): void {
+        for (let i = 1; i < string.length; i += 1) _checkChar(string[i], charSet);
+        return;
+    }
+
+    function _checkChar(char: string, charSet: string[]): void {
+        for (let i = 0; i < charSet.length; i += 1) if (char === charSet[i]) return;
+        return require<ColorErrorCode>(false, "hex-void-char-set", char);
+    }
+
+    return { toString, toHex, toRgb, toRgba };
 }
 
-export type RgbConstructorResult
+export type Rgb
     =
-    | Ok<Rgb>
-    | RgbConstructorErr;
+    & ColorType
+    & {
+        r(): bigint;
+        g(): bigint;
+        b(): bigint;
+    };
 
-export type RgbConstructorErr
-    =
-    | Err<"valueRIsBelowMinRgbValue">
-    | Err<"valueGIsBelowMinRgbValue">
-    | Err<"valueBIsBelowMinRgbValue">
-    | Err<"valueRIsAboveMaxRgbValue">
-    | Err<"valueGIsAboveMaxRgbValue">
-    | Err<"valueBIsAboveMaxRgbValue">;
+export function Rgb(_r: bigint, _g: bigint, _b: bigint): Rgb {
+    let _min: bigint = 0n;
+    let _max: bigint = 255n;
+    _check(_r, _min, _max);
+    _check(_g, _min, _max);
+    _check(_b, _min, _max);
 
-export interface Rgb extends ColorType {
-    r(): bigint;
-    g(): bigint;
-    b(): bigint;
-}
-
-export function Rgb(_r: bigint, _g: bigint, _b: bigint): RgbConstructorResult {
-    const _MIN_RGB_VALUE: bigint = 0n;
-    const _MAX_RGB_VALUE: bigint = 255n;
-    if (_r < _MIN_RGB_VALUE) return Err<"valueRIsBelowMinRgbValue">("valueRIsBelowMinRgbValue");
-    if (_g < _MIN_RGB_VALUE) return Err<"valueGIsBelowMinRgbValue">("valueGIsBelowMinRgbValue");
-    if (_b < _MIN_RGB_VALUE) return Err<"valueBIsBelowMinRgbValue">("valueBIsBelowMinRgbValue");
-    if (_r > _MAX_RGB_VALUE) return Err<"valueRIsAboveMaxRgbValue">("valueRIsAboveMaxRgbValue");
-    if (_g > _MAX_RGB_VALUE) return Err<"valueGIsAboveMaxRgbValue">("valueGIsAboveMaxRgbValue");
-    if (_b > _MAX_RGB_VALUE) return Err<"valueBIsAboveMaxRgbValue">("valueBIsAboveMaxRgbValue");
-    return Ok<Rgb>({ r, g, b, toString, toHex, toRgb, toRgba });
     function r(): bigint {
         return _r;
     }
+
     function g(): bigint {
         return _g;
     }
+
     function b(): bigint {
         return _b;
     }
+
     function toString(): string {
-        return `rgb(${r()}, ${g()}, ${b()})`;
+        let x0: string = String(Number(r()));
+        let x1: string = String(Number(g()));
+        let x2: string = String(Number(b()));
+        return "rgb" + "(" + x0 + "," + x1 + "," + x2 + ")";
     }
+
     function toHex(): Hex {
-        let hex0: string = r().toString(16);
-        let hex1: string = g().toString(16);
-        let hex2: string = b().toString(16);
-        hex0 = hex0.length === 1 ? "0" + hex0 : hex0;
-        hex1 = hex1.length === 1 ? "0" + hex1 : hex1;
-        hex2 = hex2.length === 1 ? "0" + hex2 : hex2;
-        let hex: HexConstructorResult = Hex(`${hex0}${hex1}${hex2}`);
-        /// cannot fail because initial state is checked at construction and is immutable
-        return hex.unwrap();
+        let x0: string = r().toString(16);
+        let x1: string = g().toString(16);
+        let x2: string = b().toString(16);
+        let y0: string = x0.length === 1 ? "0" + x0 : x0;
+        let y1: string = x1.length === 1 ? "0" + x1 : x1;
+        let y2: string = x2.length === 1 ? "0" + x2 : x2;
+        let string: string = y0 + y1 + y2;
+        return Hex(string);
     }
+
     function toRgb(): Rgb {
-        /// cannot fail because initial state is checked at construction and is immutable
-        return Rgb(r(), g(), b()).unwrap();
+        return Rgb(r(), g(), b());
     }
+
     function toRgba(): Rgba {
-        /// cannot fail because initial state is checked at construction and is immutable
-        return Rgba(toRgb(), 1).unwrap();
+        return Rgba(toRgb(), 1);
     }
+
+    function _check(x: bigint, min: bigint, max: bigint): void {
+        _checkMin(x, min);
+        _checkMax(x, max);
+        return;
+    }
+
+    function _checkMin(x: bigint, min: bigint): void {
+        return require<ColorErrorCode>(x >= min, "rgb-value-is-below-min");
+    }
+
+    function _checkMax(x: bigint, max: bigint): void {
+        return require<ColorErrorCode>(x <= max, "rgb-value-is-above-max");
+    }
+
+    return { r, g, b, toString, toHex, toRgb, toRgba };
 }
 
-export type RgbaConstructorResult
+export type Rgba
     =
-    | Ok<Rgba>
-    | RgbaConstructorErr;
+    & Rgb
+    & {
+        a(): number;
+    };
 
-export type RgbaConstructorErr
-    =
-    | Err<"valueAIsBelowMinOpacityValue">
-    | Err<"valueAIsAboveMaxOpacityValue">;
+export function Rgba(_rgb: Rgb, _a: number): Rgba {
+    _checkAlpha(_a);
 
-export interface Rgba extends Rgb {
-    a(): number;
-}
-
-export function Rgba(_rgb: Rgb, _a: number): RgbaConstructorResult {
-    const _MIN_OPACITY_VALUE: number = 0;
-    const _MAX_OPACITY_VALUE: number = 1;
-    if (_a < _MIN_OPACITY_VALUE) return Err<"valueAIsBelowMinOpacityValue">("valueAIsBelowMinOpacityValue");
-    if (_a > _MAX_OPACITY_VALUE) return Err<"valueAIsAboveMaxOpacityValue">("valueAIsAboveMaxOpacityValue");
-    return Ok<Rgba>({ r, g, b, a, toString, toHex, toRgb, toRgba });
     function r(): bigint {
         return _rgb.r();
     }
+
     function g(): bigint {
         return _rgb.g();
     }
+
     function b(): bigint {
         return _rgb.b();
     }
+
     function a(): number {
         return _a;
     }
+
     function toString(): string {
-        return `rgba(${r()}, ${g()}, ${b()}, ${a()})`;
+        let x0: string = String(Number(r()));
+        let x1: string = String(Number(g()));
+        let x2: string = String(Number(b()));
+        return "rgba" + "(" + x0 + "," + x1 + "," + x2 + ")";
     }
+
     function toHex(): Hex {
-        let hex0: string = r().toString(16);
-        let hex1: string = g().toString(16);
-        let hex2: string = b().toString(16);
-        hex0 = hex0.length === 1 ? "0" + hex0 : hex0;
-        hex1 = hex1.length === 1 ? "0" + hex1 : hex1;
-        hex2 = hex2.length === 1 ? "0" + hex2 : hex2;
-        let hex: HexConstructorResult = Hex(`${hex0}${hex1}${hex2}`);
-        /// cannot fail because initial state is checked at construction and is immutable
-        return hex.unwrap();
+        let x0: string = r().toString(16);
+        let x1: string = g().toString(16);
+        let x2: string = b().toString(16);
+        let y0: string = x0.length === 1 ? "0" + x0 : x0;
+        let y1: string = x1.length === 1 ? "0" + x1 : x1;
+        let y2: string = x2.length === 1 ? "0" + x2 : x2;
+        let string: string = y0 + y1 + y2;
+        return Hex(string);
     }
+
     function toRgb(): Rgb {
-        /// cannot fail because initial state is checked at construction and is immutable
-        return _rgb.toRgb();
+        return Rgb(r(), g(), b());
     }
+
     function toRgba(): Rgba {
-        /// cannot fail because initial state is checked at construction and is immutable
-        return Rgba(toRgb(), a()).unwrap();
+        return Rgba(toRgb(), 1);
     }
+
+    function _checkAlpha(x: number): void {
+        _checkMinAlpha(x);
+        _checkMaxAlpha(x);
+    }
+
+    function _checkMinAlpha(x: number): void {
+        return require<ColorErrorCode>(x >= 0, "rgba-alpha-is-below-min-bounds");
+    }
+
+    function _checkMaxAlpha(x: number): void {
+        return require<ColorErrorCode>(x <= 1, "rgba-alpha-is-above-max-bounds");
+    }
+
+    return { r, g, b, a, toString, toHex, toRgb, toRgba };
 }
 
 export type ColorLike =

@@ -4,7 +4,7 @@ import {FlexCol} from "@component/FlexCol";
 import {Sprite} from "@component/Sprite";
 import {StaticTypography} from "@component/StaticTypography";
 
-export function NavBrandProps(props: NavBrandProps): ReactNode {
+export function NavBrand(props: NavBrandProps): ReactNode {
     let {... more} = props;
     return <>
         <FlexCol
@@ -16,7 +16,12 @@ export function NavBrandProps(props: NavBrandProps): ReactNode {
                 aspectRatio: "1/1"
             }}/>
             <StaticTypography
-            content="Dreamcatcher"/>
+            content="Dreamcatcher"
+            style={{
+                fontWeight: "bold",
+                fontFamily: "satoshiRegular",
+                fontSize: "1.5em"
+            }}/>
         </FlexCol>        
     </>;
 }

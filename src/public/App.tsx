@@ -1,15 +1,8 @@
-import { LandingPage } from "./component/page/landing/LandingPage";
-import { ExplorePage } from "./component/page/explore/ExplorePage";
-import { render } from "./lib/react/Renderable";
+import { HomePage } from "./component/styled/page/HomePage";
+import { render } from "./component/Render";
 import React from "react";
 
 render([{ 
     path: "/", 
-    element: <LandingPage/> 
-}, {
-    path: "/explore",
-    element: <ExplorePage/>
-}, {
-    path: "*",
-    element: <></> 
+    element: <HomePage/> 
 }]);
