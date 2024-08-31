@@ -13,7 +13,7 @@ import * as ColorPalette from "@component/ColorPalette";
 export function NavButton(props: NavButtonProps): ReactNode {
     let {caption0, caption1, style, ... more} = props;
     let [spring, setSpring] = useSpring(() => ({
-        fontSize: "1em",
+        fontSize: "0.75em",
         fontWeight: "normal",
         fontFamily: "satoshiRegular",
         color: ColorPalette.TITANIUM.toString(),
@@ -31,7 +31,7 @@ export function NavButton(props: NavButtonProps): ReactNode {
                 }
             },
             hovering: {
-                entry: () => setSpring.start({textShadow: textShadowGlow(ColorPalette.TITANIUM.toString(), 0.25)}),
+                entry: () => setSpring.start({textShadow: textShadowGlow(ColorPalette.TITANIUM.toString(), 1)}),
                 on: {
                     mouseLeave: "idle"
                 }
@@ -43,28 +43,29 @@ export function NavButton(props: NavButtonProps): ReactNode {
         onMouseEnter={() => setNavButton({type: "mouseEnter"})}
         onMouseLeave={() => setNavButton({type: "mouseLeave"})}
         style={{
-            pointerEvents: "auto",
-            textDecoration: "none",
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "10px",
-            ... style ?? {}
+        pointerEvents: "auto",
+        textDecoration: "none",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "10px",
+        ... style ?? {}
         }}
         {... more}>
             <Typography
             content={caption0}
             style={{
-                fontSize: "1em",
-                fontWeight: "bold",
-                fontFamily: "satoshiRegular",
-                color: ColorPalette.DEEP_PURPLE.toString()
+            fontSize: "0.75em",
+            fontWeight: "bold",
+            fontFamily: "satoshiRegular",
+            color: ColorPalette.DEEP_PURPLE.toString()
             }}/>
+
             <Typography
             content={caption1}
             style={{
-                ... spring
+            ... spring
             }}/>
         </Link>
     </>;

@@ -48,9 +48,9 @@ export async function Session(): Promise<Session> {
     require<ClientErrorCode>(!!window, "session-missing-window");
     require<ClientErrorCode>(!!_ethereum, "session-missing-provider");
     _provider = new BrowserProvider(_ethereum as any);
-    _accounts = await _provider.send("eth_accounts", []);
+    _accounts = [];
+    if (_accounts.length === 0) await _provider.send("eth_accounts", []);
     if (_accounts.length === 0) await _provider.send("eth_requestAccounts", []);
-    if (_accounts.length === 0) require<ClientErrorCode>(false, "session-missing-accounts");
 
     async function Account(): Promise<Account> {
         let _account: JsonRpcSigner = await _provider.getSigner();
@@ -142,6 +142,18 @@ export async function connect() {
 
 export function disconnect() {
     return _session = null;
+}
+
+export async function accountAddress() {
+    require<ClientErrorCode>(connected(), "client-not-connected");
+    let account: Account = await _session!.Account();
+    return await account.address();
+}
+
+export async function accountChainId() {
+    require<ClientErrorCode>(connected(), "client-not-connected");
+    let network: Network = await _session!.Network();
+    return network.chainId();
 }
 
 export async function query({ to, methodSignature, methodName, methodArgs }: { to: string; methodSignature: string; methodName: string; methodArgs?: unknown[]; }) {

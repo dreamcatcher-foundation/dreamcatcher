@@ -15,12 +15,13 @@ export function NavBrand(props: NavBrandProps): ReactNode {
                 width: "25px",
                 aspectRatio: "1/1"
             }}/>
+            
             <StaticTypography
             content="Dreamcatcher"
             style={{
                 fontWeight: "bold",
                 fontFamily: "satoshiRegular",
-                fontSize: "1.5em"
+                fontSize: "1.25em"
             }}/>
         </FlexCol>        
     </>;
