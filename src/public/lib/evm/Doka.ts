@@ -1,167 +1,97 @@
 import {require} from "@lib/ErrorHandler";
+import {Contract} from "ethers";
 import { JsonRpcProvider, Wallet } from "ethers";
 import * as FileSystem from "fs";
 import * as Path from "path";
 
+export type DokaErrorCode = 
+    | "sol-missing-path"
+    | "sol-failed-to-parse-file-name"
+    | "sol-failed-to-parse-file-extension"
+    | "sol-failed-to-parse-file-content"
+    | "sol-type-error";
 
-
-export type DokaErrorCode
-    =
-    | "doka-compiler-missing-path";
-
-
-export function Sol(_path: string) {
-
-
-    function path(): string {
-        return _path;
-    }
-
-    function bytecode(): string | null {
-
-    }
-
-
-}
-
-
-
-
-
-
-
-
-
-export type BitSize
-    =
+export type SelectorBitSize = 
     | "8" 
-    | "16" 
-    | "24" 
-    | "32" 
-    | "40" 
-    | "48" 
-    | "56" 
-    | "64" 
-    | "72" 
-    | "80" 
-    | "88" 
-    | "96" 
-    | "104" 
-    | "112" 
-    | "120" 
-    | "128" 
-    | "136" 
-    | "144" 
-    | "152" 
-    | "160" 
-    | "168" 
-    | "176" 
-    | "184" 
-    | "192" 
-    | "200" 
-    | "208" 
-    | "216" 
-    | "224" 
-    | "232" 
-    | "240" 
-    | "248" 
-    | "256";
+    | "16" | "24" | "32" 
+    | "40" | "48" | "56" 
+    | "64" | "72" | "80" 
+    | "88" | "96" 
+    | "104" | "112" | "120" 
+    | "128" | "136" | "144" 
+    | "152" | "160" | "168" 
+    | "176" | "184" | "192" 
+    | "200" | "208" | "216" 
+    | "224" | "232" | "240" 
+    | "248" | "256";
 
-export type BytesBitSize
-    =
-    | "1"
-    | "2"
-    | "3"
-    | "4"
-    | "5"
-    | "6"
-    | "7"
-    | "8"
-    | "9"
-    | "10"
-    | "11"
-    | "12"
-    | "13"
-    | "14"
-    | "15"
-    | "16"
-    | "17"
-    | "18"
-    | "19"
-    | "20"
-    | "21"
-    | "22"
-    | "23"
-    | "24"
-    | "25"
-    | "26"
-    | "27"
-    | "28"
-    | "29"
-    | "30"
-    | "31"
-    | "32";
+export type SelectorBytesBitSize = 
+    | "1" | "2" | "3" 
+    | "4" | "5" | "6" 
+    | "7" | "8" | "9" 
+    | "10" | "11" | "12" 
+    | "13" | "14" | "15" 
+    | "16" | "17" | "18" 
+    | "19" | "20" | "21" 
+    | "22" | "23" | "24" 
+    | "25" | "26" | "27" 
+    | "28" | "29" | "30" 
+    | "31" | "32";
 
-export type ArithmeticBaseType
-    =
-    | "uint"
-    | "int";
+export type SelectorArithmeticType = "uint" | "int" | `${"uint" | "int"}${SelectorBitSize}`;
 
-export type BytesBaseType 
-    = "bytes";
+export type SelectorBytesType = "bytes" | `bytes${SelectorBytesBitSize}`;
 
-export type BaseType = "address" | "string" | "bool";
+export type SelectorBaseType = 
+    | "address" 
+    | "string" 
+    | "bool";
 
-export type ArithmeticType 
-    = 
-    | ArithmeticBaseType 
-    | `${ArithmeticBaseType}${BitSize}`;
+export type SelectorArrayType = `${SelectorArithmeticType | SelectorBytesType | SelectorBaseType}[]`;
 
-export type BytesType = BytesBaseType | `${BytesBaseType}${BytesBitSize}`
+export type SelectorStructType = SelectorType[];
 
-export type ArrayType = `${BaseType | ArithmeticType | BytesType}[]`;
+export type SelectorType = 
+    | SelectorArithmeticType 
+    | SelectorBaseType 
+    | SelectorArrayType 
+    | SelectorStructType;
 
-export type Type = ArithmeticType | BytesType | BaseType | ArrayType | Struct;
+export type SelectorSignature = `function ${string}(${string}) external`;
 
-export type Struct = Type[];
+export type SelectorSignatureWithResponse = `function ${string}(${string}) external view returns (${string})`;
 
-
-export type MSelector = `function ${string}(${string}) external`;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export interface Selector {
-    name(): string;
-    args(): Type[];
-    toSig(): string;
+export type Selector = {
+    name(): 
+        string;
+    args(): 
+        SelectorType[];
+    toSignature(): 
+        SelectorSignature;
 }
 
-export function Selector(_name: string, ... _args: Type[]): Selector {
+export type SelectorWithResponse = {
+    name(): 
+        string;
+    args(): 
+        SelectorType[];
+    response(): 
+        SelectorType[];
+    toSignature(): 
+        SelectorSignatureWithResponse;   
+}
+
+export function Selector(_name: string, ... _args: SelectorType[]): Selector {
 
     function name(): string {
         return _name;
     }
 
-    function args(): Type[] {
+    function args(): SelectorType[] {
         return _args;
     }
 
-    function toSig(): string {
+    function toSignature(): SelectorSignature {
         let args: string = "";
         for (let i = 0; i < _args.length; i += 1) {
             if (i !== 0) {
@@ -172,31 +102,24 @@ export function Selector(_name: string, ... _args: Type[]): Selector {
         return `function ${name()}(${args}) external`;
     }
 
-    return {name, args, toSig};
+    return {name, args, toSignature};
 }
 
-export interface SelectorWithResponse {
-    name(): string;
-    args(): Type[];
-    response(): Type[];
-    toSig(): string;
-}
-
-export function SelectorWithResponse(_name: string, _args: Type[], _response: Type[]): SelectorWithResponse {
+export function SelectorWithResponse(_name: string, _args: SelectorType[], _response: SelectorType[]): SelectorWithResponse {
 
     function name(): string {
         return _name;
     }
 
-    function args(): Type[] {
+    function args(): SelectorType[] {
         return _args;
     }
 
-    function response(): Type[] {
+    function response(): SelectorType[] {
         return _response;
     }
 
-    function toSig(): string {
+    function toSignature(): SelectorSignatureWithResponse {
         let args: string = "";
         for (let i = 0; i < _args.length; i += 1) {
             if (i !== 0) {
@@ -214,7 +137,7 @@ export function SelectorWithResponse(_name: string, _args: Type[], _response: Ty
         return `function ${_name}(${args}) external view returns (${response})`;
     }
 
-    return {name, args, response, toSig};
+    return {name, args, response, toSignature};
 }
 
 
@@ -227,23 +150,10 @@ export function SelectorWithResponse(_name: string, _args: Type[], _response: Ty
 
 
 
-
-
-
-
-
-
-
-
-
-/// takes in the url of a rpc provider to connect to a blockchain.
-function EthereumVirtualMachine(_url: string) {
+export function EthereumVirtualMachine(_url: string) {
     let _network: JsonRpcProvider = new JsonRpcProvider(_url);
 
-    /// from the evm you can log in as an account on that network
-    /// and calls will be made through this key.
     function Account(_key: string) {
-        let self;
         let _wallet: Wallet = new Wallet(_key, _network);
 
         async function address(): Promise<string> {
@@ -258,11 +168,35 @@ function EthereumVirtualMachine(_url: string) {
             return await _wallet.getNonce();
         }
 
-        async function query(to: string, selector: SelectorWithResponse) {
-
+        async function query(to: string, selector: SelectorWithResponse, ... args: unknown[]) {
+            return await new Contract(to, [selector.toSignature()], _wallet).getFunction(selector.name())(... args);
         }
 
-        return {address, nonce, nextNonce, query};
+        interface InvokeRequest {
+            to: string;
+            selector: Selector;
+            args?: unknown[];
+            gasPrice?: bigint;
+            gasLimit?: bigint;
+            value?: bigint;
+            chainId?: bigint;
+            confirmations?: bigint;
+        }
+
+        async function invoke(request: InvokeRequest) {
+            return await (await _wallet.sendTransaction({
+                from: await address(),
+                to: request.to,
+                nonce: await nextNonce(),
+                gasPrice: request.gasPrice,
+                gasLimit: request.gasLimit,
+                chainId: request.chainId,
+                value: request.value,
+                data: ""
+            })).wait(Number(request.confirmations));
+        }
+
+        return {address, nonce, nextNonce, query, invoke};
     }
 
     function Sol() {
@@ -273,21 +207,17 @@ function EthereumVirtualMachine(_url: string) {
         return (await _network.getNetwork()).chainId;
     }
 
-    return {Account};
-}
-
-
-interface Transaction {
-    sign(account): unknown;
-    send();
+    return {Account, Sol, chainId};
 }
 
 
 
-EthereumVirtualMachine("").Account("").query("", new SelectorWithResponse("previewMint", ["uint256"], ["uint256"]));
 
-
-
-
-
-
+EthereumVirtualMachine("")
+    .Account("")
+    .invoke({
+        to: "",
+        selector: Selector("", []),
+        args: [],
+        
+    })
