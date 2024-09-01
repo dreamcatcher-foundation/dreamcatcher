@@ -29,14 +29,26 @@ export function Account(_key: string, _url: string) {
 
 
 
-export type SolcNumericDataTypeShard = "uint" | "int";
-export type SolcNumericSizeTypeShard = "8" | "16" | "24" | "32" | "40" | "48" | "56" | "64" | "72" | "80" | "88" | "96" | "104" | "112" | "120" | "128" | "136" | "144" | "152" | "160" | "168" | "176" | "184" | "192" | "200" | "208" | "216" | "224" | "232" | "240" | "248" | "256";
-export type SolcNumericDataType = `${SolcNumericDataTypeShard}${SolcNumericSizeTypeShard}`;
-export type SolcDataTypeShard = "address" | "string";
-export type SolcArrayDataType = `${SolcDataTypeShard | SolcNumericDataType}[]`;
-export type SolcDataType = SolcNumericDataType | SolcDataTypeShard | SolcArrayDataType;
 
-function Selector(_name: string, _args: SolcDataType[]) {
+export type SolcNumericTypeShard = "uint" | "int";
+
+export type SolcNumericType = `${SolcNumericTypeShard}${SolcBitSize}`;
+export type SolcEnum = "uint8";
+export type SolcBytes = "bytes" | "bytes1" | "bytes2" | "bytes3"
+export type SolcBaseDataType = "address" | "string" | "bool";
+export type SolcArrayDataType = `${SolcBaseDataType | SolcNumericTypeShard}[]`;
+export type SolcType = SolcNumericType | SolcBaseDataType | SolcArrayDataType | SolcStruct;
+export type SolcStruct = SolcType[];
+
+
+
+
+
+
+let x: SolcType = [["address"], ["address"]];
+
+
+function Selector(_name: string, _args: SolcType[]) {
 
     function toSignature(): string {
         let args: string = "";
@@ -58,7 +70,7 @@ function Selector(_name: string, _args: SolcDataType[]) {
     return {toSignature, name, args};
 }
 
-Selector("mint", ["uint8"]);
+Selector("mint", [["address"], "uint256", ["uint120"]]);
 
 
 function SignatureWithReturn(_selector: ReturnType<typeof Selector>, _return: string[]) {
