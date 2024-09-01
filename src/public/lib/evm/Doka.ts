@@ -1,8 +1,10 @@
 import {require} from "@lib/ErrorHandler";
-import {Contract} from "ethers";
+import {Contract, TransactionReceipt} from "ethers";
 import { JsonRpcProvider, Wallet } from "ethers";
+import Solc from "solc";
 import * as FileSystem from "fs";
 import * as Path from "path";
+import * as ChildProcess from "child_process";
 
 export type DokaErrorCode = 
     | "sol-missing-path"
@@ -81,6 +83,41 @@ export type SelectorWithResponse = {
         SelectorSignatureWithResponse;   
 }
 
+export type Account = {
+    address():
+        Promise<string>;
+    nonce():
+        Promise<number>;
+    nextNonce():
+        Promise<number>;
+    query():
+        Promise<unknown>;
+    invoke():
+        Promise<TransactionReceipt | null>;
+    deploy():
+        Promise<TransactionReceipt | null>;
+    deployRawBytecode():
+        Promise<TransactionReceipt | null>;
+}
+
+export type Sol = {
+    path():
+        string;
+    bytecode():
+        | string
+        | null;
+    abstractBinaryInterface():
+        object[];
+    errors():
+        string[];
+    warnings():
+        string[];
+}
+
+export type EthereumVirtualMachine = {
+    Account(key: string): Account;
+}
+
 export function Selector(_name: string, ... _args: SelectorType[]): Selector {
 
     function name(): string {
@@ -140,20 +177,81 @@ export function SelectorWithResponse(_name: string, _args: SelectorType[], _resp
     return {name, args, response, toSignature};
 }
 
+function Sol(_path: string): Sol {
+    let _errors: string[];
+    let _warnings: string[];
 
+    /** @constructor */ {
+        _errors = [];
+        _warnings = [];
+        require<DokaErrorCode>(FileSystem.existsSync(_path), "sol-missing-path");
+        let name:
+            | string
+            | undefined
+            = _path
+                ?.split("\\")
+                ?.pop()
+                ?.split(".")
+                ?.at(-2);
+        require<DokaErrorCode>(!!name, "sol-failed-to-parse-file-name");
+        let extensionShards:
+            | string[]
+            | undefined
+            = _path
+                ?.split("/")
+                ?.pop()
+                ?.split(".");
+        let extension:
+            | string
+            | undefined
+            = extensionShards?.at(-1);
+        require<DokaErrorCode>(!!extension, "sol-failed-to-parse-file-extension");
+        let temporaryPath: string = Path.join(__dirname, `${name}.${extension}`);
+        let src: string = "";
+        try {
+            let command: string = `bun hardhat flatten ${_path} > ${temporaryPath}`;
+            ChildProcess.exec(command);
+            let beginTimestamp: number = Date.now();
+            let nowTimestamp: number = beginTimestamp;
+            while (nowTimestamp - beginTimestamp < 4000) {
+                nowTimestamp = Date.now();
+            }
+            let content: string = FileSystem.readFileSync(temporaryPath, "utf-8");
+            require<DokaErrorCode>(content !== "", "sol-failed-to-parse-file-content");
+            src = content;
+        }
+        finally {
+            FileSystem.unlinkSync(temporaryPath);
+        }
+        let out: unknown = JSON.parse((Solc as any).compile(JSON.stringify({
+            language: "Solidity",
+            sources: {[name!]: {content: src}},
+            settings: {outputSelection: {"*": {"*": ["abi", "evm.bytecode", "evm.methodIdentifiers"]}}}
+        })));
+        let errorsAndWarnings: unknown[] = (out as any)?.errors ?? [];
+        for (let i = 0; i < errorsAndWarnings.length; i += 1) {
+            let errorOrWarning: unknown = errorsAndWarnings[i];
+            let errorOrWarningIsTypeOfObject: boolean = typeof errorOrWarning === "object";
+            let errorOrWarningHasSeverityProp: boolean = "severity" in (errorOrWarning as any);
+            let errorOrWarningHasFormattedMessageProp: boolean = "formattedMessage" in (errorOrWarning as any);
+            let errorOrWarningSeverityIsTypeOfString: boolean = typeof (errorOrWarning as any).severity === "string";
+            
+            if (
+                errorOrWarningIsTypeOfObject &&
+                errorOrWarningHasSeverityProp &&
+                errorOrWarningHasFormattedMessageProp &&
+                errorOrWarningSeverityIsTypeOfString
+            ) {
+                
+            }
+        }
+    }    
+}
 
-
-
-
-
-
-
-
-
-export function EthereumVirtualMachine(_url: string) {
+export function EthereumVirtualMachine(_url: string): EthereumVirtualMachine {
     let _network: JsonRpcProvider = new JsonRpcProvider(_url);
 
-    function Account(_key: string) {
+    function Account(_key: string): Account {
         let _wallet: Wallet = new Wallet(_key, _network);
 
         async function address(): Promise<string> {
@@ -199,9 +297,7 @@ export function EthereumVirtualMachine(_url: string) {
         return {address, nonce, nextNonce, query, invoke};
     }
 
-    function Sol() {
 
-    }
 
     async function chainId(): Promise<bigint> {
         return (await _network.getNetwork()).chainId;
