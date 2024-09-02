@@ -49629,6 +49629,11 @@ function Nav() {
                   to: "/tokenomics",
                   caption0: "04",
                   caption1: "Tokenomics"
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime14.jsxDEV(NavButton, {
+                  to: "/get-started",
+                  caption0: "05",
+                  caption1: "Get Started"
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this)
@@ -50646,27 +50651,36 @@ function Tag({ src, content }) {
 var dream = Erc20Interface("0x52463952A864107B63Eb6b21f5234A0B0e99b3f1");
 FlexCol, OBSIDIAN.toString(), FlexCol, Nav, FlexRow, Typography, Typography, Typography, Sprite, FlexRow, Typography;
 
+// src/public/component/styled/page/GetStarted.tsx
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+function GetStarted() {
+  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {}, undefined, false, undefined, this);
+}
+
 // src/public/component/Render.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root)
-    return client.createRoot(root).render(jsx_dev_runtime21.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime22.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   return;
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime22.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime23.jsxDEV(HomePage, {}, undefined, false, undefined, this)
 }, {
   path: "/explore",
-  element: jsx_dev_runtime22.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime23.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
 }, {
   path: "/tokenomics",
-  element: jsx_dev_runtime22.jsxDEV(TokenomicsPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime23.jsxDEV(TokenomicsPage, {}, undefined, false, undefined, this)
+}, {
+  path: "/get-started",
+  element: jsx_dev_runtime23.jsxDEV(GetStarted, {}, undefined, false, undefined, this)
 }]);
