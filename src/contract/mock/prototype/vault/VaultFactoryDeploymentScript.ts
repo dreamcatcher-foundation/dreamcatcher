@@ -9,7 +9,7 @@ import * as Path from "path";
     let polygon: Vm.VirtualMachine = Vm.VirtualMachine(url);
     let account: Vm.Account = polygon.Account(key);
     let receipt: Ethers.TransactionReceipt | null = await account.deploySol({
-        sol: Solc.Sol(Path.join(__dirname, "./OwnableTokenFactory.sol")),
+        sol: Solc.Sol(Path.join(__dirname, "./VaultFactory.sol")),
         args: [],
         gasPrice: 40000000000n,
         gasLimit: 10000000n

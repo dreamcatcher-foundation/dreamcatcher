@@ -27,19 +27,27 @@ export function HomePage(): ReactNode {
                 </FlexSlideLayer>
                 <FlexSlideLayer style={{justifyContent: "space-between", paddingBottom: "10px"}}>
                     <Nav/>
-                    <FlexRow style={{width: "1024px", height: "100%"}}>
-                        <FlexCol style={{width: "100%", height: "100%", gap: "36px"}}>
-                            <FlexCol style={{width: "100%"}}>
-                                <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Shape the Decentralized Enterprise." style={{fontSize: "3em"}}/></FlexRow>
-                                <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Deploy and Manage Trusless Systems." style={{fontSize: "1.5em"}}/></FlexRow>
+                    <FlexCol style={{width: "1024px", height: "100%", justifyContent: "start"}}>
+                        <FlexRow style={{width: "100%", height: "100%"}}>
+                            <FlexCol style={{width: "100%", height: "100%", gap: "32px"}}>
+                                <FlexCol style={{width: "100%"}}>
+                                    <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Shape the Decentralized Enterprise." style={{fontSize: "3em"}}/></FlexRow>
+                                    <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Deploy and Manage Trusless Systems." style={{fontSize: "1.5em"}}/></FlexRow>
+                                </FlexCol>
+                                <FlexRow style={{width: "100%", justifyContent: "start", gap: "20px"}}>
+                                    <DualLabelLink to="/get-started" label0="Get Started" label1="✦" size={200} color={ColorPalette.TITANIUM.toString()} onClick={() => {}}/>
+                                    <DualLabelLink to="https://dreamcatcher-1.gitbook.io/dreamcatcher" label0="Learn More" label1="✦" size={200} color={ColorPalette.TITANIUM.toString()} onClick={() => {}}/>
+                                </FlexRow>
                             </FlexCol>
-                            <FlexRow style={{width: "100%", justifyContent: "start", gap: "20px"}}>
-                                <DualLabelLink to="/get-started" label0="Get Started" label1="✦" size={200} color={ColorPalette.TITANIUM.toString()} onClick={() => {}}/>
-                                <DualLabelLink to="https://dreamcatcher-1.gitbook.io/dreamcatcher" label0="Learn More" label1="✦" size={200} color={ColorPalette.TITANIUM.toString()} onClick={() => {}}/>
-                            </FlexRow>
-                        </FlexCol>
-                        <FlexCol style={{width: "100%", height: "100%"}}><Sprite src="../../../img/whale.svg" style={{width: "100%", aspectRatio: "1/1", objectFit: "contain"}}/></FlexCol>
-                    </FlexRow>
+                            <FlexCol style={{width: "100%", height: "100%"}}><Sprite src="../../../img/whale.svg" style={{width: "100%", aspectRatio: "1/1", objectFit: "contain"}}/></FlexCol>
+                        </FlexRow>
+                        <FlexRow style={{width: "100%", paddingBottom: "64px", paddingTop: "8px"}}>
+                            <HomePageCard src="../../../img/shape/TwoSquares.svg" caption="Trustless" description="Go global and reach millions safely with our smart tokenized vaults."/>
+                            <HomePageCard src="../../../img/shape/Dots.svg" caption="Streamlined" description="Streamline your trading and asset management process with our suite of reactive and integrated automation tools."/>
+                            <HomePageCard src="../../../img/shape/Composition.svg" caption="Community" description=""/>
+                        </FlexRow>
+                    </FlexCol>
+
                 </FlexSlideLayer>
             </FlexSlide>
 

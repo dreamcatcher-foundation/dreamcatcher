@@ -28,66 +28,69 @@ export function TokenomicsPage(): ReactNode {
     }, []);
     
     return <>
-        <FlexCol
-        style={{
-            width: "100vw",
-            height: "100vh",
-            overflowX: "hidden",
-            overflowY: "hidden",
-            pointerEvents: "none",
-            background: ColorPalette.OBSIDIAN.toString()
-        }}>
-            <FlexCol
-            style={{
-                width: "1024px",
-                height: "100%",
-                justifyContent: "space-between"
-            }}>
-                <Nav/>
-
-                <FlexRow>
-                    <Typography
-                    content="Dream"/>
-                    <Typography
-                    content="$DREAM"/>
+        <FlexCol style={{width: "100vw", height: "100vh", overflow: "hidden", pointerEvents: "none", background: ColorPalette.OBSIDIAN.toString()}}>
+            <Nav/>
+            <FlexCol style={{width: "1024px", height: "100%", justifyContent: "start"}}>
+                <FlexRow style={{gap: "20px"}}>
+                    <Typography content="Dream Token" style={{fontSize: "3em"}}/>
+                    <Typography content="DREAM" style={{fontSize: "1.5em"}}/>
                 </FlexRow>
-
-                <Typography
-                content="Dream is our native token and is required to use the protocol services, however, payments in other currencies are accepted and converted to Dream for a seamless experience. There are 200,000,000 initially minted of which"/>
-
-                <Sprite
-                src="../../../img/hodl.svg"
-                style={{
-                    width: "500px",
-                    aspectRatio: "1/1"
-                }}/>
-
-                <FlexRow
-                style={{
-                    gap: "5px"
-                }}>
-                    <Tag
-                    src="../../../img/shape/Flame.svg"
-                    content="0.0004"/>
-                    <Tag
-                    src="../../../img/shape/TwoSquares.svg"
-                    content="2595"/>
-                    <Tag
-                    src="../../../img/shape/Composition.svg"
-                    content="2,394,499"/>
+                <FlexRow style={{gap: "5px"}}>
+                    <Tag src="../../../img/shape/Flame.svg" content="0.0004"/>
+                    <Tag src="../../../img/shape/TwoSquares.svg" content="2595"/>
+                    <Tag src="../../../img/shape/Composition.svg" content="2,394,499"/>
                 </FlexRow>
-
-
-
-                <FlexRow>
-                    <Typography
-                    content={`TotalSupply: ${totalSupply.toLocaleString()}`}/>
-                </FlexRow>
+                <FlexRow><Typography content="Dream is the netive protocol currency in which the value and earnings of the protocol is accrued in."/></FlexRow>
             </FlexCol>
-
         </FlexCol>
     </>;
 }
+
+<FlexCol
+style={{
+    width: "100vw",
+    height: "100vh",
+    overflowX: "hidden",
+    overflowY: "hidden",
+    pointerEvents: "none",
+    background: ColorPalette.OBSIDIAN.toString()
+}}>
+    <FlexCol
+    style={{
+        width: "1024px",
+        height: "100%",
+        justifyContent: "space-between"
+    }}>
+        <Nav/>
+
+        <FlexRow>
+            <Typography
+            content="Dream"/>
+            <Typography
+            content="$DREAM"/>
+        </FlexRow>
+
+        <Typography
+        content="Dream is our native token and is required to use the protocol services, however, payments in other currencies are accepted and converted to Dream for a seamless experience. There are 200,000,000 initially minted of which"/>
+
+        <Sprite
+        src="../../../img/dist.svg"
+        style={{
+            width: "500px",
+            aspectRatio: "1/1"
+        }}/>
+
+
+
+
+
+        <FlexRow>
+            <Typography
+            content={`TotalSupply:`}/>
+        </FlexRow>
+    </FlexCol>
+
+</FlexCol>
 
 export function Tag({src, content}) {
     return <>

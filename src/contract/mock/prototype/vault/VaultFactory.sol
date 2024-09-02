@@ -21,17 +21,17 @@ contract VaultFactory {
     }
 
     function deployed() public view returns (address[] memory) {
-        address[] memory x = new address[](_deployed.length);
+        address[] memory deployed = new address[](_deployed.length);
         for (uint256 i = 0; i < _deployed.length; i++) {
-            x[i] = _deployed[i];
+            deployed[i] = _deployed[i];
         }
-        return x;
+        return deployed;
     }
 
     function deploy(IVToken vToken, Asset[] memory assets) public returns (address) {
-        address vault = address(new Vault(vToken, assets));
-        _deployed.push(vault);
-        emit Deploy(msg.sender, vault);
-        return vault;
+        address instance = address(new Vault(vToken, assets));
+        _deployed.push(instance);
+        emit Deploy(msg.sender, instance);
+        return instance;
     }
 }

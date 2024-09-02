@@ -49870,63 +49870,88 @@ function HomePage() {
               style: { justifyContent: "space-between", paddingBottom: "10px" },
               children: [
                 jsx_dev_runtime18.jsxDEV(Nav, {}, undefined, false, undefined, this),
-                jsx_dev_runtime18.jsxDEV(FlexRow, {
-                  style: { width: "1024px", height: "100%" },
+                jsx_dev_runtime18.jsxDEV(FlexCol, {
+                  style: { width: "1024px", height: "100%", justifyContent: "start" },
                   children: [
-                    jsx_dev_runtime18.jsxDEV(FlexCol, {
-                      style: { width: "100%", height: "100%", gap: "36px" },
+                    jsx_dev_runtime18.jsxDEV(FlexRow, {
+                      style: { width: "100%", height: "100%" },
                       children: [
                         jsx_dev_runtime18.jsxDEV(FlexCol, {
-                          style: { width: "100%" },
+                          style: { width: "100%", height: "100%", gap: "32px" },
                           children: [
+                            jsx_dev_runtime18.jsxDEV(FlexCol, {
+                              style: { width: "100%" },
+                              children: [
+                                jsx_dev_runtime18.jsxDEV(FlexRow, {
+                                  style: { width: "100%", justifyContent: "start" },
+                                  children: jsx_dev_runtime18.jsxDEV(Typography, {
+                                    content: "Shape the Decentralized Enterprise.",
+                                    style: { fontSize: "3em" }
+                                  }, undefined, false, undefined, this)
+                                }, undefined, false, undefined, this),
+                                jsx_dev_runtime18.jsxDEV(FlexRow, {
+                                  style: { width: "100%", justifyContent: "start" },
+                                  children: jsx_dev_runtime18.jsxDEV(Typography, {
+                                    content: "Deploy and Manage Trusless Systems.",
+                                    style: { fontSize: "1.5em" }
+                                  }, undefined, false, undefined, this)
+                                }, undefined, false, undefined, this)
+                              ]
+                            }, undefined, true, undefined, this),
                             jsx_dev_runtime18.jsxDEV(FlexRow, {
-                              style: { width: "100%", justifyContent: "start" },
-                              children: jsx_dev_runtime18.jsxDEV(Typography, {
-                                content: "Shape the Decentralized Enterprise.",
-                                style: { fontSize: "3em" }
-                              }, undefined, false, undefined, this)
-                            }, undefined, false, undefined, this),
-                            jsx_dev_runtime18.jsxDEV(FlexRow, {
-                              style: { width: "100%", justifyContent: "start" },
-                              children: jsx_dev_runtime18.jsxDEV(Typography, {
-                                content: "Deploy and Manage Trusless Systems.",
-                                style: { fontSize: "1.5em" }
-                              }, undefined, false, undefined, this)
-                            }, undefined, false, undefined, this)
+                              style: { width: "100%", justifyContent: "start", gap: "20px" },
+                              children: [
+                                jsx_dev_runtime18.jsxDEV(DualLabelLink, {
+                                  to: "/get-started",
+                                  label0: "Get Started",
+                                  label1: "\u2726",
+                                  size: 200,
+                                  color: TITANIUM.toString(),
+                                  onClick: () => {
+                                  }
+                                }, undefined, false, undefined, this),
+                                jsx_dev_runtime18.jsxDEV(DualLabelLink, {
+                                  to: "https://dreamcatcher-1.gitbook.io/dreamcatcher",
+                                  label0: "Learn More",
+                                  label1: "\u2726",
+                                  size: 200,
+                                  color: TITANIUM.toString(),
+                                  onClick: () => {
+                                  }
+                                }, undefined, false, undefined, this)
+                              ]
+                            }, undefined, true, undefined, this)
                           ]
                         }, undefined, true, undefined, this),
-                        jsx_dev_runtime18.jsxDEV(FlexRow, {
-                          style: { width: "100%", justifyContent: "start", gap: "20px" },
-                          children: [
-                            jsx_dev_runtime18.jsxDEV(DualLabelLink, {
-                              to: "/get-started",
-                              label0: "Get Started",
-                              label1: "\u2726",
-                              size: 200,
-                              color: TITANIUM.toString(),
-                              onClick: () => {
-                              }
-                            }, undefined, false, undefined, this),
-                            jsx_dev_runtime18.jsxDEV(DualLabelLink, {
-                              to: "https://dreamcatcher-1.gitbook.io/dreamcatcher",
-                              label0: "Learn More",
-                              label1: "\u2726",
-                              size: 200,
-                              color: TITANIUM.toString(),
-                              onClick: () => {
-                              }
-                            }, undefined, false, undefined, this)
-                          ]
-                        }, undefined, true, undefined, this)
+                        jsx_dev_runtime18.jsxDEV(FlexCol, {
+                          style: { width: "100%", height: "100%" },
+                          children: jsx_dev_runtime18.jsxDEV(Sprite, {
+                            src: "../../../img/whale.svg",
+                            style: { width: "100%", aspectRatio: "1/1", objectFit: "contain" }
+                          }, undefined, false, undefined, this)
+                        }, undefined, false, undefined, this)
                       ]
                     }, undefined, true, undefined, this),
-                    jsx_dev_runtime18.jsxDEV(FlexCol, {
-                      style: { width: "100%", height: "100%" },
-                      children: jsx_dev_runtime18.jsxDEV(Sprite, {
-                        src: "../../../img/whale.svg",
-                        style: { width: "100%", aspectRatio: "1/1", objectFit: "contain" }
-                      }, undefined, false, undefined, this)
-                    }, undefined, false, undefined, this)
+                    jsx_dev_runtime18.jsxDEV(FlexRow, {
+                      style: { width: "100%", paddingBottom: "64px", paddingTop: "8px" },
+                      children: [
+                        jsx_dev_runtime18.jsxDEV(HomePageCard, {
+                          src: "../../../img/shape/TwoSquares.svg",
+                          caption: "Trustless",
+                          description: "Go global and reach millions safely with our smart tokenized vaults."
+                        }, undefined, false, undefined, this),
+                        jsx_dev_runtime18.jsxDEV(HomePageCard, {
+                          src: "../../../img/shape/Dots.svg",
+                          caption: "Streamlined",
+                          description: "Streamline your trading and asset management process with our suite of reactive and integrated automation tools."
+                        }, undefined, false, undefined, this),
+                        jsx_dev_runtime18.jsxDEV(HomePageCard, {
+                          src: "../../../img/shape/Composition.svg",
+                          caption: "Community",
+                          description: ""
+                        }, undefined, false, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this)
                   ]
                 }, undefined, true, undefined, this)
               ]
@@ -50054,6 +50079,76 @@ function HomePage() {
   }
 }
 var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+function HomePageCard({ src, caption, description }) {
+  return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
+    children: jsx_dev_runtime18.jsxDEV(FlexRow, {
+      style: {
+        width: "100%",
+        height: "100%",
+        paddingTop: "1%",
+        paddingBottom: "1%",
+        paddingLeft: "1%",
+        paddingRight: "1%",
+        overflowX: "hidden",
+        overflowY: "hidden",
+        gap: "5%"
+      },
+      children: [
+        jsx_dev_runtime18.jsxDEV(FlexCol, {
+          style: {
+            width: "50%",
+            height: "100%",
+            justifyContent: "start"
+          },
+          children: jsx_dev_runtime18.jsxDEV(Sprite, {
+            src,
+            style: {
+              width: "50%",
+              aspectRatio: "1/1",
+              objectFit: "contain"
+            }
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime18.jsxDEV(FlexCol, {
+          style: {
+            width: "100%",
+            height: "100%",
+            gap: "5%",
+            justifyContent: "start"
+          },
+          children: [
+            jsx_dev_runtime18.jsxDEV(FlexRow, {
+              style: {
+                width: "100%",
+                height: "auto",
+                justifyContent: "start"
+              },
+              children: jsx_dev_runtime18.jsxDEV(Typography, {
+                content: caption,
+                style: {
+                  fontSize: "1.25em"
+                }
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime18.jsxDEV(FlexRow, {
+              style: {
+                width: "100%",
+                height: "auto",
+                justifyContent: "start"
+              },
+              children: jsx_dev_runtime18.jsxDEV(Typography, {
+                content: description,
+                style: {
+                  fontSize: "0.75em"
+                }
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
 function TearDropBulletPoint({ caption, content }) {
   return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
     children: jsx_dev_runtime18.jsxDEV(FlexCol, {
@@ -50471,69 +50566,51 @@ function TokenomicsPage() {
   }, []);
   return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
     children: jsx_dev_runtime20.jsxDEV(FlexCol, {
-      style: {
-        width: "100vw",
-        height: "100vh",
-        overflowX: "hidden",
-        overflowY: "hidden",
-        pointerEvents: "none",
-        background: OBSIDIAN.toString()
-      },
-      children: jsx_dev_runtime20.jsxDEV(FlexCol, {
-        style: {
-          width: "1024px",
-          height: "100%",
-          justifyContent: "space-between"
-        },
-        children: [
-          jsx_dev_runtime20.jsxDEV(Nav, {}, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(FlexRow, {
-            children: [
-              jsx_dev_runtime20.jsxDEV(Typography, {
-                content: "Dream"
-              }, undefined, false, undefined, this),
-              jsx_dev_runtime20.jsxDEV(Typography, {
-                content: "$DREAM"
+      style: { width: "100vw", height: "100vh", overflow: "hidden", pointerEvents: "none", background: OBSIDIAN.toString() },
+      children: [
+        jsx_dev_runtime20.jsxDEV(Nav, {}, undefined, false, undefined, this),
+        jsx_dev_runtime20.jsxDEV(FlexCol, {
+          style: { width: "1024px", height: "100%", justifyContent: "start" },
+          children: [
+            jsx_dev_runtime20.jsxDEV(FlexRow, {
+              style: { gap: "20px" },
+              children: [
+                jsx_dev_runtime20.jsxDEV(Typography, {
+                  content: "Dream Token",
+                  style: { fontSize: "3em" }
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime20.jsxDEV(Typography, {
+                  content: "DREAM",
+                  style: { fontSize: "1.5em" }
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            jsx_dev_runtime20.jsxDEV(FlexRow, {
+              style: { gap: "5px" },
+              children: [
+                jsx_dev_runtime20.jsxDEV(Tag, {
+                  src: "../../../img/shape/Flame.svg",
+                  content: "0.0004"
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime20.jsxDEV(Tag, {
+                  src: "../../../img/shape/TwoSquares.svg",
+                  content: "2595"
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime20.jsxDEV(Tag, {
+                  src: "../../../img/shape/Composition.svg",
+                  content: "2,394,499"
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            jsx_dev_runtime20.jsxDEV(FlexRow, {
+              children: jsx_dev_runtime20.jsxDEV(Typography, {
+                content: "Dream is the netive protocol currency in which the value and earnings of the protocol is accrued in."
               }, undefined, false, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
-          jsx_dev_runtime20.jsxDEV(Typography, {
-            content: "Dream is our native token and is required to use the protocol services, however, payments in other currencies are accepted and converted to Dream for a seamless experience. There are 200,000,000 initially minted of which"
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(Sprite, {
-            src: "../../../img/hodl.svg",
-            style: {
-              width: "500px",
-              aspectRatio: "1/1"
-            }
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime20.jsxDEV(FlexRow, {
-            style: {
-              gap: "5px"
-            },
-            children: [
-              jsx_dev_runtime20.jsxDEV(Tag, {
-                src: "../../../img/shape/Flame.svg",
-                content: "0.0004"
-              }, undefined, false, undefined, this),
-              jsx_dev_runtime20.jsxDEV(Tag, {
-                src: "../../../img/shape/TwoSquares.svg",
-                content: "2595"
-              }, undefined, false, undefined, this),
-              jsx_dev_runtime20.jsxDEV(Tag, {
-                src: "../../../img/shape/Composition.svg",
-                content: "2,394,499"
-              }, undefined, false, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
-          jsx_dev_runtime20.jsxDEV(FlexRow, {
-            children: jsx_dev_runtime20.jsxDEV(Typography, {
-              content: `TotalSupply: ${totalSupply.toLocaleString()}`
             }, undefined, false, undefined, this)
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this)
-    }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
 function Tag({ src, content }) {
@@ -50567,6 +50644,7 @@ function Tag({ src, content }) {
   }, undefined, false, undefined, this);
 }
 var dream = Erc20Interface("0x52463952A864107B63Eb6b21f5234A0B0e99b3f1");
+FlexCol, OBSIDIAN.toString(), FlexCol, Nav, FlexRow, Typography, Typography, Typography, Sprite, FlexRow, Typography;
 
 // src/public/component/Render.tsx
 var client = __toESM(require_client(), 1);
