@@ -1,5 +1,5 @@
-import type {SelectorType} from "@doka/SelectorType";
-import type {SelectorSignatureWithReturn} from "@doka/SelectorSignatureWithReturn";
+import type {SelectorType} from "./type/SelectorType";
+import type {SelectorSignatureWithReturn} from "./type/SelectorSignatureWithReturn";
 
 export type SelectorWithReturn = {
     name(): 

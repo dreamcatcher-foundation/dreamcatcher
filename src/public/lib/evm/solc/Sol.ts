@@ -1,4 +1,3 @@
-import type {SolErrorCode} from "@doka/SolErrorCode";
 import {require} from "@lib/ErrorHandler";
 import {existsSync} from "fs";
 import {readFileSync} from "fs";
@@ -6,6 +5,13 @@ import {unlinkSync} from "fs";
 import {join} from "path";
 import {exec} from "child_process";
 import Solc from "solc";
+
+export type SolErrorCode =
+    | "sol-missing-path"
+    | "sol-failed-to-parse-file-name"
+    | "sol-failed-to-parse-file-extension"
+    | "sol-failed-to-parse-file-content"
+    | "sol-type-error";
 
 export type Sol = {
     path(): string;

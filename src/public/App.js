@@ -13910,7 +13910,7 @@ var require_react_dom_development = __commonJS((exports) => {
           return _ref2;
         }
       }
-      function updateRef2(initialValue) {
+      function updateRef(initialValue) {
         var hook = updateWorkInProgressHook();
         return hook.memoizedState;
       }
@@ -14592,7 +14592,7 @@ var require_react_dom_development = __commonJS((exports) => {
           useRef: function(initialValue) {
             currentHookNameInDev = "useRef";
             updateHookTypesDev();
-            return updateRef2();
+            return updateRef();
           },
           useState: function(initialState) {
             currentHookNameInDev = "useState";
@@ -14696,7 +14696,7 @@ var require_react_dom_development = __commonJS((exports) => {
           useRef: function(initialValue) {
             currentHookNameInDev = "useRef";
             updateHookTypesDev();
-            return updateRef2();
+            return updateRef();
           },
           useState: function(initialState) {
             currentHookNameInDev = "useState";
@@ -14931,7 +14931,7 @@ var require_react_dom_development = __commonJS((exports) => {
             currentHookNameInDev = "useRef";
             warnInvalidHookAccess();
             updateHookTypesDev();
-            return updateRef2();
+            return updateRef();
           },
           useState: function(initialState) {
             currentHookNameInDev = "useState";
@@ -15052,7 +15052,7 @@ var require_react_dom_development = __commonJS((exports) => {
             currentHookNameInDev = "useRef";
             warnInvalidHookAccess();
             updateHookTypesDev();
-            return updateRef2();
+            return updateRef();
           },
           useState: function(initialState) {
             currentHookNameInDev = "useState";
@@ -22591,7 +22591,7 @@ var require_react_dom = __commonJS((exports, module) => {
 
 // node_modules/react/cjs/react-jsx-dev-runtime.development.js
 var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
-  var React3 = __toESM(require_react(), 1);
+  var React4 = __toESM(require_react(), 1);
   if (true) {
     (function() {
       var REACT_ELEMENT_TYPE = Symbol.for("react.element");
@@ -22619,7 +22619,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         }
         return null;
       }
-      var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+      var ReactSharedInternals = React4.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
       function error(format) {
         {
           {
@@ -22738,7 +22738,7 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         }
         return null;
       }
-      var assign2 = Object.assign;
+      var assign3 = Object.assign;
       var disabledDepth = 0;
       var prevLog;
       var prevInfo;
@@ -22789,25 +22789,25 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
               writable: true
             };
             Object.defineProperties(console, {
-              log: assign2({}, props, {
+              log: assign3({}, props, {
                 value: prevLog
               }),
-              info: assign2({}, props, {
+              info: assign3({}, props, {
                 value: prevInfo
               }),
-              warn: assign2({}, props, {
+              warn: assign3({}, props, {
                 value: prevWarn
               }),
-              error: assign2({}, props, {
+              error: assign3({}, props, {
                 value: prevError
               }),
-              group: assign2({}, props, {
+              group: assign3({}, props, {
                 value: prevGroup
               }),
-              groupCollapsed: assign2({}, props, {
+              groupCollapsed: assign3({}, props, {
                 value: prevGroupCollapsed
               }),
-              groupEnd: assign2({}, props, {
+              groupEnd: assign3({}, props, {
                 value: prevGroupEnd
               })
             });
@@ -22818,18 +22818,18 @@ var require_react_jsx_dev_runtime_development = __commonJS((exports) => {
         }
       }
       var ReactCurrentDispatcher = ReactSharedInternals.ReactCurrentDispatcher;
-      var prefix2;
+      var prefix3;
       function describeBuiltInComponentFrame(name, source, ownerFn) {
         {
-          if (prefix2 === undefined) {
+          if (prefix3 === undefined) {
             try {
               throw Error();
             } catch (x) {
               var match = x.stack.trim().match(/\n( *(at )?)/);
-              prefix2 = match && match[1] || "";
+              prefix3 = match && match[1] || "";
             }
           }
-          return "\n" + prefix2 + name;
+          return "\n" + prefix3 + name;
         }
       }
       var reentry = false;
@@ -23452,13 +23452,13 @@ var require_jsx_dev_runtime = __commonJS((exports, module) => {
 
 // node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.development.js
 var require_use_sync_external_store_shim_development = __commonJS((exports) => {
-  var React5 = __toESM(require_react(), 1);
+  var React6 = __toESM(require_react(), 1);
   if (true) {
     (function() {
       if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
         __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error);
       }
-      var ReactSharedInternals = React5.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+      var ReactSharedInternals = React6.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
       function error(format) {
         {
           {
@@ -23484,17 +23484,17 @@ var require_use_sync_external_store_shim_development = __commonJS((exports) => {
           Function.prototype.apply.call(console[level], console, argsWithFormat);
         }
       }
-      function is2(x, y) {
+      function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is === "function" ? Object.is : is2;
-      var useState8 = React5.useState, useEffect9 = React5.useEffect, useLayoutEffect5 = React5.useLayoutEffect, useDebugValue2 = React5.useDebugValue;
+      var objectIs = typeof Object.is === "function" ? Object.is : is3;
+      var useState9 = React6.useState, useEffect11 = React6.useEffect, useLayoutEffect6 = React6.useLayoutEffect, useDebugValue2 = React6.useDebugValue;
       var didWarnOld18Alpha = false;
       var didWarnUncachedGetSnapshot = false;
       function useSyncExternalStore2(subscribe, getSnapshot, getServerSnapshot) {
         {
           if (!didWarnOld18Alpha) {
-            if (React5.startTransition !== undefined) {
+            if (React6.startTransition !== undefined) {
               didWarnOld18Alpha = true;
               error("You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release.");
             }
@@ -23510,13 +23510,13 @@ var require_use_sync_external_store_shim_development = __commonJS((exports) => {
             }
           }
         }
-        var _useState = useState8({
+        var _useState = useState9({
           inst: {
             value,
             getSnapshot
           }
         }), inst = _useState[0].inst, forceUpdate = _useState[1];
-        useLayoutEffect5(function() {
+        useLayoutEffect6(function() {
           inst.value = value;
           inst.getSnapshot = getSnapshot;
           if (checkIfSnapshotChanged(inst)) {
@@ -23525,7 +23525,7 @@ var require_use_sync_external_store_shim_development = __commonJS((exports) => {
             });
           }
         }, [subscribe, value, getSnapshot]);
-        useEffect9(function() {
+        useEffect11(function() {
           if (checkIfSnapshotChanged(inst)) {
             forceUpdate({
               inst
@@ -23559,7 +23559,7 @@ var require_use_sync_external_store_shim_development = __commonJS((exports) => {
       var canUseDOM = !!(typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined");
       var isServerEnvironment = !canUseDOM;
       var shim = isServerEnvironment ? useSyncExternalStore$1 : useSyncExternalStore2;
-      var useSyncExternalStore$2 = React5.useSyncExternalStore !== undefined ? React5.useSyncExternalStore : shim;
+      var useSyncExternalStore$2 = React6.useSyncExternalStore !== undefined ? React6.useSyncExternalStore : shim;
       exports.useSyncExternalStore = useSyncExternalStore$2;
       if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop === "function") {
         __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error);
@@ -23578,21 +23578,21 @@ var require_shim = __commonJS((exports, module) => {
 
 // node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.development.js
 var require_with_selector_development = __commonJS((exports) => {
-  var React5 = __toESM(require_react(), 1);
+  var React6 = __toESM(require_react(), 1);
   if (true) {
     (function() {
       if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") {
         __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error);
       }
       var shim = require_shim();
-      function is2(x, y) {
+      function is3(x, y) {
         return x === y && (x !== 0 || 1 / x === 1 / y) || x !== x && y !== y;
       }
-      var objectIs = typeof Object.is === "function" ? Object.is : is2;
+      var objectIs = typeof Object.is === "function" ? Object.is : is3;
       var useSyncExternalStore = shim.useSyncExternalStore;
-      var useRef10 = React5.useRef, useEffect9 = React5.useEffect, useMemo6 = React5.useMemo, useDebugValue2 = React5.useDebugValue;
+      var useRef12 = React6.useRef, useEffect11 = React6.useEffect, useMemo6 = React6.useMemo, useDebugValue2 = React6.useDebugValue;
       function useSyncExternalStoreWithSelector(subscribe, getSnapshot, getServerSnapshot, selector, isEqual2) {
-        var instRef = useRef10(null);
+        var instRef = useRef12(null);
         var inst;
         if (instRef.current === null) {
           inst = {
@@ -23647,7 +23647,7 @@ var require_with_selector_development = __commonJS((exports) => {
           return [getSnapshotWithSelector, getServerSnapshotWithSelector];
         }, [getSnapshot, getServerSnapshot, selector, isEqual2]), getSelection = _useMemo[0], getServerSelection = _useMemo[1];
         var value = useSyncExternalStore(subscribe, getSelection, getServerSelection);
-        useEffect9(function() {
+        useEffect11(function() {
           inst.hasValue = true;
           inst.value = value;
         }, [value]);
@@ -23696,7 +23696,7 @@ var require_client = __commonJS((exports) => {
   var i;
 });
 
-// node_modules/@react-spring/shared/dist/react-spring_shared.modern.mjs
+// node_modules/@react-spring/core/node_modules/@react-spring/shared/dist/react-spring_shared.modern.mjs
 var schedule = function(fn, queue) {
   if (sync) {
     queue.delete(fn);
@@ -24253,158 +24253,6 @@ var frameLoop = {
   }
 };
 var clamp = (min, max, v) => Math.min(Math.max(v, min), max);
-var colors2 = {
-  transparent: 0,
-  aliceblue: 4042850303,
-  antiquewhite: 4209760255,
-  aqua: 16777215,
-  aquamarine: 2147472639,
-  azure: 4043309055,
-  beige: 4126530815,
-  bisque: 4293182719,
-  black: 255,
-  blanchedalmond: 4293643775,
-  blue: 65535,
-  blueviolet: 2318131967,
-  brown: 2771004159,
-  burlywood: 3736635391,
-  burntsienna: 3934150143,
-  cadetblue: 1604231423,
-  chartreuse: 2147418367,
-  chocolate: 3530104575,
-  coral: 4286533887,
-  cornflowerblue: 1687547391,
-  cornsilk: 4294499583,
-  crimson: 3692313855,
-  cyan: 16777215,
-  darkblue: 35839,
-  darkcyan: 9145343,
-  darkgoldenrod: 3095792639,
-  darkgray: 2846468607,
-  darkgreen: 6553855,
-  darkgrey: 2846468607,
-  darkkhaki: 3182914559,
-  darkmagenta: 2332068863,
-  darkolivegreen: 1433087999,
-  darkorange: 4287365375,
-  darkorchid: 2570243327,
-  darkred: 2332033279,
-  darksalmon: 3918953215,
-  darkseagreen: 2411499519,
-  darkslateblue: 1211993087,
-  darkslategray: 793726975,
-  darkslategrey: 793726975,
-  darkturquoise: 13554175,
-  darkviolet: 2483082239,
-  deeppink: 4279538687,
-  deepskyblue: 12582911,
-  dimgray: 1768516095,
-  dimgrey: 1768516095,
-  dodgerblue: 512819199,
-  firebrick: 2988581631,
-  floralwhite: 4294635775,
-  forestgreen: 579543807,
-  fuchsia: 4278255615,
-  gainsboro: 3705462015,
-  ghostwhite: 4177068031,
-  gold: 4292280575,
-  goldenrod: 3668254975,
-  gray: 2155905279,
-  green: 8388863,
-  greenyellow: 2919182335,
-  grey: 2155905279,
-  honeydew: 4043305215,
-  hotpink: 4285117695,
-  indianred: 3445382399,
-  indigo: 1258324735,
-  ivory: 4294963455,
-  khaki: 4041641215,
-  lavender: 3873897215,
-  lavenderblush: 4293981695,
-  lawngreen: 2096890111,
-  lemonchiffon: 4294626815,
-  lightblue: 2916673279,
-  lightcoral: 4034953471,
-  lightcyan: 3774873599,
-  lightgoldenrodyellow: 4210742015,
-  lightgray: 3553874943,
-  lightgreen: 2431553791,
-  lightgrey: 3553874943,
-  lightpink: 4290167295,
-  lightsalmon: 4288707327,
-  lightseagreen: 548580095,
-  lightskyblue: 2278488831,
-  lightslategray: 2005441023,
-  lightslategrey: 2005441023,
-  lightsteelblue: 2965692159,
-  lightyellow: 4294959359,
-  lime: 16711935,
-  limegreen: 852308735,
-  linen: 4210091775,
-  magenta: 4278255615,
-  maroon: 2147483903,
-  mediumaquamarine: 1724754687,
-  mediumblue: 52735,
-  mediumorchid: 3126187007,
-  mediumpurple: 2473647103,
-  mediumseagreen: 1018393087,
-  mediumslateblue: 2070474495,
-  mediumspringgreen: 16423679,
-  mediumturquoise: 1221709055,
-  mediumvioletred: 3340076543,
-  midnightblue: 421097727,
-  mintcream: 4127193855,
-  mistyrose: 4293190143,
-  moccasin: 4293178879,
-  navajowhite: 4292783615,
-  navy: 33023,
-  oldlace: 4260751103,
-  olive: 2155872511,
-  olivedrab: 1804477439,
-  orange: 4289003775,
-  orangered: 4282712319,
-  orchid: 3664828159,
-  palegoldenrod: 4008225535,
-  palegreen: 2566625535,
-  paleturquoise: 2951671551,
-  palevioletred: 3681588223,
-  papayawhip: 4293907967,
-  peachpuff: 4292524543,
-  peru: 3448061951,
-  pink: 4290825215,
-  plum: 3718307327,
-  powderblue: 2967529215,
-  purple: 2147516671,
-  rebeccapurple: 1714657791,
-  red: 4278190335,
-  rosybrown: 3163525119,
-  royalblue: 1097458175,
-  saddlebrown: 2336560127,
-  salmon: 4202722047,
-  sandybrown: 4104413439,
-  seagreen: 780883967,
-  seashell: 4294307583,
-  sienna: 2689740287,
-  silver: 3233857791,
-  skyblue: 2278484991,
-  slateblue: 1784335871,
-  slategray: 1887473919,
-  slategrey: 1887473919,
-  snow: 4294638335,
-  springgreen: 16744447,
-  steelblue: 1182971135,
-  tan: 3535047935,
-  teal: 8421631,
-  thistle: 3636451583,
-  tomato: 4284696575,
-  turquoise: 1088475391,
-  violet: 4001558271,
-  wheat: 4125012991,
-  white: 4294967295,
-  whitesmoke: 4126537215,
-  yellow: 4294902015,
-  yellowgreen: 2597139199
-};
 var NUMBER = "[-+]?\\d*\\.?\\d+";
 var PERCENTAGE = NUMBER + "%";
 var rgb = new RegExp("rgb" + call(NUMBER, NUMBER, NUMBER));
@@ -24657,7 +24505,7 @@ var replaceRef = function(ctrl, ref) {
 };
 var import_react10 = __toESM(require_react(), 1);
 
-// node_modules/@react-spring/animated/dist/react-spring_animated.modern.mjs
+// node_modules/@react-spring/core/node_modules/@react-spring/animated/dist/react-spring_animated.modern.mjs
 var makeAnimated = function(value) {
   const nodeType = isAnimatedString(value) ? AnimatedString : AnimatedValue;
   return nodeType.create(value);
@@ -24668,27 +24516,6 @@ var getAnimatedType = function(value) {
 };
 var React = __toESM(require_react(), 1);
 var import_react9 = __toESM(require_react(), 1);
-var getAnimatedState = function(props, host) {
-  const dependencies = new Set;
-  TreeContext.dependencies = dependencies;
-  if (props.style)
-    props = {
-      ...props,
-      style: host.createAnimatedStyle(props.style)
-    };
-  props = new AnimatedObject(props);
-  TreeContext.dependencies = null;
-  return [props, dependencies];
-};
-var updateRef = function(ref, value) {
-  if (ref) {
-    if (is.fun(ref))
-      ref(value);
-    else
-      ref.current = value;
-  }
-  return value;
-};
 var $node = Symbol.for("Animated:node");
 var isAnimated = (value) => !!value && value[$node] === value;
 var getAnimated = (owner) => owner && owner[$node];
@@ -24854,89 +24681,7 @@ var AnimatedArray = class extends AnimatedObject {
     return true;
   }
 };
-var withAnimated = (Component, host) => {
-  const hasInstance = !is.fun(Component) || Component.prototype && Component.prototype.isReactComponent;
-  return import_react9.forwardRef((givenProps, givenRef) => {
-    const instanceRef = import_react9.useRef(null);
-    const ref = hasInstance && import_react9.useCallback((value) => {
-      instanceRef.current = updateRef(givenRef, value);
-    }, [givenRef]);
-    const [props, deps] = getAnimatedState(givenProps, host);
-    const forceUpdate = useForceUpdate();
-    const callback = () => {
-      const instance = instanceRef.current;
-      if (hasInstance && !instance) {
-        return;
-      }
-      const didUpdate = instance ? host.applyAnimatedValues(instance, props.getValue(true)) : false;
-      if (didUpdate === false) {
-        forceUpdate();
-      }
-    };
-    const observer = new PropsObserver(callback, deps);
-    const observerRef = import_react9.useRef();
-    useIsomorphicLayoutEffect(() => {
-      observerRef.current = observer;
-      each(deps, (dep) => addFluidObserver(dep, observer));
-      return () => {
-        if (observerRef.current) {
-          each(observerRef.current.deps, (dep) => removeFluidObserver(dep, observerRef.current));
-          raf.cancel(observerRef.current.update);
-        }
-      };
-    });
-    import_react9.useEffect(callback, []);
-    useOnce(() => () => {
-      const observer2 = observerRef.current;
-      each(observer2.deps, (dep) => removeFluidObserver(dep, observer2));
-    });
-    const usedProps = host.getComponentProps(props.getValue());
-    return React.createElement(Component, { ...usedProps, ref });
-  });
-};
-var PropsObserver = class {
-  constructor(update2, deps) {
-    this.update = update2;
-    this.deps = deps;
-  }
-  eventObserved(event) {
-    if (event.type == "change") {
-      raf.write(this.update);
-    }
-  }
-};
 var cacheKey = Symbol.for("AnimatedComponent");
-var createHost = (components, {
-  applyAnimatedValues = () => false,
-  createAnimatedStyle = (style) => new AnimatedObject(style),
-  getComponentProps = (props) => props
-} = {}) => {
-  const hostConfig = {
-    applyAnimatedValues,
-    createAnimatedStyle,
-    getComponentProps
-  };
-  const animated = (Component) => {
-    const displayName = getDisplayName(Component) || "Anonymous";
-    if (is.str(Component)) {
-      Component = animated[Component] || (animated[Component] = withAnimated(Component, hostConfig));
-    } else {
-      Component = Component[cacheKey] || (Component[cacheKey] = withAnimated(Component, hostConfig));
-    }
-    Component.displayName = `Animated(${displayName})`;
-    return Component;
-  };
-  eachProp(components, (Component, key) => {
-    if (is.arr(components)) {
-      key = getDisplayName(Component);
-    }
-    animated[key] = animated(Component);
-  });
-  return {
-    animated
-  };
-};
-var getDisplayName = (arg) => is.str(arg) ? arg : arg && is.str(arg.displayName) ? arg.displayName : is.fun(arg) && arg.name || null;
 
 // node_modules/@react-spring/core/dist/react-spring_core.modern.mjs
 var mergeConfig = function(config2, newConfig, defaultConfig) {
@@ -26475,8 +26220,885 @@ globals_exports.assign({
 });
 var update2 = frameLoop.advance;
 
-// node_modules/@react-spring/web/dist/react-spring_web.modern.mjs
+// node_modules/react-spring/node_modules/@react-spring/web/dist/react-spring_web.modern.mjs
 var import_react_dom = __toESM(require_react_dom(), 1);
+
+// node_modules/react-spring/node_modules/@react-spring/web/node_modules/@react-spring/shared/dist/react-spring_shared.modern.mjs
+var schedule2 = function(fn, queue) {
+  if (sync2) {
+    queue.delete(fn);
+    fn(0);
+  } else {
+    queue.add(fn);
+    start2();
+  }
+};
+var start2 = function() {
+  if (ts2 < 0) {
+    ts2 = 0;
+    if (raf2.frameLoop !== "demand") {
+      nativeRaf2(loop2);
+    }
+  }
+};
+var stop2 = function() {
+  ts2 = -1;
+};
+var loop2 = function() {
+  if (~ts2) {
+    nativeRaf2(loop2);
+    raf2.batchedUpdates(update3);
+  }
+};
+var update3 = function() {
+  const prevTs = ts2;
+  ts2 = raf2.now();
+  const count = findTimeout2(ts2);
+  if (count) {
+    eachSafely2(timeouts2.splice(0, count), (t) => t.handler());
+    pendingCount2 -= count;
+  }
+  if (!pendingCount2) {
+    stop2();
+    return;
+  }
+  onStartQueue2.flush();
+  updateQueue2.flush(prevTs ? Math.min(64, ts2 - prevTs) : 16.667);
+  onFrameQueue2.flush();
+  writeQueue2.flush();
+  onFinishQueue2.flush();
+};
+var makeQueue2 = function() {
+  let next = new Set;
+  let current = next;
+  return {
+    add(fn) {
+      pendingCount2 += current == next && !next.has(fn) ? 1 : 0;
+      next.add(fn);
+    },
+    delete(fn) {
+      pendingCount2 -= current == next && next.has(fn) ? 1 : 0;
+      return next.delete(fn);
+    },
+    flush(arg) {
+      if (current.size) {
+        next = new Set;
+        pendingCount2 -= current.size;
+        eachSafely2(current, (fn) => fn(arg) && next.add(fn));
+        pendingCount2 += next.size;
+        current = next;
+      }
+    }
+  };
+};
+var eachSafely2 = function(values, each2) {
+  values.forEach((value) => {
+    try {
+      each2(value);
+    } catch (e) {
+      raf2.catch(e);
+    }
+  });
+};
+var noop2 = function() {
+};
+var eachProp2 = function(obj, fn, ctx2) {
+  if (is2.arr(obj)) {
+    for (let i = 0;i < obj.length; i++) {
+      fn.call(ctx2, obj[i], `${i}`);
+    }
+    return;
+  }
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      fn.call(ctx2, obj[key], key);
+    }
+  }
+};
+var call2 = function(...parts) {
+  return "\\(\\s*(" + parts.join(")\\s*,\\s*(") + ")\\s*\\)";
+};
+var normalizeColor2 = function(color) {
+  let match;
+  if (typeof color === "number") {
+    return color >>> 0 === color && color >= 0 && color <= 4294967295 ? color : null;
+  }
+  if (match = hex62.exec(color))
+    return parseInt(match[1] + "ff", 16) >>> 0;
+  if (colors2 && colors2[color] !== undefined) {
+    return colors2[color];
+  }
+  if (match = rgb2.exec(color)) {
+    return (parse2552(match[1]) << 24 | parse2552(match[2]) << 16 | parse2552(match[3]) << 8 | 255) >>> 0;
+  }
+  if (match = rgba2.exec(color)) {
+    return (parse2552(match[1]) << 24 | parse2552(match[2]) << 16 | parse2552(match[3]) << 8 | parse12(match[4])) >>> 0;
+  }
+  if (match = hex32.exec(color)) {
+    return parseInt(match[1] + match[1] + match[2] + match[2] + match[3] + match[3] + "ff", 16) >>> 0;
+  }
+  if (match = hex82.exec(color))
+    return parseInt(match[1], 16) >>> 0;
+  if (match = hex42.exec(color)) {
+    return parseInt(match[1] + match[1] + match[2] + match[2] + match[3] + match[3] + match[4] + match[4], 16) >>> 0;
+  }
+  if (match = hsl2.exec(color)) {
+    return (hslToRgb2(parse3602(match[1]), parsePercentage2(match[2]), parsePercentage2(match[3])) | 255) >>> 0;
+  }
+  if (match = hsla2.exec(color)) {
+    return (hslToRgb2(parse3602(match[1]), parsePercentage2(match[2]), parsePercentage2(match[3])) | parse12(match[4])) >>> 0;
+  }
+  return null;
+};
+var hue2rgb2 = function(p, q, t) {
+  if (t < 0)
+    t += 1;
+  if (t > 1)
+    t -= 1;
+  if (t < 1 / 6)
+    return p + (q - p) * 6 * t;
+  if (t < 1 / 2)
+    return q;
+  if (t < 2 / 3)
+    return p + (q - p) * (2 / 3 - t) * 6;
+  return p;
+};
+var hslToRgb2 = function(h, s, l) {
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const r = hue2rgb2(p, q, h + 1 / 3);
+  const g = hue2rgb2(p, q, h);
+  const b = hue2rgb2(p, q, h - 1 / 3);
+  return Math.round(r * 255) << 24 | Math.round(g * 255) << 16 | Math.round(b * 255) << 8;
+};
+var parse2552 = function(str) {
+  const int = parseInt(str, 10);
+  if (int < 0)
+    return 0;
+  if (int > 255)
+    return 255;
+  return int;
+};
+var parse3602 = function(str) {
+  const int = parseFloat(str);
+  return (int % 360 + 360) % 360 / 360;
+};
+var parse12 = function(str) {
+  const num = parseFloat(str);
+  if (num < 0)
+    return 0;
+  if (num > 1)
+    return 255;
+  return Math.round(num * 255);
+};
+var parsePercentage2 = function(str) {
+  const int = parseFloat(str);
+  if (int < 0)
+    return 0;
+  if (int > 100)
+    return 1;
+  return int / 100;
+};
+var colorToRgba2 = function(input) {
+  let int32Color = normalizeColor2(input);
+  if (int32Color === null)
+    return input;
+  int32Color = int32Color || 0;
+  const r = (int32Color & 4278190080) >>> 24;
+  const g = (int32Color & 16711680) >>> 16;
+  const b = (int32Color & 65280) >>> 8;
+  const a = (int32Color & 255) / 255;
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+var interpolate2 = function(input, inputMin, inputMax, outputMin, outputMax, easing, extrapolateLeft, extrapolateRight, map) {
+  let result = map ? map(input) : input;
+  if (result < inputMin) {
+    if (extrapolateLeft === "identity")
+      return result;
+    else if (extrapolateLeft === "clamp")
+      result = inputMin;
+  }
+  if (result > inputMax) {
+    if (extrapolateRight === "identity")
+      return result;
+    else if (extrapolateRight === "clamp")
+      result = inputMax;
+  }
+  if (outputMin === outputMax)
+    return outputMin;
+  if (inputMin === inputMax)
+    return input <= inputMin ? outputMin : outputMax;
+  if (inputMin === -Infinity)
+    result = -result;
+  else if (inputMax === Infinity)
+    result = result - inputMin;
+  else
+    result = (result - inputMin) / (inputMax - inputMin);
+  result = easing(result);
+  if (outputMin === -Infinity)
+    result = -result;
+  else if (outputMax === Infinity)
+    result = result + outputMin;
+  else
+    result = result * (outputMax - outputMin) + outputMin;
+  return result;
+};
+var findRange2 = function(input, inputRange) {
+  for (var i = 1;i < inputRange.length - 1; ++i)
+    if (inputRange[i] >= input)
+      break;
+  return i - 1;
+};
+var callFluidObserver2 = function(observer2, event) {
+  if (observer2.eventObserved) {
+    observer2.eventObserved(event);
+  } else {
+    observer2(event);
+  }
+};
+var callFluidObservers2 = function(target, event) {
+  const observers = target[$observers2];
+  if (observers) {
+    observers.forEach((observer2) => {
+      callFluidObserver2(observer2, event);
+    });
+  }
+};
+var addFluidObserver2 = function(target, observer2) {
+  if (target[$get2]) {
+    let observers = target[$observers2];
+    if (!observers) {
+      setHidden2(target, $observers2, observers = new Set);
+    }
+    if (!observers.has(observer2)) {
+      observers.add(observer2);
+      if (target.observerAdded) {
+        target.observerAdded(observers.size, observer2);
+      }
+    }
+  }
+  return observer2;
+};
+var removeFluidObserver2 = function(target, observer2) {
+  const observers = target[$observers2];
+  if (observers && observers.has(observer2)) {
+    const count = observers.size - 1;
+    if (count) {
+      observers.delete(observer2);
+    } else {
+      target[$observers2] = null;
+    }
+    if (target.observerRemoved) {
+      target.observerRemoved(count, observer2);
+    }
+  }
+};
+var import_react15 = __toESM(require_react(), 1);
+var import_react16 = __toESM(require_react(), 1);
+var import_react17 = __toESM(require_react(), 1);
+var import_react18 = __toESM(require_react(), 1);
+var import_react19 = __toESM(require_react(), 1);
+var useForceUpdate2 = function() {
+  const update22 = import_react16.useState()[1];
+  const isMounted = useIsMounted2();
+  return () => {
+    if (isMounted.current) {
+      update22(Math.random());
+    }
+  };
+};
+var import_react20 = __toESM(require_react(), 1);
+var import_react21 = __toESM(require_react(), 1);
+var import_react22 = __toESM(require_react(), 1);
+var __defProp3 = Object.defineProperty;
+var __export3 = (target, all) => {
+  for (var name in all)
+    __defProp3(target, name, { get: all[name], enumerable: true });
+};
+var globals_exports2 = {};
+__export3(globals_exports2, {
+  assign: () => assign2,
+  colors: () => colors2,
+  createStringInterpolator: () => createStringInterpolator3,
+  skipAnimation: () => skipAnimation2,
+  to: () => to2,
+  willAdvance: () => willAdvance2
+});
+var updateQueue2 = makeQueue2();
+var raf2 = (fn) => schedule2(fn, updateQueue2);
+var writeQueue2 = makeQueue2();
+raf2.write = (fn) => schedule2(fn, writeQueue2);
+var onStartQueue2 = makeQueue2();
+raf2.onStart = (fn) => schedule2(fn, onStartQueue2);
+var onFrameQueue2 = makeQueue2();
+raf2.onFrame = (fn) => schedule2(fn, onFrameQueue2);
+var onFinishQueue2 = makeQueue2();
+raf2.onFinish = (fn) => schedule2(fn, onFinishQueue2);
+var timeouts2 = [];
+raf2.setTimeout = (handler, ms) => {
+  const time = raf2.now() + ms;
+  const cancel = () => {
+    const i = timeouts2.findIndex((t) => t.cancel == cancel);
+    if (~i)
+      timeouts2.splice(i, 1);
+    pendingCount2 -= ~i ? 1 : 0;
+  };
+  const timeout = { time, handler, cancel };
+  timeouts2.splice(findTimeout2(time), 0, timeout);
+  pendingCount2 += 1;
+  start2();
+  return timeout;
+};
+var findTimeout2 = (time) => ~(~timeouts2.findIndex((t) => t.time > time) || ~timeouts2.length);
+raf2.cancel = (fn) => {
+  onStartQueue2.delete(fn);
+  onFrameQueue2.delete(fn);
+  onFinishQueue2.delete(fn);
+  updateQueue2.delete(fn);
+  writeQueue2.delete(fn);
+};
+raf2.sync = (fn) => {
+  sync2 = true;
+  raf2.batchedUpdates(fn);
+  sync2 = false;
+};
+raf2.throttle = (fn) => {
+  let lastArgs;
+  function queuedFn() {
+    try {
+      fn(...lastArgs);
+    } finally {
+      lastArgs = null;
+    }
+  }
+  function throttled(...args) {
+    lastArgs = args;
+    raf2.onStart(queuedFn);
+  }
+  throttled.handler = fn;
+  throttled.cancel = () => {
+    onStartQueue2.delete(queuedFn);
+    lastArgs = null;
+  };
+  return throttled;
+};
+var nativeRaf2 = typeof window != "undefined" ? window.requestAnimationFrame : () => {
+};
+raf2.use = (impl) => nativeRaf2 = impl;
+raf2.now = typeof performance != "undefined" ? () => performance.now() : Date.now;
+raf2.batchedUpdates = (fn) => fn();
+raf2.catch = console.error;
+raf2.frameLoop = "always";
+raf2.advance = () => {
+  if (raf2.frameLoop !== "demand") {
+    console.warn("Cannot call the manual advancement of rafz whilst frameLoop is not set as demand");
+  } else {
+    update3();
+  }
+};
+var ts2 = -1;
+var pendingCount2 = 0;
+var sync2 = false;
+var defineHidden2 = (obj, key, value) => Object.defineProperty(obj, key, { value, writable: true, configurable: true });
+var is2 = {
+  arr: Array.isArray,
+  obj: (a) => !!a && a.constructor.name === "Object",
+  fun: (a) => typeof a === "function",
+  str: (a) => typeof a === "string",
+  num: (a) => typeof a === "number",
+  und: (a) => a === undefined
+};
+var each2 = (obj, fn) => obj.forEach(fn);
+var toArray2 = (a) => is2.und(a) ? [] : is2.arr(a) ? a : [a];
+var isSSR2 = () => typeof window === "undefined" || !window.navigator || /ServerSideRendering|^Deno\//.test(window.navigator.userAgent);
+var createStringInterpolator3;
+var to2;
+var colors2 = null;
+var skipAnimation2 = false;
+var willAdvance2 = noop2;
+var assign2 = (globals) => {
+  if (globals.to)
+    to2 = globals.to;
+  if (globals.now)
+    raf2.now = globals.now;
+  if (globals.colors !== undefined)
+    colors2 = globals.colors;
+  if (globals.skipAnimation != null)
+    skipAnimation2 = globals.skipAnimation;
+  if (globals.createStringInterpolator)
+    createStringInterpolator3 = globals.createStringInterpolator;
+  if (globals.requestAnimationFrame)
+    raf2.use(globals.requestAnimationFrame);
+  if (globals.batchedUpdates)
+    raf2.batchedUpdates = globals.batchedUpdates;
+  if (globals.willAdvance)
+    willAdvance2 = globals.willAdvance;
+  if (globals.frameLoop)
+    raf2.frameLoop = globals.frameLoop;
+};
+var colors22 = {
+  transparent: 0,
+  aliceblue: 4042850303,
+  antiquewhite: 4209760255,
+  aqua: 16777215,
+  aquamarine: 2147472639,
+  azure: 4043309055,
+  beige: 4126530815,
+  bisque: 4293182719,
+  black: 255,
+  blanchedalmond: 4293643775,
+  blue: 65535,
+  blueviolet: 2318131967,
+  brown: 2771004159,
+  burlywood: 3736635391,
+  burntsienna: 3934150143,
+  cadetblue: 1604231423,
+  chartreuse: 2147418367,
+  chocolate: 3530104575,
+  coral: 4286533887,
+  cornflowerblue: 1687547391,
+  cornsilk: 4294499583,
+  crimson: 3692313855,
+  cyan: 16777215,
+  darkblue: 35839,
+  darkcyan: 9145343,
+  darkgoldenrod: 3095792639,
+  darkgray: 2846468607,
+  darkgreen: 6553855,
+  darkgrey: 2846468607,
+  darkkhaki: 3182914559,
+  darkmagenta: 2332068863,
+  darkolivegreen: 1433087999,
+  darkorange: 4287365375,
+  darkorchid: 2570243327,
+  darkred: 2332033279,
+  darksalmon: 3918953215,
+  darkseagreen: 2411499519,
+  darkslateblue: 1211993087,
+  darkslategray: 793726975,
+  darkslategrey: 793726975,
+  darkturquoise: 13554175,
+  darkviolet: 2483082239,
+  deeppink: 4279538687,
+  deepskyblue: 12582911,
+  dimgray: 1768516095,
+  dimgrey: 1768516095,
+  dodgerblue: 512819199,
+  firebrick: 2988581631,
+  floralwhite: 4294635775,
+  forestgreen: 579543807,
+  fuchsia: 4278255615,
+  gainsboro: 3705462015,
+  ghostwhite: 4177068031,
+  gold: 4292280575,
+  goldenrod: 3668254975,
+  gray: 2155905279,
+  green: 8388863,
+  greenyellow: 2919182335,
+  grey: 2155905279,
+  honeydew: 4043305215,
+  hotpink: 4285117695,
+  indianred: 3445382399,
+  indigo: 1258324735,
+  ivory: 4294963455,
+  khaki: 4041641215,
+  lavender: 3873897215,
+  lavenderblush: 4293981695,
+  lawngreen: 2096890111,
+  lemonchiffon: 4294626815,
+  lightblue: 2916673279,
+  lightcoral: 4034953471,
+  lightcyan: 3774873599,
+  lightgoldenrodyellow: 4210742015,
+  lightgray: 3553874943,
+  lightgreen: 2431553791,
+  lightgrey: 3553874943,
+  lightpink: 4290167295,
+  lightsalmon: 4288707327,
+  lightseagreen: 548580095,
+  lightskyblue: 2278488831,
+  lightslategray: 2005441023,
+  lightslategrey: 2005441023,
+  lightsteelblue: 2965692159,
+  lightyellow: 4294959359,
+  lime: 16711935,
+  limegreen: 852308735,
+  linen: 4210091775,
+  magenta: 4278255615,
+  maroon: 2147483903,
+  mediumaquamarine: 1724754687,
+  mediumblue: 52735,
+  mediumorchid: 3126187007,
+  mediumpurple: 2473647103,
+  mediumseagreen: 1018393087,
+  mediumslateblue: 2070474495,
+  mediumspringgreen: 16423679,
+  mediumturquoise: 1221709055,
+  mediumvioletred: 3340076543,
+  midnightblue: 421097727,
+  mintcream: 4127193855,
+  mistyrose: 4293190143,
+  moccasin: 4293178879,
+  navajowhite: 4292783615,
+  navy: 33023,
+  oldlace: 4260751103,
+  olive: 2155872511,
+  olivedrab: 1804477439,
+  orange: 4289003775,
+  orangered: 4282712319,
+  orchid: 3664828159,
+  palegoldenrod: 4008225535,
+  palegreen: 2566625535,
+  paleturquoise: 2951671551,
+  palevioletred: 3681588223,
+  papayawhip: 4293907967,
+  peachpuff: 4292524543,
+  peru: 3448061951,
+  pink: 4290825215,
+  plum: 3718307327,
+  powderblue: 2967529215,
+  purple: 2147516671,
+  rebeccapurple: 1714657791,
+  red: 4278190335,
+  rosybrown: 3163525119,
+  royalblue: 1097458175,
+  saddlebrown: 2336560127,
+  salmon: 4202722047,
+  sandybrown: 4104413439,
+  seagreen: 780883967,
+  seashell: 4294307583,
+  sienna: 2689740287,
+  silver: 3233857791,
+  skyblue: 2278484991,
+  slateblue: 1784335871,
+  slategray: 1887473919,
+  slategrey: 1887473919,
+  snow: 4294638335,
+  springgreen: 16744447,
+  steelblue: 1182971135,
+  tan: 3535047935,
+  teal: 8421631,
+  thistle: 3636451583,
+  tomato: 4284696575,
+  turquoise: 1088475391,
+  violet: 4001558271,
+  wheat: 4125012991,
+  white: 4294967295,
+  whitesmoke: 4126537215,
+  yellow: 4294902015,
+  yellowgreen: 2597139199
+};
+var NUMBER2 = "[-+]?\\d*\\.?\\d+";
+var PERCENTAGE2 = NUMBER2 + "%";
+var rgb2 = new RegExp("rgb" + call2(NUMBER2, NUMBER2, NUMBER2));
+var rgba2 = new RegExp("rgba" + call2(NUMBER2, NUMBER2, NUMBER2, NUMBER2));
+var hsl2 = new RegExp("hsl" + call2(NUMBER2, PERCENTAGE2, PERCENTAGE2));
+var hsla2 = new RegExp("hsla" + call2(NUMBER2, PERCENTAGE2, PERCENTAGE2, NUMBER2));
+var hex32 = /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/;
+var hex42 = /^#([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/;
+var hex62 = /^#([0-9a-fA-F]{6})$/;
+var hex82 = /^#([0-9a-fA-F]{8})$/;
+var createInterpolator2 = (range, output, extrapolate) => {
+  if (is2.fun(range)) {
+    return range;
+  }
+  if (is2.arr(range)) {
+    return createInterpolator2({
+      range,
+      output,
+      extrapolate
+    });
+  }
+  if (is2.str(range.output[0])) {
+    return createStringInterpolator3(range);
+  }
+  const config2 = range;
+  const outputRange = config2.output;
+  const inputRange = config2.range || [0, 1];
+  const extrapolateLeft = config2.extrapolateLeft || config2.extrapolate || "extend";
+  const extrapolateRight = config2.extrapolateRight || config2.extrapolate || "extend";
+  const easing = config2.easing || ((t) => t);
+  return (input) => {
+    const range2 = findRange2(input, inputRange);
+    return interpolate2(input, inputRange[range2], inputRange[range2 + 1], outputRange[range2], outputRange[range2 + 1], easing, extrapolateLeft, extrapolateRight, config2.map);
+  };
+};
+var c12 = 1.70158;
+var c22 = c12 * 1.525;
+var c32 = c12 + 1;
+var c42 = 2 * Math.PI / 3;
+var c52 = 2 * Math.PI / 4.5;
+var $get2 = Symbol.for("FluidValue.get");
+var $observers2 = Symbol.for("FluidValue.observers");
+var hasFluidValue2 = (arg) => Boolean(arg && arg[$get2]);
+var getFluidValue2 = (arg) => arg && arg[$get2] ? arg[$get2]() : arg;
+var FluidValue2 = class {
+  constructor(get) {
+    if (!get && !(get = this.get)) {
+      throw Error("Unknown getter");
+    }
+    setFluidGetter2(this, get);
+  }
+};
+var setFluidGetter2 = (target, get) => setHidden2(target, $get2, get);
+var setHidden2 = (target, key, value) => Object.defineProperty(target, key, {
+  value,
+  writable: true,
+  configurable: true
+});
+var numberRegex2 = /[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/g;
+var colorRegex2 = /(#(?:[0-9a-f]{2}){2,4}|(#[0-9a-f]{3})|(rgb|hsl)a?\((-?\d+%?[,\s]+){2,3}\s*[\d\.]+%?\))/gi;
+var unitRegex2 = new RegExp(`(${numberRegex2.source})(%|[a-z]+)`, "i");
+var rgbaRegex2 = /rgba\(([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+), ([0-9\.-]+)\)/gi;
+var cssVariableRegex2 = /var\((--[a-zA-Z0-9-_]+),? ?([a-zA-Z0-9 ()%#.,-]+)?\)/;
+var variableToRgba2 = (input) => {
+  const [token, fallback] = parseCSSVariable2(input);
+  if (!token || isSSR2()) {
+    return input;
+  }
+  const value = window.getComputedStyle(document.documentElement).getPropertyValue(token);
+  if (value) {
+    return value.trim();
+  } else if (fallback && fallback.startsWith("--")) {
+    const value2 = window.getComputedStyle(document.documentElement).getPropertyValue(fallback);
+    if (value2) {
+      return value2;
+    } else {
+      return input;
+    }
+  } else if (fallback && cssVariableRegex2.test(fallback)) {
+    return variableToRgba2(fallback);
+  } else if (fallback) {
+    return fallback;
+  }
+  return input;
+};
+var parseCSSVariable2 = (current) => {
+  const match = cssVariableRegex2.exec(current);
+  if (!match)
+    return [,];
+  const [, token, fallback] = match;
+  return [token, fallback];
+};
+var namedColorRegex2;
+var rgbaRound2 = (_, p1, p2, p3, p4) => `rgba(${Math.round(p1)}, ${Math.round(p2)}, ${Math.round(p3)}, ${p4})`;
+var createStringInterpolator22 = (config2) => {
+  if (!namedColorRegex2)
+    namedColorRegex2 = colors2 ? new RegExp(`(${Object.keys(colors2).join("|")})(?!\\w)`, "g") : /^\b$/;
+  const output = config2.output.map((value) => {
+    return getFluidValue2(value).replace(cssVariableRegex2, variableToRgba2).replace(colorRegex2, colorToRgba2).replace(namedColorRegex2, colorToRgba2);
+  });
+  const keyframes = output.map((value) => value.match(numberRegex2).map(Number));
+  const outputRanges = keyframes[0].map((_, i) => keyframes.map((values) => {
+    if (!(i in values)) {
+      throw Error('The arity of each "output" value must be equal');
+    }
+    return values[i];
+  }));
+  const interpolators = outputRanges.map((output2) => createInterpolator2({ ...config2, output: output2 }));
+  return (input) => {
+    const missingUnit = !unitRegex2.test(output[0]) && output.find((value) => unitRegex2.test(value))?.replace(numberRegex2, "");
+    let i = 0;
+    return output[0].replace(numberRegex2, () => `${interpolators[i++](input)}${missingUnit || ""}`).replace(rgbaRegex2, rgbaRound2);
+  };
+};
+var prefix2 = "react-spring: ";
+var once2 = (fn) => {
+  const func = fn;
+  let called = false;
+  if (typeof func != "function") {
+    throw new TypeError(`${prefix2}once requires a function parameter`);
+  }
+  return (...args) => {
+    if (!called) {
+      func(...args);
+      called = true;
+    }
+  };
+};
+var warnInterpolate2 = once2(console.warn);
+var warnDirectCall2 = once2(console.warn);
+var useIsomorphicLayoutEffect2 = isSSR2() ? import_react18.useEffect : import_react18.useLayoutEffect;
+var useIsMounted2 = () => {
+  const isMounted = import_react17.useRef(false);
+  useIsomorphicLayoutEffect2(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+  return isMounted;
+};
+var useOnce2 = (effect) => import_react20.useEffect(effect, emptyDeps2);
+var emptyDeps2 = [];
+
+// node_modules/react-spring/node_modules/@react-spring/web/node_modules/@react-spring/animated/dist/react-spring_animated.modern.mjs
+var React3 = __toESM(require_react(), 1);
+var import_react23 = __toESM(require_react(), 1);
+var getAnimatedState = function(props, host) {
+  const dependencies = new Set;
+  TreeContext2.dependencies = dependencies;
+  if (props.style)
+    props = {
+      ...props,
+      style: host.createAnimatedStyle(props.style)
+    };
+  props = new AnimatedObject2(props);
+  TreeContext2.dependencies = null;
+  return [props, dependencies];
+};
+var updateRef = function(ref, value) {
+  if (ref) {
+    if (is2.fun(ref))
+      ref(value);
+    else
+      ref.current = value;
+  }
+  return value;
+};
+var $node2 = Symbol.for("Animated:node");
+var isAnimated2 = (value) => !!value && value[$node2] === value;
+var setAnimated2 = (owner, node) => defineHidden2(owner, $node2, node);
+var getPayload2 = (owner) => owner && owner[$node2] && owner[$node2].getPayload();
+var Animated2 = class {
+  constructor() {
+    setAnimated2(this, this);
+  }
+  getPayload() {
+    return this.payload || [];
+  }
+};
+var TreeContext2 = { dependencies: null };
+var AnimatedObject2 = class extends Animated2 {
+  constructor(source) {
+    super();
+    this.source = source;
+    this.setValue(source);
+  }
+  getValue(animated4) {
+    const values = {};
+    eachProp2(this.source, (source, key) => {
+      if (isAnimated2(source)) {
+        values[key] = source.getValue(animated4);
+      } else if (hasFluidValue2(source)) {
+        values[key] = getFluidValue2(source);
+      } else if (!animated4) {
+        values[key] = source;
+      }
+    });
+    return values;
+  }
+  setValue(source) {
+    this.source = source;
+    this.payload = this._makePayload(source);
+  }
+  reset() {
+    if (this.payload) {
+      each2(this.payload, (node) => node.reset());
+    }
+  }
+  _makePayload(source) {
+    if (source) {
+      const payload = new Set;
+      eachProp2(source, this._addToPayload, payload);
+      return Array.from(payload);
+    }
+  }
+  _addToPayload(source) {
+    if (TreeContext2.dependencies && hasFluidValue2(source)) {
+      TreeContext2.dependencies.add(source);
+    }
+    const payload = getPayload2(source);
+    if (payload) {
+      each2(payload, (node) => this.add(node));
+    }
+  }
+};
+var withAnimated = (Component, host) => {
+  const hasInstance = !is2.fun(Component) || Component.prototype && Component.prototype.isReactComponent;
+  return import_react23.forwardRef((givenProps, givenRef) => {
+    const instanceRef = import_react23.useRef(null);
+    const ref = hasInstance && import_react23.useCallback((value) => {
+      instanceRef.current = updateRef(givenRef, value);
+    }, [givenRef]);
+    const [props, deps] = getAnimatedState(givenProps, host);
+    const forceUpdate = useForceUpdate2();
+    const callback = () => {
+      const instance = instanceRef.current;
+      if (hasInstance && !instance) {
+        return;
+      }
+      const didUpdate = instance ? host.applyAnimatedValues(instance, props.getValue(true)) : false;
+      if (didUpdate === false) {
+        forceUpdate();
+      }
+    };
+    const observer = new PropsObserver(callback, deps);
+    const observerRef = import_react23.useRef();
+    useIsomorphicLayoutEffect2(() => {
+      observerRef.current = observer;
+      each2(deps, (dep) => addFluidObserver2(dep, observer));
+      return () => {
+        if (observerRef.current) {
+          each2(observerRef.current.deps, (dep) => removeFluidObserver2(dep, observerRef.current));
+          raf2.cancel(observerRef.current.update);
+        }
+      };
+    });
+    import_react23.useEffect(callback, []);
+    useOnce2(() => () => {
+      const observer2 = observerRef.current;
+      each2(observer2.deps, (dep) => removeFluidObserver2(dep, observer2));
+    });
+    const usedProps = host.getComponentProps(props.getValue());
+    return React3.createElement(Component, { ...usedProps, ref });
+  });
+};
+var PropsObserver = class {
+  constructor(update4, deps) {
+    this.update = update4;
+    this.deps = deps;
+  }
+  eventObserved(event) {
+    if (event.type == "change") {
+      raf2.write(this.update);
+    }
+  }
+};
+var cacheKey2 = Symbol.for("AnimatedComponent");
+var createHost = (components, {
+  applyAnimatedValues = () => false,
+  createAnimatedStyle = (style) => new AnimatedObject2(style),
+  getComponentProps = (props) => props
+} = {}) => {
+  const hostConfig = {
+    applyAnimatedValues,
+    createAnimatedStyle,
+    getComponentProps
+  };
+  const animated4 = (Component) => {
+    const displayName = getDisplayName(Component) || "Anonymous";
+    if (is2.str(Component)) {
+      Component = animated4[Component] || (animated4[Component] = withAnimated(Component, hostConfig));
+    } else {
+      Component = Component[cacheKey2] || (Component[cacheKey2] = withAnimated(Component, hostConfig));
+    }
+    Component.displayName = `Animated(${displayName})`;
+    return Component;
+  };
+  eachProp2(components, (Component, key) => {
+    if (is2.arr(components)) {
+      key = getDisplayName(Component);
+    }
+    animated4[key] = animated4(Component);
+  });
+  return {
+    animated: animated4
+  };
+};
+var getDisplayName = (arg) => is2.str(arg) ? arg : arg && is2.str(arg.displayName) ? arg.displayName : is2.fun(arg) && arg.name || null;
+
+// node_modules/react-spring/node_modules/@react-spring/web/dist/react-spring_web.modern.mjs
 var dangerousStyleValue = function(name, value) {
   if (value == null || typeof value === "boolean" || value === "")
     return "";
@@ -26563,18 +27185,18 @@ var isUnitlessNumber = {
   strokeOpacity: true,
   strokeWidth: true
 };
-var prefixKey = (prefix2, key) => prefix2 + key.charAt(0).toUpperCase() + key.substring(1);
+var prefixKey = (prefix3, key) => prefix3 + key.charAt(0).toUpperCase() + key.substring(1);
 var prefixes = ["Webkit", "Ms", "Moz", "O"];
 isUnitlessNumber = Object.keys(isUnitlessNumber).reduce((acc, prop) => {
-  prefixes.forEach((prefix2) => acc[prefixKey(prefix2, prop)] = acc[prop]);
+  prefixes.forEach((prefix3) => acc[prefixKey(prefix3, prop)] = acc[prop]);
   return acc;
 }, isUnitlessNumber);
 var domTransforms = /^(matrix|translate|scale|rotate|skew)/;
 var pxTransforms = /^(translate)/;
 var degTransforms = /^(rotate|skew)/;
-var addUnit = (value, unit) => is.num(value) && value !== 0 ? value + unit : value;
-var isValueIdentity = (value, id) => is.arr(value) ? value.every((v) => isValueIdentity(v, id)) : is.num(value) ? value === id : parseFloat(value) === id;
-var AnimatedStyle = class extends AnimatedObject {
+var addUnit = (value, unit) => is2.num(value) && value !== 0 ? value + unit : value;
+var isValueIdentity = (value, id) => is2.arr(value) ? value.every((v) => isValueIdentity(v, id)) : is2.num(value) ? value === id : parseFloat(value) === id;
+var AnimatedStyle = class extends AnimatedObject2 {
   constructor({ x, y, z, ...style }) {
     const inputs = [];
     const transforms = [];
@@ -26585,16 +27207,16 @@ var AnimatedStyle = class extends AnimatedObject {
         isValueIdentity(xyz, 0)
       ]);
     }
-    eachProp(style, (value, key) => {
+    eachProp2(style, (value, key) => {
       if (key === "transform") {
         inputs.push([value || ""]);
         transforms.push((transform) => [transform, transform === ""]);
       } else if (domTransforms.test(key)) {
         delete style[key];
-        if (is.und(value))
+        if (is2.und(value))
           return;
         const unit = pxTransforms.test(key) ? "px" : degTransforms.test(key) ? "deg" : "";
-        inputs.push(toArray(value));
+        inputs.push(toArray2(value));
         transforms.push(key === "rotate3d" ? ([x2, y2, z2, deg]) => [
           `rotate3d(${x2},${y2},${z2},${addUnit(deg, unit)})`,
           isValueIdentity(deg, 0)
@@ -26610,7 +27232,7 @@ var AnimatedStyle = class extends AnimatedObject {
     super(style);
   }
 };
-var FluidTransform = class extends FluidValue {
+var FluidTransform = class extends FluidValue2 {
   constructor(inputs, transforms) {
     super();
     this.inputs = inputs;
@@ -26623,9 +27245,9 @@ var FluidTransform = class extends FluidValue {
   _get() {
     let transform = "";
     let identity = true;
-    each(this.inputs, (input, i) => {
-      const arg1 = getFluidValue(input[0]);
-      const [t, id] = this.transforms[i](is.arr(arg1) ? arg1 : input.map(getFluidValue));
+    each2(this.inputs, (input, i) => {
+      const arg1 = getFluidValue2(input[0]);
+      const [t, id] = this.transforms[i](is2.arr(arg1) ? arg1 : input.map(getFluidValue2));
       transform += " " + t;
       identity = identity && id;
     });
@@ -26633,17 +27255,17 @@ var FluidTransform = class extends FluidValue {
   }
   observerAdded(count) {
     if (count == 1)
-      each(this.inputs, (input) => each(input, (value) => hasFluidValue(value) && addFluidObserver(value, this)));
+      each2(this.inputs, (input) => each2(input, (value) => hasFluidValue2(value) && addFluidObserver2(value, this)));
   }
   observerRemoved(count) {
     if (count == 0)
-      each(this.inputs, (input) => each(input, (value) => hasFluidValue(value) && removeFluidObserver(value, this)));
+      each2(this.inputs, (input) => each2(input, (value) => hasFluidValue2(value) && removeFluidObserver2(value, this)));
   }
   eventObserved(event) {
     if (event.type == "change") {
       this._value = null;
     }
-    callFluidObservers(this, event);
+    callFluidObservers2(this, event);
   }
 };
 var primitives = [
@@ -26783,8 +27405,8 @@ var primitives = [
 ];
 globals_exports.assign({
   batchedUpdates: import_react_dom.unstable_batchedUpdates,
-  createStringInterpolator: createStringInterpolator2,
-  colors: colors2
+  createStringInterpolator: createStringInterpolator22,
+  colors: colors22
 });
 var host = createHost(primitives, {
   applyAnimatedValues,
@@ -27198,11 +27820,11 @@ function NavBrand(props) {
 }
 
 // node_modules/react-router-dom/dist/index.js
-var React4 = __toESM(require_react(), 1);
+var React5 = __toESM(require_react(), 1);
 var ReactDOM = __toESM(require_react_dom(), 1);
 
 // node_modules/react-router/dist/index.js
-var React3 = __toESM(require_react(), 1);
+var React4 = __toESM(require_react(), 1);
 
 // node_modules/@remix-run/router/dist/router.js
 var _extends = function() {
@@ -27235,8 +27857,8 @@ var createBrowserHistory = function(options) {
       hash
     }, globalHistory.state && globalHistory.state.usr || null, globalHistory.state && globalHistory.state.key || "default");
   }
-  function createBrowserHref(window2, to2) {
-    return typeof to2 === "string" ? to2 : createPath(to2);
+  function createBrowserHref(window2, to3) {
+    return typeof to3 === "string" ? to3 : createPath(to3);
   }
   return getUrlBasedHistory(createBrowserLocation, createBrowserHref, null, options);
 };
@@ -27265,7 +27887,7 @@ var getHistoryState = function(location, index) {
     idx: index
   };
 };
-var createLocation = function(current, to2, state, key) {
+var createLocation = function(current, to3, state, key) {
   if (state === undefined) {
     state = null;
   }
@@ -27273,9 +27895,9 @@ var createLocation = function(current, to2, state, key) {
     pathname: typeof current === "string" ? current : current.pathname,
     search: "",
     hash: ""
-  }, typeof to2 === "string" ? parsePath(to2) : to2, {
+  }, typeof to3 === "string" ? parsePath(to3) : to3, {
     state,
-    key: to2 && to2.key || key || createKey()
+    key: to3 && to3.key || key || createKey()
   });
   return location;
 };
@@ -27347,11 +27969,11 @@ var getUrlBasedHistory = function(getLocation, createHref, validateLocation, opt
       });
     }
   }
-  function push(to2, state) {
+  function push(to3, state) {
     action = Action.Push;
-    let location = createLocation(history.location, to2, state);
+    let location = createLocation(history.location, to3, state);
     if (validateLocation)
-      validateLocation(location, to2);
+      validateLocation(location, to3);
     index = getIndex() + 1;
     let historyState = getHistoryState(location, index);
     let url = history.createHref(location);
@@ -27371,11 +27993,11 @@ var getUrlBasedHistory = function(getLocation, createHref, validateLocation, opt
       });
     }
   }
-  function replace(to2, state) {
+  function replace(to3, state) {
     action = Action.Replace;
-    let location = createLocation(history.location, to2, state);
+    let location = createLocation(history.location, to3, state);
     if (validateLocation)
-      validateLocation(location, to2);
+      validateLocation(location, to3);
     index = getIndex();
     let historyState = getHistoryState(location, index);
     let url = history.createHref(location);
@@ -27388,9 +28010,9 @@ var getUrlBasedHistory = function(getLocation, createHref, validateLocation, opt
       });
     }
   }
-  function createURL(to2) {
+  function createURL(to3) {
     let base = window2.location.origin !== "null" ? window2.location.origin : window2.location.href;
-    let href = typeof to2 === "string" ? to2 : createPath(to2);
+    let href = typeof to3 === "string" ? to3 : createPath(to3);
     href = href.replace(/ $/, "%20");
     invariant(base, "No window.location.(origin|href) available to create URL for href: " + href);
     return new URL(href, base);
@@ -27413,12 +28035,12 @@ var getUrlBasedHistory = function(getLocation, createHref, validateLocation, opt
         listener = null;
       };
     },
-    createHref(to2) {
-      return createHref(window2, to2);
+    createHref(to3) {
+      return createHref(window2, to3);
     },
     createURL,
-    encodeLocation(to2) {
-      let url = createURL(to2);
+    encodeLocation(to3) {
+      let url = createURL(to3);
       return {
         pathname: url.pathname,
         search: url.search,
@@ -27705,7 +28327,7 @@ var stripBasename = function(pathname, basename) {
   }
   return pathname.slice(startIndex) || "/";
 };
-var resolvePath = function(to2, fromPathname) {
+var resolvePath = function(to3, fromPathname) {
   if (fromPathname === undefined) {
     fromPathname = "/";
   }
@@ -27713,7 +28335,7 @@ var resolvePath = function(to2, fromPathname) {
     pathname: toPathname,
     search = "",
     hash = ""
-  } = typeof to2 === "string" ? parsePath(to2) : to2;
+  } = typeof to3 === "string" ? parsePath(to3) : to3;
   let pathname = toPathname ? toPathname.startsWith("/") ? toPathname : resolvePathname(toPathname, fromPathname) : fromPathname;
   return {
     pathname,
@@ -27751,17 +28373,17 @@ var resolveTo = function(toArg, routePathnames, locationPathname, isPathRelative
   if (isPathRelative === undefined) {
     isPathRelative = false;
   }
-  let to2;
+  let to3;
   if (typeof toArg === "string") {
-    to2 = parsePath(toArg);
+    to3 = parsePath(toArg);
   } else {
-    to2 = _extends({}, toArg);
-    invariant(!to2.pathname || !to2.pathname.includes("?"), getInvalidPathError("?", "pathname", "search", to2));
-    invariant(!to2.pathname || !to2.pathname.includes("#"), getInvalidPathError("#", "pathname", "hash", to2));
-    invariant(!to2.search || !to2.search.includes("#"), getInvalidPathError("#", "search", "hash", to2));
+    to3 = _extends({}, toArg);
+    invariant(!to3.pathname || !to3.pathname.includes("?"), getInvalidPathError("?", "pathname", "search", to3));
+    invariant(!to3.pathname || !to3.pathname.includes("#"), getInvalidPathError("#", "pathname", "hash", to3));
+    invariant(!to3.search || !to3.search.includes("#"), getInvalidPathError("#", "search", "hash", to3));
   }
-  let isEmptyPath = toArg === "" || to2.pathname === "";
-  let toPathname = isEmptyPath ? "/" : to2.pathname;
+  let isEmptyPath = toArg === "" || to3.pathname === "";
+  let toPathname = isEmptyPath ? "/" : to3.pathname;
   let from;
   if (toPathname == null) {
     from = locationPathname;
@@ -27773,11 +28395,11 @@ var resolveTo = function(toArg, routePathnames, locationPathname, isPathRelative
         toSegments.shift();
         routePathnameIndex -= 1;
       }
-      to2.pathname = toSegments.join("/");
+      to3.pathname = toSegments.join("/");
     }
     from = routePathnameIndex >= 0 ? routePathnames[routePathnameIndex] : "/";
   }
-  let path = resolvePath(to2, from);
+  let path = resolvePath(to3, from);
   let hasExplicitTrailingSlash = toPathname && toPathname !== "/" && toPathname.endsWith("/");
   let hasCurrentTrailingSlash = (isEmptyPath || toPathname === ".") && locationPathname.endsWith("/");
   if (!path.pathname.endsWith("/") && (hasExplicitTrailingSlash || hasCurrentTrailingSlash)) {
@@ -28088,12 +28710,12 @@ var createRouter = function(init) {
     cancelledDeferredRoutes = [];
     cancelledFetcherLoads = [];
   }
-  async function navigate(to2, opts) {
-    if (typeof to2 === "number") {
-      init.history.go(to2);
+  async function navigate(to3, opts) {
+    if (typeof to3 === "number") {
+      init.history.go(to3);
       return;
     }
-    let normalizedPath = normalizeTo(state.location, state.matches, basename, future.v7_prependBasename, to2, future.v7_relativeSplatPath, opts == null ? undefined : opts.fromRouteId, opts == null ? undefined : opts.relative);
+    let normalizedPath = normalizeTo(state.location, state.matches, basename, future.v7_prependBasename, to3, future.v7_relativeSplatPath, opts == null ? undefined : opts.fromRouteId, opts == null ? undefined : opts.relative);
     let {
       path,
       submission,
@@ -28129,7 +28751,7 @@ var createRouter = function(init) {
             reset: undefined,
             location: nextLocation
           });
-          navigate(to2, opts);
+          navigate(to3, opts);
         },
         reset() {
           let blockers = new Map(state.blockers);
@@ -28968,8 +29590,8 @@ var createRouter = function(init) {
     navigate,
     fetch: fetch2,
     revalidate,
-    createHref: (to2) => init.history.createHref(to2),
-    encodeLocation: (to2) => init.history.encodeLocation(to2),
+    createHref: (to3) => init.history.createHref(to3),
+    encodeLocation: (to3) => init.history.encodeLocation(to3),
     getFetcher,
     deleteFetcher: deleteFetcherAndUpdateState,
     dispose,
@@ -28984,7 +29606,7 @@ var createRouter = function(init) {
 var isSubmissionNavigation = function(opts) {
   return opts != null && (("formData" in opts) && opts.formData != null || ("body" in opts) && opts.body !== undefined);
 };
-var normalizeTo = function(location, matches, basename, prependBasename, to2, v7_relativeSplatPath, fromRouteId, relative) {
+var normalizeTo = function(location, matches, basename, prependBasename, to3, v7_relativeSplatPath, fromRouteId, relative) {
   let contextualMatches;
   let activeRouteMatch;
   if (fromRouteId) {
@@ -29000,12 +29622,12 @@ var normalizeTo = function(location, matches, basename, prependBasename, to2, v7
     contextualMatches = matches;
     activeRouteMatch = matches[matches.length - 1];
   }
-  let path = resolveTo(to2 ? to2 : ".", getResolveToMatches(contextualMatches, v7_relativeSplatPath), stripBasename(location.pathname, basename) || location.pathname, relative === "path");
-  if (to2 == null) {
+  let path = resolveTo(to3 ? to3 : ".", getResolveToMatches(contextualMatches, v7_relativeSplatPath), stripBasename(location.pathname, basename) || location.pathname, relative === "path");
+  if (to3 == null) {
     path.search = location.search;
     path.hash = location.hash;
   }
-  if ((to2 == null || to2 === "" || to2 === ".") && activeRouteMatch && activeRouteMatch.route.index && !hasNakedIndexQuery(path.search)) {
+  if ((to3 == null || to3 === "" || to3 === ".") && activeRouteMatch && activeRouteMatch.route.index && !hasNakedIndexQuery(path.search)) {
     path.search = path.search ? path.search.replace(/^\?/, "?index&") : "?index";
   }
   if (prependBasename && basename !== "/") {
@@ -29987,7 +30609,7 @@ var _extends2 = function() {
   };
   return _extends2.apply(this, arguments);
 };
-var useHref = function(to2, _temp) {
+var useHref = function(to3, _temp) {
   let {
     relative
   } = _temp === undefined ? {} : _temp;
@@ -29995,12 +30617,12 @@ var useHref = function(to2, _temp) {
   let {
     basename,
     navigator: navigator2
-  } = React3.useContext(NavigationContext);
+  } = React4.useContext(NavigationContext);
   let {
     hash,
     pathname,
     search
-  } = useResolvedPath(to2, {
+  } = useResolvedPath(to3, {
     relative
   });
   let joinedPathname = pathname;
@@ -30014,55 +30636,55 @@ var useHref = function(to2, _temp) {
   });
 };
 var useInRouterContext = function() {
-  return React3.useContext(LocationContext) != null;
+  return React4.useContext(LocationContext) != null;
 };
 var useLocation = function() {
   !useInRouterContext() && invariant(false, "useLocation() may be used only in the context of a <Router> component.");
-  return React3.useContext(LocationContext).location;
+  return React4.useContext(LocationContext).location;
 };
-var useIsomorphicLayoutEffect2 = function(cb) {
-  let isStatic = React3.useContext(NavigationContext).static;
+var useIsomorphicLayoutEffect3 = function(cb) {
+  let isStatic = React4.useContext(NavigationContext).static;
   if (!isStatic) {
-    React3.useLayoutEffect(cb);
+    React4.useLayoutEffect(cb);
   }
 };
 var useNavigate = function() {
   let {
     isDataRoute
-  } = React3.useContext(RouteContext);
+  } = React4.useContext(RouteContext);
   return isDataRoute ? useNavigateStable() : useNavigateUnstable();
 };
 var useNavigateUnstable = function() {
   !useInRouterContext() && invariant(false, "useNavigate() may be used only in the context of a <Router> component.");
-  let dataRouterContext = React3.useContext(DataRouterContext);
+  let dataRouterContext = React4.useContext(DataRouterContext);
   let {
     basename,
     future,
     navigator: navigator2
-  } = React3.useContext(NavigationContext);
+  } = React4.useContext(NavigationContext);
   let {
     matches
-  } = React3.useContext(RouteContext);
+  } = React4.useContext(RouteContext);
   let {
     pathname: locationPathname
   } = useLocation();
   let routePathnamesJson = JSON.stringify(getResolveToMatches(matches, future.v7_relativeSplatPath));
-  let activeRef = React3.useRef(false);
-  useIsomorphicLayoutEffect2(() => {
+  let activeRef = React4.useRef(false);
+  useIsomorphicLayoutEffect3(() => {
     activeRef.current = true;
   });
-  let navigate = React3.useCallback(function(to2, options) {
+  let navigate = React4.useCallback(function(to3, options) {
     if (options === undefined) {
       options = {};
     }
     warning(activeRef.current, navigateEffectWarning);
     if (!activeRef.current)
       return;
-    if (typeof to2 === "number") {
-      navigator2.go(to2);
+    if (typeof to3 === "number") {
+      navigator2.go(to3);
       return;
     }
-    let path = resolveTo(to2, JSON.parse(routePathnamesJson), locationPathname, options.relative === "path");
+    let path = resolveTo(to3, JSON.parse(routePathnamesJson), locationPathname, options.relative === "path");
     if (dataRouterContext == null && basename !== "/") {
       path.pathname = path.pathname === "/" ? basename : joinPaths([basename, path.pathname]);
     }
@@ -30070,30 +30692,30 @@ var useNavigateUnstable = function() {
   }, [basename, navigator2, routePathnamesJson, locationPathname, dataRouterContext]);
   return navigate;
 };
-var useResolvedPath = function(to2, _temp2) {
+var useResolvedPath = function(to3, _temp2) {
   let {
     relative
   } = _temp2 === undefined ? {} : _temp2;
   let {
     future
-  } = React3.useContext(NavigationContext);
+  } = React4.useContext(NavigationContext);
   let {
     matches
-  } = React3.useContext(RouteContext);
+  } = React4.useContext(RouteContext);
   let {
     pathname: locationPathname
   } = useLocation();
   let routePathnamesJson = JSON.stringify(getResolveToMatches(matches, future.v7_relativeSplatPath));
-  return React3.useMemo(() => resolveTo(to2, JSON.parse(routePathnamesJson), locationPathname, relative === "path"), [to2, routePathnamesJson, locationPathname, relative]);
+  return React4.useMemo(() => resolveTo(to3, JSON.parse(routePathnamesJson), locationPathname, relative === "path"), [to3, routePathnamesJson, locationPathname, relative]);
 };
 var useRoutesImpl = function(routes, locationArg, dataRouterState, future) {
   !useInRouterContext() && invariant(false, "useRoutes() may be used only in the context of a <Router> component.");
   let {
     navigator: navigator2
-  } = React3.useContext(NavigationContext);
+  } = React4.useContext(NavigationContext);
   let {
     matches: parentMatches
-  } = React3.useContext(RouteContext);
+  } = React4.useContext(RouteContext);
   let routeMatch = parentMatches[parentMatches.length - 1];
   let parentParams = routeMatch ? routeMatch.params : {};
   let parentPathname = routeMatch ? routeMatch.pathname : "/";
@@ -30139,7 +30761,7 @@ var useRoutesImpl = function(routes, locationArg, dataRouterState, future) {
     ])
   })), parentMatches, dataRouterState, future);
   if (locationArg && renderedMatches) {
-    return React3.createElement(LocationContext.Provider, {
+    return React4.createElement(LocationContext.Provider, {
       value: {
         location: _extends2({
           pathname: "/",
@@ -30170,17 +30792,17 @@ var DefaultErrorComponent = function() {
   let devInfo = null;
   if (true) {
     console.error("Error handled by React Router default ErrorBoundary:", error);
-    devInfo = React3.createElement(React3.Fragment, null, React3.createElement("p", null, "\uD83D\uDCBF Hey developer \uD83D\uDC4B"), React3.createElement("p", null, "You can provide a way better UX than this when your app throws errors by providing your own ", React3.createElement("code", {
+    devInfo = React4.createElement(React4.Fragment, null, React4.createElement("p", null, "\uD83D\uDCBF Hey developer \uD83D\uDC4B"), React4.createElement("p", null, "You can provide a way better UX than this when your app throws errors by providing your own ", React4.createElement("code", {
       style: codeStyles
-    }, "ErrorBoundary"), " or", " ", React3.createElement("code", {
+    }, "ErrorBoundary"), " or", " ", React4.createElement("code", {
       style: codeStyles
     }, "errorElement"), " prop on your route."));
   }
-  return React3.createElement(React3.Fragment, null, React3.createElement("h2", null, "Unexpected Application Error!"), React3.createElement("h3", {
+  return React4.createElement(React4.Fragment, null, React4.createElement("h2", null, "Unexpected Application Error!"), React4.createElement("h3", {
     style: {
       fontStyle: "italic"
     }
-  }, message), stack ? React3.createElement("pre", {
+  }, message), stack ? React4.createElement("pre", {
     style: preStyles
   }, stack) : null, devInfo);
 };
@@ -30190,11 +30812,11 @@ var RenderedRoute = function(_ref) {
     match,
     children
   } = _ref;
-  let dataRouterContext = React3.useContext(DataRouterContext);
+  let dataRouterContext = React4.useContext(DataRouterContext);
   if (dataRouterContext && dataRouterContext.static && dataRouterContext.staticContext && (match.route.errorElement || match.route.ErrorBoundary)) {
     dataRouterContext.staticContext._deepestRenderedBoundaryId = match.route.id;
   }
-  return React3.createElement(RouteContext.Provider, {
+  return React4.createElement(RouteContext.Provider, {
     value: routeContext
   }, children);
 };
@@ -30277,13 +30899,13 @@ var _renderMatches = function(matches, parentMatches, dataRouterState, future) {
       } else if (shouldRenderHydrateFallback) {
         children = hydrateFallbackElement;
       } else if (match.route.Component) {
-        children = React3.createElement(match.route.Component, null);
+        children = React4.createElement(match.route.Component, null);
       } else if (match.route.element) {
         children = match.route.element;
       } else {
         children = outlet;
       }
-      return React3.createElement(RenderedRoute, {
+      return React4.createElement(RenderedRoute, {
         match,
         routeContext: {
           outlet,
@@ -30293,7 +30915,7 @@ var _renderMatches = function(matches, parentMatches, dataRouterState, future) {
         children
       });
     };
-    return dataRouterState && (match.route.ErrorBoundary || match.route.errorElement || index === 0) ? React3.createElement(RenderErrorBoundary, {
+    return dataRouterState && (match.route.ErrorBoundary || match.route.errorElement || index === 0) ? React4.createElement(RenderErrorBoundary, {
       location: dataRouterState.location,
       revalidation: dataRouterState.revalidation,
       component: errorElement,
@@ -30311,17 +30933,17 @@ var getDataRouterConsoleError = function(hookName) {
   return hookName + " must be used within a data router.  See https://reactrouter.com/routers/picking-a-router.";
 };
 var useDataRouterContext = function(hookName) {
-  let ctx2 = React3.useContext(DataRouterContext);
+  let ctx2 = React4.useContext(DataRouterContext);
   !ctx2 && invariant(false, getDataRouterConsoleError(hookName));
   return ctx2;
 };
 var useDataRouterState = function(hookName) {
-  let state = React3.useContext(DataRouterStateContext);
+  let state = React4.useContext(DataRouterStateContext);
   !state && invariant(false, getDataRouterConsoleError(hookName));
   return state;
 };
 var useRouteContext = function(hookName) {
-  let route = React3.useContext(RouteContext);
+  let route = React4.useContext(RouteContext);
   !route && invariant(false, getDataRouterConsoleError(hookName));
   return route;
 };
@@ -30343,11 +30965,11 @@ var useMatches = function() {
     matches,
     loaderData
   } = useDataRouterState(DataRouterStateHook.UseMatches);
-  return React3.useMemo(() => matches.map((m) => convertRouteMatchToUiMatch(m, loaderData)), [matches, loaderData]);
+  return React4.useMemo(() => matches.map((m) => convertRouteMatchToUiMatch(m, loaderData)), [matches, loaderData]);
 };
 var useRouteError = function() {
   var _state$errors;
-  let error = React3.useContext(RouteErrorContext);
+  let error = React4.useContext(RouteErrorContext);
   let state = useDataRouterState(DataRouterStateHook.UseRouteError);
   let routeId = useCurrentRouteId(DataRouterStateHook.UseRouteError);
   if (error !== undefined) {
@@ -30360,21 +30982,21 @@ var useNavigateStable = function() {
     router: router2
   } = useDataRouterContext(DataRouterHook.UseNavigateStable);
   let id = useCurrentRouteId(DataRouterStateHook.UseNavigateStable);
-  let activeRef = React3.useRef(false);
-  useIsomorphicLayoutEffect2(() => {
+  let activeRef = React4.useRef(false);
+  useIsomorphicLayoutEffect3(() => {
     activeRef.current = true;
   });
-  let navigate = React3.useCallback(function(to2, options) {
+  let navigate = React4.useCallback(function(to3, options) {
     if (options === undefined) {
       options = {};
     }
     warning(activeRef.current, navigateEffectWarning);
     if (!activeRef.current)
       return;
-    if (typeof to2 === "number") {
-      router2.navigate(to2);
+    if (typeof to3 === "number") {
+      router2.navigate(to3);
     } else {
-      router2.navigate(to2, _extends2({
+      router2.navigate(to3, _extends2({
         fromRouteId: id
       }, options));
     }
@@ -30399,7 +31021,7 @@ var Router = function(_ref5) {
   } = _ref5;
   useInRouterContext() && invariant(false, "You cannot render a <Router> inside another <Router>. You should never have more than one in your app.");
   let basename = basenameProp.replace(/^\/*/, "/");
-  let navigationContext = React3.useMemo(() => ({
+  let navigationContext = React4.useMemo(() => ({
     basename,
     navigator: navigator2,
     static: staticProp,
@@ -30417,7 +31039,7 @@ var Router = function(_ref5) {
     state = null,
     key = "default"
   } = locationProp;
-  let locationContext = React3.useMemo(() => {
+  let locationContext = React4.useMemo(() => {
     let trailingPathname = stripBasename(pathname, basename);
     if (trailingPathname == null) {
       return null;
@@ -30437,9 +31059,9 @@ var Router = function(_ref5) {
   if (locationContext == null) {
     return null;
   }
-  return React3.createElement(NavigationContext.Provider, {
+  return React4.createElement(NavigationContext.Provider, {
     value: navigationContext
-  }, React3.createElement(LocationContext.Provider, {
+  }, React4.createElement(LocationContext.Provider, {
     children,
     value: locationContext
   }));
@@ -30455,7 +31077,7 @@ var mapRouteProperties = function(route) {
       }
     }
     Object.assign(updates, {
-      element: React3.createElement(route.Component),
+      element: React4.createElement(route.Component),
       Component: undefined
     });
   }
@@ -30466,7 +31088,7 @@ var mapRouteProperties = function(route) {
       }
     }
     Object.assign(updates, {
-      hydrateFallbackElement: React3.createElement(route.HydrateFallback),
+      hydrateFallbackElement: React4.createElement(route.HydrateFallback),
       HydrateFallback: undefined
     });
   }
@@ -30477,33 +31099,33 @@ var mapRouteProperties = function(route) {
       }
     }
     Object.assign(updates, {
-      errorElement: React3.createElement(route.ErrorBoundary),
+      errorElement: React4.createElement(route.ErrorBoundary),
       ErrorBoundary: undefined
     });
   }
   return updates;
 };
-var DataRouterContext = React3.createContext(null);
+var DataRouterContext = React4.createContext(null);
 if (true) {
   DataRouterContext.displayName = "DataRouter";
 }
-var DataRouterStateContext = React3.createContext(null);
+var DataRouterStateContext = React4.createContext(null);
 if (true) {
   DataRouterStateContext.displayName = "DataRouterState";
 }
-var AwaitContext = React3.createContext(null);
+var AwaitContext = React4.createContext(null);
 if (true) {
   AwaitContext.displayName = "Await";
 }
-var NavigationContext = React3.createContext(null);
+var NavigationContext = React4.createContext(null);
 if (true) {
   NavigationContext.displayName = "Navigation";
 }
-var LocationContext = React3.createContext(null);
+var LocationContext = React4.createContext(null);
 if (true) {
   LocationContext.displayName = "Location";
 }
-var RouteContext = React3.createContext({
+var RouteContext = React4.createContext({
   outlet: null,
   matches: [],
   isDataRoute: false
@@ -30511,14 +31133,14 @@ var RouteContext = React3.createContext({
 if (true) {
   RouteContext.displayName = "Route";
 }
-var RouteErrorContext = React3.createContext(null);
+var RouteErrorContext = React4.createContext(null);
 if (true) {
   RouteErrorContext.displayName = "RouteError";
 }
 var navigateEffectWarning = "You should call navigate() in a React.useEffect(), not when your component is first rendered.";
-var defaultErrorElement = React3.createElement(DefaultErrorComponent, null);
+var defaultErrorElement = React4.createElement(DefaultErrorComponent, null);
 
-class RenderErrorBoundary extends React3.Component {
+class RenderErrorBoundary extends React4.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30550,9 +31172,9 @@ class RenderErrorBoundary extends React3.Component {
     console.error("React Router caught the following error during render", error, errorInfo);
   }
   render() {
-    return this.state.error !== undefined ? React3.createElement(RouteContext.Provider, {
+    return this.state.error !== undefined ? React4.createElement(RouteContext.Provider, {
       value: this.props.routeContext
-    }, React3.createElement(RouteErrorContext.Provider, {
+    }, React4.createElement(RouteErrorContext.Provider, {
       value: this.state.error,
       children: this.props.component
     })) : this.props.children;
@@ -30579,7 +31201,7 @@ var DataRouterStateHook = function(DataRouterStateHook2) {
 }(DataRouterStateHook || {});
 var alreadyWarned = {};
 var START_TRANSITION = "startTransition";
-var startTransitionImpl = React3[START_TRANSITION];
+var startTransitionImpl = React4[START_TRANSITION];
 var neverSettledPromise = new Promise(() => {
 });
 
@@ -30677,9 +31299,9 @@ var getFormSubmissionInfo = function(target, basename) {
         value
       } = target;
       if (type === "image") {
-        let prefix2 = name ? name + "." : "";
-        formData.append(prefix2 + "x", "0");
-        formData.append(prefix2 + "y", "0");
+        let prefix3 = name ? name + "." : "";
+        formData.append(prefix3 + "x", "0");
+        formData.append(prefix3 + "y", "0");
       } else if (name) {
         formData.append(name, value);
       }
@@ -30780,26 +31402,26 @@ var RouterProvider = function(_ref) {
     router: router3,
     future
   } = _ref;
-  let [state, setStateImpl] = React4.useState(router3.state);
-  let [pendingState, setPendingState] = React4.useState();
-  let [vtContext, setVtContext] = React4.useState({
+  let [state, setStateImpl] = React5.useState(router3.state);
+  let [pendingState, setPendingState] = React5.useState();
+  let [vtContext, setVtContext] = React5.useState({
     isTransitioning: false
   });
-  let [renderDfd, setRenderDfd] = React4.useState();
-  let [transition, setTransition] = React4.useState();
-  let [interruption, setInterruption] = React4.useState();
-  let fetcherData = React4.useRef(new Map);
+  let [renderDfd, setRenderDfd] = React5.useState();
+  let [transition, setTransition] = React5.useState();
+  let [interruption, setInterruption] = React5.useState();
+  let fetcherData = React5.useRef(new Map);
   let {
     v7_startTransition
   } = future || {};
-  let optInStartTransition = React4.useCallback((cb) => {
+  let optInStartTransition = React5.useCallback((cb) => {
     if (v7_startTransition) {
       startTransitionSafe(cb);
     } else {
       cb();
     }
   }, [v7_startTransition]);
-  let setState = React4.useCallback((newState, _ref2) => {
+  let setState = React5.useCallback((newState, _ref2) => {
     let {
       deletedFetchers,
       unstable_flushSync: flushSync,
@@ -30867,13 +31489,13 @@ var RouterProvider = function(_ref) {
       });
     }
   }, [router3.window, transition, renderDfd, fetcherData, optInStartTransition]);
-  React4.useLayoutEffect(() => router3.subscribe(setState), [router3, setState]);
-  React4.useEffect(() => {
+  React5.useLayoutEffect(() => router3.subscribe(setState), [router3, setState]);
+  React5.useEffect(() => {
     if (vtContext.isTransitioning && !vtContext.flushSync) {
       setRenderDfd(new Deferred);
     }
   }, [vtContext]);
-  React4.useEffect(() => {
+  React5.useEffect(() => {
     if (renderDfd && pendingState && router3.window) {
       let newState = pendingState;
       let renderPromise = renderDfd.promise;
@@ -30892,12 +31514,12 @@ var RouterProvider = function(_ref) {
       setTransition(transition2);
     }
   }, [optInStartTransition, pendingState, renderDfd, router3.window]);
-  React4.useEffect(() => {
+  React5.useEffect(() => {
     if (renderDfd && pendingState && state.location.key === pendingState.location.key) {
       renderDfd.resolve();
     }
   }, [renderDfd, transition, state.location, pendingState]);
-  React4.useEffect(() => {
+  React5.useEffect(() => {
     if (!vtContext.isTransitioning && interruption) {
       setPendingState(interruption.state);
       setVtContext({
@@ -30909,19 +31531,19 @@ var RouterProvider = function(_ref) {
       setInterruption(undefined);
     }
   }, [vtContext.isTransitioning, interruption]);
-  React4.useEffect(() => {
+  React5.useEffect(() => {
     warning(fallbackElement == null || !router3.future.v7_partialHydration, "`<RouterProvider fallbackElement>` is deprecated when using `v7_partialHydration`, use a `HydrateFallback` component instead");
   }, []);
-  let navigator2 = React4.useMemo(() => {
+  let navigator2 = React5.useMemo(() => {
     return {
       createHref: router3.createHref,
       encodeLocation: router3.encodeLocation,
       go: (n) => router3.navigate(n),
-      push: (to2, state2, opts) => router3.navigate(to2, {
+      push: (to3, state2, opts) => router3.navigate(to3, {
         state: state2,
         preventScrollReset: opts == null ? undefined : opts.preventScrollReset
       }),
-      replace: (to2, state2, opts) => router3.navigate(to2, {
+      replace: (to3, state2, opts) => router3.navigate(to3, {
         replace: true,
         state: state2,
         preventScrollReset: opts == null ? undefined : opts.preventScrollReset
@@ -30929,21 +31551,21 @@ var RouterProvider = function(_ref) {
     };
   }, [router3]);
   let basename = router3.basename || "/";
-  let dataRouterContext = React4.useMemo(() => ({
+  let dataRouterContext = React5.useMemo(() => ({
     router: router3,
     navigator: navigator2,
     static: false,
     basename
   }), [router3, navigator2, basename]);
-  return React4.createElement(React4.Fragment, null, React4.createElement(DataRouterContext.Provider, {
+  return React5.createElement(React5.Fragment, null, React5.createElement(DataRouterContext.Provider, {
     value: dataRouterContext
-  }, React4.createElement(DataRouterStateContext.Provider, {
+  }, React5.createElement(DataRouterStateContext.Provider, {
     value: state
-  }, React4.createElement(FetchersContext.Provider, {
+  }, React5.createElement(FetchersContext.Provider, {
     value: fetcherData.current
-  }, React4.createElement(ViewTransitionContext.Provider, {
+  }, React5.createElement(ViewTransitionContext.Provider, {
     value: vtContext
-  }, React4.createElement(Router, {
+  }, React5.createElement(Router, {
     basename,
     location: state.location,
     navigationType: state.historyAction,
@@ -30951,7 +31573,7 @@ var RouterProvider = function(_ref) {
     future: {
       v7_relativeSplatPath: router3.future.v7_relativeSplatPath
     }
-  }, state.initialized || router3.future.v7_partialHydration ? React4.createElement(DataRoutes, {
+  }, state.initialized || router3.future.v7_partialHydration ? React5.createElement(DataRoutes, {
     routes: router3.routes,
     future: router3.future,
     state
@@ -30972,18 +31594,18 @@ var HistoryRouter = function(_ref6) {
     future,
     history
   } = _ref6;
-  let [state, setStateImpl] = React4.useState({
+  let [state, setStateImpl] = React5.useState({
     action: history.action,
     location: history.location
   });
   let {
     v7_startTransition
   } = future || {};
-  let setState = React4.useCallback((newState) => {
+  let setState = React5.useCallback((newState) => {
     v7_startTransition && startTransitionImpl2 ? startTransitionImpl2(() => setStateImpl(newState)) : setStateImpl(newState);
   }, [setStateImpl, v7_startTransition]);
-  React4.useLayoutEffect(() => history.listen(setState), [history, setState]);
-  return React4.createElement(Router, {
+  React5.useLayoutEffect(() => history.listen(setState), [history, setState]);
+  return React5.createElement(Router, {
     basename,
     children,
     location: state.location,
@@ -31007,16 +31629,16 @@ var getDataRouterConsoleError2 = function(hookName) {
   return hookName + " must be used within a data router.  See https://reactrouter.com/routers/picking-a-router.";
 };
 var useDataRouterContext2 = function(hookName) {
-  let ctx2 = React4.useContext(DataRouterContext);
+  let ctx2 = React5.useContext(DataRouterContext);
   !ctx2 && invariant(false, getDataRouterConsoleError2(hookName));
   return ctx2;
 };
 var useDataRouterState2 = function(hookName) {
-  let state = React4.useContext(DataRouterStateContext);
+  let state = React5.useContext(DataRouterStateContext);
   !state && invariant(false, getDataRouterConsoleError2(hookName));
   return state;
 };
-var useLinkClickHandler = function(to2, _temp) {
+var useLinkClickHandler = function(to3, _temp) {
   let {
     target,
     replace: replaceProp,
@@ -31027,14 +31649,14 @@ var useLinkClickHandler = function(to2, _temp) {
   } = _temp === undefined ? {} : _temp;
   let navigate = useNavigate();
   let location = useLocation();
-  let path = useResolvedPath(to2, {
+  let path = useResolvedPath(to3, {
     relative
   });
-  return React4.useCallback((event) => {
+  return React5.useCallback((event) => {
     if (shouldProcessLinkClick(event, target)) {
       event.preventDefault();
       let replace = replaceProp !== undefined ? replaceProp : createPath(location) === createPath(path);
-      navigate(to2, {
+      navigate(to3, {
         replace,
         state,
         preventScrollReset,
@@ -31042,7 +31664,7 @@ var useLinkClickHandler = function(to2, _temp) {
         unstable_viewTransition
       });
     }
-  }, [location, navigate, path, replaceProp, state, target, to2, preventScrollReset, relative, unstable_viewTransition]);
+  }, [location, navigate, path, replaceProp, state, target, to3, preventScrollReset, relative, unstable_viewTransition]);
 };
 var validateClientSideSubmission = function() {
   if (typeof document === "undefined") {
@@ -31055,9 +31677,9 @@ var useSubmit = function() {
   } = useDataRouterContext2(DataRouterHook2.UseSubmit);
   let {
     basename
-  } = React4.useContext(NavigationContext);
+  } = React5.useContext(NavigationContext);
   let currentRouteId = useRouteId();
-  return React4.useCallback(function(target, options) {
+  return React5.useCallback(function(target, options) {
     if (options === undefined) {
       options = {};
     }
@@ -31101,8 +31723,8 @@ var useFormAction = function(action, _temp2) {
   } = _temp2 === undefined ? {} : _temp2;
   let {
     basename
-  } = React4.useContext(NavigationContext);
-  let routeContext = React4.useContext(RouteContext);
+  } = React5.useContext(NavigationContext);
+  let routeContext = React5.useContext(RouteContext);
   !routeContext && invariant(false, "useFormAction must be used inside a RouteContext");
   let [match] = routeContext.matches.slice(-1);
   let path = _extends3({}, useResolvedPath(action ? action : ".", {
@@ -31139,17 +31761,17 @@ var useScrollRestoration = function(_temp4) {
   } = useDataRouterState2(DataRouterStateHook2.UseScrollRestoration);
   let {
     basename
-  } = React4.useContext(NavigationContext);
+  } = React5.useContext(NavigationContext);
   let location = useLocation();
   let matches = useMatches();
   let navigation = useNavigation();
-  React4.useEffect(() => {
+  React5.useEffect(() => {
     window.history.scrollRestoration = "manual";
     return () => {
       window.history.scrollRestoration = "auto";
     };
   }, []);
-  usePageHide(React4.useCallback(() => {
+  usePageHide(React5.useCallback(() => {
     if (navigation.state === "idle") {
       let key = (getKey ? getKey(location, matches) : null) || location.key;
       savedScrollPositions[key] = window.scrollY;
@@ -31162,7 +31784,7 @@ var useScrollRestoration = function(_temp4) {
     window.history.scrollRestoration = "auto";
   }, [storageKey, getKey, navigation.state, location, matches]));
   if (typeof document !== "undefined") {
-    React4.useLayoutEffect(() => {
+    React5.useLayoutEffect(() => {
       try {
         let sessionPositions = sessionStorage.getItem(storageKey || SCROLL_RESTORATION_STORAGE_KEY);
         if (sessionPositions) {
@@ -31171,14 +31793,14 @@ var useScrollRestoration = function(_temp4) {
       } catch (e) {
       }
     }, [storageKey]);
-    React4.useLayoutEffect(() => {
+    React5.useLayoutEffect(() => {
       let getKeyWithoutBasename = getKey && basename !== "/" ? (location2, matches2) => getKey(_extends3({}, location2, {
         pathname: stripBasename(location2.pathname, basename) || location2.pathname
       }), matches2) : getKey;
       let disableScrollRestoration = router3 == null ? undefined : router3.enableScrollRestoration(savedScrollPositions, () => window.scrollY, getKeyWithoutBasename);
       return () => disableScrollRestoration && disableScrollRestoration();
     }, [router3, basename, getKey]);
-    React4.useLayoutEffect(() => {
+    React5.useLayoutEffect(() => {
       if (restoreScrollPosition === false) {
         return;
       }
@@ -31204,7 +31826,7 @@ var usePageHide = function(callback, options) {
   let {
     capture
   } = options || {};
-  React4.useEffect(() => {
+  React5.useEffect(() => {
     let opts = capture != null ? {
       capture
     } : undefined;
@@ -31214,16 +31836,16 @@ var usePageHide = function(callback, options) {
     };
   }, [callback, capture]);
 };
-var useViewTransitionState = function(to2, opts) {
+var useViewTransitionState = function(to3, opts) {
   if (opts === undefined) {
     opts = {};
   }
-  let vtContext = React4.useContext(ViewTransitionContext);
+  let vtContext = React5.useContext(ViewTransitionContext);
   !(vtContext != null) && invariant(false, "`unstable_useViewTransitionState` must be used within `react-router-dom`'s `RouterProvider`.  Did you accidentally import `RouterProvider` from `react-router`?");
   let {
     basename
   } = useDataRouterContext2(DataRouterHook2.useViewTransitionState);
-  let path = useResolvedPath(to2, {
+  let path = useResolvedPath(to3, {
     relative: opts.relative
   });
   if (!vtContext.isTransitioning) {
@@ -31245,22 +31867,22 @@ try {
   window.__reactRouterVersion = REACT_ROUTER_VERSION;
 } catch (e) {
 }
-var ViewTransitionContext = React4.createContext({
+var ViewTransitionContext = React5.createContext({
   isTransitioning: false
 });
 if (true) {
   ViewTransitionContext.displayName = "ViewTransition";
 }
-var FetchersContext = React4.createContext(new Map);
+var FetchersContext = React5.createContext(new Map);
 if (true) {
   FetchersContext.displayName = "Fetchers";
 }
 var START_TRANSITION2 = "startTransition";
-var startTransitionImpl2 = React4[START_TRANSITION2];
+var startTransitionImpl2 = React5[START_TRANSITION2];
 var FLUSH_SYNC = "flushSync";
 var flushSyncImpl = ReactDOM[FLUSH_SYNC];
 var USE_ID = "useId";
-var useIdImpl = React4[USE_ID];
+var useIdImpl = React5[USE_ID];
 
 class Deferred {
   constructor() {
@@ -31286,7 +31908,7 @@ if (true) {
 }
 var isBrowser = typeof window !== "undefined" && typeof window.document !== "undefined" && typeof window.document.createElement !== "undefined";
 var ABSOLUTE_URL_REGEX2 = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
-var Link = React4.forwardRef(function LinkWithRef(_ref7, ref) {
+var Link = React5.forwardRef(function LinkWithRef(_ref7, ref) {
   let {
     onClick,
     relative,
@@ -31294,36 +31916,36 @@ var Link = React4.forwardRef(function LinkWithRef(_ref7, ref) {
     replace,
     state,
     target,
-    to: to2,
+    to: to3,
     preventScrollReset,
     unstable_viewTransition
   } = _ref7, rest = _objectWithoutPropertiesLoose(_ref7, _excluded);
   let {
     basename
-  } = React4.useContext(NavigationContext);
+  } = React5.useContext(NavigationContext);
   let absoluteHref;
   let isExternal = false;
-  if (typeof to2 === "string" && ABSOLUTE_URL_REGEX2.test(to2)) {
-    absoluteHref = to2;
+  if (typeof to3 === "string" && ABSOLUTE_URL_REGEX2.test(to3)) {
+    absoluteHref = to3;
     if (isBrowser) {
       try {
         let currentUrl = new URL(window.location.href);
-        let targetUrl = to2.startsWith("//") ? new URL(currentUrl.protocol + to2) : new URL(to2);
+        let targetUrl = to3.startsWith("//") ? new URL(currentUrl.protocol + to3) : new URL(to3);
         let path = stripBasename(targetUrl.pathname, basename);
         if (targetUrl.origin === currentUrl.origin && path != null) {
-          to2 = path + targetUrl.search + targetUrl.hash;
+          to3 = path + targetUrl.search + targetUrl.hash;
         } else {
           isExternal = true;
         }
       } catch (e) {
-        warning(false, "<Link to=\"" + to2 + "\"> contains an invalid URL which will probably break when clicked - please update to a valid URL path.");
+        warning(false, "<Link to=\"" + to3 + "\"> contains an invalid URL which will probably break when clicked - please update to a valid URL path.");
       }
     }
   }
-  let href = useHref(to2, {
+  let href = useHref(to3, {
     relative
   });
-  let internalOnClick = useLinkClickHandler(to2, {
+  let internalOnClick = useLinkClickHandler(to3, {
     replace,
     state,
     target,
@@ -31338,7 +31960,7 @@ var Link = React4.forwardRef(function LinkWithRef(_ref7, ref) {
       internalOnClick(event);
     }
   }
-  return React4.createElement("a", _extends3({}, rest, {
+  return React5.createElement("a", _extends3({}, rest, {
     href: absoluteHref || href,
     onClick: isExternal || reloadDocument ? onClick : handleClick,
     ref,
@@ -31348,26 +31970,26 @@ var Link = React4.forwardRef(function LinkWithRef(_ref7, ref) {
 if (true) {
   Link.displayName = "Link";
 }
-var NavLink = React4.forwardRef(function NavLinkWithRef(_ref8, ref) {
+var NavLink = React5.forwardRef(function NavLinkWithRef(_ref8, ref) {
   let {
     "aria-current": ariaCurrentProp = "page",
     caseSensitive = false,
     className: classNameProp = "",
     end = false,
     style: styleProp,
-    to: to2,
+    to: to3,
     unstable_viewTransition,
     children
   } = _ref8, rest = _objectWithoutPropertiesLoose(_ref8, _excluded2);
-  let path = useResolvedPath(to2, {
+  let path = useResolvedPath(to3, {
     relative: rest.relative
   });
   let location = useLocation();
-  let routerState = React4.useContext(DataRouterStateContext);
+  let routerState = React5.useContext(DataRouterStateContext);
   let {
     navigator: navigator2,
     basename
-  } = React4.useContext(NavigationContext);
+  } = React5.useContext(NavigationContext);
   let isTransitioning = routerState != null && useViewTransitionState(path) && unstable_viewTransition === true;
   let toPathname = navigator2.encodeLocation ? navigator2.encodeLocation(path).pathname : path.pathname;
   let locationPathname = location.pathname;
@@ -31396,19 +32018,19 @@ var NavLink = React4.forwardRef(function NavLinkWithRef(_ref8, ref) {
     className = [classNameProp, isActive ? "active" : null, isPending ? "pending" : null, isTransitioning ? "transitioning" : null].filter(Boolean).join(" ");
   }
   let style = typeof styleProp === "function" ? styleProp(renderProps) : styleProp;
-  return React4.createElement(Link, _extends3({}, rest, {
+  return React5.createElement(Link, _extends3({}, rest, {
     "aria-current": ariaCurrent,
     className,
     ref,
     style,
-    to: to2,
+    to: to3,
     unstable_viewTransition
   }), typeof children === "function" ? children(renderProps) : children);
 });
 if (true) {
   NavLink.displayName = "NavLink";
 }
-var Form = React4.forwardRef((_ref9, forwardedRef) => {
+var Form = React5.forwardRef((_ref9, forwardedRef) => {
   let {
     fetcherKey,
     navigate,
@@ -31445,7 +32067,7 @@ var Form = React4.forwardRef((_ref9, forwardedRef) => {
       unstable_viewTransition
     });
   };
-  return React4.createElement("form", _extends3({
+  return React5.createElement("form", _extends3({
     ref: forwardedRef,
     method: formMethod,
     action: formAction,
@@ -31649,7 +32271,7 @@ var toArrayStrict = function(value) {
   }
   return [value];
 };
-var toArray2 = function(value) {
+var toArray3 = function(value) {
   if (value === undefined) {
     return [];
   }
@@ -31685,7 +32307,7 @@ var normalizeTarget = function(target) {
   if (target === undefined || target === TARGETLESS_KEY) {
     return;
   }
-  return toArray2(target);
+  return toArray3(target);
 };
 var toObserver = function(nextHandler, errorHandler, completionHandler) {
   const isObserver = typeof nextHandler === "object";
@@ -32041,13 +32663,13 @@ var executeStop = function(actorScope, actorRef) {
   });
 };
 var stopChild = function(actorRef) {
-  function stop2(args, params) {
+  function stop3(args, params) {
   }
-  stop2.type = "xstate.stopChild";
-  stop2.actorRef = actorRef;
-  stop2.resolve = resolveStop;
-  stop2.execute = executeStop;
-  return stop2;
+  stop3.type = "xstate.stopChild";
+  stop3.actorRef = actorRef;
+  stop3.resolve = resolveStop;
+  stop3.execute = executeStop;
+  return stop3;
 };
 var getChildren = function(stateNode) {
   return Object.values(stateNode.states).filter((sn) => sn.type !== "history");
@@ -32191,7 +32813,7 @@ var getDelayedTransitions = function(stateNode) {
     } : configTransition;
     const resolvedDelay = Number.isNaN(+delay) ? delay : +delay;
     const eventType = mutateEntryExit(resolvedDelay);
-    return toArray2(resolvedTransition).map((transition) => ({
+    return toArray3(resolvedTransition).map((transition) => ({
       ...transition,
       event: eventType,
       delay: resolvedDelay
@@ -32213,7 +32835,7 @@ var formatTransition = function(stateNode, descriptor, transitionConfig) {
   const target = resolveTarget(stateNode, normalizedTarget);
   const transition = {
     ...transitionConfig,
-    actions: toArray2(transitionConfig.actions),
+    actions: toArray3(transitionConfig.actions),
     guard: transitionConfig.guard,
     target,
     source: stateNode,
@@ -32273,7 +32895,7 @@ var formatInitialTransition = function(stateNode, _target) {
   }
   const transition = {
     source: stateNode,
-    actions: !_target || typeof _target === "string" ? [] : toArray2(_target.actions),
+    actions: !_target || typeof _target === "string" ? [] : toArray3(_target.actions),
     eventType: null,
     reenter: false,
     target: resolvedTarget ? [resolvedTarget] : [],
@@ -33614,13 +34236,13 @@ var resolveAssign = function(actorScope, snapshot, actionArgs, actionParams, {
     } : snapshot.children
   })];
 };
-var assign2 = function(assignment) {
-  function assign3(args, params) {
+var assign3 = function(assignment) {
+  function assign4(args, params) {
   }
-  assign3.type = "xstate.assign";
-  assign3.assignment = assignment;
-  assign3.resolve = resolveAssign;
-  return assign3;
+  assign4.type = "xstate.assign";
+  assign4.assignment = assignment;
+  assign4.resolve = resolveAssign;
+  return assign4;
 };
 
 // node_modules/xstate/dist/xstate.esm.js
@@ -33701,11 +34323,11 @@ class StateNode {
       throw new Error(`No initial state specified for compound state node "#${this.id}". Try adding { initial: "${Object.keys(this.states)[0]}" } to the state config.`);
     }
     this.history = this.config.history === true ? "shallow" : this.config.history || false;
-    this.entry = toArray2(this.config.entry).slice();
-    this.exit = toArray2(this.config.exit).slice();
+    this.entry = toArray3(this.config.entry).slice();
+    this.exit = toArray3(this.config.exit).slice();
     this.meta = this.config.meta;
     this.output = this.type === "final" || !this.parent ? this.config.output : undefined;
-    this.tags = toArray2(config2.tags).slice();
+    this.tags = toArray3(config2.tags).slice();
   }
   _initialize() {
     this.transitions = formatTransitions(this);
@@ -33758,7 +34380,7 @@ class StateNode {
     return this.definition;
   }
   get invoke() {
-    return memo(this, "invoke", () => toArray2(this.config.invoke).map((invokeConfig, i) => {
+    return memo(this, "invoke", () => toArray3(this.config.invoke).map((invokeConfig, i) => {
       const {
         src,
         systemId
@@ -33957,7 +34579,7 @@ class StateMachine {
         input: event.input,
         self: self2
       });
-      return resolveActionsAndContext(preInitial, initEvent, actorScope, [assign2(assignment)], internalQueue);
+      return resolveActionsAndContext(preInitial, initEvent, actorScope, [assign3(assignment)], internalQueue);
     }
     return preInitial;
   }
@@ -34053,13 +34675,13 @@ class StateMachine {
 }
 
 // node_modules/@xstate/react/dist/xstate-react.esm.js
-var React5 = __toESM(require_react(), 1);
-var import_react16 = __toESM(require_react(), 1);
+var React6 = __toESM(require_react(), 1);
+var import_react25 = __toESM(require_react(), 1);
 var shim = __toESM(require_shim(), 1);
 
 // node_modules/use-isomorphic-layout-effect/dist/use-isomorphic-layout-effect.browser.esm.js
-var import_react15 = __toESM(require_react(), 1);
-var index = import_react15.useLayoutEffect;
+var import_react24 = __toESM(require_react(), 1);
+var index = import_react24.useLayoutEffect;
 var use_isomorphic_layout_effect_browser_esm_default = index;
 
 // node_modules/@xstate/react/dist/xstate-react.esm.js
@@ -34079,7 +34701,7 @@ var stopRootWithRehydration = function(actorRef) {
   });
 };
 var useIdleActorRef = function(logic, options) {
-  let [[currentConfig, actorRef], setCurrent] = import_react16.useState(() => {
+  let [[currentConfig, actorRef], setCurrent] = import_react25.useState(() => {
     const actorRef2 = createActor(logic, options);
     return [logic.config, actorRef2];
   });
@@ -34100,17 +34722,17 @@ var useIdleActorRef = function(logic, options) {
 };
 var useActor = function(logic, options = {}) {
   const actorRef = useIdleActorRef(logic, options);
-  const getSnapshot = import_react16.useCallback(() => {
+  const getSnapshot = import_react25.useCallback(() => {
     return actorRef.getSnapshot();
   }, [actorRef]);
-  const subscribe = import_react16.useCallback((handleStoreChange) => {
+  const subscribe = import_react25.useCallback((handleStoreChange) => {
     const {
       unsubscribe
     } = actorRef.subscribe(handleStoreChange);
     return unsubscribe;
   }, [actorRef]);
   const actorSnapshot = shim.useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
-  import_react16.useEffect(() => {
+  import_react25.useEffect(() => {
     actorRef.start();
     return () => {
       stopRootWithRehydration(actorRef);
@@ -34132,7 +34754,7 @@ var forEachActor = (actorRef, callback) => {
 };
 
 // src/public/component/styled/nav/NavButton.tsx
-var import_react17 = __toESM(require_react(), 1);
+var import_react26 = __toESM(require_react(), 1);
 
 // src/public/component/effect/TextShadowGlow.tsx
 function textShadowGlow(color, strength) {
@@ -34172,7 +34794,7 @@ function NavButton(props) {
     textShadow: textShadowGlow(TITANIUM.toString(), 0),
     config: config.stiff
   }));
-  let [_, setNavButton] = useMachine(import_react17.useMemo(() => createMachine({
+  let [_, setNavButton] = useMachine(import_react26.useMemo(() => createMachine({
     initial: "idle",
     states: {
       idle: {
@@ -34226,8 +34848,8 @@ function NavButton(props) {
 }
 
 // src/public/component/styled/nav/NavConnectButton.tsx
-var import_react18 = __toESM(require_react(), 1);
-var import_react19 = __toESM(require_react(), 1);
+var import_react27 = __toESM(require_react(), 1);
+var import_react28 = __toESM(require_react(), 1);
 
 // node_modules/ethers/lib.esm/_version.js
 var version = "6.13.0";
@@ -34481,7 +35103,7 @@ function dataLength(data) {
   }
   return getBytes(data).length;
 }
-function dataSlice(data, start2, end) {
+function dataSlice(data, start3, end) {
   const bytes = getBytes(data);
   if (end != null && end > bytes.length) {
     assert(false, "cannot slice beyond data bounds", "BUFFER_OVERRUN", {
@@ -34490,7 +35112,7 @@ function dataSlice(data, start2, end) {
       offset: end
     });
   }
-  return hexlify(bytes.slice(start2 == null ? 0 : start2, end == null ? bytes.length : end));
+  return hexlify(bytes.slice(start3 == null ? 0 : start3, end == null ? bytes.length : end));
 }
 var zeroPad = function(data, length, left) {
   const bytes = getBytes(data);
@@ -34840,9 +35462,9 @@ function toUtf8Bytes(str, form) {
       result.push(c & 63 | 128);
     } else if ((c & 64512) == 55296) {
       i++;
-      const c22 = str.charCodeAt(i);
-      assertArgument(i < str.length && (c22 & 64512) === 56320, "invalid surrogate pair", "str", str);
-      const pair = 65536 + ((c & 1023) << 10) + (c22 & 1023);
+      const c23 = str.charCodeAt(i);
+      assertArgument(i < str.length && (c23 & 64512) === 56320, "invalid surrogate pair", "str", str);
+      const pair = 65536 + ((c & 1023) << 10) + (c23 & 1023);
       result.push(pair >> 18 | 240);
       result.push(pair >> 12 & 63 | 128);
       result.push(pair >> 6 & 63 | 128);
@@ -35746,14 +36368,14 @@ class Result extends Array {
       return toObject(names, this, deep);
     }, {});
   }
-  slice(start2, end) {
-    if (start2 == null) {
-      start2 = 0;
+  slice(start3, end) {
+    if (start3 == null) {
+      start3 = 0;
     }
-    if (start2 < 0) {
-      start2 += this.length;
-      if (start2 < 0) {
-        start2 = 0;
+    if (start3 < 0) {
+      start3 += this.length;
+      if (start3 < 0) {
+        start3 = 0;
       }
     }
     if (end == null) {
@@ -35770,7 +36392,7 @@ class Result extends Array {
     }
     const _names = getNames(this);
     const result = [], names = [];
-    for (let i = start2;i < end; i++) {
+    for (let i = start3;i < end; i++) {
       result.push(this[i]);
       names.push(_names[i]);
     }
@@ -36093,17 +36715,17 @@ class HMAC extends Hash {
     this.digestInto(out);
     return out;
   }
-  _cloneInto(to2) {
-    to2 || (to2 = Object.create(Object.getPrototypeOf(this), {}));
+  _cloneInto(to3) {
+    to3 || (to3 = Object.create(Object.getPrototypeOf(this), {}));
     const { oHash, iHash, finished, destroyed, blockLen, outputLen } = this;
-    to2 = to2;
-    to2.finished = finished;
-    to2.destroyed = destroyed;
-    to2.blockLen = blockLen;
-    to2.outputLen = outputLen;
-    to2.oHash = oHash._cloneInto(to2.oHash);
-    to2.iHash = iHash._cloneInto(to2.iHash);
-    return to2;
+    to3 = to3;
+    to3.finished = finished;
+    to3.destroyed = destroyed;
+    to3.blockLen = blockLen;
+    to3.outputLen = outputLen;
+    to3.oHash = oHash._cloneInto(to3.oHash);
+    to3.iHash = iHash._cloneInto(to3.iHash);
+    return to3;
   }
   destroy() {
     this.destroyed = true;
@@ -36201,17 +36823,17 @@ class SHA2 extends Hash {
     this.destroy();
     return res;
   }
-  _cloneInto(to2) {
-    to2 || (to2 = new this.constructor);
-    to2.set(...this.get());
+  _cloneInto(to3) {
+    to3 || (to3 = new this.constructor);
+    to3.set(...this.get());
     const { blockLen, buffer, length, finished, destroyed, pos } = this;
-    to2.length = length;
-    to2.pos = pos;
-    to2.finished = finished;
-    to2.destroyed = destroyed;
+    to3.length = length;
+    to3.pos = pos;
+    to3.finished = finished;
+    to3.destroyed = destroyed;
     if (length % blockLen)
-      to2.buffer.set(buffer);
-    return to2;
+      to3.buffer.set(buffer);
+    return to3;
   }
 }
 
@@ -36808,19 +37430,19 @@ class Keccak extends Hash {
     this.destroyed = true;
     this.state.fill(0);
   }
-  _cloneInto(to2) {
+  _cloneInto(to3) {
     const { blockLen, suffix, outputLen, rounds, enableXOF } = this;
-    to2 || (to2 = new Keccak(blockLen, suffix, outputLen, enableXOF, rounds));
-    to2.state32.set(this.state32);
-    to2.pos = this.pos;
-    to2.posOut = this.posOut;
-    to2.finished = this.finished;
-    to2.rounds = rounds;
-    to2.suffix = suffix;
-    to2.outputLen = outputLen;
-    to2.enableXOF = enableXOF;
-    to2.destroyed = this.destroyed;
-    return to2;
+    to3 || (to3 = new Keccak(blockLen, suffix, outputLen, enableXOF, rounds));
+    to3.state32.set(this.state32);
+    to3.pos = this.pos;
+    to3.posOut = this.posOut;
+    to3.finished = this.finished;
+    to3.rounds = rounds;
+    to3.suffix = suffix;
+    to3.outputLen = outputLen;
+    to3.enableXOF = enableXOF;
+    to3.destroyed = this.destroyed;
+    return to3;
   }
 }
 var gen = (suffix, blockLen, outputLen) => wrapConstructor(() => new Keccak(blockLen, suffix, outputLen));
@@ -37291,10 +37913,10 @@ function FpSqrt(P) {
     };
   }
   if (P % _8n === _5n) {
-    const c12 = (P - _5n) / _8n;
+    const c13 = (P - _5n) / _8n;
     return function sqrt5mod8(Fp, n) {
       const n2 = Fp.mul(n, _2n3);
-      const v = Fp.pow(n2, c12);
+      const v = Fp.pow(n2, c13);
       const nv = Fp.mul(n, v);
       const i = Fp.mul(Fp.mul(nv, _2n3), v);
       const root = Fp.mul(nv, Fp.sub(i, Fp.ONE));
@@ -37992,7 +38614,7 @@ function weierstrass(curveDef) {
   function normalizeS(s) {
     return isBiggerThanHalfOrder(s) ? modN(-s) : s;
   }
-  const slcNum = (b, from, to2) => bytesToNumberBE(b.slice(from, to2));
+  const slcNum = (b, from, to3) => bytesToNumberBE(b.slice(from, to3));
 
   class Signature {
     constructor(r, s, recovery) {
@@ -38027,8 +38649,8 @@ function weierstrass(curveDef) {
       const radj = rec === 2 || rec === 3 ? r + CURVE.n : r;
       if (radj >= Fp.ORDER)
         throw new Error("recovery id 2 or 3 invalid");
-      const prefix2 = (rec & 1) === 0 ? "02" : "03";
-      const R = Point.fromHex(prefix2 + numToNByteStr(radj));
+      const prefix3 = (rec & 1) === 0 ? "02" : "03";
+      const R = Point.fromHex(prefix3 + numToNByteStr(radj));
       const ir = invN(radj);
       const u1 = modN(-h * ir);
       const u2 = modN(s * ir);
@@ -38202,9 +38824,9 @@ function weierstrass(curveDef) {
       msgHash = CURVE.hash(msgHash);
     const { r, s } = _sig;
     const h = bits2int_modN(msgHash);
-    const is2 = invN(s);
-    const u1 = modN(h * is2);
-    const u2 = modN(r * is2);
+    const is3 = invN(s);
+    const u1 = modN(h * is3);
+    const u2 = modN(r * is3);
     const R = Point.BASE.multiplyAndAddUnsafe(P, u1, u2)?.toAffine();
     if (!R)
       return false;
@@ -38343,10 +38965,10 @@ var secp256k1 = createCurve({
       const a2 = BigInt("0x114ca50f7a8e2f3f657c1108d9d44cfd8");
       const b2 = a1;
       const POW_2_128 = BigInt("0x100000000000000000000000000000000");
-      const c12 = divNearest(b2 * k, n);
-      const c22 = divNearest(-b1 * k, n);
-      let k1 = mod(k - c12 * a1 - c22 * a2, n);
-      let k2 = mod(-c12 * b1 - c22 * b2, n);
+      const c13 = divNearest(b2 * k, n);
+      const c23 = divNearest(-b1 * k, n);
+      let k1 = mod(k - c13 * a1 - c23 * a2, n);
+      let k2 = mod(-c13 * b1 - c23 * b2, n);
       const k1neg = k1 > POW_2_128;
       const k2neg = k2 > POW_2_128;
       if (k1neg)
@@ -39563,21 +40185,21 @@ var decode_arithmetic = function(bytes3) {
   let range = FULL;
   while (true) {
     let value = Math.floor(((register - low + 1) * total - 1) / range);
-    let start2 = 0;
+    let start3 = 0;
     let end = symbol_count;
-    while (end - start2 > 1) {
-      let mid = start2 + end >>> 1;
+    while (end - start3 > 1) {
+      let mid = start3 + end >>> 1;
       if (value < acc[mid]) {
         end = mid;
       } else {
-        start2 = mid;
+        start3 = mid;
       }
     }
-    if (start2 == 0)
+    if (start3 == 0)
       break;
-    symbols.push(start2);
-    let a = low + Math.floor(range * acc[start2] / total);
-    let b2 = low + Math.floor(range * acc[start2 + 1] / total) - 1;
+    symbols.push(start3);
+    let a = low + Math.floor(range * acc[start3] / total);
+    let b2 = low + Math.floor(range * acc[start3 + 1] / total) - 1;
     while (((a ^ b2) & HALF) == 0) {
       register = register << 1 & MASK | read_bit();
       a = a << 1 & MASK;
@@ -40159,7 +40781,7 @@ var split2 = function(name, nf, ef) {
 };
 var check_whole = function(group, unique) {
   let maker;
-  let shared34 = [];
+  let shared42 = [];
   for (let cp of unique) {
     let whole = WHOLE_MAP.get(cp);
     if (whole === UNIQUE_PH)
@@ -40170,12 +40792,12 @@ var check_whole = function(group, unique) {
       if (!maker.length)
         return;
     } else {
-      shared34.push(cp);
+      shared42.push(cp);
     }
   }
   if (maker) {
     for (let g of maker) {
-      if (shared34.every((cp) => group_has_cp(g, cp))) {
+      if (shared42.every((cp) => group_has_cp(g, cp))) {
         throw new Error(`whole-script confusable: ${group.N}/${g.N}`);
       }
     }
@@ -41837,8 +42459,8 @@ class TokenString {
   reset() {
     this.#offset = 0;
   }
-  #subTokenString(from = 0, to2 = 0) {
-    return new TokenString(this.#tokens.slice(from, to2).map((t) => {
+  #subTokenString(from = 0, to3 = 0) {
+    return new TokenString(this.#tokens.slice(from, to3).map((t) => {
       return Object.freeze(Object.assign({}, t, {
         match: t.match - from,
         linkBack: t.linkBack - from,
@@ -43863,7 +44485,7 @@ class TransactionReceipt {
   }
   toJSON() {
     const {
-      to: to2,
+      to: to3,
       from,
       contractAddress,
       hash: hash4,
@@ -43892,7 +44514,7 @@ class TransactionReceipt {
       logsBloom,
       root,
       status,
-      to: to2
+      to: to3
     };
   }
   get length() {
@@ -43987,7 +44609,7 @@ class TransactionResponse {
     this.#startBlock = -1;
   }
   toJSON() {
-    const { blockNumber, blockHash, index: index2, hash: hash4, type, to: to2, from, nonce, data: data9, signature: signature2, accessList, blobVersionedHashes } = this;
+    const { blockNumber, blockHash, index: index2, hash: hash4, type, to: to3, from, nonce, data: data9, signature: signature2, accessList, blobVersionedHashes } = this;
     return {
       _type: "TransactionResponse",
       accessList,
@@ -44005,7 +44627,7 @@ class TransactionResponse {
       maxFeePerBlobGas: toJson(this.maxFeePerBlobGas),
       nonce,
       signature: signature2,
-      to: to2,
+      to: to3,
       index: index2,
       type,
       value: toJson(this.value)
@@ -44687,13 +45309,13 @@ async function getSub(contract, operation, event) {
       }
     };
     let starting = [];
-    const start2 = () => {
+    const start3 = () => {
       if (starting.length) {
         return;
       }
       starting.push(provider3.on(filter, listener));
     };
-    const stop3 = async () => {
+    const stop4 = async () => {
       if (starting.length == 0) {
         return;
       }
@@ -44702,7 +45324,7 @@ async function getSub(contract, operation, event) {
       await Promise.all(started);
       provider3.off(filter, listener);
     };
-    sub = { tag, listeners: [], start: start2, stop: stop3 };
+    sub = { tag, listeners: [], start: start3, stop: stop4 };
     subs.set(tag, sub);
   }
   return sub;
@@ -44714,16 +45336,16 @@ async function _emit(contract, event, args, payloadFunc) {
     return false;
   }
   const count = sub.listeners.length;
-  sub.listeners = sub.listeners.filter(({ listener, once: once2 }) => {
+  sub.listeners = sub.listeners.filter(({ listener, once: once3 }) => {
     const passArgs = Array.from(args);
     if (payloadFunc) {
-      passArgs.push(payloadFunc(once2 ? null : listener));
+      passArgs.push(payloadFunc(once3 ? null : listener));
     }
     try {
       listener.call(contract, ...passArgs);
     } catch (error) {
     }
-    return !once2;
+    return !once3;
   });
   if (sub.listeners.length === 0) {
     sub.stop();
@@ -45051,8 +45673,8 @@ class BaseContract {
       getInternal(this).subs.delete(sub.tag);
     } else {
       const { subs } = getInternal(this);
-      for (const { tag, stop: stop3 } of subs.values()) {
-        stop3();
+      for (const { tag, stop: stop4 } of subs.values()) {
+        stop4();
         subs.delete(tag);
       }
     }
@@ -46312,8 +46934,8 @@ class PollingEventSubscriber {
 var isPromise = function(value) {
   return value && typeof value.then === "function";
 };
-var getTag = function(prefix2, value) {
-  return prefix2 + ":" + JSON.stringify(value, (k, v) => {
+var getTag = function(prefix3, value) {
+  return prefix3 + ":" + JSON.stringify(value, (k, v) => {
     if (v == null) {
       return "null";
     }
@@ -46412,9 +47034,9 @@ async function getSubscription(_event, provider4) {
 var getTime2 = function() {
   return new Date().getTime();
 };
-var _parseString = function(result, start2) {
+var _parseString = function(result, start3) {
   try {
-    const bytes4 = _parseBytes(result, start2);
+    const bytes4 = _parseBytes(result, start3);
     if (bytes4) {
       return toUtf8String(bytes4);
     }
@@ -46422,12 +47044,12 @@ var _parseString = function(result, start2) {
   }
   return null;
 };
-var _parseBytes = function(result, start2) {
+var _parseBytes = function(result, start3) {
   if (result === "0x") {
     return null;
   }
   try {
-    const offset = getNumber(dataSlice(result, start2, start2 + 32));
+    const offset = getNumber(dataSlice(result, start3, start3 + 32));
     const length = getNumber(dataSlice(result, offset, offset + 32));
     return dataSlice(result, offset + 32, offset + 32 + length);
   } catch (error) {
@@ -47331,13 +47953,13 @@ class AbstractProvider {
       return false;
     }
     const count = sub.listeners.length;
-    sub.listeners = sub.listeners.filter(({ listener, once: once2 }) => {
-      const payload = new EventPayload(this, once2 ? null : listener, event);
+    sub.listeners = sub.listeners.filter(({ listener, once: once3 }) => {
+      const payload = new EventPayload(this, once3 ? null : listener, event);
       try {
         listener.call(this, ...args, payload);
       } catch (error) {
       }
-      return !once2;
+      return !once3;
     });
     if (sub.listeners.length === 0) {
       if (sub.started) {
@@ -47914,7 +48536,7 @@ class JsonRpcSigner extends AbstractSigner {
     const blockNumber = await this.provider.getBlockNumber();
     const hash7 = await this.sendUncheckedTransaction(tx);
     return await new Promise((resolve, reject) => {
-      const timeouts2 = [1000, 100];
+      const timeouts3 = [1000, 100];
       let invalids = 0;
       const checkTx = async () => {
         try {
@@ -47947,7 +48569,7 @@ class JsonRpcSigner extends AbstractSigner {
         }
         this.provider._setTimeout(() => {
           checkTx();
-        }, timeouts2.pop() || 4000);
+        }, timeouts3.pop() || 4000);
       };
       checkTx();
     });
@@ -48623,15 +49245,15 @@ async function Session() {
     async function nextNonce() {
       return await _account.getNonce();
     }
-    async function query({ to: to2, methodSignature, methodName, methodArgs = [] }) {
-      let contract4 = new Contract(to2, [methodSignature], _provider);
+    async function query({ to: to3, methodSignature, methodName, methodArgs = [] }) {
+      let contract4 = new Contract(to3, [methodSignature], _provider);
       let contractMethod = contract4.getFunction(methodName);
       return await contractMethod(...methodArgs);
     }
-    async function call2({ to: to2, methodSignature, methodName, methodArgs, gasPrice = 20000000000n, gasLimit = 10000000n, value = 0n, chainId, confirmations = 1n }) {
+    async function call3({ to: to3, methodSignature, methodName, methodArgs, gasPrice = 20000000000n, gasLimit = 10000000n, value = 0n, chainId, confirmations = 1n }) {
       return await (await _account.sendTransaction({
         from: await address18(),
-        to: to2,
+        to: to3,
         nonce: await nextNonce(),
         gasPrice,
         gasLimit,
@@ -48664,7 +49286,7 @@ async function Session() {
         data: (await new ContractFactory(abi4, bytecode, _account).getDeployTransaction(...args)).data
       })).wait(Number(confirmations));
     }
-    return { address: address18, nonce, nextNonce, query, call: call2, deployRawBytecode, deploy };
+    return { address: address18, nonce, nextNonce, query, call: call3, deployRawBytecode, deploy };
   }
   async function Network2() {
     let _network = await _provider.getNetwork();
@@ -48691,19 +49313,19 @@ async function accountChainId() {
   let network3 = await _session.Network();
   return network3.chainId();
 }
-async function query({ to: to2, methodSignature, methodName, methodArgs }) {
+async function query({ to: to3, methodSignature, methodName, methodArgs }) {
   require2(connected(), "client-not-connected");
   return await (await _session.Account()).query({
-    to: to2,
+    to: to3,
     methodSignature,
     methodName,
     methodArgs
   });
 }
-async function call2({ to: to2, methodSignature, methodName, methodArgs, gasPrice, gasLimit, value, chainId, confirmations }) {
+async function call3({ to: to3, methodSignature, methodName, methodArgs, gasPrice, gasLimit, value, chainId, confirmations }) {
   require2(connected(), "client-not-connected");
   return await (await _session.Account()).call({
-    to: to2,
+    to: to3,
     methodSignature,
     methodName,
     methodArgs,
@@ -48739,8 +49361,8 @@ function NavConnectButton() {
   let [captionSpring, setCaptionSpring] = useSpring(() => ({ fontSize: "1.5em", cursor: "pointer", textShadow: textShadowGlow(TITANIUM.toString(), 0) }));
   let [feedbackMessageSpring, setFeedbackMessageSpring] = useSpring(() => ({ color: RED.toString(), fontSize: "0.5em" }));
   let [loaderSpriteSpring, setLoaderSpriteSpring] = useSpring(() => ({ opacity: "0" }));
-  let [feedbackMessage, setFeedbackMessage] = import_react19.useState("");
-  let [_, setNavConnectButton] = useMachine(import_react18.useMemo(() => createMachine({
+  let [feedbackMessage, setFeedbackMessage] = import_react28.useState("");
+  let [_, setNavConnectButton] = useMachine(import_react27.useMemo(() => createMachine({
     initial: "boot",
     states: {
       boot: {
@@ -48880,13 +49502,13 @@ function NavConnectButton() {
 }
 
 // src/public/component/styled/nav/NavAccount.tsx
-var import_react20 = __toESM(require_react(), 1);
-var import_react21 = __toESM(require_react(), 1);
+var import_react29 = __toESM(require_react(), 1);
+var import_react30 = __toESM(require_react(), 1);
 var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
 function NavAccount() {
-  let [address18, setAddress] = import_react21.useState("");
-  let [chainId, setChainId] = import_react21.useState(0n);
-  let [_, setNavAccount] = useMachine(import_react20.useMemo(() => createMachine({
+  let [address18, setAddress] = import_react30.useState("");
+  let [chainId, setChainId] = import_react30.useState(0n);
+  let [_, setNavAccount] = useMachine(import_react29.useMemo(() => createMachine({
     initial: "boot",
     states: {
       boot: {
@@ -49002,6 +49624,11 @@ function Nav() {
                   to: "/explore",
                   caption0: "03",
                   caption1: "Explore"
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime14.jsxDEV(NavButton, {
+                  to: "/tokenomics",
+                  caption0: "04",
+                  caption1: "Tokenomics"
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this)
@@ -49038,7 +49665,7 @@ function Blurdot(props) {
 }
 
 // src/public/component/button/DualLabelButton.tsx
-var import_react22 = __toESM(require_react(), 1);
+var import_react31 = __toESM(require_react(), 1);
 var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 function DualLabelButton(props) {
   let { label0, label1, size, color, onClick, style, ...more } = props;
@@ -49057,7 +49684,7 @@ function DualLabelButton(props) {
   let [spring2, setSpring2] = useSpring(() => ({
     opacity: "0"
   }));
-  let [_, setDualLabelButton] = useMachine(import_react22.useMemo(() => createMachine({
+  let [_, setDualLabelButton] = useMachine(import_react31.useMemo(() => createMachine({
     initial: "idle",
     states: {
       idle: {
@@ -49215,335 +49842,242 @@ function DualLabelLink(props) {
 }
 
 // src/public/component/styled/page/HomePage.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
 function HomePage() {
   return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
     children: jsx_dev_runtime18.jsxDEV(VerticalFlexPage, {
       children: [
-        jsx_dev_runtime18.jsxDEV(HomePageMainSlide, {}, undefined, false, undefined, this),
-        jsx_dev_runtime18.jsxDEV(HomePageSlide, {
+        jsx_dev_runtime18.jsxDEV(FlexSlide, {
+          children: [
+            jsx_dev_runtime18.jsxDEV(FlexSlideLayer, {
+              style: { background: OBSIDIAN.toString(), overflow: "hidden" },
+              children: jsx_dev_runtime18.jsxDEV(FlexRow, {
+                style: { width: "1024px", height: "100%", position: "relative" },
+                children: [
+                  jsx_dev_runtime18.jsxDEV(Blurdot, {
+                    color0: DEEP_PURPLE.toString(),
+                    color1: OBSIDIAN.toString(),
+                    style: { width: "800px", aspectRatio: "1/1", position: "absolute", right: "300px", bottom: "20px" }
+                  }, undefined, false, undefined, this),
+                  jsx_dev_runtime18.jsxDEV(Blurdot, {
+                    color0: RED.toString(),
+                    color1: OBSIDIAN.toString(),
+                    style: { width: "800px", aspectRatio: "1/1", position: "absolute", left: "300px", top: "20px" }
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime18.jsxDEV(FlexSlideLayer, {
+              style: { justifyContent: "space-between", paddingBottom: "10px" },
+              children: [
+                jsx_dev_runtime18.jsxDEV(Nav, {}, undefined, false, undefined, this),
+                jsx_dev_runtime18.jsxDEV(FlexRow, {
+                  style: { width: "1024px", height: "100%" },
+                  children: [
+                    jsx_dev_runtime18.jsxDEV(FlexCol, {
+                      style: { width: "100%", height: "100%", gap: "36px" },
+                      children: [
+                        jsx_dev_runtime18.jsxDEV(FlexCol, {
+                          style: { width: "100%" },
+                          children: [
+                            jsx_dev_runtime18.jsxDEV(FlexRow, {
+                              style: { width: "100%", justifyContent: "start" },
+                              children: jsx_dev_runtime18.jsxDEV(Typography, {
+                                content: "Shape the Decentralized Enterprise.",
+                                style: { fontSize: "3em" }
+                              }, undefined, false, undefined, this)
+                            }, undefined, false, undefined, this),
+                            jsx_dev_runtime18.jsxDEV(FlexRow, {
+                              style: { width: "100%", justifyContent: "start" },
+                              children: jsx_dev_runtime18.jsxDEV(Typography, {
+                                content: "Deploy and Manage Trusless Systems.",
+                                style: { fontSize: "1.5em" }
+                              }, undefined, false, undefined, this)
+                            }, undefined, false, undefined, this)
+                          ]
+                        }, undefined, true, undefined, this),
+                        jsx_dev_runtime18.jsxDEV(FlexRow, {
+                          style: { width: "100%", justifyContent: "start", gap: "20px" },
+                          children: [
+                            jsx_dev_runtime18.jsxDEV(DualLabelLink, {
+                              to: "/get-started",
+                              label0: "Get Started",
+                              label1: "\u2726",
+                              size: 200,
+                              color: TITANIUM.toString(),
+                              onClick: () => {
+                              }
+                            }, undefined, false, undefined, this),
+                            jsx_dev_runtime18.jsxDEV(DualLabelLink, {
+                              to: "https://dreamcatcher-1.gitbook.io/dreamcatcher",
+                              label0: "Learn More",
+                              label1: "\u2726",
+                              size: 200,
+                              color: TITANIUM.toString(),
+                              onClick: () => {
+                              }
+                            }, undefined, false, undefined, this)
+                          ]
+                        }, undefined, true, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this),
+                    jsx_dev_runtime18.jsxDEV(FlexCol, {
+                      style: { width: "100%", height: "100%" },
+                      children: jsx_dev_runtime18.jsxDEV(Sprite, {
+                        src: "../../../img/whale.svg",
+                        style: { width: "100%", aspectRatio: "1/1", objectFit: "contain" }
+                      }, undefined, false, undefined, this)
+                    }, undefined, false, undefined, this)
+                  ]
+                }, undefined, true, undefined, this)
+              ]
+            }, undefined, true, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime18.jsxDEV(_Slide, {
           caption0: "01",
-          caption1: "About Us"
+          caption1: "About Us",
+          children: jsx_dev_runtime18.jsxDEV(FlexRow, {
+            style: { width: "1024px", height: "100%" },
+            children: [
+              jsx_dev_runtime18.jsxDEV(FlexCol, {
+                style: { width: "100%", height: "100%" },
+                children: jsx_dev_runtime18.jsxDEV(Sprite, {
+                  src: "../../../img/woman.svg",
+                  style: { width: "75%", aspectRatio: "1/1", objectFit: "contain" }
+                }, undefined, false, undefined, this)
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime18.jsxDEV(FlexCol, {
+                style: { width: "100%", height: "100%", gap: "20px" },
+                children: [
+                  jsx_dev_runtime18.jsxDEV(TearDropBulletPoint, {
+                    caption: "Storytelling",
+                    content: "We are a community of storytellers who unite through technology, code, and art."
+                  }, undefined, false, undefined, this),
+                  jsx_dev_runtime18.jsxDEV(TearDropBulletPoint, {
+                    caption: "Exploration",
+                    content: "We are a community of explorers who embrace research and adventure, dedicated to discovering new realms and pushing boundaries."
+                  }, undefined, false, undefined, this),
+                  jsx_dev_runtime18.jsxDEV(TearDropBulletPoint, {
+                    caption: "Passion",
+                    content: "We are passionate about our work, advocating for the right incentives and valuing a genuine love for what we do above all else."
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
         }, undefined, false, undefined, this),
-        jsx_dev_runtime18.jsxDEV(HomePageSlide, {
-          caption0: "02",
-          caption1: "Team"
+        jsx_dev_runtime18.jsxDEV(_Slide, {
+          caption0: "",
+          caption1: "",
+          children: jsx_dev_runtime18.jsxDEV(FlexRow, {
+            style: { width: "1024px", height: "100%" },
+            children: [
+              jsx_dev_runtime18.jsxDEV(FlexCol, {
+                style: { width: "100%", height: "100%", gap: "20px" },
+                children: [
+                  jsx_dev_runtime18.jsxDEV(TearDropBulletPoint, {
+                    caption: "Entrepreneurship",
+                    content: "We champion entrepreneurship as pioneers, paving the way for others, even when not directly benefiting."
+                  }, undefined, false, undefined, this),
+                  jsx_dev_runtime18.jsxDEV(TearDropBulletPoint, {
+                    caption: "Automation",
+                    content: "We advocate for technology as a force for good, enabling increased productivity and benefit for all."
+                  }, undefined, false, undefined, this),
+                  jsx_dev_runtime18.jsxDEV(TearDropBulletPoint, {
+                    caption: "Imagination",
+                    content: "We champion imagination, valuing dreams and recognizing potential where others may not. Our core belief is that anything is achievable."
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              jsx_dev_runtime18.jsxDEV(FlexCol, {
+                style: { width: "100%", height: "100%" },
+                children: jsx_dev_runtime18.jsxDEV(Sprite, {
+                  src: "../../../img/hodl.svg",
+                  style: { width: "75%", aspectRatio: "1/1", objectFit: "contain" }
+                }, undefined, false, undefined, this)
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
+  function _Slide({ caption0, caption1, children }) {
+    return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
+      children: jsx_dev_runtime18.jsxDEV(FlexSlide, {
+        children: [
+          jsx_dev_runtime18.jsxDEV(FlexSlideLayer, {
+            style: {
+              background: OBSIDIAN.toString()
+            }
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime18.jsxDEV(FlexSlideLayer, {
+            style: {
+              justifyContent: "space-between"
+            },
+            children: [
+              jsx_dev_runtime18.jsxDEV(FlexRow, {
+                style: {
+                  width: "1024px",
+                  height: "auto"
+                },
+                children: jsx_dev_runtime18.jsxDEV(FlexRow, {
+                  style: {
+                    width: "100%",
+                    height: "100%",
+                    justifyContent: "start",
+                    gap: "2.5%"
+                  },
+                  children: [
+                    jsx_dev_runtime18.jsxDEV(Typography, {
+                      content: caption0,
+                      style: {
+                        fontSize: "4em",
+                        color: DEEP_PURPLE.toString()
+                      }
+                    }, undefined, false, undefined, this),
+                    jsx_dev_runtime18.jsxDEV(Typography, {
+                      content: caption1,
+                      style: {
+                        fontSize: "4em"
+                      }
+                    }, undefined, false, undefined, this)
+                  ]
+                }, undefined, true, undefined, this)
+              }, undefined, false, undefined, this),
+              children
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this);
+  }
 }
-function HomePageMainSlide() {
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+function TearDropBulletPoint({ caption, content }) {
   return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: jsx_dev_runtime18.jsxDEV(FlexSlide, {
+    children: jsx_dev_runtime18.jsxDEV(FlexCol, {
+      style: { width: "100%", alignItems: "start", gap: "10px" },
       children: [
-        jsx_dev_runtime18.jsxDEV(HomePageMainSlideBackgroundLayer, {}, undefined, false, undefined, this),
-        jsx_dev_runtime18.jsxDEV(HomePageMainSlideContentLayer, {}, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function HomePageMainSlideContentLayer() {
-  return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: jsx_dev_runtime18.jsxDEV(FlexSlideLayer, {
-      style: {
-        justifyContent: "space-between",
-        paddingBottom: "1%"
-      },
-      children: [
-        jsx_dev_runtime18.jsxDEV(Nav, {}, undefined, false, undefined, this),
-        jsx_dev_runtime18.jsxDEV(HomePageMainSlideContentLayerHeroSection, {}, undefined, false, undefined, this),
         jsx_dev_runtime18.jsxDEV(FlexRow, {
-          style: {
-            width: "1024px",
-            height: "200px",
-            justifyContent: "space-between"
-          },
+          style: { gap: "10px" },
           children: [
-            jsx_dev_runtime18.jsxDEV(HomePageCard, {
-              src: "../../../img/shape/Dots.svg",
-              caption: "Ecosystem",
-              description: "Your one-stop view of all your digital assets. Monitor real-time valuations, track performance across various categories, and manage your entire portfolio with a user-friendly interface."
+            jsx_dev_runtime18.jsxDEV(Sprite, {
+              src: "../../../img/shape/Tear.svg",
+              style: { width: "25px", aspectRatio: "1/1", objectFit: "contain" }
             }, undefined, false, undefined, this),
-            jsx_dev_runtime18.jsxDEV(HomePageCard, {
-              src: "../../../img/shape/TwoSquares.svg",
-              caption: "Community",
-              description: "Tailor your investment approach with customizable strategies. Whether you\u2019re focused on yield farming, staking, or speculative trading, this module helps you optimize your asset allocation for maximum returns."
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime18.jsxDEV(HomePageCard, {
-              src: "../../../img/shape/Composition.svg",
-              caption: "Modularity",
-              description: "Manage your tokens effortlessly with our integrated wallet. Transfer, receive, and store a wide variety of tokens securely, all in one place, with support for multiple blockchain networks."
+            jsx_dev_runtime18.jsxDEV(Typography, {
+              content: caption,
+              style: { fontSize: "2em" }
             }, undefined, false, undefined, this)
           ]
         }, undefined, true, undefined, this),
         jsx_dev_runtime18.jsxDEV(FlexRow, {
           children: jsx_dev_runtime18.jsxDEV(Typography, {
-            content: "Dreamcatcher 2024",
-            style: {
-              fontSize: "0.75em"
-            }
+            content,
+            style: { fontSize: "1em" }
           }, undefined, false, undefined, this)
         }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function HomePageMainSlideContentLayerHeroSection() {
-  return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: jsx_dev_runtime18.jsxDEV(FlexRow, {
-      style: {
-        width: "1024px",
-        height: "250px"
-      },
-      children: [
-        jsx_dev_runtime18.jsxDEV(FlexCol, {
-          style: {
-            width: "100%",
-            height: "100%",
-            gap: "10%"
-          },
-          children: [
-            jsx_dev_runtime18.jsxDEV(FlexCol, {
-              style: {
-                width: "100%"
-              },
-              children: [
-                jsx_dev_runtime18.jsxDEV(FlexRow, {
-                  style: {
-                    width: "100%",
-                    justifyContent: "start"
-                  },
-                  children: jsx_dev_runtime18.jsxDEV(Typography, {
-                    content: "Shape the Decentralized Enterprise.",
-                    style: {
-                      fontSize: "3em"
-                    }
-                  }, undefined, false, undefined, this)
-                }, undefined, false, undefined, this),
-                jsx_dev_runtime18.jsxDEV(FlexRow, {
-                  style: {
-                    width: "100%",
-                    justifyContent: "start"
-                  },
-                  children: jsx_dev_runtime18.jsxDEV(Typography, {
-                    content: "We think money should be global.",
-                    style: {
-                      fontSize: "2em"
-                    }
-                  }, undefined, false, undefined, this)
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this),
-            jsx_dev_runtime18.jsxDEV(FlexRow, {
-              style: {
-                width: "100%",
-                justifyContent: "start",
-                gap: "5%"
-              },
-              children: [
-                jsx_dev_runtime18.jsxDEV(DualLabelLink, {
-                  to: "",
-                  label0: "Get Started",
-                  label1: "\u25B8",
-                  size: 200,
-                  color: TITANIUM.toString(),
-                  onClick: () => {
-                  }
-                }, undefined, false, undefined, this),
-                jsx_dev_runtime18.jsxDEV(DualLabelLink, {
-                  to: "",
-                  label0: "Learn More",
-                  label1: "\u25B8",
-                  size: 200,
-                  color: TITANIUM.toString(),
-                  onClick: () => {
-                  }
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
-        jsx_dev_runtime18.jsxDEV(FlexCol, {
-          style: {
-            width: "100%",
-            height: "100%"
-          },
-          children: jsx_dev_runtime18.jsxDEV(Sprite, {
-            src: "../../../img/shape/Stripe.svg",
-            style: {
-              width: "50%",
-              aspectRatio: "1/1",
-              objectFit: "contain"
-            }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function HomePageMainSlideBackgroundLayer() {
-  return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: jsx_dev_runtime18.jsxDEV(FlexSlideLayer, {
-      style: {
-        background: OBSIDIAN.toString(),
-        overflowX: "hidden",
-        overflowY: "hidden"
-      },
-      children: jsx_dev_runtime18.jsxDEV(FlexRow, {
-        style: {
-          width: "1024px",
-          height: "100%",
-          position: "relative",
-          overflowX: "visible",
-          overflowY: "visible"
-        },
-        children: [
-          jsx_dev_runtime18.jsxDEV(Blurdot, {
-            color0: DEEP_PURPLE.toString(),
-            color1: OBSIDIAN.toString(),
-            style: {
-              width: "800px",
-              aspectRatio: "1/1",
-              position: "absolute",
-              right: "300px",
-              bottom: "20px",
-              zIndex: "1"
-            }
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime18.jsxDEV(Blurdot, {
-            color0: RED.toString(),
-            color1: OBSIDIAN.toString(),
-            style: {
-              width: "800px",
-              aspectRatio: "1/1",
-              position: "absolute",
-              left: "300px",
-              top: "20px",
-              zIndex: "2"
-            }
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this)
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function HomePageSlide({ caption0, caption1, children }) {
-  return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: jsx_dev_runtime18.jsxDEV(FlexSlide, {
-      children: [
-        jsx_dev_runtime18.jsxDEV(FlexSlideLayer, {
-          style: {
-            background: OBSIDIAN.toString()
-          }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime18.jsxDEV(FlexSlideLayer, {
-          style: {
-            justifyContent: "space-between"
-          },
-          children: [
-            jsx_dev_runtime18.jsxDEV(FlexRow, {
-              style: {
-                width: "1024px",
-                height: "auto"
-              },
-              children: jsx_dev_runtime18.jsxDEV(FlexRow, {
-                style: {
-                  width: "100%",
-                  height: "100%",
-                  justifyContent: "start",
-                  gap: "2.5%"
-                },
-                children: [
-                  jsx_dev_runtime18.jsxDEV(Typography, {
-                    content: caption0,
-                    style: {
-                      fontSize: "4em",
-                      color: DEEP_PURPLE.toString()
-                    }
-                  }, undefined, false, undefined, this),
-                  jsx_dev_runtime18.jsxDEV(Typography, {
-                    content: caption1,
-                    style: {
-                      fontSize: "4em"
-                    }
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            children
-          ]
-        }, undefined, true, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function HomePageCard({ src, caption, description }) {
-  return jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: jsx_dev_runtime18.jsxDEV(FlexRow, {
-      style: {
-        width: "100%",
-        height: "100%",
-        paddingTop: "1%",
-        paddingBottom: "1%",
-        paddingLeft: "1%",
-        paddingRight: "1%",
-        overflowX: "hidden",
-        overflowY: "hidden",
-        gap: "5%"
-      },
-      children: [
-        jsx_dev_runtime18.jsxDEV(FlexCol, {
-          style: {
-            width: "50%",
-            height: "100%",
-            justifyContent: "start"
-          },
-          children: jsx_dev_runtime18.jsxDEV(Sprite, {
-            src,
-            style: {
-              width: "50%",
-              aspectRatio: "1/1",
-              objectFit: "contain"
-            }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime18.jsxDEV(FlexCol, {
-          style: {
-            width: "100%",
-            height: "100%",
-            gap: "5%",
-            justifyContent: "start"
-          },
-          children: [
-            jsx_dev_runtime18.jsxDEV(FlexRow, {
-              style: {
-                width: "100%",
-                height: "auto",
-                justifyContent: "start"
-              },
-              children: jsx_dev_runtime18.jsxDEV(Typography, {
-                content: caption,
-                style: {
-                  fontSize: "1.25em"
-                }
-              }, undefined, false, undefined, this)
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime18.jsxDEV(FlexRow, {
-              style: {
-                width: "100%",
-                height: "auto",
-                justifyContent: "start"
-              },
-              children: jsx_dev_runtime18.jsxDEV(Typography, {
-                content: description,
-                style: {
-                  fontSize: "0.75em"
-                }
-              }, undefined, false, undefined, this)
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
@@ -49618,14 +50152,14 @@ function MockPrototypeVaultInterface(_address) {
     })) / 1000000000000000000;
   }
   async function rebalance() {
-    return await call2({
+    return await call3({
       to: _address,
       methodSignature: "function rebalance() external",
       methodName: "rebalance"
     });
   }
   async function mint(assetsIn) {
-    return await call2({
+    return await call3({
       to: _address,
       methodSignature: "function mint(uint256) external",
       methodName: "mint",
@@ -49633,7 +50167,7 @@ function MockPrototypeVaultInterface(_address) {
     });
   }
   async function burn(supplyIn) {
-    return await call2({
+    return await call3({
       to: _address,
       methodSignature: "function burn(uint256) external",
       methodName: "burn",
@@ -49644,13 +50178,13 @@ function MockPrototypeVaultInterface(_address) {
 }
 
 // src/public/component/styled/page/ExplorePage.tsx
-var import_react23 = __toESM(require_react(), 1);
-var import_react24 = __toESM(require_react(), 1);
+var import_react32 = __toESM(require_react(), 1);
+var import_react33 = __toESM(require_react(), 1);
 function ExplorePage() {
-  let [pageBackgroundColor, setPageBackgroundColor] = import_react24.useState(OBSIDIAN.toString());
-  let [address0, setAddress0] = import_react24.useState("");
-  let [address1, setAddress1] = import_react24.useState("");
-  let [address22, setAddress2] = import_react24.useState("");
+  let [pageBackgroundColor, setPageBackgroundColor] = import_react33.useState(OBSIDIAN.toString());
+  let [address0, setAddress0] = import_react33.useState("");
+  let [address1, setAddress1] = import_react33.useState("");
+  let [address22, setAddress2] = import_react33.useState("");
   return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
     children: jsx_dev_runtime19.jsxDEV(FlexCol, {
       style: {
@@ -49773,13 +50307,13 @@ function ExplorePage() {
 }
 var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 function ExplorePageCard({ address: address18 }) {
-  let [name, setName] = import_react24.useState("****");
-  let [symbol, setSymbol] = import_react24.useState("****");
-  let [totalAssets, setTotalAssets] = import_react24.useState(0);
-  let [totalSupply, setTotalSupply] = import_react24.useState(0);
-  let [quote, setQuote] = import_react24.useState(0);
-  let [mounted, setMounted] = import_react24.useState(jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this));
-  let [_, setExplorePageCard] = useMachine(import_react23.useMemo(() => createMachine({
+  let [name, setName] = import_react33.useState("****");
+  let [symbol, setSymbol] = import_react33.useState("****");
+  let [totalAssets, setTotalAssets] = import_react33.useState(0);
+  let [totalSupply, setTotalSupply] = import_react33.useState(0);
+  let [quote, setQuote] = import_react33.useState(0);
+  let [mounted, setMounted] = import_react33.useState(jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this));
+  let [_, setExplorePageCard] = useMachine(import_react32.useMemo(() => createMachine({
     initial: "loading",
     states: {
       loading: {
@@ -49848,24 +50382,213 @@ function ExplorePageCardLoadingSlide() {
   }, undefined, false, undefined, this);
 }
 
+// src/public/component/module/client/interface/Erc20Interface.tsx
+function Erc20Interface(_address) {
+  async function name() {
+    return await query({
+      to: _address,
+      methodSignature: "function name() external view returns (string)",
+      methodName: "name"
+    });
+  }
+  async function symbol() {
+    return await query({
+      to: _address,
+      methodSignature: "function symbol() external view returns (string)",
+      methodName: "symbol"
+    });
+  }
+  async function decimals() {
+    return await query({
+      to: _address,
+      methodSignature: "function decimals() external view returns (uint8)",
+      methodName: "decimals"
+    });
+  }
+  async function totalSupply() {
+    return Number(await query({
+      to: _address,
+      methodSignature: "function totalSupply() external view returns (uint256)",
+      methodName: "totalSupply"
+    })) / 10 ** Number(await decimals());
+  }
+  async function balanceOf(account) {
+    return Number(await query({
+      to: _address,
+      methodSignature: "function balanceOf(address) external view returns (uint256)",
+      methodName: "balanceOf",
+      methodArgs: [account]
+    })) / 10 ** Number(await decimals());
+  }
+  async function allowance(owner, spender) {
+    return Number(await query({
+      to: _address,
+      methodSignature: "function allowance(address, address) external view returns (uint256)",
+      methodName: "allowance",
+      methodArgs: [owner, spender]
+    })) / 10 ** Number(await decimals());
+  }
+  async function transfer(to3, amount) {
+    return await call3({
+      to: _address,
+      methodSignature: "function transfer(address, uint256) external",
+      methodName: "transfer",
+      methodArgs: [to3, BigInt(amount * 10 ** Number(await decimals()))]
+    });
+  }
+  async function transferFrom(from, to3, amount) {
+    return await call3({
+      to: _address,
+      methodSignature: "function transferFrom(address, address, uint256) external",
+      methodName: "transferFrom",
+      methodArgs: [from, to3, BigInt(amount * 10 ** Number(await decimals()))]
+    });
+  }
+  async function approve(spender, amount) {
+    return await call3({
+      to: _address,
+      methodSignature: "function approve(address, uint256) external",
+      methodName: "approve",
+      methodArgs: [spender, BigInt(amount * 10 ** Number(await decimals()))]
+    });
+  }
+  return { name, symbol, decimals, totalSupply, balanceOf, allowance, transfer, transferFrom, approve };
+}
+
+// src/public/component/styled/page/TokenomicsPage.tsx
+var import_react34 = __toESM(require_react(), 1);
+var import_react35 = __toESM(require_react(), 1);
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+function TokenomicsPage() {
+  let [totalSupply, setTotalSupply] = import_react35.useState(0);
+  let [balance, setBalance] = import_react35.useState(0);
+  let [quote, setQuote] = import_react35.useState(0.5);
+  import_react34.useEffect(() => {
+    (async () => {
+      setTotalSupply(await dream.totalSupply());
+      setBalance(await dream.balanceOf(await accountAddress()));
+    })();
+  }, []);
+  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: jsx_dev_runtime20.jsxDEV(FlexCol, {
+      style: {
+        width: "100vw",
+        height: "100vh",
+        overflowX: "hidden",
+        overflowY: "hidden",
+        pointerEvents: "none",
+        background: OBSIDIAN.toString()
+      },
+      children: jsx_dev_runtime20.jsxDEV(FlexCol, {
+        style: {
+          width: "1024px",
+          height: "100%",
+          justifyContent: "space-between"
+        },
+        children: [
+          jsx_dev_runtime20.jsxDEV(Nav, {}, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(FlexRow, {
+            children: [
+              jsx_dev_runtime20.jsxDEV(Typography, {
+                content: "Dream"
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime20.jsxDEV(Typography, {
+                content: "$DREAM"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          jsx_dev_runtime20.jsxDEV(Typography, {
+            content: "Dream is our native token and is required to use the protocol services, however, payments in other currencies are accepted and converted to Dream for a seamless experience. There are 200,000,000 initially minted of which"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(Sprite, {
+            src: "../../../img/hodl.svg",
+            style: {
+              width: "500px",
+              aspectRatio: "1/1"
+            }
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime20.jsxDEV(FlexRow, {
+            style: {
+              gap: "5px"
+            },
+            children: [
+              jsx_dev_runtime20.jsxDEV(Tag, {
+                src: "../../../img/shape/Flame.svg",
+                content: "0.0004"
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime20.jsxDEV(Tag, {
+                src: "../../../img/shape/TwoSquares.svg",
+                content: "2595"
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime20.jsxDEV(Tag, {
+                src: "../../../img/shape/Composition.svg",
+                content: "2,394,499"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          jsx_dev_runtime20.jsxDEV(FlexRow, {
+            children: jsx_dev_runtime20.jsxDEV(Typography, {
+              content: `TotalSupply: ${totalSupply.toLocaleString()}`
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function Tag({ src, content }) {
+  return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: jsx_dev_runtime20.jsxDEV(FlexRow, {
+      style: {
+        background: SOFT_OBSIDIAN.toString(),
+        padding: "10px",
+        gap: "5px",
+        borderColor: GHOST_IRON.toString(),
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderRadius: "10px"
+      },
+      children: [
+        jsx_dev_runtime20.jsxDEV(Sprite, {
+          src,
+          style: {
+            width: "10px",
+            aspectRatio: "1/1"
+          }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime20.jsxDEV(Typography, {
+          content,
+          style: {
+            fontSize: "0.75em"
+          }
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+var dream = Erc20Interface("0x52463952A864107B63Eb6b21f5234A0B0e99b3f1");
+
 // src/public/component/Render.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root)
-    return client.createRoot(root).render(jsx_dev_runtime20.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime21.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   return;
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime21.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime22.jsxDEV(HomePage, {}, undefined, false, undefined, this)
 }, {
   path: "/explore",
-  element: jsx_dev_runtime21.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime22.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+}, {
+  path: "/tokenomics",
+  element: jsx_dev_runtime22.jsxDEV(TokenomicsPage, {}, undefined, false, undefined, this)
 }]);

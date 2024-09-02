@@ -41,6 +41,11 @@ export function Nav(): ReactNode {
                     to="/explore"
                     caption0="03"
                     caption1="Explore"/>
+
+                    <NavButton
+                    to="/tokenomics"
+                    caption0="04"
+                    caption1="Tokenomics"/>             
                 </FlexRow>
             </FlexRow>
 

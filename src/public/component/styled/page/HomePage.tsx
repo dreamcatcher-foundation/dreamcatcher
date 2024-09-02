@@ -18,21 +18,100 @@ import * as ColorPalette from "@component/ColorPalette";
 export function HomePage(): ReactNode {
     return <>
         <VerticalFlexPage>
-            <HomePageMainSlide/>
+            <FlexSlide>
+                <FlexSlideLayer style={{background: ColorPalette.OBSIDIAN.toString(), overflow: "hidden"}}>
+                    <FlexRow style={{width: "1024px", height: "100%", position: "relative"}}>
+                        <Blurdot color0={ColorPalette.DEEP_PURPLE.toString()} color1={ColorPalette.OBSIDIAN.toString()} style={{width: "800px", aspectRatio: "1/1", position: "absolute", right: "300px", bottom: "20px"}}/>
+                        <Blurdot color0={ColorPalette.RED.toString()} color1={ColorPalette.OBSIDIAN.toString()} style={{width: "800px", aspectRatio: "1/1", position: "absolute", left: "300px", top: "20px"}}/>
+                    </FlexRow>
+                </FlexSlideLayer>
+                <FlexSlideLayer style={{justifyContent: "space-between", paddingBottom: "10px"}}>
+                    <Nav/>
+                    <FlexRow style={{width: "1024px", height: "100%"}}>
+                        <FlexCol style={{width: "100%", height: "100%", gap: "36px"}}>
+                            <FlexCol style={{width: "100%"}}>
+                                <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Shape the Decentralized Enterprise." style={{fontSize: "3em"}}/></FlexRow>
+                                <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Deploy and Manage Trusless Systems." style={{fontSize: "1.5em"}}/></FlexRow>
+                            </FlexCol>
+                            <FlexRow style={{width: "100%", justifyContent: "start", gap: "20px"}}>
+                                <DualLabelLink to="/get-started" label0="Get Started" label1="✦" size={200} color={ColorPalette.TITANIUM.toString()} onClick={() => {}}/>
+                                <DualLabelLink to="https://dreamcatcher-1.gitbook.io/dreamcatcher" label0="Learn More" label1="✦" size={200} color={ColorPalette.TITANIUM.toString()} onClick={() => {}}/>
+                            </FlexRow>
+                        </FlexCol>
+                        <FlexCol style={{width: "100%", height: "100%"}}><Sprite src="../../../img/whale.svg" style={{width: "100%", aspectRatio: "1/1", objectFit: "contain"}}/></FlexCol>
+                    </FlexRow>
+                </FlexSlideLayer>
+            </FlexSlide>
 
-            <HomePageSlide
-            caption0="01"
-            caption1="About Us">
-            </HomePageSlide>
+            <_Slide caption0="01" caption1="About Us">
+                <FlexRow style={{width: "1024px", height: "100%"}}>
+                    <FlexCol style={{width: "100%", height: "100%"}}><Sprite src="../../../img/woman.svg" style={{width: "75%", aspectRatio: "1/1", objectFit: "contain"}}/></FlexCol>
+                    <FlexCol style={{width: "100%", height: "100%", gap: "20px"}}>
+                        <TearDropBulletPoint caption="Storytelling" content="We are a community of storytellers who unite through technology, code, and art."/>
+                        <TearDropBulletPoint caption="Exploration" content="We are a community of explorers who embrace research and adventure, dedicated to discovering new realms and pushing boundaries."/>
+                        <TearDropBulletPoint caption="Passion" content="We are passionate about our work, advocating for the right incentives and valuing a genuine love for what we do above all else."/>
+                    </FlexCol>
+                </FlexRow>
+            </_Slide>
 
-            <HomePageSlide
-            caption0="02"
-            caption1="Team">
-            </HomePageSlide>
-
+            <_Slide caption0="" caption1="">
+                <FlexRow style={{width: "1024px", height: "100%"}}>
+                    <FlexCol style={{width: "100%", height: "100%", gap: "20px"}}>
+                        <TearDropBulletPoint caption="Entrepreneurship" content="We champion entrepreneurship as pioneers, paving the way for others, even when not directly benefiting."/>
+                        <TearDropBulletPoint caption="Automation" content="We advocate for technology as a force for good, enabling increased productivity and benefit for all."/>
+                        <TearDropBulletPoint caption="Imagination" content="We champion imagination, valuing dreams and recognizing potential where others may not. Our core belief is that anything is achievable."/>
+                    </FlexCol>
+                    <FlexCol style={{width: "100%", height: "100%"}}><Sprite src="../../../img/hodl.svg" style={{width: "75%", aspectRatio: "1/1", objectFit: "contain"}}/></FlexCol>
+                </FlexRow>
+            </_Slide>
         </VerticalFlexPage>
-    </>;
+    </>
+
+    function _Slide({caption0, caption1, children}: {caption0: string; caption1: string; children?: ReactNode;}): ReactNode {
+        return <>
+            <FlexSlide>
+                <FlexSlideLayer
+                style={{
+                    background: ColorPalette.OBSIDIAN.toString()
+                }}/>
+                <FlexSlideLayer
+                style={{
+                    justifyContent: "space-between"
+                }}>
+                    <FlexRow
+                    style={{
+                        width: "1024px",
+                        height: "auto"
+                    }}>
+                        <FlexRow
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            justifyContent: "start",
+                            gap: "2.5%"
+                        }}>
+                            <Typography
+                            content={caption0}
+                            style={{
+                                fontSize: "4em",
+                                color: ColorPalette.DEEP_PURPLE.toString()
+                            }}/>  
+
+                            <Typography
+                            content={caption1}
+                            style={{
+                                fontSize: "4em"
+                            }}/>
+                        </FlexRow>
+                    </FlexRow>
+                    {children}
+                </FlexSlideLayer>
+            </FlexSlide>
+        </>;
+    }
 }
+
+
 
 export function HomePageMainSlide(): ReactNode {
     return <>
@@ -54,27 +133,7 @@ export function HomePageMainSlideContentLayer(): ReactNode {
 
             <HomePageMainSlideContentLayerHeroSection/>
 
-            <FlexRow
-            style={{
-                width: "1024px",
-                height: "200px",
-                justifyContent: "space-between"
-            }}>
-                <HomePageCard
-                src="../../../img/shape/Dots.svg"
-                caption="Ecosystem"
-                description="Your one-stop view of all your digital assets. Monitor real-time valuations, track performance across various categories, and manage your entire portfolio with a user-friendly interface."/>
 
-                <HomePageCard
-                src="../../../img/shape/TwoSquares.svg"
-                caption="Community"
-                description="Tailor your investment approach with customizable strategies. Whether you’re focused on yield farming, staking, or speculative trading, this module helps you optimize your asset allocation for maximum returns."/>
-
-                <HomePageCard
-                src="../../../img/shape/Composition.svg"
-                caption="Modularity"
-                description="Manage your tokens effortlessly with our integrated wallet. Transfer, receive, and store a wide variety of tokens securely, all in one place, with support for multiple blockchain networks."/>
-            </FlexRow>
 
             <FlexRow>
                 <Typography
@@ -87,12 +146,14 @@ export function HomePageMainSlideContentLayer(): ReactNode {
     </>;
 }
 
+
+
 export function HomePageMainSlideContentLayerHeroSection(): ReactNode {
     return <>
         <FlexRow
         style={{
             width: "1024px",
-            height: "250px"
+            height: "auto"
         }}>
             <FlexCol
             style={{
@@ -159,9 +220,9 @@ export function HomePageMainSlideContentLayerHeroSection(): ReactNode {
                 height: "100%"
             }}>
                 <Sprite
-                src="../../../img/shape/Stripe.svg"
+                src="../../../img/whale.svg"
                 style={{
-                    width: "50%",
+                    width: "100%",
                     aspectRatio: "1/1",
                     objectFit: "contain"
                 }}/>
@@ -322,5 +383,18 @@ export function HomePageCard({ src, caption, description }: { src: string; capti
                 </FlexRow>
             </FlexCol>
         </FlexRow>
+    </>;
+}
+
+
+export function TearDropBulletPoint({caption, content}: {caption: string; content: string;}): ReactNode {
+    return <>
+        <FlexCol style={{width: "100%", alignItems: "start", gap: "10px"}}>
+            <FlexRow style={{gap: "10px"}}>
+                <Sprite src="../../../img/shape/Tear.svg" style={{width: "25px", aspectRatio: "1/1", objectFit: "contain"}}/>
+                <Typography content={caption} style={{fontSize: "2em"}}/>
+            </FlexRow>
+            <FlexRow><Typography content={content} style={{fontSize: "1em"}}/></FlexRow>
+        </FlexCol>
     </>;
 }
