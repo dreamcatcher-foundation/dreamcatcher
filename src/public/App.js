@@ -50281,206 +50281,178 @@ function MockPrototypeVaultInterface(_address) {
 var import_react32 = __toESM(require_react(), 1);
 var import_react33 = __toESM(require_react(), 1);
 function ExplorePage() {
-  let [pageBackgroundColor, setPageBackgroundColor] = import_react33.useState(OBSIDIAN.toString());
-  let [address0, setAddress0] = import_react33.useState("");
-  let [address1, setAddress1] = import_react33.useState("");
-  let [address22, setAddress2] = import_react33.useState("");
   return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
     children: jsx_dev_runtime19.jsxDEV(FlexCol, {
-      style: {
-        width: "100vw",
-        height: "100vh",
-        overflowX: "hidden",
-        overflowY: "hidden",
-        pointerEvents: "none",
-        background: pageBackgroundColor,
-        justifyItems: "space-between"
-      },
-      children: [
-        jsx_dev_runtime19.jsxDEV(FlexCol, {
-          style: {
-            width: "100%",
-            height: "100%",
-            position: "absolute"
-          },
-          children: jsx_dev_runtime19.jsxDEV(Blurdot, {
-            color0: PINK.toString(),
-            color1: pageBackgroundColor,
-            style: {
-              width: "500px",
-              aspectRatio: "1/1",
-              position: "absolute",
-              right: "200px",
-              bottom: "100px"
-            }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime19.jsxDEV(FlexCol, {
-          style: {
-            width: "100%",
-            height: "100%",
-            justifyContent: "space-between",
-            position: "absolute"
-          },
-          children: [
-            jsx_dev_runtime19.jsxDEV(Nav, {}, undefined, false, undefined, this),
-            jsx_dev_runtime19.jsxDEV(FlexCol, {
-              style: {
-                width: "1024px",
-                height: "100%",
-                gap: "5%"
-              },
-              children: [
-                jsx_dev_runtime19.jsxDEV(Typography, {
-                  content: "<",
-                  style: {
-                    fontSize: "2em"
-                  }
-                }, undefined, false, undefined, this),
-                jsx_dev_runtime19.jsxDEV(Typography, {
-                  content: ">",
-                  style: {
-                    fontSize: "2em"
-                  }
-                }, undefined, false, undefined, this),
-                jsx_dev_runtime19.jsxDEV(FlexRow, {
-                  style: {
-                    width: "100%",
-                    height: "auto",
-                    gap: "5%"
-                  },
+      style: { width: "100vw", height: "100vh", overflow: "hidden", pointerEvents: "none", background: OBSIDIAN.toString() },
+      children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+        style: { width: "1024px", height: "100%", justifyContent: "start" },
+        children: [
+          jsx_dev_runtime19.jsxDEV(Nav, {}, undefined, false, undefined, this),
+          jsx_dev_runtime19.jsxDEV(FlexRow, {
+            style: { width: "100%", justifyContent: "start", gap: "20px" },
+            children: [
+              jsx_dev_runtime19.jsxDEV(FlexCol, {
+                style: { height: "100%", justifyContent: "start" },
+                children: jsx_dev_runtime19.jsxDEV(SearchBar, {}, undefined, false, undefined, this)
+              }, undefined, false, undefined, this),
+              jsx_dev_runtime19.jsxDEV(FlexCol, {
+                style: { height: "100%", justifyContent: "start" },
+                children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+                  style: { width: "500px", height: "auto", background: SOFT_OBSIDIAN.toString(), borderWidth: "1px", borderStyle: "solid", borderColor: GHOST_IRON.toString() },
                   children: [
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address0
+                    jsx_dev_runtime19.jsxDEV(Typography, {
+                      content: "Blue Palm Capital",
+                      style: { fontSize: "2em" }
                     }, undefined, false, undefined, this),
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address1
-                    }, undefined, false, undefined, this),
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address22
-                    }, undefined, false, undefined, this)
-                  ]
-                }, undefined, true, undefined, this),
-                jsx_dev_runtime19.jsxDEV(FlexRow, {
-                  style: {
-                    width: "100%",
-                    height: "auto",
-                    gap: "5%"
-                  },
-                  children: [
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address0
-                    }, undefined, false, undefined, this),
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address1
-                    }, undefined, false, undefined, this),
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address22
-                    }, undefined, false, undefined, this)
-                  ]
-                }, undefined, true, undefined, this),
-                jsx_dev_runtime19.jsxDEV(FlexRow, {
-                  style: {
-                    width: "100%",
-                    height: "auto",
-                    gap: "5%"
-                  },
-                  children: [
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address0
-                    }, undefined, false, undefined, this),
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address1
-                    }, undefined, false, undefined, this),
-                    jsx_dev_runtime19.jsxDEV(ExplorePageCard, {
-                      address: address22
+                    jsx_dev_runtime19.jsxDEV(Typography, {
+                      content: "BPC",
+                      style: { fontSize: "1em" }
                     }, undefined, false, undefined, this)
                   ]
                 }, undefined, true, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          jsx_dev_runtime19.jsxDEV(Card, {
+            address: "0x0000000000000000000000000000000000000000"
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime19.jsxDEV(Card, {
+            address: "0x0000000000000000000000000000000000000000"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function SearchBar() {
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+      style: { width: "500px", height: "auto", gap: "10px" },
+      children: [
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          style: { width: "100%", height: "100%", background: DARK_OBSIDIAN.toString(), padding: "10px", gap: "10px", borderWidth: "1px", borderStyle: "solid", borderColor: GHOST_IRON.toString() },
+          children: jsx_dev_runtime19.jsxDEV("input", {
+            type: "text",
+            placeholder: "0x0000000000000000000000000000000000000000",
+            style: { width: "100%", height: "100%", color: TITANIUM.toString(), background: "transparent", pointerEvents: "auto", cursor: "text", borderWidth: "0px", borderColor: "transparent", fontSize: "1em", fontWeight: "bold", fontFamily: "satoshiRegular", outline: "none" }
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          style: { width: "100%", justifyContent: "start" },
+          children: jsx_dev_runtime19.jsxDEV(Typography, {
+            content: "Lookup any address.",
+            style: { fontSize: "0.5em" }
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function Card({ address: address18 }) {
+  let [name, setName] = import_react33.useState("BIG CAPITAL");
+  let [symbol, setSymbol] = import_react33.useState("BC");
+  let [totalAssets, setTotalAssets] = import_react33.useState(2056);
+  let [totalSupply, setTotalSupply] = import_react33.useState(2034283);
+  let [quote, setQuote] = import_react33.useState(7.293);
+  let [mounted, setMounted] = import_react33.useState(jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this));
+  import_react32.useEffect(function() {
+    (async function() {
+      setMounted(jsx_dev_runtime19.jsxDEV(CardLoaderSlide, {}, undefined, false, undefined, this));
+      try {
+        let contract4 = MockPrototypeVaultInterface(address18);
+        setName(await contract4.name());
+        setSymbol(await contract4.symbol());
+        setTotalAssets(await contract4.totalAssets()[1]);
+        setTotalSupply(await contract4.totalSupply());
+        setQuote(await contract4.quote()[1]);
+      } catch (e) {
+        setName("****");
+        setSymbol("****");
+        setTotalAssets(0);
+        setTotalSupply(0);
+        setQuote(0);
+      } finally {
+        return setMounted(jsx_dev_runtime19.jsxDEV(CardIdleSlide, {
+          address: address18,
+          name,
+          symbol,
+          totalAssets,
+          totalSupply,
+          quote
+        }, undefined, false, undefined, this));
+      }
+    })();
+  }, [address18]);
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+      style: { width: "300px", height: "auto", padding: "10px" },
+      children: mounted
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function CardIdleSlide({ address: address18, name, symbol, totalAssets, totalSupply, quote }) {
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+      style: { width: "100%", height: "100%", gap: "10px" },
+      children: [
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          style: { width: "100%", gap: "10px", justifyContent: "start" },
+          children: [
+            jsx_dev_runtime19.jsxDEV(Typography, {
+              content: name
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime19.jsxDEV(Typography, {
+              content: symbol,
+              style: { fontSize: "0.75em" }
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          style: { width: "100%", justifyContent: "start" },
+          children: [
+            jsx_dev_runtime19.jsxDEV(Tag, {
+              src: "../../../img/shape/Composition.svg",
+              content: `\$${totalAssets.toLocaleString()}`
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime19.jsxDEV(Tag, {
+              src: "../../../img/shape/TwoSquares.svg",
+              content: `${totalSupply.toLocaleString()} shares`
+            }, undefined, false, undefined, this)
           ]
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
-function ExplorePageCard({ address: address18 }) {
-  let [name, setName] = import_react33.useState("****");
-  let [symbol, setSymbol] = import_react33.useState("****");
-  let [totalAssets, setTotalAssets] = import_react33.useState(0);
-  let [totalSupply, setTotalSupply] = import_react33.useState(0);
-  let [quote, setQuote] = import_react33.useState(0);
-  let [mounted, setMounted] = import_react33.useState(jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this));
-  let [_, setExplorePageCard] = useMachine(import_react32.useMemo(() => createMachine({
-    initial: "loading",
-    states: {
-      loading: {
-        entry: () => {
-          (async () => {
-            setMounted(jsx_dev_runtime19.jsxDEV(ExplorePageCardLoadingSlide, {}, undefined, false, undefined, this));
-            try {
-              let contract4 = MockPrototypeVaultInterface(address18);
-              setName(await contract4.name());
-              setSymbol(await contract4.symbol());
-              setTotalAssets(await contract4.totalAssets()[1]);
-              setTotalSupply(await contract4.totalSupply());
-              setQuote(await contract4.quote()[1]);
-              setExplorePageCard({ type: "success" });
-              return;
-            } catch (e) {
-            }
-          })();
-        },
-        on: {
-          success: "idle",
-          failure: "loadingFailed"
-        }
-      },
-      loadingFailed: {
-        entry: () => setTimeout(() => setExplorePageCard({ type: "done" }), 3000),
-        on: {
-          done: "loading"
-        }
-      },
-      idle: {
-        entry: () => {
-        }
-      }
-    }
-  }), [address18, setName, setSymbol, setTotalAssets, setTotalSupply, setQuote, setMounted]));
+function CardLoaderSlide() {
   return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
     children: jsx_dev_runtime19.jsxDEV(FlexCol, {
-      style: {
-        width: "300px",
-        aspectRatio: "2/1",
-        background: SOFT_OBSIDIAN.toString(),
-        borderWidth: "1px",
-        borderStyle: "solid",
-        borderColor: GHOST_IRON.toString()
-      },
-      children: mounted
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function ExplorePageCardLoadingSlide() {
-  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-    children: jsx_dev_runtime19.jsxDEV(FlexRow, {
-      style: {
-        width: "100%",
-        height: "100%"
-      },
+      style: { width: "100%", height: "100%" },
       children: jsx_dev_runtime19.jsxDEV(Sprite, {
         src: "../../../img/animation/loader/Infinity.svg",
-        style: {
-          width: "50%",
-          aspectRatio: "1/1"
-        }
+        style: { width: "50px", aspectRatio: "1/1" }
       }, undefined, false, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
+function Tag({ src, content }) {
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(FlexRow, {
+      style: { padding: "10px", gap: "5px" },
+      children: [
+        jsx_dev_runtime19.jsxDEV(Sprite, {
+          src,
+          style: { width: "10px", aspectRatio: "1/1" }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime19.jsxDEV(Typography, {
+          content,
+          style: { fontSize: "0.75em" }
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
 
 // src/public/component/module/client/interface/Erc20Interface.tsx
 function Erc20Interface(_address) {
@@ -50593,15 +50565,15 @@ function TokenomicsPage() {
             jsx_dev_runtime20.jsxDEV(FlexRow, {
               style: { gap: "5px" },
               children: [
-                jsx_dev_runtime20.jsxDEV(Tag, {
+                jsx_dev_runtime20.jsxDEV(Tag2, {
                   src: "../../../img/shape/Flame.svg",
                   content: "0.0004"
                 }, undefined, false, undefined, this),
-                jsx_dev_runtime20.jsxDEV(Tag, {
+                jsx_dev_runtime20.jsxDEV(Tag2, {
                   src: "../../../img/shape/TwoSquares.svg",
                   content: "2595"
                 }, undefined, false, undefined, this),
-                jsx_dev_runtime20.jsxDEV(Tag, {
+                jsx_dev_runtime20.jsxDEV(Tag2, {
                   src: "../../../img/shape/Composition.svg",
                   content: "2,394,499"
                 }, undefined, false, undefined, this)
@@ -50618,7 +50590,7 @@ function TokenomicsPage() {
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
-function Tag({ src, content }) {
+function Tag2({ src, content }) {
   return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
     children: jsx_dev_runtime20.jsxDEV(FlexRow, {
       style: {
