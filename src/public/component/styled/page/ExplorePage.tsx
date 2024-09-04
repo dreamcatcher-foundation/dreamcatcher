@@ -1,11 +1,13 @@
 import type {ReactNode} from "react";
 import {MockPrototypeVaultInterface} from "@component/MockPrototypeVaultInterface";
+import {MockPrototypeVaultNodeInterface} from "@component/MockPrototypeVaultNodeInterface";
 import {FlexRow} from "@component/FlexRow";
 import {FlexCol} from "@component/FlexCol";
 import {Nav} from "@component/Nav";
 import {Blurdot} from "@component/Blurdot";
 import {Sprite} from "@component/Sprite";
 import {Typography} from "@component/Typography";
+import {DualLabelButton} from "@component/DualLabelButton";
 import {createMachine as Machine} from "xstate";
 import {useSpring} from "react-spring";
 import {useMachine} from "@xstate/react";
@@ -14,46 +16,56 @@ import {useState} from "react";
 import * as ColorPalette from "@component/ColorPalette";
 
 export function ExplorePage(): ReactNode {
+    let [batch, setBatch] = useState<(string[])[]>([]);
+    let [batchCursor, setBatchCursor] = useState<number>(0);
+    useEffect(() => {
+        (async () => {
+            let stored: string[];
+            try {
+                stored = await MockPrototypeVaultNodeInterface("0x79AE495ce6832182B62e6B9340f1eF887269C38c").deployed();
+            }
+            catch {
+                stored = [];
+            }
+            if (stored.length === 0) {
+                return;
+            }
+            let batchSize: number = 6;
+            let batch: string[][] = [];
+            let chunk: string[] = [];
+            let cursor: number = 0;
+            while (stored.length > 0) {
+                let item: string = stored[cursor];
+                chunk.push(item);
+                if (chunk.length === batchSize) {
+                    batch.push(chunk);
+                    chunk = [];
+                }
+                cursor += 1;
+            }
+            setBatch(batch);
+            return;
+        })();
+        return;
+    }, []);
     return <>
         <FlexCol style={{width: "100vw", height: "100vh", overflow: "hidden", pointerEvents: "none", background: ColorPalette.OBSIDIAN.toString()}}>
             <FlexCol style={{width: "1024px", height: "100%", justifyContent: "start"}}>
                 <Nav/>
-                <FlexRow style={{width: "100%", justifyContent: "start", gap: "20px"}}>
-                    <FlexCol style={{height: "100%", justifyContent: "start"}}><SearchBar/></FlexCol>
-                    <FlexCol style={{height: "100%", justifyContent: "start"}}>
-                        <FlexCol style={{width: "500px", height: "auto", background: ColorPalette.SOFT_OBSIDIAN.toString(), borderWidth: "1px", borderStyle: "solid", borderColor: ColorPalette.GHOST_IRON.toString()}}>
-                            <Typography content="Blue Palm Capital" style={{fontSize: "2em"}}/>
-                            <Typography content="BPC" style={{fontSize: "1em"}}/>
-                        </FlexCol>
-                    </FlexCol>
+                <FlexRow>
+                    
                 </FlexRow>
-
-                <Card address={"0x0000000000000000000000000000000000000000"}/>
-                <Card address={"0x0000000000000000000000000000000000000000"}/>
             </FlexCol>
         </FlexCol>
     </>;
 }
 
-
-export function SearchBar(): ReactNode {
-    return <>
-        <FlexCol style={{width: "500px", height: "auto", gap: "10px"}}>
-            <FlexRow style={{width: "100%", height: "100%", background: ColorPalette.DARK_OBSIDIAN.toString(), padding: "10px", gap: "10px", borderWidth: "1px", borderStyle: "solid", borderColor: ColorPalette.GHOST_IRON.toString()}}>
-                <input type="text" placeholder="0x0000000000000000000000000000000000000000" style={{width: "100%", height: "100%", color: ColorPalette.TITANIUM.toString(), background: "transparent", pointerEvents: "auto", cursor: "text", borderWidth: "0px", borderColor: "transparent", fontSize: "1em", fontWeight: "bold", fontFamily: "satoshiRegular", outline: "none"}}/>
-            </FlexRow>
-            <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Lookup any address." style={{fontSize: "0.5em"}}/></FlexRow>
-        </FlexCol>
-    </>;
-}
-
-
 export function Card({address}: {address: string;}): ReactNode {
-    let [name, setName] = useState<string>("BIG CAPITAL");
-    let [symbol, setSymbol] = useState<string>("BC");
-    let [totalAssets, setTotalAssets] = useState<number>(2056);
-    let [totalSupply, setTotalSupply] = useState<number>(2034283);
-    let [quote, setQuote] = useState<number>(7.293);
+    let [name, setName] = useState<string>("****");
+    let [symbol, setSymbol] = useState<string>("****");
+    let [totalAssets, setTotalAssets] = useState<number>(0);
+    let [totalSupply, setTotalSupply] = useState<number>(0);
+    let [quote, setQuote] = useState<number>(0);
     let [mounted, setMounted] = useState<ReactNode>(<></>);
     useEffect(function() {
         (async function() {
@@ -74,59 +86,59 @@ export function Card({address}: {address: string;}): ReactNode {
                 setQuote(0);
             }
             finally {
-                return setMounted(<CardIdleSlide address={address} name={name} symbol={symbol} totalAssets={totalAssets} totalSupply={totalSupply} quote={quote}/>);
+                setMounted(<CardLoadedSlide address={address} name={name} symbol={symbol} totalAssets={totalAssets} totalSupply={totalSupply} quote={quote}/>);
+                return;
             }
         })();
+        return;
     }, [address]);
+    return <><FlexCol style={{padding: "10px", borderRadius: "10px", background: ColorPalette.SOFT_OBSIDIAN.toString()}}>{mounted}</FlexCol></>;
+}
+
+export function CardLoadedSlide({address, name, symbol, totalAssets, totalSupply, quote}: {address: string; name: string; symbol: string; totalAssets: number; totalSupply: number; quote: number;}): ReactNode {
+    let [amount, setAmount] = useState<number>(0);
     return <>
-        <FlexCol style={{width: "300px", height: "auto", padding: "10px"}}>
-            {mounted}
+        <FlexCol style={{width: "100%", height: "100%", gap: "10px", overflow: "hidden"}}>
+            <FlexRow style={{width: "100%", gap: "10px", justifyContent: "start"}}>
+                <Typography content={name}/>
+                <Typography content={symbol}/>
+            </FlexRow>
+            <FlexRow><Typography content={address} style={{fontSize: "0.5em"}}/></FlexRow>
+            <CardData tag="total-assets" content={totalAssets.toFixed(2)}/>
+            <CardData tag="total-supply" content={totalSupply.toFixed(2)}/>
+            <CardData tag="quote" content={quote.toFixed(2)}/>
+            <FlexRow style={{width: "100%", gap: "10px"}}>
+                <Button label0="Mint" label1="⟡" onClick={() => MockPrototypeVaultInterface(address).mint(amount)}/>
+                <Button label0="Burn" label1="☀︎" onClick={() => MockPrototypeVaultInterface(address).burn(amount)}/>
+            </FlexRow>
+            <FlexRow><input type="number" placeholder={`USDC (Buy) or ${symbol} (Sell)`} onChange={e => setAmount(Number(e.target.value))} style={{width: "100%", all: "unset", pointerEvents: "auto", cursor: "text", color: ColorPalette.TITANIUM.toString(), fontFamily: "satoshiRegular"}}/></FlexRow>
         </FlexCol>
     </>;
 }
 
-export function CardIdleSlide({address, name, symbol, totalAssets, totalSupply, quote}: {address: string; name: string; symbol: string; totalAssets: number; totalSupply: number; quote: number;}): ReactNode {
+export function CardData({tag, content}: {tag: string; content: string}): ReactNode {
     return <>
-        <FlexCol style={{width: "100%", height: "100%", gap: "10px"}}>
-            <FlexRow style={{width: "100%", gap: "10px", justifyContent: "start"}}>
-                <Typography content={name}/>
-                <Typography content={symbol} style={{fontSize: "0.75em"}}/>
+        <GhostIronBorder width="100%">
+            <FlexRow style={{width: "100%"}}>
+                <FlexRow style={{width: "100%"}}><FlexRow style={{width: "100%", padding: "10%", justifyContent: "start"}}><Typography content={tag}/></FlexRow></FlexRow>
+                <FlexRow style={{width: "100%"}}><FlexRow style={{width: "100%", padding: "10%", justifyContent: "start"}}><Typography content={content}/></FlexRow></FlexRow>
             </FlexRow>
-            <FlexRow style={{width: "100%", justifyContent: "start"}}>
-                <Tag src="../../../img/shape/Composition.svg" content={`$${totalAssets.toLocaleString()}`}/>
-                <Tag src="../../../img/shape/TwoSquares.svg" content={`${totalSupply.toLocaleString()} shares`}/>
-            </FlexRow>
-        </FlexCol>
+        </GhostIronBorder>
     </>;
 }
 
 export function CardLoaderSlide(): ReactNode {
-    return <>
-        <FlexCol style={{width: "100%", height: "100%"}}>
-            <Sprite src="../../../img/animation/loader/Infinity.svg" style={{width: "50px", aspectRatio: "1/1"}}/>
-        </FlexCol>
-    </>;
+    return <><FlexCol style={{width: "100%", height: "100%"}}><Sprite src="../../../img/animation/loader/Infinity.svg" style={{width: "50px", aspectRatio: "1/1"}}/></FlexCol></>;
 }
 
-export function SoftObsidianContainer({width, height, children}: {width: string; height: string; children?: ReactNode}): ReactNode {
-    return <>
-        <FlexRow style={{width, height, background: ColorPalette.SOFT_OBSIDIAN.toString(), gap: "5px", padding: "10px", borderColor: ColorPalette.GHOST_IRON.toString(), borderWidth: "1px", borderStyle: "solid", borderRadius: "10px"}}>
-            {children}
-        </FlexRow>
-    </>;
+export function Button({label0, label1, onClick}: {label0: string; label1: string; onClick: Function;}): ReactNode {
+    return <><DualLabelButton label0={label0} label1={label1} size={100} color={ColorPalette.GHOST_IRON.toString()} onClick={onClick}/></>;
 }
 
-export function Tag({src, content}: {src: string; content: string;}): ReactNode {
-    return <>
-        <FlexRow style={{padding: "10px", gap: "5px"}}>
-            <Sprite src={src} style={{width: "10px", aspectRatio: "1/1"}}/>
-            <Typography content={content} style={{fontSize: "0.75em"}}/>
-        </FlexRow>
-    </>;
+export function GhostIronBorder({width, height, children}: {width?: string; height?: string; children?: ReactNode;}): ReactNode {
+    return <><FlexCol style={{width, height, borderColor: ColorPalette.GHOST_IRON.toString(), borderWidth: "1px", borderStyle: "solid"}}>{children}</FlexCol></>;
 }
 
-export function Button(): ReactNode {
-    return <>
-        
-    </>;
+export function SoftObsidianContainer({width, height, children}:{width?: string; height?: string; children?: ReactNode;}): ReactNode {
+    return <><FlexCol style={{width, height, background: ColorPalette.SOFT_OBSIDIAN.toString()}}>{children}</FlexCol></>;
 }

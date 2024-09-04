@@ -50183,104 +50183,75 @@ function TearDropBulletPoint({ caption, content }) {
   }, undefined, false, undefined, this);
 }
 
-// src/public/component/module/client/interface/MockPrototypeVaultInterface.tsx
-function MockPrototypeVaultInterface(_address) {
-  async function name() {
+// src/public/component/module/client/interface/MockPrototypeVaultNodeInterface.tsx
+function MockPrototypeVaultNodeInterface(_address) {
+  async function deployed() {
     return await query({
       to: _address,
-      methodSignature: "function name() external view returns (string)",
-      methodName: "name"
+      methodSignature: "function deployed() external view returns (address[])",
+      methodName: "deployed"
     });
   }
-  async function symbol() {
+  async function vaultFactory() {
     return await query({
       to: _address,
-      methodSignature: "function symbol() external view returns (string)",
-      methodName: "symbol"
+      methodSignature: "function vaultFactory() external view returns (address)",
+      methodName: "vaultFactory"
     });
   }
-  async function secondsLeftToNextRebalance() {
+  async function ownableTokenFactory() {
     return await query({
       to: _address,
-      methodSignature: "function secondsLeftToNextRebalance() external view returns (uint256)",
-      methodName: "secondsLeftToNextRebalance"
+      methodSignature: "function ownableTokenFactory() external view returns (address)",
+      methodName: "ownableTokenFactory"
     });
   }
-  async function previewMint(assetsIn) {
-    return Number(await query({
-      to: _address,
-      methodSignature: "function previewMint(uint256) external view returns (uint256)",
-      methodName: "previewMint",
-      methodArgs: [BigInt(assetsIn * 1000000000000000000)]
-    })) / 1000000000000000000;
-  }
-  async function previewBurn(supplyIn) {
-    return Number(await query({
-      to: _address,
-      methodSignature: "function previewBurn(uint256) external view returns (uint256)",
-      methodName: "previewBurn",
-      methodArgs: [BigInt(supplyIn * 1000000000000000000)]
-    })) / 1000000000000000000;
-  }
-  async function quote() {
-    let x = await query({
-      to: _address,
-      methodSignature: "function quote() external view returns (uint256, uint256, uint256)",
-      methodName: "quote"
-    });
-    let real = Number(x[0]) / 1000000000000000000;
-    let best = Number(x[1]) / 1000000000000000000;
-    let slippage = Number(x[2]) / 1000000000000000000;
-    return [real, best, slippage];
-  }
-  async function totalAssets() {
-    let x = await query({
-      to: _address,
-      methodSignature: "function totalAssets() external view returns (uint256, uint256, uint256)",
-      methodName: "totaAssets"
-    });
-    let real = Number(x[0]) / 1000000000000000000;
-    let best = Number(x[1]) / 1000000000000000000;
-    let slippage = Number(x[2]) / 1000000000000000000;
-    return [real, best, slippage];
-  }
-  async function totalSupply() {
-    return Number(await query({
-      to: _address,
-      methodSignature: "function totalSupply() external view returns (uint256)",
-      methodName: "totalSupply"
-    })) / 1000000000000000000;
-  }
-  async function rebalance() {
+  async function deploy(name, symbol, assets) {
     return await call3({
       to: _address,
-      methodSignature: "function rebalance() external",
-      methodName: "rebalance"
+      methodSignature: "function deploy(string, string, [address, address, address[], address[], uint256][])",
+      methodName: "deploy",
+      methodArgs: [name, symbol, assets]
     });
   }
-  async function mint(assetsIn) {
-    return await call3({
-      to: _address,
-      methodSignature: "function mint(uint256) external",
-      methodName: "mint",
-      methodArgs: [BigInt(assetsIn * 1000000000000000000)]
-    });
-  }
-  async function burn(supplyIn) {
-    return await call3({
-      to: _address,
-      methodSignature: "function burn(uint256) external",
-      methodName: "burn",
-      methodArgs: [BigInt(supplyIn * 1000000000000000000)]
-    });
-  }
-  return { name, symbol, secondsLeftToNextRebalance, previewMint, previewBurn, quote, totalAssets, totalSupply, rebalance, mint, burn };
+  return { deployed, vaultFactory, deploy };
 }
 
 // src/public/component/styled/page/ExplorePage.tsx
 var import_react32 = __toESM(require_react(), 1);
 var import_react33 = __toESM(require_react(), 1);
 function ExplorePage() {
+  let [batch, setBatch] = import_react33.useState([]);
+  let [batchCursor, setBatchCursor] = import_react33.useState(0);
+  import_react32.useEffect(() => {
+    (async () => {
+      let stored;
+      try {
+        stored = await MockPrototypeVaultNodeInterface("0x79AE495ce6832182B62e6B9340f1eF887269C38c").deployed();
+      } catch {
+        stored = [];
+      }
+      if (stored.length === 0) {
+        return;
+      }
+      let batchSize = 6;
+      let batch2 = [];
+      let chunk = [];
+      let cursor = 0;
+      while (stored.length > 0) {
+        let item = stored[cursor];
+        chunk.push(item);
+        if (chunk.length === batchSize) {
+          batch2.push(chunk);
+          chunk = [];
+        }
+        cursor += 1;
+      }
+      setBatch(batch2);
+      return;
+    })();
+    return;
+  }, []);
   return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
     children: jsx_dev_runtime19.jsxDEV(FlexCol, {
       style: { width: "100vw", height: "100vh", overflow: "hidden", pointerEvents: "none", background: OBSIDIAN.toString() },
@@ -50288,168 +50259,10 @@ function ExplorePage() {
         style: { width: "1024px", height: "100%", justifyContent: "start" },
         children: [
           jsx_dev_runtime19.jsxDEV(Nav, {}, undefined, false, undefined, this),
-          jsx_dev_runtime19.jsxDEV(FlexRow, {
-            style: { width: "100%", justifyContent: "start", gap: "20px" },
-            children: [
-              jsx_dev_runtime19.jsxDEV(FlexCol, {
-                style: { height: "100%", justifyContent: "start" },
-                children: jsx_dev_runtime19.jsxDEV(SearchBar, {}, undefined, false, undefined, this)
-              }, undefined, false, undefined, this),
-              jsx_dev_runtime19.jsxDEV(FlexCol, {
-                style: { height: "100%", justifyContent: "start" },
-                children: jsx_dev_runtime19.jsxDEV(FlexCol, {
-                  style: { width: "500px", height: "auto", background: SOFT_OBSIDIAN.toString(), borderWidth: "1px", borderStyle: "solid", borderColor: GHOST_IRON.toString() },
-                  children: [
-                    jsx_dev_runtime19.jsxDEV(Typography, {
-                      content: "Blue Palm Capital",
-                      style: { fontSize: "2em" }
-                    }, undefined, false, undefined, this),
-                    jsx_dev_runtime19.jsxDEV(Typography, {
-                      content: "BPC",
-                      style: { fontSize: "1em" }
-                    }, undefined, false, undefined, this)
-                  ]
-                }, undefined, true, undefined, this)
-              }, undefined, false, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
-          jsx_dev_runtime19.jsxDEV(Card, {
-            address: "0x0000000000000000000000000000000000000000"
-          }, undefined, false, undefined, this),
-          jsx_dev_runtime19.jsxDEV(Card, {
-            address: "0x0000000000000000000000000000000000000000"
-          }, undefined, false, undefined, this)
+          jsx_dev_runtime19.jsxDEV(FlexRow, {}, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
     }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function SearchBar() {
-  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
-      style: { width: "500px", height: "auto", gap: "10px" },
-      children: [
-        jsx_dev_runtime19.jsxDEV(FlexRow, {
-          style: { width: "100%", height: "100%", background: DARK_OBSIDIAN.toString(), padding: "10px", gap: "10px", borderWidth: "1px", borderStyle: "solid", borderColor: GHOST_IRON.toString() },
-          children: jsx_dev_runtime19.jsxDEV("input", {
-            type: "text",
-            placeholder: "0x0000000000000000000000000000000000000000",
-            style: { width: "100%", height: "100%", color: TITANIUM.toString(), background: "transparent", pointerEvents: "auto", cursor: "text", borderWidth: "0px", borderColor: "transparent", fontSize: "1em", fontWeight: "bold", fontFamily: "satoshiRegular", outline: "none" }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime19.jsxDEV(FlexRow, {
-          style: { width: "100%", justifyContent: "start" },
-          children: jsx_dev_runtime19.jsxDEV(Typography, {
-            content: "Lookup any address.",
-            style: { fontSize: "0.5em" }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function Card({ address: address18 }) {
-  let [name, setName] = import_react33.useState("BIG CAPITAL");
-  let [symbol, setSymbol] = import_react33.useState("BC");
-  let [totalAssets, setTotalAssets] = import_react33.useState(2056);
-  let [totalSupply, setTotalSupply] = import_react33.useState(2034283);
-  let [quote, setQuote] = import_react33.useState(7.293);
-  let [mounted, setMounted] = import_react33.useState(jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this));
-  import_react32.useEffect(function() {
-    (async function() {
-      setMounted(jsx_dev_runtime19.jsxDEV(CardLoaderSlide, {}, undefined, false, undefined, this));
-      try {
-        let contract4 = MockPrototypeVaultInterface(address18);
-        setName(await contract4.name());
-        setSymbol(await contract4.symbol());
-        setTotalAssets(await contract4.totalAssets()[1]);
-        setTotalSupply(await contract4.totalSupply());
-        setQuote(await contract4.quote()[1]);
-      } catch (e) {
-        setName("****");
-        setSymbol("****");
-        setTotalAssets(0);
-        setTotalSupply(0);
-        setQuote(0);
-      } finally {
-        return setMounted(jsx_dev_runtime19.jsxDEV(CardIdleSlide, {
-          address: address18,
-          name,
-          symbol,
-          totalAssets,
-          totalSupply,
-          quote
-        }, undefined, false, undefined, this));
-      }
-    })();
-  }, [address18]);
-  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
-      style: { width: "300px", height: "auto", padding: "10px" },
-      children: mounted
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function CardIdleSlide({ address: address18, name, symbol, totalAssets, totalSupply, quote }) {
-  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
-      style: { width: "100%", height: "100%", gap: "10px" },
-      children: [
-        jsx_dev_runtime19.jsxDEV(FlexRow, {
-          style: { width: "100%", gap: "10px", justifyContent: "start" },
-          children: [
-            jsx_dev_runtime19.jsxDEV(Typography, {
-              content: name
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime19.jsxDEV(Typography, {
-              content: symbol,
-              style: { fontSize: "0.75em" }
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
-        jsx_dev_runtime19.jsxDEV(FlexRow, {
-          style: { width: "100%", justifyContent: "start" },
-          children: [
-            jsx_dev_runtime19.jsxDEV(Tag, {
-              src: "../../../img/shape/Composition.svg",
-              content: `\$${totalAssets.toLocaleString()}`
-            }, undefined, false, undefined, this),
-            jsx_dev_runtime19.jsxDEV(Tag, {
-              src: "../../../img/shape/TwoSquares.svg",
-              content: `${totalSupply.toLocaleString()} shares`
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function CardLoaderSlide() {
-  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
-      style: { width: "100%", height: "100%" },
-      children: jsx_dev_runtime19.jsxDEV(Sprite, {
-        src: "../../../img/animation/loader/Infinity.svg",
-        style: { width: "50px", aspectRatio: "1/1" }
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this)
-  }, undefined, false, undefined, this);
-}
-function Tag({ src, content }) {
-  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
-    children: jsx_dev_runtime19.jsxDEV(FlexRow, {
-      style: { padding: "10px", gap: "5px" },
-      children: [
-        jsx_dev_runtime19.jsxDEV(Sprite, {
-          src,
-          style: { width: "10px", aspectRatio: "1/1" }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime19.jsxDEV(Typography, {
-          content,
-          style: { fontSize: "0.75em" }
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
 var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
@@ -50565,15 +50378,15 @@ function TokenomicsPage() {
             jsx_dev_runtime20.jsxDEV(FlexRow, {
               style: { gap: "5px" },
               children: [
-                jsx_dev_runtime20.jsxDEV(Tag2, {
+                jsx_dev_runtime20.jsxDEV(Tag, {
                   src: "../../../img/shape/Flame.svg",
                   content: "0.0004"
                 }, undefined, false, undefined, this),
-                jsx_dev_runtime20.jsxDEV(Tag2, {
+                jsx_dev_runtime20.jsxDEV(Tag, {
                   src: "../../../img/shape/TwoSquares.svg",
                   content: "2595"
                 }, undefined, false, undefined, this),
-                jsx_dev_runtime20.jsxDEV(Tag2, {
+                jsx_dev_runtime20.jsxDEV(Tag, {
                   src: "../../../img/shape/Composition.svg",
                   content: "2,394,499"
                 }, undefined, false, undefined, this)
@@ -50590,7 +50403,7 @@ function TokenomicsPage() {
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
-function Tag2({ src, content }) {
+function Tag({ src, content }) {
   return jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
     children: jsx_dev_runtime20.jsxDEV(FlexRow, {
       style: {
@@ -50624,10 +50437,83 @@ var dream = Erc20Interface("0x52463952A864107B63Eb6b21f5234A0B0e99b3f1");
 FlexCol, OBSIDIAN.toString(), FlexCol, Nav, FlexRow, Typography, Typography, Typography, Sprite, FlexRow, Typography;
 
 // src/public/component/styled/page/GetStarted.tsx
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react36 = __toESM(require_react(), 1);
+var import_react37 = __toESM(require_react(), 1);
 function GetStarted() {
-  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {}, undefined, false, undefined, this);
+  let [nameInput, setNameInput] = import_react36.useState("");
+  let [symbolInput, setSymbolInput] = import_react36.useState("");
+  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+    children: jsx_dev_runtime21.jsxDEV(VerticalFlexPage, {
+      children: jsx_dev_runtime21.jsxDEV(FlexSlide, {
+        children: [
+          jsx_dev_runtime21.jsxDEV(FlexSlideLayer, {
+            style: { background: OBSIDIAN.toString() },
+            children: jsx_dev_runtime21.jsxDEV(FlexRow, {
+              style: { width: "1024px", height: "100%", position: "relative" },
+              children: [
+                jsx_dev_runtime21.jsxDEV(Blurdot, {
+                  color0: DEEP_PURPLE.toString(),
+                  color1: OBSIDIAN.toString(),
+                  style: { width: "1000px", aspectRatio: "1/1", position: "absolute", right: "300px", bottom: "20px" }
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime21.jsxDEV(Blurdot, {
+                  color0: RED.toString(),
+                  color1: OBSIDIAN.toString(),
+                  style: { width: "1000px", aspectRatio: "1/1", position: "absolute", left: "300px", top: "20px" }
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this)
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime21.jsxDEV(FlexSlideLayer, {
+            style: { justifyContent: "start" },
+            children: [
+              jsx_dev_runtime21.jsxDEV(Nav, {}, undefined, false, undefined, this),
+              jsx_dev_runtime21.jsxDEV(PathForm, {}, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
 }
+function PathForm({ children }) {
+  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+    children: jsx_dev_runtime21.jsxDEV(FlexCol, {
+      style: { width: "200px", height: "800px", gap: "5px" },
+      children: [
+        jsx_dev_runtime21.jsxDEV(Typography, {
+          content: "Token to Currency Path",
+          style: { fontSize: "0.75em" }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime21.jsxDEV(PathFormDivider, {}, undefined, false, undefined, this),
+        children,
+        jsx_dev_runtime21.jsxDEV(FlexCol, {
+          style: { width: "100%", gap: "10px", pointerEvents: "auto", cursor: "pointer" },
+          children: jsx_dev_runtime21.jsxDEV(PathFormButton, {}, undefined, false, undefined, this)
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function PathFormDivider() {
+  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+    children: jsx_dev_runtime21.jsxDEV(FlexRow, {
+      style: { width: "100%", height: "1px", background: `linear-gradient(to right, transparent, ${TITANIUM.toString()}, transparent)` }
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function PathFormButton() {
+  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+    children: jsx_dev_runtime21.jsxDEV(FlexRow, {
+      style: { paddingLeft: "2.5px", paddingRight: "2.5px", background: TITANIUM.toString(), justifyContent: "start" },
+      children: jsx_dev_runtime21.jsxDEV(Typography, {
+        content: "Add Path",
+        style: { fontSize: "0.75em", color: OBSIDIAN.toString() }
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 
 // src/public/component/Render.tsx
 var client = __toESM(require_client(), 1);
