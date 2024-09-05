@@ -50436,27 +50436,79 @@ function Tag({ src, content }) {
 var dream = Erc20Interface("0x52463952A864107B63Eb6b21f5234A0B0e99b3f1");
 FlexCol, OBSIDIAN.toString(), FlexCol, Nav, FlexRow, Typography, Typography, Typography, Sprite, FlexRow, Typography;
 
+// src/public/component/retro-minima/RetroMinimaButton.tsx
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+function RetroMinimaButton({
+  caption,
+  style,
+  ...more
+}) {
+  let [padding2, setPadding] = useSpring(() => ({ padding: "2px", config: config.stiff }));
+  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+    children: jsx_dev_runtime21.jsxDEV(FlexRow, {
+      style: {
+        width: "100px",
+        aspectRatio: "4/1",
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: TITANIUM.toString(),
+        ...padding2,
+        ...style
+      },
+      ...more,
+      children: jsx_dev_runtime21.jsxDEV(FlexRow, {
+        onMouseEnter: () => {
+          setPadding.start({ padding: "0px" });
+          return;
+        },
+        onMouseLeave: () => {
+          setPadding.start({ padding: "2px" });
+          return;
+        },
+        style: {
+          width: "100%",
+          height: "100%",
+          borderWidth: "1px",
+          borderStyle: "solid",
+          borderColor: TITANIUM.toString(),
+          background: TITANIUM.toString()
+        },
+        ...more,
+        children: jsx_dev_runtime21.jsxDEV(Typography, {
+          content: caption,
+          style: {
+            fontWeight: "bold",
+            fontFamily: "monospace",
+            fontSize: "0.75em",
+            color: OBSIDIAN.toString()
+          }
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
 // src/public/component/styled/page/GetStarted.tsx
 var import_react36 = __toESM(require_react(), 1);
 var import_react37 = __toESM(require_react(), 1);
 function GetStarted() {
   let [nameInput, setNameInput] = import_react36.useState("");
   let [symbolInput, setSymbolInput] = import_react36.useState("");
-  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
-    children: jsx_dev_runtime21.jsxDEV(VerticalFlexPage, {
-      children: jsx_dev_runtime21.jsxDEV(FlexSlide, {
+  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
+    children: jsx_dev_runtime22.jsxDEV(VerticalFlexPage, {
+      children: jsx_dev_runtime22.jsxDEV(FlexSlide, {
         children: [
-          jsx_dev_runtime21.jsxDEV(FlexSlideLayer, {
+          jsx_dev_runtime22.jsxDEV(FlexSlideLayer, {
             style: { background: OBSIDIAN.toString() },
-            children: jsx_dev_runtime21.jsxDEV(FlexRow, {
+            children: jsx_dev_runtime22.jsxDEV(FlexRow, {
               style: { width: "1024px", height: "100%", position: "relative" },
               children: [
-                jsx_dev_runtime21.jsxDEV(Blurdot, {
+                jsx_dev_runtime22.jsxDEV(Blurdot, {
                   color0: DEEP_PURPLE.toString(),
                   color1: OBSIDIAN.toString(),
                   style: { width: "1000px", aspectRatio: "1/1", position: "absolute", right: "300px", bottom: "20px" }
                 }, undefined, false, undefined, this),
-                jsx_dev_runtime21.jsxDEV(Blurdot, {
+                jsx_dev_runtime22.jsxDEV(Blurdot, {
                   color0: RED.toString(),
                   color1: OBSIDIAN.toString(),
                   style: { width: "1000px", aspectRatio: "1/1", position: "absolute", left: "300px", top: "20px" }
@@ -50464,11 +50516,35 @@ function GetStarted() {
               ]
             }, undefined, true, undefined, this)
           }, undefined, false, undefined, this),
-          jsx_dev_runtime21.jsxDEV(FlexSlideLayer, {
+          jsx_dev_runtime22.jsxDEV(FlexSlideLayer, {
             style: { justifyContent: "start" },
             children: [
-              jsx_dev_runtime21.jsxDEV(Nav, {}, undefined, false, undefined, this),
-              jsx_dev_runtime21.jsxDEV(PathForm, {}, undefined, false, undefined, this)
+              jsx_dev_runtime22.jsxDEV(Nav, {}, undefined, false, undefined, this),
+              jsx_dev_runtime22.jsxDEV(FlexCol, {
+                style: {
+                  gap: "10px"
+                },
+                children: [
+                  jsx_dev_runtime22.jsxDEV(MetadataForm, {
+                    setNameInput,
+                    setSymbolInput
+                  }, undefined, false, undefined, this),
+                  jsx_dev_runtime22.jsxDEV(AssetForm, {}, undefined, false, undefined, this),
+                  jsx_dev_runtime22.jsxDEV(FlexRow, {
+                    style: {
+                      gap: "10px"
+                    },
+                    children: [
+                      jsx_dev_runtime22.jsxDEV(RetroMinimaButton, {
+                        caption: "Confirm"
+                      }, undefined, false, undefined, this),
+                      jsx_dev_runtime22.jsxDEV(RetroMinimaButton, {
+                        caption: "Restart"
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
@@ -50476,69 +50552,146 @@ function GetStarted() {
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-function PathForm({ children }) {
-  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
-    children: jsx_dev_runtime21.jsxDEV(FlexCol, {
-      style: { width: "200px", height: "800px", gap: "5px" },
+function InputField({ caption, placeholder, set }) {
+  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
+    children: jsx_dev_runtime22.jsxDEV(FlexCol, {
+      style: {
+        gap: "10px"
+      },
       children: [
-        jsx_dev_runtime21.jsxDEV(Typography, {
-          content: "Token to Currency Path",
-          style: { fontSize: "0.75em" }
+        jsx_dev_runtime22.jsxDEV(FlexRow, {
+          style: {
+            width: "100%",
+            justifyContent: "start"
+          },
+          children: jsx_dev_runtime22.jsxDEV(Typography, {
+            content: caption,
+            style: { fontSize: "0.5em" }
+          }, undefined, false, undefined, this)
         }, undefined, false, undefined, this),
-        jsx_dev_runtime21.jsxDEV(PathFormDivider, {}, undefined, false, undefined, this),
-        children,
-        jsx_dev_runtime21.jsxDEV(FlexCol, {
-          style: { width: "100%", gap: "10px", pointerEvents: "auto", cursor: "pointer" },
-          children: jsx_dev_runtime21.jsxDEV(PathFormButton, {}, undefined, false, undefined, this)
+        jsx_dev_runtime22.jsxDEV(FlexRow, {
+          style: {
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: TITANIUM.toString(),
+            padding: "5px"
+          },
+          children: jsx_dev_runtime22.jsxDEV("input", {
+            type: "text",
+            placeholder,
+            onChange: (e) => set(e.target.value),
+            style: {
+              all: "unset",
+              width: "200px",
+              aspectRatio: "10/1",
+              fontWeight: "bold",
+              fontFamily: "satoshiRegular",
+              fontSize: "0.5em",
+              pointerEvents: "auto",
+              cursor: "text",
+              color: TITANIUM.toString(),
+              paddingLeft: "5px",
+              paddingRight: "5px"
+            }
+          }, undefined, false, undefined, this)
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
-function PathFormDivider() {
-  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
-    children: jsx_dev_runtime21.jsxDEV(FlexRow, {
-      style: { width: "100%", height: "1px", background: `linear-gradient(to right, transparent, ${TITANIUM.toString()}, transparent)` }
-    }, undefined, false, undefined, this)
+function MetadataForm({ setNameInput, setSymbolInput }) {
+  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
+    children: jsx_dev_runtime22.jsxDEV(FlexCol, {
+      style: { gap: "20px" },
+      children: [
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "What do you want to call it?",
+          placeholder: "Ocean Token",
+          set: setNameInput
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "Your ticker symbol",
+          placeholder: "$OCEAN",
+          set: setSymbolInput
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "Your ticker symbol",
+          placeholder: "$OCEAN",
+          set: setSymbolInput
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "Your ticker symbol",
+          placeholder: "$OCEAN",
+          set: setSymbolInput
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "Your ticker symbol",
+          placeholder: "$OCEAN",
+          set: setSymbolInput
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
-function PathFormButton() {
-  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
-    children: jsx_dev_runtime21.jsxDEV(FlexRow, {
-      style: { paddingLeft: "2.5px", paddingRight: "2.5px", background: TITANIUM.toString(), justifyContent: "start" },
-      children: jsx_dev_runtime21.jsxDEV(Typography, {
-        content: "Add Path",
-        style: { fontSize: "0.75em", color: OBSIDIAN.toString() }
-      }, undefined, false, undefined, this)
-    }, undefined, false, undefined, this)
+function AssetForm() {
+  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
+    children: jsx_dev_runtime22.jsxDEV(FlexCol, {
+      style: { gap: "10px" },
+      children: [
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "What is the token address?",
+          placeholder: "0x0000000000000000000000000000000000000000",
+          set: () => {
+          }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "The path to traverse to get to the currency?",
+          placeholder: "",
+          set: () => {
+          }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "The path to traverse to get to the token from the currency?",
+          placeholder: "",
+          set: () => {
+          }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(InputField, {
+          caption: "Percentage to allocate to this?",
+          placeholder: "",
+          set: () => {
+          }
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
   }, undefined, false, undefined, this);
 }
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
 
 // src/public/component/Render.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root)
-    return client.createRoot(root).render(jsx_dev_runtime22.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime23.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   return;
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime23.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime24.jsxDEV(HomePage, {}, undefined, false, undefined, this)
 }, {
   path: "/explore",
-  element: jsx_dev_runtime23.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime24.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
 }, {
   path: "/tokenomics",
-  element: jsx_dev_runtime23.jsxDEV(TokenomicsPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime24.jsxDEV(TokenomicsPage, {}, undefined, false, undefined, this)
 }, {
   path: "/get-started",
-  element: jsx_dev_runtime23.jsxDEV(GetStarted, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime24.jsxDEV(GetStarted, {}, undefined, false, undefined, this)
 }]);

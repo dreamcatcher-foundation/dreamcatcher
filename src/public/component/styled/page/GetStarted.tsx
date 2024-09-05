@@ -8,6 +8,7 @@ import {Blurdot} from "@component/Blurdot";
 import {Nav} from "@component/Nav";
 import {Typography} from "@component/Typography";
 import {Sprite} from "@component/Sprite";
+import {RetroMinimaButton} from "@component/retro-minima/RetroMinimaButton";
 import {Erc20Interface} from "@component/Erc20Interface";
 import {useState} from "react";
 import {useSpring} from "react-spring";
@@ -29,18 +30,74 @@ export function GetStarted(): ReactNode {
                 </FlexSlideLayer>
                 <FlexSlideLayer style={{justifyContent: "start"}}>
                     <Nav/>
-                    <PathForm/>
+                    <FlexCol
+                    style={{
+                        gap: "10px"
+                    }}>
+                        <MetadataForm setNameInput={setNameInput} setSymbolInput={setSymbolInput}/>
+                        <AssetForm/>
+                        <FlexRow
+                        style={{
+                            gap: "10px"
+                        }}>
+                            <RetroMinimaButton
+                                caption="Confirm"/>
+                            <RetroMinimaButton
+                                caption="Restart"/>
+                        </FlexRow>
+                    </FlexCol>
+
                 </FlexSlideLayer>
             </FlexSlide>
         </VerticalFlexPage>
     </>;
 }
 
+
+
+
+
+
 export function InputField({caption, placeholder, set}: {caption: string; placeholder: string; set: Function}): ReactNode {
     return <>
-        <FlexCol style={{gap: "5px"}}>
-            <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content={caption} style={{fontSize: "0.5em"}}/></FlexRow>
-            <FlexRow style={{background: ColorPalette.DARK_OBSIDIAN.toString(), borderWidth: "1px", borderStyle: "solid", borderColor: ColorPalette.GHOST_IRON.toString(), padding: "5px"}}><input type="text" placeholder={placeholder} onChange={e => set(e.target.value)} style={{all: "unset", width: "200px", aspectRatio: "10/1", fontWeight: "bold", fontFamily: "satoshiRegular", fontSize: "0.75em", pointerEvents: "auto", cursor: "text", color: ColorPalette.TITANIUM.toString(), paddingLeft: "5px", paddingRight: "5px"}}/></FlexRow>
+        <FlexCol
+            style={{
+                gap: "10px"
+            }}>
+            <FlexRow
+                style={{
+                    width: "100%",
+                    justifyContent: "start"
+                }}>
+                <Typography 
+                    content={caption} 
+                    style={{fontSize: "0.5em"}}/>
+            </FlexRow>
+            <FlexRow
+                style={{
+                    borderWidth: "1px",
+                    borderStyle: "solid",
+                    borderColor: ColorPalette.TITANIUM.toString(),
+                    padding: "5px"
+                }}>
+                <input 
+                    type="text" 
+                    placeholder={placeholder} 
+                    onChange={e => set(e.target.value)} 
+                    style={{
+                        all: "unset", 
+                        width: "200px", 
+                        aspectRatio: "10/1", 
+                        fontWeight: "bold",
+                        fontFamily: "satoshiRegular", 
+                        fontSize: "0.5em", 
+                        pointerEvents: "auto", 
+                        cursor: "text", 
+                        color: ColorPalette.TITANIUM.toString(), 
+                        paddingLeft: "5px", 
+                        paddingRight: "5px"
+                    }}/>
+            </FlexRow>
         </FlexCol>
     </>;
 }
@@ -49,6 +106,9 @@ export function MetadataForm({setNameInput, setSymbolInput}: {setNameInput: Func
     return <>
         <FlexCol style={{gap: "20px"}}>
             <InputField caption="What do you want to call it?" placeholder="Ocean Token" set={setNameInput}/>
+            <InputField caption="Your ticker symbol" placeholder="$OCEAN" set={setSymbolInput}/>
+            <InputField caption="Your ticker symbol" placeholder="$OCEAN" set={setSymbolInput}/>
+            <InputField caption="Your ticker symbol" placeholder="$OCEAN" set={setSymbolInput}/>
             <InputField caption="Your ticker symbol" placeholder="$OCEAN" set={setSymbolInput}/>
         </FlexCol>
     </>;
@@ -66,40 +126,6 @@ export function AssetForm(): ReactNode {
 }
 
 
-export function Button({
-    caption,
-    size,
-    color0,
-    color1
-}: {
-    caption: string;
-    size: number;
-    color0: string;
-    color1: string;
-}): ReactNode {
-    let minOpacity: string = "0";
-    let maxOpacity: string = "0.5";
-    let [opacity, setOpacity] = useSpring(() => ({opacity: minOpacity}));
-    function onMouseEnter() {
-        setOpacity.start({opacity: minOpacity});
-        return;
-    }
-    function onMouseLeave() {
-        setOpacity.start({opacity: maxOpacity});
-        return;
-    }
-    return <>
-
-
-        <FlexRow onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} style={{width: `${size}px`, aspectRatio: "2/1", background: color0}}>
-            <FlexRow style={{width: "100%", aspectRatio: "2/1", position: "absolute", background: "#000", ... opacity}}/>
-            <FlexRow style={{width: "100%", aspectRatio: "2/1", position: "absolute", cursor: "pointer"}}>
-                <Typography content={caption} style={{color: color1}}/>
-            </FlexRow>
-        </FlexRow>
-    </>;
-}
-
 
 
 
@@ -109,35 +135,33 @@ export function Button({
 
 export function PathForm({children}: {children?: ReactNode;}) {
     return <>
-        <FlexCol style={{width: "200px", height: "800px", gap: "5px"}}>
+        <FlexCol style={{width: "200px", height: "800px", gap: "10px"}}>
             <Typography content="Token to Currency Path" style={{fontSize: "0.75em"}}/>
             <PathFormDivider/>
             {children}
             <FlexCol style={{width: "100%", gap: "10px", pointerEvents: "auto", cursor: "pointer"}}>
-                <PathFormButton/>
+                <RetroMinimaButton
+                caption="H"/>
             </FlexCol>
         </FlexCol>
     </>;
 }
 
 export function PathFormDivider(): ReactNode {
-    return <><FlexRow style={{width: "100%", height: "1px", background: `linear-gradient(to right, transparent, ${ColorPalette.TITANIUM.toString()}, transparent)`}}/></>;
+    return <><FlexRow style={{width: "100%", height: "1px", opacity: "0.25", background: `linear-gradient(to right, transparent, ${ColorPalette.TITANIUM.toString()}, transparent)`}}/></>;
 }
 
-export function PathFormButton(): ReactNode {
-    return <>
-        <FlexRow style={{paddingLeft: "2.5px", paddingRight: "2.5px", background: ColorPalette.TITANIUM.toString(), justifyContent: "start"}}>
-            <Typography content="Add Path" style={{fontSize: "0.75em", color: ColorPalette.OBSIDIAN.toString()}}/>
-        </FlexRow>
-    </>;
-}
 
-export function PathFormItem({address, isStart}: {address: string; isStart?: boolean}): ReactNode {
+
+export function PathFormItem({address}: {address: string;}): ReactNode {
     return <>
         <FlexCol style={{width: "100%", gap: "10px"}}>
-            <PathFormItemAddress address={address}/>
-            <PathFormItemSymbol address={address}/>
-            <PathFormItemDownArrow visible={isStart}/>
+            <FlexRow style={{gap: "10px"}}>
+                <PathFormItemAddress address={address}/>
+                <PathFormItemSymbol address={address}/>
+            </FlexRow>
+            <PathFormItemDownArrow/>
+            <PathFormDivider/>
         </FlexCol>
     </>;
 }
@@ -171,7 +195,7 @@ export function PathFormItemAddress({address}: {address: string;}): ReactNode {
         return;
     }, []);
 
-    return <><FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content={addressFormatted} style={{fontSize: "0.5em"}}/></FlexRow></>;
+    return <><FlexRow style={{width: "100%"}}><Typography content={addressFormatted} style={{fontSize: "0.5em"}}/></FlexRow></>;
 }
 
 export function PathFormItemSymbol({address}: {address: string;}): ReactNode {
@@ -194,6 +218,18 @@ export function PathFormItemSymbol({address}: {address: string;}): ReactNode {
     return <>{symbol.length !== 0 ? <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content={symbol} style={{fontSize: "0.5em"}}/></FlexRow> : <></>}</>;
 }
 
-export function PathFormItemDownArrow({visible}: {visible?: boolean}): ReactNode {
-    return <>{visible ? <Typography content="▼" style={{fontSize: "0.5em"}}/> : <></>}</>;
+export function PathFormItemDownArrow(): ReactNode {
+    return <><Typography content="▼" style={{fontSize: "0.5em"}}/></>;
 }
+
+
+export function PathFormButton(): ReactNode {
+    return <>
+        <FlexRow style={{paddingLeft: "2.5px", paddingRight: "2.5px", background: ColorPalette.TITANIUM.toString(), justifyContent: "start"}}>
+            <Typography content="Add Path" style={{fontSize: "0.75em", color: ColorPalette.OBSIDIAN.toString()}}/>
+        </FlexRow>
+    </>;
+}
+
+
+
