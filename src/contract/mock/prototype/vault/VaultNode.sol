@@ -9,7 +9,13 @@ import {Asset} from "./Asset.sol";
 contract VaultNode {
     event Deploy(address deployer, address instance);
 
-    address[] private _deployed;
+    struct Child {
+        address deployer;
+        address instance;
+        uint256 timestamp;
+    }
+
+    Child[] private _children;
     address private _vaultFactory;
     address private _ownableTokenFactory;
 
@@ -18,12 +24,14 @@ contract VaultNode {
         _ownableTokenFactory = ownableTokenFactory;
     }
 
-    function deployed() public view returns (address[] memory) {
-        address[] memory deployed = new address[](_deployed.length);
-        for (uint256 i = 0; i < _deployed.length; i++) {
-            deployed[i] = _deployed[i];
+    function children() public view returns (Child[] memory) {
+        Child[] memory children = new Child[](_children.length);
+        for (uint256 i = 0; i < _children.length; i++) {
+            children[i].deployer = _children[i].deployer;
+            children[i].instance = _children[i].instance;
+            children[i].timestamp = _children[i].timestamp;
         }
-        return deployed;
+        return children;
     }
 
     function vaultFactory() public view returns (address) {
@@ -38,7 +46,11 @@ contract VaultNode {
         address vToken = IOwnableTokenFactory(_ownableTokenFactory).deploy(name, symbol, address(this));
         address vault = IVaultFactory(_vaultFactory).deploy(IVToken(vToken), assets);
         IOwnableToken(vToken).transferOwnership(vault);
-        _deployed.push(vault);
+        _children.push(Child({
+            deployer: msg.sender,
+            instance: vault,
+            timestamp: block.timestamp
+        }));
         emit Deploy(msg.sender, vault);
         return vault;
     }
