@@ -9,16 +9,325 @@ import {Nav} from "@component/Nav";
 import {Typography} from "@component/Typography";
 import {Sprite} from "@component/Sprite";
 import {RetroMinimaButton} from "@component/retro-minima/RetroMinimaButton";
-import {Erc20Interface} from "@component/Erc20Interface";
+import {RetroMinimaInputField} from "@component/retro-minima/RetroMinimaInputField";
+import {RetroMinimaCardContainer} from "@component/retro-minima/RetroMinimaCardContainer";
+import {MockPrototypeVaultNodeInterface} from "@component/MockPrototypeVaultNodeInterface";
 import {useState} from "react";
-import {useSpring} from "react-spring";
 import {useEffect} from "react";
 import * as ColorPalette from "@component/ColorPalette";
+
+export type InputSetter = (input: string) => unknown;
 
 export function GetStarted(): ReactNode {
     let [nameInput, setNameInput] = useState<string>("");
     let [symbolInput, setSymbolInput] = useState<string>("");
+    let [tknInput0, setTknInput0] = useState<string>("");
+    let [curInput0, setCurInput0] = useState<string>("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359");
+    let [tknCurPathInput0, setTknCurPathInput0] = useState<string>("");
+    let [curTknPathInput0, setCurTknPathInput0] = useState<string>("");
+    let [allocationInput0, setAllocationInput0] = useState<string>("");
+    let [tknInput1, setTknInput1] = useState<string>("");
+    let [curInput1, setCurInput1] = useState<string>("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359");
+    let [tknCurPathInput1, setTknCurPathInput1] = useState<string>("");
+    let [curTknPathInput1, setCurTknPathInput1] = useState<string>("");
+    let [allocationInput1, setAllocationInput1] = useState<string>("");
+    let [deployment, setDeployment] = useState();
+
+    useEffect(function(): void {
+
+        interface Address {
+            toString(): string;
+        }
+
+        function Address(_string: string): Address {
+            let _charSet: string[] = [
+                "0", "1", "2", "3", "4", 
+                "5", "6", "7", "8", "9", 
+                "a", "b", "c", "d", "e", 
+                "f", "A", "B", "C", "D", 
+                "E", "F"
+            ];
+
+            /** @constructor */ {
+                if (`${_string[0]}${_string[1]}` !== "0x") throw Error("missing-prefix");
+                if (_string.length < 42) throw Error("too-short");
+                if (_string.length > 42) throw Error("too-long");
+                let stringWithoutInitials: string = "";
+                for (let i = 2; i < _string.length; i++) stringWithoutInitials += _string[i];
+                _checkCharSet(stringWithoutInitials);
+                return {toString};
+            }
+
+            function toString(): string {
+                return _string.toString();
+            }
+
+            function _checkCharSet(string: string): true {
+                for (let i = 0; i < string.length; i++) _checkChar(string[i]);
+                return true;
+            }
+
+            function _checkChar(char: string): true {
+                if (char.length !== 1) throw Error("illegal-char");
+                for (let i = 0; i < _charSet.length; i++) if (char === _charSet[i]) return true;
+                throw Error("illegal-char-set");
+            }
+        }
+
+        interface Path {
+            toString(): string;
+            toStringArray(): string[];
+            toAddressArray(): Address[];
+        }
+
+        function Path(_string: string): Path {
+            let _shards: string[];
+            /** @constructor */ {
+                _shards = _string.split(",");
+                for (let i = 0; i < _shards.length; i++) Address(_shards[i]);
+                return {toString, toStringArray, toAddressArray};
+            }
+            
+            function toString(): string {
+                return _string;
+            }
+
+            function toStringArray(): string[] {
+                return _shards;
+            }
+
+            function toAddressArray(): Address[] {
+                let array: Address[] = [];
+                for (let i = 0; i < _shards.length; i++) array.push(Address(_shards[i]));
+                return array;
+            }
+        }
+
+        function Asset({
+            _tknInput,
+            _curInput,
+            _tknCurPathInput,
+            _curTknPathInput,
+            _allocationInput
+        }: {
+            _tknInput: string;
+            _curInput: string;
+            _tknCurPathInput: string;
+            _curTknPathInput: string;
+            _allocationInput: string;
+        }) {
+            let _tkn: Address;
+            let _cur: Address;
+            let _tknCurPath: Path;
+            let _curTknPath: Path;
+            let _allocation: bigint;
+
+            /** @constructor */ {
+                _tkn = Address(_tknInput);
+                _cur = Address(_curInput);
+                _tknCurPath = Path(_tknCurPathInput);
+                _curTknPath = Path(_curTknPathInput);
+                _allocation = BigInt(parseFloat(_allocationInput) * 10**18);
+                return {toSolStruct, tkn, cur, tknCurPath, curTknPath, allocation};
+            }
+
+            function toSolStruct(): [string, string, string[], string[], bigint] {
+                return [
+                    tkn().toString(),
+                    cur().toString(),
+                    tknCurPath().toStringArray(),
+                    curTknPath().toStringArray(),
+                    allocation()
+                ];
+            }
+
+            function tkn(): Address {
+                return _tkn;
+            }
+
+            function cur(): Address {
+                return _cur;
+            }
+
+            function tknCurPath(): Path {
+                return _tknCurPath;
+            }
+
+            function curTknPath(): Path {
+                return _curTknPath;
+            }
+
+            function allocation(): bigint {
+                return _allocation;
+            }
+        }
+
+        try {
+            let asset0 = Asset({
+                _tknInput: tknInput0,
+                _curInput: curInput0,
+                _tknCurPathInput: tknCurPathInput0,
+                _curTknPathInput: curTknPathInput0,
+                _allocationInput: allocationInput0
+            });
+            
+        }
+        catch (e: unknown) {
+
+        }
+
+    }, [
+        nameInput,
+        symbolInput,
+        tknInput0,
+        curInput0,
+        tknCurPathInput0,
+        curTknPathInput0,
+        allocationInput0,
+        tknInput1,
+        curInput1,
+        tknCurPathInput1,
+        curTknPathInput1,
+        allocationInput1
+    ]);
     
+    async function deploy(): Promise<string | null> {
+        try {
+
+            class Address {
+                private static _charSet: string[] = [
+                    "0", "1", "2", "3", "4", 
+                    "5", "6", "7", "8", "9", 
+                    "a", "b", "c", "d", "e", 
+                    "f", "A", "B", "C", "D", 
+                    "E", "F", "x"
+                ];
+
+                private static _checkCharSet(string: string): true {
+                    for (let i = 0; i < string.length; i++) Address._checkChar(string[i]);
+                    return true;
+                }
+
+                private static _checkChar(char: string): true {
+                    if (char.length !== 1) throw new Error("address-illegal-char");
+                    for (let i = 0; i < Address._charSet.length; i++) if (char === Address._charSet[i]) return true;
+                    throw new Error("address-illegal-char-set");
+                }
+
+                public constructor(private _string: string) {
+                    let initial: string = this._string[0] + this._string[1];
+                    if (initial !== "0x") throw new Error("address-illegal-prefix");
+                    if (this._string.length < 42) throw new Error("address-too-short");
+                    if (this._string.length > 42) throw new Error("address-too-long");
+                    Address._checkCharSet(this._string);
+                }
+
+                public toString(): string {
+                    return this._string;
+                }
+            }
+
+            class Path {
+                private _addressArray: Address[] = [];
+
+                public constructor(private _stringArray: string[]) {
+                    for (let i = 0; i < this._stringArray.length; i++) this._addressArray.push(new Address(this._stringArray[i]));
+                }
+
+                public toAddressArray(): Address[] {
+                    return [... this._addressArray];
+                }
+
+                public toStringArray(): string[] {
+                    return [... this._stringArray];
+                }
+            }
+            class Asset {
+                private _tkn: Address;
+                private _cur: Address;
+                private _tknCurPath: Path;
+                private _curTknPath: Path;
+                private _allocation: bigint;
+
+                public constructor({
+                    tknInput,
+                    curInput,
+                    tknCurPathInput,
+                    curTknPathInput,
+                    allocationInput
+                }: {
+                    tknInput: string;
+                    curInput: string;
+                    tknCurPathInput: string;
+                    curTknPathInput: string;
+                    allocationInput: string;
+                }) {
+                    let tknCurPathShards: string[] = tknCurPathInput.split(",");
+                    let curTknPathShards: string[] = curTknPathInput.split(",");
+                    if (tknCurPathInput === "") tknCurPathShards = [tknInput, curInput];
+                    if (curTknPathInput === "") curTknPathShards = [curInput, tknInput];
+                    this._tkn = new Address(tknInput);
+                    this._cur = new Address(curInput);
+                    this._tknCurPath = new Path(tknCurPathShards);
+                    this._curTknPath = new Path(curTknPathShards);
+                    this._allocation = BigInt(parseFloat(allocationInput) * 10**18)
+                }
+
+                public toDeploymentPayload(): [string, string, string[], string[], bigint] {
+                    return [
+                        this._tkn.toString(), 
+                        this._cur.toString(), 
+                        this._tknCurPath.toStringArray(), 
+                        this._curTknPath.toStringArray(), 
+                        this._allocation
+                    ];
+                }
+
+                public tkn(): Address {
+                    return this._tkn;
+                }
+
+                public cur(): Address {
+                    return this._cur;
+                }
+
+                public tknCurPath(): Path {
+                    return this._tknCurPath;
+                }
+
+                public curTknPath(): Path {
+                    return this._curTknPath;
+                }
+
+                public allocation(): bigint {
+                    return this._allocation;
+                }
+            }
+            let asset0 = new Asset({
+                tknInput: tknInput0,
+                curInput: curInput0,
+                tknCurPathInput: tknCurPathInput0,
+                curTknPathInput: curTknPathInput0,
+                allocationInput: allocationInput0
+            });
+            let asset1 = new Asset({
+                tknInput: tknInput1,
+                curInput: curInput1,
+                tknCurPathInput: tknCurPathInput1,
+                curTknPathInput: curTknPathInput1,
+                allocationInput: allocationInput1
+            });
+            let node = MockPrototypeVaultNodeInterface("0x79AE495ce6832182B62e6B9340f1eF887269C38c");
+            let receipt = await node.deploy(nameInput, symbolInput, [asset0.toDeploymentPayload(), asset1.toDeploymentPayload()]);
+            if (receipt) return receipt.contractAddress;
+            return null;
+        }
+        catch (e: unknown) {
+            console.error(e);
+            return null;
+        }
+    }
+
     return <>
         <VerticalFlexPage>
             <FlexSlide>
@@ -30,206 +339,73 @@ export function GetStarted(): ReactNode {
                 </FlexSlideLayer>
                 <FlexSlideLayer style={{justifyContent: "start"}}>
                     <Nav/>
-                    <FlexCol
-                    style={{
-                        gap: "10px"
-                    }}>
-                        <MetadataForm setNameInput={setNameInput} setSymbolInput={setSymbolInput}/>
-                        <AssetForm/>
-                        <FlexRow
-                        style={{
-                            gap: "10px"
-                        }}>
-                            <RetroMinimaButton
-                                caption="Confirm"/>
-                            <RetroMinimaButton
-                                caption="Restart"/>
+                    <FlexCol style={{width: "1024px", height: "100%", gap: "50px"}}>
+                        <FlexRow style={{gap: "20px"}}>
+
+                            <FlexCol style={{height: "100%", gap: "20px", justifyContent: "start"}}>
+
+                                <MetadataForm setNameInput={setNameInput} setSymbolInput={setSymbolInput}/>
+
+                                <FlexRow style={{width: "100%", justifyContent: "space-between"}}>
+                                    <RetroMinimaButton caption="Confirm" onClick={() => deploy()}/>
+                                    <RetroMinimaButton caption="Help"/>
+                                </FlexRow>
+                            </FlexCol>
+
+
+                            <FlexCol style={{gap: "20px"}}>
+                                <AssetForm count="01" setTknInput={setTknInput0} setTknCurPathInput={setTknCurPathInput0} setCurTknPathInput={setCurTknPathInput0} setAllocationInput={setAllocationInput0}/>
+                                <AssetForm count="02" setTknInput={setCurInput1} setTknCurPathInput={setTknCurPathInput1} setCurTknPathInput={setCurTknPathInput1} setAllocationInput={setAllocationInput1}/>
+                            </FlexCol>
                         </FlexRow>
                     </FlexCol>
-
                 </FlexSlideLayer>
             </FlexSlide>
         </VerticalFlexPage>
     </>;
 }
 
-
-
-
-
-
-export function InputField({caption, placeholder, set}: {caption: string; placeholder: string; set: Function}): ReactNode {
+export function MetadataForm({setNameInput, setSymbolInput}: {setNameInput(input: string): unknown; setSymbolInput(input: string): unknown;}): ReactNode {
     return <>
-        <FlexCol
-            style={{
-                gap: "10px"
-            }}>
-            <FlexRow
-                style={{
-                    width: "100%",
-                    justifyContent: "start"
-                }}>
-                <Typography 
-                    content={caption} 
-                    style={{fontSize: "0.5em"}}/>
-            </FlexRow>
-            <FlexRow
-                style={{
-                    borderWidth: "1px",
-                    borderStyle: "solid",
-                    borderColor: ColorPalette.TITANIUM.toString(),
-                    padding: "5px"
-                }}>
-                <input 
-                    type="text" 
-                    placeholder={placeholder} 
-                    onChange={e => set(e.target.value)} 
-                    style={{
-                        all: "unset", 
-                        width: "200px", 
-                        aspectRatio: "10/1", 
-                        fontWeight: "bold",
-                        fontFamily: "satoshiRegular", 
-                        fontSize: "0.5em", 
-                        pointerEvents: "auto", 
-                        cursor: "text", 
-                        color: ColorPalette.TITANIUM.toString(), 
-                        paddingLeft: "5px", 
-                        paddingRight: "5px"
-                    }}/>
-            </FlexRow>
+        <FlexCol style={{justifyContent: "start"}}>
+            <RetroMinimaCardContainer>
+                <FlexCol style={{gap: "20px"}}>
+                    <FlexCol style={{width: "100%", gap: "5px", alignItems: "start"}}>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Metadata"/></FlexRow>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="Pick a name and ticker symbol for your DAO." style={{fontSize: "0.5em"}}/></FlexRow>
+                    </FlexCol>
+                    <FlexCol style={{width: "100%", gap: "10px", alignItems: "start"}}>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><RetroMinimaInputField caption="dao-name" placeholder="ETH WBTC 50 50 Fund" setInput={setNameInput} style={{width: "100%"}}/></FlexRow>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><RetroMinimaInputField caption="dao-symbol" placeholder="5050" setInput={setSymbolInput} style={{width: "100%"}}/></FlexRow>
+                    </FlexCol>
+                    <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="This will be used to identify your DAO on the blockchain." style={{fontSize: "0.50em"}}/></FlexRow>
+                </FlexCol>
+            </RetroMinimaCardContainer>
         </FlexCol>
     </>;
 }
 
-export function MetadataForm({setNameInput, setSymbolInput}: {setNameInput: Function; setSymbolInput: Function;}): ReactNode {
+export function AssetForm({count, setTknInput, setTknCurPathInput, setCurTknPathInput, setAllocationInput}: {count: string; setTknInput: InputSetter; setTknCurPathInput: InputSetter; setCurTknPathInput: InputSetter; setAllocationInput: InputSetter;}): ReactNode {
     return <>
-        <FlexCol style={{gap: "20px"}}>
-            <InputField caption="What do you want to call it?" placeholder="Ocean Token" set={setNameInput}/>
-            <InputField caption="Your ticker symbol" placeholder="$OCEAN" set={setSymbolInput}/>
-            <InputField caption="Your ticker symbol" placeholder="$OCEAN" set={setSymbolInput}/>
-            <InputField caption="Your ticker symbol" placeholder="$OCEAN" set={setSymbolInput}/>
-            <InputField caption="Your ticker symbol" placeholder="$OCEAN" set={setSymbolInput}/>
+        <FlexCol style={{height: "100%", justifyContent: "start"}}>
+            <RetroMinimaCardContainer>
+                <FlexCol style={{gap: "20px"}}>
+                    <FlexCol style={{width: "100%", gap: "5px", alignItems: "start"}}>
+                        <FlexRow style={{width: "100%", gap: "10px", justifyContent: "start"}}>
+                            <Typography content={count} style={{color: ColorPalette.DEEP_PURPLE.toString()}}/>
+                            <Typography content="Asset"/>
+                        </FlexRow>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="An asset that the DAO will manage." style={{fontSize: "0.5em"}}/></FlexRow>
+                    </FlexCol>
+                    <FlexCol style={{width: "100%", gap: "10px", alignItems: "start"}}>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><RetroMinimaInputField caption="token" placeholder="0x0000000000000000000000000000000000000000" setInput={setTknInput} style={{width: "100%"}}/></FlexRow>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><RetroMinimaInputField caption="token-to-currency-path" placeholder="address,address,address" setInput={setTknCurPathInput} style={{width: "100%"}}/></FlexRow>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><RetroMinimaInputField caption="currency-to-token-path" placeholder="address,address,address" setInput={setCurTknPathInput} style={{width: "100%"}}/></FlexRow>
+                        <FlexRow style={{width: "100%", justifyContent: "start"}}><RetroMinimaInputField caption="allocation" placeholder="50" setInput={setAllocationInput} style={{width: "100%"}}/></FlexRow>
+                    </FlexCol>
+                    <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content="When rebalanced the contract will make a swap using the paths provided to bring its total assets into balance. The allocation will determine the amount for each position." style={{fontSize: "0.50em"}}/></FlexRow>
+                </FlexCol>
+            </RetroMinimaCardContainer>
         </FlexCol>
-    </>;
+    </>
 }
-
-export function AssetForm(): ReactNode {
-    return <>
-        <FlexCol style={{gap: "10px"}}>
-            <InputField caption="What is the token address?" placeholder="0x0000000000000000000000000000000000000000" set={() => {}}/>
-            <InputField caption="The path to traverse to get to the currency?" placeholder="" set={() => {}}/>
-            <InputField caption="The path to traverse to get to the token from the currency?" placeholder="" set={() => {}}/>
-            <InputField caption="Percentage to allocate to this?" placeholder="" set={() => {}}/>
-        </FlexCol>
-    </>;
-}
-
-
-
-
-
-
-
-
-
-export function PathForm({children}: {children?: ReactNode;}) {
-    return <>
-        <FlexCol style={{width: "200px", height: "800px", gap: "10px"}}>
-            <Typography content="Token to Currency Path" style={{fontSize: "0.75em"}}/>
-            <PathFormDivider/>
-            {children}
-            <FlexCol style={{width: "100%", gap: "10px", pointerEvents: "auto", cursor: "pointer"}}>
-                <RetroMinimaButton
-                caption="H"/>
-            </FlexCol>
-        </FlexCol>
-    </>;
-}
-
-export function PathFormDivider(): ReactNode {
-    return <><FlexRow style={{width: "100%", height: "1px", opacity: "0.25", background: `linear-gradient(to right, transparent, ${ColorPalette.TITANIUM.toString()}, transparent)`}}/></>;
-}
-
-
-
-export function PathFormItem({address}: {address: string;}): ReactNode {
-    return <>
-        <FlexCol style={{width: "100%", gap: "10px"}}>
-            <FlexRow style={{gap: "10px"}}>
-                <PathFormItemAddress address={address}/>
-                <PathFormItemSymbol address={address}/>
-            </FlexRow>
-            <PathFormItemDownArrow/>
-            <PathFormDivider/>
-        </FlexCol>
-    </>;
-}
-
-export function PathFormItemAddress({address}: {address: string;}): ReactNode {
-    let [addressFormatted, setAddressFormatted] = useState<string>("");
-
-    useEffect(function(): void {
-        let addressFormatted: string = "";
-        if (!address.startsWith("0x")) {
-            addressFormatted += "0x";
-        }
-        if (address.length < 40) {
-            for (let i = 0; i < 40; i += 1) {
-                let char: string = address[i];
-                if (!char) {
-                    addressFormatted += "0";
-                }
-                else {
-                    addressFormatted += char;
-                }
-            }
-        }
-        if (address.length > 40) {
-            for (let i = 0; i < 40; i += 1) {
-                let char: string = address[i];
-                addressFormatted += char;
-            }
-        }
-        setAddressFormatted(addressFormatted);
-        return;
-    }, []);
-
-    return <><FlexRow style={{width: "100%"}}><Typography content={addressFormatted} style={{fontSize: "0.5em"}}/></FlexRow></>;
-}
-
-export function PathFormItemSymbol({address}: {address: string;}): ReactNode {
-    let [symbol, setSymbol] = useState<string>("");
-    
-    useEffect(function(): void {
-        (async function(): Promise<void> {
-            try {
-                setSymbol(await Erc20Interface(address).symbol());
-                return;
-            }
-            catch (e: unknown) {
-                setSymbol("");
-                return;
-            }
-        })();
-        return;
-    }, []);
-
-    return <>{symbol.length !== 0 ? <FlexRow style={{width: "100%", justifyContent: "start"}}><Typography content={symbol} style={{fontSize: "0.5em"}}/></FlexRow> : <></>}</>;
-}
-
-export function PathFormItemDownArrow(): ReactNode {
-    return <><Typography content="▼" style={{fontSize: "0.5em"}}/></>;
-}
-
-
-export function PathFormButton(): ReactNode {
-    return <>
-        <FlexRow style={{paddingLeft: "2.5px", paddingRight: "2.5px", background: ColorPalette.TITANIUM.toString(), justifyContent: "start"}}>
-            <Typography content="Add Path" style={{fontSize: "0.75em", color: ColorPalette.OBSIDIAN.toString()}}/>
-        </FlexRow>
-    </>;
-}
-
-
-

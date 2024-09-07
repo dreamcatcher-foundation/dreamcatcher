@@ -50444,71 +50444,279 @@ function RetroMinimaButton({
   ...more
 }) {
   let [padding2, setPadding] = useSpring(() => ({ padding: "2px", config: config.stiff }));
+  function onMouseEnter() {
+    setPadding.start({ padding: "0px" });
+    return;
+  }
+  function onMouseLeave() {
+    setPadding.start({ padding: "2px" });
+    return;
+  }
   return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
     children: jsx_dev_runtime21.jsxDEV(FlexRow, {
-      style: {
-        width: "100px",
-        aspectRatio: "4/1",
-        borderWidth: "1px",
-        borderStyle: "solid",
-        borderColor: TITANIUM.toString(),
-        ...padding2,
-        ...style
-      },
+      onMouseEnter,
+      onMouseLeave,
+      style: { width: "100px", aspectRatio: "4/1", borderWidth: "1px", borderStyle: "solid", borderColor: TITANIUM.toString(), pointerEvents: "auto", cursor: "pointer", ...padding2, ...style },
       ...more,
-      children: jsx_dev_runtime21.jsxDEV(FlexRow, {
-        onMouseEnter: () => {
-          setPadding.start({ padding: "0px" });
-          return;
-        },
-        onMouseLeave: () => {
-          setPadding.start({ padding: "2px" });
-          return;
-        },
-        style: {
-          width: "100%",
-          height: "100%",
-          borderWidth: "1px",
-          borderStyle: "solid",
-          borderColor: TITANIUM.toString(),
-          background: TITANIUM.toString()
-        },
-        ...more,
-        children: jsx_dev_runtime21.jsxDEV(Typography, {
-          content: caption,
-          style: {
-            fontWeight: "bold",
-            fontFamily: "monospace",
-            fontSize: "0.75em",
-            color: OBSIDIAN.toString()
-          }
+      children: jsx_dev_runtime21.jsxDEV(RetroMinimaButtonInnerContainer, {
+        children: jsx_dev_runtime21.jsxDEV(RetroMinimaButtonCaption, {
+          caption
         }, undefined, false, undefined, this)
       }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function RetroMinimaButtonInnerContainer({ children }) {
+  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+    children: jsx_dev_runtime21.jsxDEV(FlexRow, {
+      style: { width: "100%", height: "100%", background: TITANIUM.toString() },
+      children
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function RetroMinimaButtonCaption({ caption }) {
+  return jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+    children: jsx_dev_runtime21.jsxDEV(Typography, {
+      content: caption,
+      style: { fontWeight: "bold", fontFamily: "monospace", fontSize: "0.75em", color: OBSIDIAN.toString() }
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/retro-minima/RetroMinimaInputField.tsx
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+function RetroMinimaInputField({ caption, placeholder, setInput, ...more }) {
+  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
+    children: jsx_dev_runtime22.jsxDEV(FlexCol, {
+      ...more,
+      children: [
+        jsx_dev_runtime22.jsxDEV(FlexRow, {
+          style: { width: "100%", justifyContent: "start" },
+          children: jsx_dev_runtime22.jsxDEV(Typography, {
+            content: caption,
+            style: { fontSize: "0.5em" }
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(FlexRow, {
+          style: { width: "100%", height: "5px" }
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime22.jsxDEV(FlexRow, {
+          style: { width: "100%", justifyContent: "start" },
+          children: jsx_dev_runtime22.jsxDEV(FlexRow, {
+            style: { width: "100%", height: "100%", padding: "5px", gap: "5px", pointerEvents: "auto", borderWidth: "1px", borderStyle: "solid", borderColor: GHOST_IRON.toString() },
+            children: jsx_dev_runtime22.jsxDEV("input", {
+              onChange: (e) => setInput(e.target.value),
+              type: "text",
+              placeholder,
+              style: { all: "unset", width: "100%", fontSize: "0.75em", pointerEvents: "auto", cursor: "text", color: TITANIUM.toString(), fontWeight: "bold", fontFamily: "satoshiRegular" }
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+
+// src/public/component/retro-minima/RetroMinimaCardContainer.tsx
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+function RetroMinimaCardContainer({
+  style,
+  ...more
+}) {
+  return jsx_dev_runtime23.jsxDEV(jsx_dev_runtime23.Fragment, {
+    children: jsx_dev_runtime23.jsxDEV(FlexCol, {
+      style: {
+        borderWidth: "1px",
+        borderStyle: "dashed",
+        borderColor: GHOST_IRON.toString(),
+        padding: "10px",
+        ...style ?? {}
+      },
+      ...more
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
 
 // src/public/component/styled/page/GetStarted.tsx
 var import_react36 = __toESM(require_react(), 1);
-var import_react37 = __toESM(require_react(), 1);
+var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
 function GetStarted() {
   let [nameInput, setNameInput] = import_react36.useState("");
   let [symbolInput, setSymbolInput] = import_react36.useState("");
-  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
-    children: jsx_dev_runtime22.jsxDEV(VerticalFlexPage, {
-      children: jsx_dev_runtime22.jsxDEV(FlexSlide, {
+  let [tknInput0, setTknInput0] = import_react36.useState("");
+  let [curInput0, setCurInput0] = import_react36.useState("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359");
+  let [tknCurPathInput0, setTknCurPathInput0] = import_react36.useState("");
+  let [curTknPathInput0, setCurTknPathInput0] = import_react36.useState("");
+  let [allocationInput0, setAllocationInput0] = import_react36.useState("");
+  let [tknInput1, setTknInput1] = import_react36.useState("");
+  let [curInput1, setCurInput1] = import_react36.useState("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359");
+  let [tknCurPathInput1, setTknCurPathInput1] = import_react36.useState("");
+  let [curTknPathInput1, setCurTknPathInput1] = import_react36.useState("");
+  let [allocationInput1, setAllocationInput1] = import_react36.useState("");
+  async function deploy() {
+    try {
+
+      class Address {
+        _string;
+        static _charSet = [
+          "0",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F",
+          "x"
+        ];
+        static _checkCharSet(string2) {
+          for (let i = 0;i < string2.length; i++)
+            Address._checkChar(string2[i]);
+          return true;
+        }
+        static _checkChar(char) {
+          if (char.length !== 1)
+            throw new Error("address-illegal-char");
+          for (let i = 0;i < Address._charSet.length; i++)
+            if (char === Address._charSet[i])
+              return true;
+          throw new Error("address-illegal-char-set");
+        }
+        constructor(_string) {
+          this._string = _string;
+          let initial = this._string[0] + this._string[1];
+          if (initial !== "0x")
+            throw new Error("address-illegal-prefix");
+          if (this._string.length < 42)
+            throw new Error("address-too-short");
+          if (this._string.length > 42)
+            throw new Error("address-too-long");
+          Address._checkCharSet(this._string);
+        }
+        toString() {
+          return this._string;
+        }
+      }
+
+      class Path {
+        _stringArray;
+        _addressArray = [];
+        constructor(_stringArray) {
+          this._stringArray = _stringArray;
+          for (let i = 0;i < this._stringArray.length; i++)
+            this._addressArray.push(new Address(this._stringArray[i]));
+        }
+        toAddressArray() {
+          return [...this._addressArray];
+        }
+        toStringArray() {
+          return [...this._stringArray];
+        }
+      }
+
+      class Asset {
+        _tkn;
+        _cur;
+        _tknCurPath;
+        _curTknPath;
+        _allocation;
+        constructor({
+          tknInput,
+          curInput,
+          tknCurPathInput,
+          curTknPathInput,
+          allocationInput
+        }) {
+          let tknCurPathShards = tknCurPathInput.split(",");
+          let curTknPathShards = curTknPathInput.split(",");
+          if (tknCurPathInput === "")
+            tknCurPathShards = [tknInput, curInput];
+          if (curTknPathInput === "")
+            curTknPathShards = [curInput, tknInput];
+          this._tkn = new Address(tknInput);
+          this._cur = new Address(curInput);
+          this._tknCurPath = new Path(tknCurPathShards);
+          this._curTknPath = new Path(curTknPathShards);
+          this._allocation = BigInt(parseFloat(allocationInput) * 1000000000000000000);
+        }
+        toDeploymentPayload() {
+          return [
+            this._tkn.toString(),
+            this._cur.toString(),
+            this._tknCurPath.toStringArray(),
+            this._curTknPath.toStringArray(),
+            this._allocation
+          ];
+        }
+        tkn() {
+          return this._tkn;
+        }
+        cur() {
+          return this._cur;
+        }
+        tknCurPath() {
+          return this._tknCurPath;
+        }
+        curTknPath() {
+          return this._curTknPath;
+        }
+        allocation() {
+          return this._allocation;
+        }
+      }
+      let asset0 = new Asset({
+        tknInput: tknInput0,
+        curInput: curInput0,
+        tknCurPathInput: tknCurPathInput0,
+        curTknPathInput: curTknPathInput0,
+        allocationInput: allocationInput0
+      });
+      let asset1 = new Asset({
+        tknInput: tknInput1,
+        curInput: curInput1,
+        tknCurPathInput: tknCurPathInput1,
+        curTknPathInput: curTknPathInput1,
+        allocationInput: allocationInput1
+      });
+      let node = MockPrototypeVaultNodeInterface("0x79AE495ce6832182B62e6B9340f1eF887269C38c");
+      let receipt = await node.deploy(nameInput, symbolInput, [asset0.toDeploymentPayload(), asset1.toDeploymentPayload()]);
+      if (receipt)
+        return receipt.contractAddress;
+      return null;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  }
+  return jsx_dev_runtime24.jsxDEV(jsx_dev_runtime24.Fragment, {
+    children: jsx_dev_runtime24.jsxDEV(VerticalFlexPage, {
+      children: jsx_dev_runtime24.jsxDEV(FlexSlide, {
         children: [
-          jsx_dev_runtime22.jsxDEV(FlexSlideLayer, {
+          jsx_dev_runtime24.jsxDEV(FlexSlideLayer, {
             style: { background: OBSIDIAN.toString() },
-            children: jsx_dev_runtime22.jsxDEV(FlexRow, {
+            children: jsx_dev_runtime24.jsxDEV(FlexRow, {
               style: { width: "1024px", height: "100%", position: "relative" },
               children: [
-                jsx_dev_runtime22.jsxDEV(Blurdot, {
+                jsx_dev_runtime24.jsxDEV(Blurdot, {
                   color0: DEEP_PURPLE.toString(),
                   color1: OBSIDIAN.toString(),
                   style: { width: "1000px", aspectRatio: "1/1", position: "absolute", right: "300px", bottom: "20px" }
                 }, undefined, false, undefined, this),
-                jsx_dev_runtime22.jsxDEV(Blurdot, {
+                jsx_dev_runtime24.jsxDEV(Blurdot, {
                   color0: RED.toString(),
                   color1: OBSIDIAN.toString(),
                   style: { width: "1000px", aspectRatio: "1/1", position: "absolute", left: "300px", top: "20px" }
@@ -50516,35 +50724,58 @@ function GetStarted() {
               ]
             }, undefined, true, undefined, this)
           }, undefined, false, undefined, this),
-          jsx_dev_runtime22.jsxDEV(FlexSlideLayer, {
+          jsx_dev_runtime24.jsxDEV(FlexSlideLayer, {
             style: { justifyContent: "start" },
             children: [
-              jsx_dev_runtime22.jsxDEV(Nav, {}, undefined, false, undefined, this),
-              jsx_dev_runtime22.jsxDEV(FlexCol, {
-                style: {
-                  gap: "10px"
-                },
-                children: [
-                  jsx_dev_runtime22.jsxDEV(MetadataForm, {
-                    setNameInput,
-                    setSymbolInput
-                  }, undefined, false, undefined, this),
-                  jsx_dev_runtime22.jsxDEV(AssetForm, {}, undefined, false, undefined, this),
-                  jsx_dev_runtime22.jsxDEV(FlexRow, {
-                    style: {
-                      gap: "10px"
-                    },
-                    children: [
-                      jsx_dev_runtime22.jsxDEV(RetroMinimaButton, {
-                        caption: "Confirm"
-                      }, undefined, false, undefined, this),
-                      jsx_dev_runtime22.jsxDEV(RetroMinimaButton, {
-                        caption: "Restart"
-                      }, undefined, false, undefined, this)
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
+              jsx_dev_runtime24.jsxDEV(Nav, {}, undefined, false, undefined, this),
+              jsx_dev_runtime24.jsxDEV(FlexCol, {
+                style: { width: "1024px", height: "100%", gap: "50px" },
+                children: jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { gap: "20px" },
+                  children: [
+                    jsx_dev_runtime24.jsxDEV(FlexCol, {
+                      style: { height: "100%", gap: "20px", justifyContent: "start" },
+                      children: [
+                        jsx_dev_runtime24.jsxDEV(MetadataForm, {
+                          setNameInput,
+                          setSymbolInput
+                        }, undefined, false, undefined, this),
+                        jsx_dev_runtime24.jsxDEV(FlexRow, {
+                          style: { width: "100%", justifyContent: "space-between" },
+                          children: [
+                            jsx_dev_runtime24.jsxDEV(RetroMinimaButton, {
+                              caption: "Confirm",
+                              onClick: () => deploy()
+                            }, undefined, false, undefined, this),
+                            jsx_dev_runtime24.jsxDEV(RetroMinimaButton, {
+                              caption: "Help"
+                            }, undefined, false, undefined, this)
+                          ]
+                        }, undefined, true, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this),
+                    jsx_dev_runtime24.jsxDEV(FlexCol, {
+                      style: { gap: "20px" },
+                      children: [
+                        jsx_dev_runtime24.jsxDEV(AssetForm, {
+                          count: "01",
+                          setTknInput: setTknInput0,
+                          setTknCurPathInput: setTknCurPathInput0,
+                          setCurTknPathInput: setCurTknPathInput0,
+                          setAllocationInput: setAllocationInput0
+                        }, undefined, false, undefined, this),
+                        jsx_dev_runtime24.jsxDEV(AssetForm, {
+                          count: "02",
+                          setTknInput: setCurInput1,
+                          setTknCurPathInput: setTknCurPathInput1,
+                          setCurTknPathInput: setCurTknPathInput1,
+                          setAllocationInput: setAllocationInput1
+                        }, undefined, false, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this)
+                  ]
+                }, undefined, true, undefined, this)
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
@@ -50552,146 +50783,179 @@ function GetStarted() {
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-function InputField({ caption, placeholder, set }) {
-  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
-    children: jsx_dev_runtime22.jsxDEV(FlexCol, {
-      style: {
-        gap: "10px"
-      },
-      children: [
-        jsx_dev_runtime22.jsxDEV(FlexRow, {
-          style: {
-            width: "100%",
-            justifyContent: "start"
-          },
-          children: jsx_dev_runtime22.jsxDEV(Typography, {
-            content: caption,
-            style: { fontSize: "0.5em" }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime22.jsxDEV(FlexRow, {
-          style: {
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderColor: TITANIUM.toString(),
-            padding: "5px"
-          },
-          children: jsx_dev_runtime22.jsxDEV("input", {
-            type: "text",
-            placeholder,
-            onChange: (e) => set(e.target.value),
-            style: {
-              all: "unset",
-              width: "200px",
-              aspectRatio: "10/1",
-              fontWeight: "bold",
-              fontFamily: "satoshiRegular",
-              fontSize: "0.5em",
-              pointerEvents: "auto",
-              cursor: "text",
-              color: TITANIUM.toString(),
-              paddingLeft: "5px",
-              paddingRight: "5px"
-            }
-          }, undefined, false, undefined, this)
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-}
 function MetadataForm({ setNameInput, setSymbolInput }) {
-  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
-    children: jsx_dev_runtime22.jsxDEV(FlexCol, {
-      style: { gap: "20px" },
-      children: [
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "What do you want to call it?",
-          placeholder: "Ocean Token",
-          set: setNameInput
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "Your ticker symbol",
-          placeholder: "$OCEAN",
-          set: setSymbolInput
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "Your ticker symbol",
-          placeholder: "$OCEAN",
-          set: setSymbolInput
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "Your ticker symbol",
-          placeholder: "$OCEAN",
-          set: setSymbolInput
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "Your ticker symbol",
-          placeholder: "$OCEAN",
-          set: setSymbolInput
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
+  return jsx_dev_runtime24.jsxDEV(jsx_dev_runtime24.Fragment, {
+    children: jsx_dev_runtime24.jsxDEV(FlexCol, {
+      style: { justifyContent: "start" },
+      children: jsx_dev_runtime24.jsxDEV(RetroMinimaCardContainer, {
+        children: jsx_dev_runtime24.jsxDEV(FlexCol, {
+          style: { gap: "20px" },
+          children: [
+            jsx_dev_runtime24.jsxDEV(FlexCol, {
+              style: { width: "100%", gap: "5px", alignItems: "start" },
+              children: [
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(Typography, {
+                    content: "Metadata"
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(Typography, {
+                    content: "Pick a name and ticker symbol for your DAO.",
+                    style: { fontSize: "0.5em" }
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            jsx_dev_runtime24.jsxDEV(FlexCol, {
+              style: { width: "100%", gap: "10px", alignItems: "start" },
+              children: [
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(RetroMinimaInputField, {
+                    caption: "dao-name",
+                    placeholder: "ETH WBTC 50 50 Fund",
+                    setInput: setNameInput,
+                    style: { width: "100%" }
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(RetroMinimaInputField, {
+                    caption: "dao-symbol",
+                    placeholder: "5050",
+                    setInput: setSymbolInput,
+                    style: { width: "100%" }
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            jsx_dev_runtime24.jsxDEV(FlexRow, {
+              style: { width: "100%", justifyContent: "start" },
+              children: jsx_dev_runtime24.jsxDEV(Typography, {
+                content: "This will be used to identify your DAO on the blockchain.",
+                style: { fontSize: "0.50em" }
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-function AssetForm() {
-  return jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
-    children: jsx_dev_runtime22.jsxDEV(FlexCol, {
-      style: { gap: "10px" },
-      children: [
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "What is the token address?",
-          placeholder: "0x0000000000000000000000000000000000000000",
-          set: () => {
-          }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "The path to traverse to get to the currency?",
-          placeholder: "",
-          set: () => {
-          }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "The path to traverse to get to the token from the currency?",
-          placeholder: "",
-          set: () => {
-          }
-        }, undefined, false, undefined, this),
-        jsx_dev_runtime22.jsxDEV(InputField, {
-          caption: "Percentage to allocate to this?",
-          placeholder: "",
-          set: () => {
-          }
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
+function AssetForm({ count, setTknInput, setTknCurPathInput, setCurTknPathInput, setAllocationInput }) {
+  return jsx_dev_runtime24.jsxDEV(jsx_dev_runtime24.Fragment, {
+    children: jsx_dev_runtime24.jsxDEV(FlexCol, {
+      style: { height: "100%", justifyContent: "start" },
+      children: jsx_dev_runtime24.jsxDEV(RetroMinimaCardContainer, {
+        children: jsx_dev_runtime24.jsxDEV(FlexCol, {
+          style: { gap: "20px" },
+          children: [
+            jsx_dev_runtime24.jsxDEV(FlexCol, {
+              style: { width: "100%", gap: "5px", alignItems: "start" },
+              children: [
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", gap: "10px", justifyContent: "start" },
+                  children: [
+                    jsx_dev_runtime24.jsxDEV(Typography, {
+                      content: count,
+                      style: { color: DEEP_PURPLE.toString() }
+                    }, undefined, false, undefined, this),
+                    jsx_dev_runtime24.jsxDEV(Typography, {
+                      content: "Asset"
+                    }, undefined, false, undefined, this)
+                  ]
+                }, undefined, true, undefined, this),
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(Typography, {
+                    content: "An asset that the DAO will manage.",
+                    style: { fontSize: "0.5em" }
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            jsx_dev_runtime24.jsxDEV(FlexCol, {
+              style: { width: "100%", gap: "10px", alignItems: "start" },
+              children: [
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(RetroMinimaInputField, {
+                    caption: "token",
+                    placeholder: "0x0000000000000000000000000000000000000000",
+                    setInput: setTknInput,
+                    style: { width: "100%" }
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(RetroMinimaInputField, {
+                    caption: "token-to-currency-path",
+                    placeholder: "address,address,address",
+                    setInput: setTknCurPathInput,
+                    style: { width: "100%" }
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(RetroMinimaInputField, {
+                    caption: "currency-to-token-path",
+                    placeholder: "address,address,address",
+                    setInput: setCurTknPathInput,
+                    style: { width: "100%" }
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this),
+                jsx_dev_runtime24.jsxDEV(FlexRow, {
+                  style: { width: "100%", justifyContent: "start" },
+                  children: jsx_dev_runtime24.jsxDEV(RetroMinimaInputField, {
+                    caption: "allocation",
+                    placeholder: "50",
+                    setInput: setAllocationInput,
+                    style: { width: "100%" }
+                  }, undefined, false, undefined, this)
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            jsx_dev_runtime24.jsxDEV(FlexRow, {
+              style: { width: "100%", justifyContent: "start" },
+              children: jsx_dev_runtime24.jsxDEV(Typography, {
+                content: "When rebalanced the contract will make a swap using the paths provided to bring its total assets into balance. The allocation will determine the amount for each position.",
+                style: { fontSize: "0.50em" }
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
-var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
 
 // src/public/component/Render.tsx
 var client = __toESM(require_client(), 1);
-var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
 function render(routes) {
   let root = document.getElementById("root");
   if (root)
-    return client.createRoot(root).render(jsx_dev_runtime23.jsxDEV(RouterProvider, {
+    return client.createRoot(root).render(jsx_dev_runtime25.jsxDEV(RouterProvider, {
       router: createBrowserRouter(routes)
     }, undefined, false, undefined, this));
   return;
 }
 
 // src/public/App.tsx
-var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
 render([{
   path: "/",
-  element: jsx_dev_runtime24.jsxDEV(HomePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime26.jsxDEV(HomePage, {}, undefined, false, undefined, this)
 }, {
   path: "/explore",
-  element: jsx_dev_runtime24.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime26.jsxDEV(ExplorePage, {}, undefined, false, undefined, this)
 }, {
   path: "/tokenomics",
-  element: jsx_dev_runtime24.jsxDEV(TokenomicsPage, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime26.jsxDEV(TokenomicsPage, {}, undefined, false, undefined, this)
 }, {
   path: "/get-started",
-  element: jsx_dev_runtime24.jsxDEV(GetStarted, {}, undefined, false, undefined, this)
+  element: jsx_dev_runtime26.jsxDEV(GetStarted, {}, undefined, false, undefined, this)
 }]);

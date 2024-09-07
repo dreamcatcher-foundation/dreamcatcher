@@ -1,13 +1,7 @@
 import {query} from "@component/Client";
 import {call} from "@component/Client";
 
-export type Asset = {
-    token: string;
-    currency: string;
-    tknCurPath: string[];
-    curTknPath: string[];
-    targetAllocation: bigint;
-}
+export type Asset = [string, string, string[], string[], bigint];
 
 export function MockPrototypeVaultNodeInterface(_address: string) {
 

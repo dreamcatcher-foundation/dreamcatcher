@@ -16,45 +16,21 @@ export function RetroMinimaButton({
     ... more
 }: RetroMinimaButtonProps): ReactNode {
     let [padding, setPadding] = useSpring(() => ({padding: "2px", config: config.stiff}));
-    return <>
-        <FlexRow 
-        style={{
-            width: "100px",
-            aspectRatio: "4/1", 
-            borderWidth: "1px", 
-            borderStyle: "solid", 
-            borderColor: ColorPalette.TITANIUM.toString(), 
-            ... padding,
-            ... style
-        }} 
-        {... more}>
-            <FlexRow
-            onMouseEnter={() => {
-                setPadding.start({padding: "0px"});
-                return;
-            }}
-            onMouseLeave={() => {
-                setPadding.start({padding: "2px"});
-                return;
-            }}
-            style={{
-                width: "100%",
-                height: "100%",
-                borderWidth: "1px", 
-                borderStyle: "solid", 
-                borderColor: ColorPalette.TITANIUM.toString(),
-                background: ColorPalette.TITANIUM.toString()
-            }}
-            {... more}>
-                <Typography
-                content={caption}
-                style={{
-                    fontWeight: "bold",
-                    fontFamily: "monospace",
-                    fontSize: "0.75em",
-                    color: ColorPalette.OBSIDIAN.toString()
-                }}/>
-            </FlexRow>
-        </FlexRow>
-    </>; 
+    function onMouseEnter(): void {
+        setPadding.start({padding: "0px"});
+        return;
+    }
+    function onMouseLeave(): void {
+        setPadding.start({padding: "2px"});
+        return;
+    }
+    return <><FlexRow onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} style={{width: "100px", aspectRatio: "4/1", borderWidth: "1px", borderStyle: "solid", borderColor: ColorPalette.TITANIUM.toString(), pointerEvents: "auto", cursor: "pointer", ... padding, ... style}} {... more}><RetroMinimaButtonInnerContainer><RetroMinimaButtonCaption caption={caption}/></RetroMinimaButtonInnerContainer></FlexRow></>
+}
+
+export function RetroMinimaButtonInnerContainer({children}: {children?: ReactNode;}): ReactNode {
+    return <><FlexRow style={{width: "100%", height: "100%", background: ColorPalette.TITANIUM.toString()}}>{children}</FlexRow></>;
+}
+
+export function RetroMinimaButtonCaption({caption}: {caption: string;}): ReactNode {
+    return <><Typography content={caption} style={{fontWeight: "bold", fontFamily: "monospace", fontSize: "0.75em", color: ColorPalette.OBSIDIAN.toString()}}/></>;
 }
