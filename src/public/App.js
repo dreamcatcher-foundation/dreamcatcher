@@ -50186,11 +50186,13 @@ function TearDropBulletPoint({ caption, content }) {
 // src/public/component/module/client/interface/MockPrototypeVaultNodeInterface.tsx
 function MockPrototypeVaultNodeInterface(_address) {
   async function deployed() {
-    return await query({
+    let x = await query({
       to: _address,
       methodSignature: "function deployed() external view returns (address[])",
       methodName: "deployed"
     });
+    console.log("deployed", x);
+    return x;
   }
   async function vaultFactory() {
     return await query({
@@ -50209,7 +50211,7 @@ function MockPrototypeVaultNodeInterface(_address) {
   async function deploy(name, symbol, assets) {
     return await call3({
       to: _address,
-      methodSignature: "function deploy(string, string, [address, address, address[], address[], uint256][])",
+      methodSignature: "function deploy(string,string,(address,address,address[],address[],uint256)[])",
       methodName: "deploy",
       methodArgs: [name, symbol, assets]
     });
@@ -50227,10 +50229,13 @@ function ExplorePage() {
     (async () => {
       let stored;
       try {
-        stored = await MockPrototypeVaultNodeInterface("0x79AE495ce6832182B62e6B9340f1eF887269C38c").deployed();
-      } catch {
+        console.log("fetching");
+        stored = await MockPrototypeVaultNodeInterface("0xa3d19477B551C8d0f4AD8A5eE0080ED5Ad094dC5").deployed();
+      } catch (e) {
+        console.error(e);
         stored = [];
       }
+      console.log(stored);
       if (stored.length === 0) {
         return;
       }
@@ -50539,6 +50544,7 @@ function RetroMinimaCardContainer({
 
 // src/public/component/styled/page/GetStarted.tsx
 var import_react36 = __toESM(require_react(), 1);
+var import_react37 = __toESM(require_react(), 1);
 var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
 function GetStarted() {
   let [nameInput, setNameInput] = import_react36.useState("");
@@ -50553,149 +50559,170 @@ function GetStarted() {
   let [tknCurPathInput1, setTknCurPathInput1] = import_react36.useState("");
   let [curTknPathInput1, setCurTknPathInput1] = import_react36.useState("");
   let [allocationInput1, setAllocationInput1] = import_react36.useState("");
-  async function deploy() {
-    try {
-
-      class Address {
-        _string;
-        static _charSet = [
-          "0",
-          "1",
-          "2",
-          "3",
-          "4",
-          "5",
-          "6",
-          "7",
-          "8",
-          "9",
-          "a",
-          "b",
-          "c",
-          "d",
-          "e",
-          "f",
-          "A",
-          "B",
-          "C",
-          "D",
-          "E",
-          "F",
-          "x"
+  let [deployment, setDeployment] = import_react36.useState(null);
+  import_react37.useEffect(function() {
+    function Address(_string) {
+      let _charSet = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+      ];
+      {
+        if (_string.length < 42)
+          throw Error("too-short");
+        if (_string.length > 42)
+          throw Error("too-long");
+        let stringWithoutInitials = "";
+        for (let i = 2;i < _string.length; i++)
+          stringWithoutInitials += _string[i];
+        _checkCharSet(stringWithoutInitials);
+        return { toString };
+      }
+      function toString() {
+        return _string.toString();
+      }
+      function _checkCharSet(string2) {
+        for (let i = 0;i < string2.length; i++)
+          _checkChar(string2[i]);
+        return true;
+      }
+      function _checkChar(char) {
+        if (char.length !== 1)
+          throw Error("illegal-char");
+        for (let i = 0;i < _charSet.length; i++)
+          if (char === _charSet[i])
+            return true;
+        throw Error("illegal-char-set");
+      }
+    }
+    function Path(_string) {
+      let _shards;
+      {
+        _shards = _string.split(",");
+        for (let i = 0;i < _shards.length; i++)
+          Address(_shards[i]);
+        return { toString, toStringArray, toAddressArray };
+      }
+      function toString() {
+        return _string;
+      }
+      function toStringArray() {
+        return _shards;
+      }
+      function toAddressArray() {
+        let array3 = [];
+        for (let i = 0;i < _shards.length; i++)
+          array3.push(Address(_shards[i]));
+        return array3;
+      }
+    }
+    function Asset({
+      _tknInput,
+      _curInput,
+      _tknCurPathInput,
+      _curTknPathInput,
+      _allocationInput
+    }) {
+      let _tkn;
+      let _cur;
+      let _tknCurPath;
+      let _curTknPath;
+      let _allocation;
+      {
+        _tkn = Address(_tknInput);
+        _cur = Address(_curInput);
+        _tknCurPathInput === "" ? _tknCurPath = Path(`${_tknInput},${_curInput}`) : _tknCurPath = Path(_tknCurPathInput);
+        _curTknPathInput === "" ? _curTknPath = Path(`${_curInput},${_tknInput}`) : _curTknPath = Path(_curTknPathInput);
+        _allocation = BigInt(parseFloat(_allocationInput) * 1000000000000000000);
+        return { toSolStruct, tkn, cur, tknCurPath, curTknPath, allocation };
+      }
+      function toSolStruct() {
+        return [
+          tkn().toString(),
+          cur().toString(),
+          tknCurPath().toStringArray(),
+          curTknPath().toStringArray(),
+          allocation()
         ];
-        static _checkCharSet(string2) {
-          for (let i = 0;i < string2.length; i++)
-            Address._checkChar(string2[i]);
-          return true;
-        }
-        static _checkChar(char) {
-          if (char.length !== 1)
-            throw new Error("address-illegal-char");
-          for (let i = 0;i < Address._charSet.length; i++)
-            if (char === Address._charSet[i])
-              return true;
-          throw new Error("address-illegal-char-set");
-        }
-        constructor(_string) {
-          this._string = _string;
-          let initial = this._string[0] + this._string[1];
-          if (initial !== "0x")
-            throw new Error("address-illegal-prefix");
-          if (this._string.length < 42)
-            throw new Error("address-too-short");
-          if (this._string.length > 42)
-            throw new Error("address-too-long");
-          Address._checkCharSet(this._string);
-        }
-        toString() {
-          return this._string;
-        }
       }
-
-      class Path {
-        _stringArray;
-        _addressArray = [];
-        constructor(_stringArray) {
-          this._stringArray = _stringArray;
-          for (let i = 0;i < this._stringArray.length; i++)
-            this._addressArray.push(new Address(this._stringArray[i]));
-        }
-        toAddressArray() {
-          return [...this._addressArray];
-        }
-        toStringArray() {
-          return [...this._stringArray];
-        }
+      function tkn() {
+        return _tkn;
       }
-
-      class Asset {
-        _tkn;
-        _cur;
-        _tknCurPath;
-        _curTknPath;
-        _allocation;
-        constructor({
-          tknInput,
-          curInput,
-          tknCurPathInput,
-          curTknPathInput,
-          allocationInput
-        }) {
-          let tknCurPathShards = tknCurPathInput.split(",");
-          let curTknPathShards = curTknPathInput.split(",");
-          if (tknCurPathInput === "")
-            tknCurPathShards = [tknInput, curInput];
-          if (curTknPathInput === "")
-            curTknPathShards = [curInput, tknInput];
-          this._tkn = new Address(tknInput);
-          this._cur = new Address(curInput);
-          this._tknCurPath = new Path(tknCurPathShards);
-          this._curTknPath = new Path(curTknPathShards);
-          this._allocation = BigInt(parseFloat(allocationInput) * 1000000000000000000);
-        }
-        toDeploymentPayload() {
-          return [
-            this._tkn.toString(),
-            this._cur.toString(),
-            this._tknCurPath.toStringArray(),
-            this._curTknPath.toStringArray(),
-            this._allocation
-          ];
-        }
-        tkn() {
-          return this._tkn;
-        }
-        cur() {
-          return this._cur;
-        }
-        tknCurPath() {
-          return this._tknCurPath;
-        }
-        curTknPath() {
-          return this._curTknPath;
-        }
-        allocation() {
-          return this._allocation;
-        }
+      function cur() {
+        return _cur;
       }
-      let asset0 = new Asset({
-        tknInput: tknInput0,
-        curInput: curInput0,
-        tknCurPathInput: tknCurPathInput0,
-        curTknPathInput: curTknPathInput0,
-        allocationInput: allocationInput0
+      function tknCurPath() {
+        return _tknCurPath;
+      }
+      function curTknPath() {
+        return _curTknPath;
+      }
+      function allocation() {
+        return _allocation;
+      }
+    }
+    try {
+      let asset0 = Asset({
+        _tknInput: tknInput0,
+        _curInput: curInput0,
+        _tknCurPathInput: tknCurPathInput0,
+        _curTknPathInput: curTknPathInput0,
+        _allocationInput: allocationInput0
       });
-      let asset1 = new Asset({
-        tknInput: tknInput1,
-        curInput: curInput1,
-        tknCurPathInput: tknCurPathInput1,
-        curTknPathInput: curTknPathInput1,
-        allocationInput: allocationInput1
+      let asset1 = Asset({
+        _tknInput: tknInput1,
+        _curInput: curInput1,
+        _tknCurPathInput: tknCurPathInput1,
+        _curTknPathInput: curTknPathInput1,
+        _allocationInput: allocationInput1
       });
-      let node = MockPrototypeVaultNodeInterface("0x79AE495ce6832182B62e6B9340f1eF887269C38c");
-      let receipt = await node.deploy(nameInput, symbolInput, [asset0.toDeploymentPayload(), asset1.toDeploymentPayload()]);
+      setDeployment([asset0.toSolStruct(), asset1.toSolStruct()]);
+      return;
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+  }, [
+    nameInput,
+    symbolInput,
+    tknInput0,
+    curInput0,
+    tknCurPathInput0,
+    curTknPathInput0,
+    allocationInput0,
+    tknInput1,
+    curInput1,
+    tknCurPathInput1,
+    curTknPathInput1,
+    allocationInput1
+  ]);
+  async function deploy() {
+    if (!deployment)
+      return null;
+    try {
+      let node = MockPrototypeVaultNodeInterface("0xa3d19477B551C8d0f4AD8A5eE0080ED5Ad094dC5");
+      let receipt = await node.deploy(nameInput, symbolInput, deployment);
       if (receipt)
-        return receipt.contractAddress;
+        return receipt.hash;
       return null;
     } catch (e) {
       console.error(e);
@@ -50766,7 +50793,7 @@ function GetStarted() {
                         }, undefined, false, undefined, this),
                         jsx_dev_runtime24.jsxDEV(AssetForm, {
                           count: "02",
-                          setTknInput: setCurInput1,
+                          setTknInput: setTknInput1,
                           setTknCurPathInput: setTknCurPathInput1,
                           setCurTknPathInput: setCurTknPathInput1,
                           setAllocationInput: setAllocationInput1

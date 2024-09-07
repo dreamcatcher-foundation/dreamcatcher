@@ -22,11 +22,14 @@ export function ExplorePage(): ReactNode {
         (async () => {
             let stored: string[];
             try {
-                stored = await MockPrototypeVaultNodeInterface("0x79AE495ce6832182B62e6B9340f1eF887269C38c").deployed();
+                console.log("fetching");
+                stored = await MockPrototypeVaultNodeInterface("0xa3d19477B551C8d0f4AD8A5eE0080ED5Ad094dC5").deployed();
             }
-            catch {
+            catch (e: unknown) {
+                console.error(e);
                 stored = [];
             }
+            console.log(stored);
             if (stored.length === 0) {
                 return;
             }

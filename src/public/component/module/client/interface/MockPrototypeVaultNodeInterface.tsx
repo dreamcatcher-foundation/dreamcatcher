@@ -6,11 +6,13 @@ export type Asset = [string, string, string[], string[], bigint];
 export function MockPrototypeVaultNodeInterface(_address: string) {
 
     async function deployed(): Promise<string[]> {
-        return (await query({
+        let x = (await query({
             to: _address,
             methodSignature: "function deployed() external view returns (address[])",
             methodName: "deployed"
-        })) as string[];
+        }));
+        console.log("deployed", x);
+        return x as string[];
     }
 
     async function vaultFactory(): Promise<string> {
@@ -32,7 +34,7 @@ export function MockPrototypeVaultNodeInterface(_address: string) {
     async function deploy(name: string, symbol: string, assets: Asset[]) {
         return await call({
             to: _address,
-            methodSignature: "function deploy(string, string, [address, address, address[], address[], uint256][])",
+            methodSignature: "function deploy(string,string,(address,address,address[],address[],uint256)[])",
             methodName: "deploy",
             methodArgs: [name, symbol, assets]
         })

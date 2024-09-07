@@ -31,7 +31,7 @@ export function GetStarted(): ReactNode {
     let [tknCurPathInput1, setTknCurPathInput1] = useState<string>("");
     let [curTknPathInput1, setCurTknPathInput1] = useState<string>("");
     let [allocationInput1, setAllocationInput1] = useState<string>("");
-    let [deployment, setDeployment] = useState();
+    let [deployment, setDeployment] = useState<[[string, string, string[], string[], bigint], [string, string, string[], string[], bigint]] | null>(null);
 
     useEffect(function(): void {
 
@@ -49,7 +49,6 @@ export function GetStarted(): ReactNode {
             ];
 
             /** @constructor */ {
-                if (`${_string[0]}${_string[1]}` !== "0x") throw Error("missing-prefix");
                 if (_string.length < 42) throw Error("too-short");
                 if (_string.length > 42) throw Error("too-long");
                 let stringWithoutInitials: string = "";
@@ -103,6 +102,15 @@ export function GetStarted(): ReactNode {
             }
         }
 
+        interface Asset {
+            toSolStruct(): [string, string, string[], string[], bigint];
+            tkn(): Address;
+            cur(): Address;
+            tknCurPath(): Path;
+            curTknPath(): Path;
+            allocation(): bigint;
+        }
+
         function Asset({
             _tknInput,
             _curInput,
@@ -115,7 +123,7 @@ export function GetStarted(): ReactNode {
             _tknCurPathInput: string;
             _curTknPathInput: string;
             _allocationInput: string;
-        }) {
+        }): Asset {
             let _tkn: Address;
             let _cur: Address;
             let _tknCurPath: Path;
@@ -125,8 +133,12 @@ export function GetStarted(): ReactNode {
             /** @constructor */ {
                 _tkn = Address(_tknInput);
                 _cur = Address(_curInput);
-                _tknCurPath = Path(_tknCurPathInput);
-                _curTknPath = Path(_curTknPathInput);
+                _tknCurPathInput === ""
+                    ? _tknCurPath = Path(`${_tknInput},${_curInput}`)
+                    : _tknCurPath = Path(_tknCurPathInput);
+                _curTknPathInput === ""
+                    ? _curTknPath = Path(`${_curInput},${_tknInput}`)
+                    : _curTknPath = Path(_curTknPathInput);
                 _allocation = BigInt(parseFloat(_allocationInput) * 10**18);
                 return {toSolStruct, tkn, cur, tknCurPath, curTknPath, allocation};
             }
@@ -163,19 +175,27 @@ export function GetStarted(): ReactNode {
         }
 
         try {
-            let asset0 = Asset({
+            let asset0: Asset = Asset({
                 _tknInput: tknInput0,
                 _curInput: curInput0,
                 _tknCurPathInput: tknCurPathInput0,
                 _curTknPathInput: curTknPathInput0,
                 _allocationInput: allocationInput0
             });
-            
+            let asset1: Asset = Asset({
+                _tknInput: tknInput1,
+                _curInput: curInput1,
+                _tknCurPathInput: tknCurPathInput1,
+                _curTknPathInput: curTknPathInput1,
+                _allocationInput: allocationInput1
+            });
+            setDeployment([asset0.toSolStruct(), asset1.toSolStruct()])
+            return;
         }
         catch (e: unknown) {
-
+            console.error(e);
+            return;
         }
-
     }, [
         nameInput,
         symbolInput,
@@ -192,134 +212,11 @@ export function GetStarted(): ReactNode {
     ]);
     
     async function deploy(): Promise<string | null> {
+        if (!deployment) return null;
         try {
-
-            class Address {
-                private static _charSet: string[] = [
-                    "0", "1", "2", "3", "4", 
-                    "5", "6", "7", "8", "9", 
-                    "a", "b", "c", "d", "e", 
-                    "f", "A", "B", "C", "D", 
-                    "E", "F", "x"
-                ];
-
-                private static _checkCharSet(string: string): true {
-                    for (let i = 0; i < string.length; i++) Address._checkChar(string[i]);
-                    return true;
-                }
-
-                private static _checkChar(char: string): true {
-                    if (char.length !== 1) throw new Error("address-illegal-char");
-                    for (let i = 0; i < Address._charSet.length; i++) if (char === Address._charSet[i]) return true;
-                    throw new Error("address-illegal-char-set");
-                }
-
-                public constructor(private _string: string) {
-                    let initial: string = this._string[0] + this._string[1];
-                    if (initial !== "0x") throw new Error("address-illegal-prefix");
-                    if (this._string.length < 42) throw new Error("address-too-short");
-                    if (this._string.length > 42) throw new Error("address-too-long");
-                    Address._checkCharSet(this._string);
-                }
-
-                public toString(): string {
-                    return this._string;
-                }
-            }
-
-            class Path {
-                private _addressArray: Address[] = [];
-
-                public constructor(private _stringArray: string[]) {
-                    for (let i = 0; i < this._stringArray.length; i++) this._addressArray.push(new Address(this._stringArray[i]));
-                }
-
-                public toAddressArray(): Address[] {
-                    return [... this._addressArray];
-                }
-
-                public toStringArray(): string[] {
-                    return [... this._stringArray];
-                }
-            }
-            class Asset {
-                private _tkn: Address;
-                private _cur: Address;
-                private _tknCurPath: Path;
-                private _curTknPath: Path;
-                private _allocation: bigint;
-
-                public constructor({
-                    tknInput,
-                    curInput,
-                    tknCurPathInput,
-                    curTknPathInput,
-                    allocationInput
-                }: {
-                    tknInput: string;
-                    curInput: string;
-                    tknCurPathInput: string;
-                    curTknPathInput: string;
-                    allocationInput: string;
-                }) {
-                    let tknCurPathShards: string[] = tknCurPathInput.split(",");
-                    let curTknPathShards: string[] = curTknPathInput.split(",");
-                    if (tknCurPathInput === "") tknCurPathShards = [tknInput, curInput];
-                    if (curTknPathInput === "") curTknPathShards = [curInput, tknInput];
-                    this._tkn = new Address(tknInput);
-                    this._cur = new Address(curInput);
-                    this._tknCurPath = new Path(tknCurPathShards);
-                    this._curTknPath = new Path(curTknPathShards);
-                    this._allocation = BigInt(parseFloat(allocationInput) * 10**18)
-                }
-
-                public toDeploymentPayload(): [string, string, string[], string[], bigint] {
-                    return [
-                        this._tkn.toString(), 
-                        this._cur.toString(), 
-                        this._tknCurPath.toStringArray(), 
-                        this._curTknPath.toStringArray(), 
-                        this._allocation
-                    ];
-                }
-
-                public tkn(): Address {
-                    return this._tkn;
-                }
-
-                public cur(): Address {
-                    return this._cur;
-                }
-
-                public tknCurPath(): Path {
-                    return this._tknCurPath;
-                }
-
-                public curTknPath(): Path {
-                    return this._curTknPath;
-                }
-
-                public allocation(): bigint {
-                    return this._allocation;
-                }
-            }
-            let asset0 = new Asset({
-                tknInput: tknInput0,
-                curInput: curInput0,
-                tknCurPathInput: tknCurPathInput0,
-                curTknPathInput: curTknPathInput0,
-                allocationInput: allocationInput0
-            });
-            let asset1 = new Asset({
-                tknInput: tknInput1,
-                curInput: curInput1,
-                tknCurPathInput: tknCurPathInput1,
-                curTknPathInput: curTknPathInput1,
-                allocationInput: allocationInput1
-            });
-            let node = MockPrototypeVaultNodeInterface("0x79AE495ce6832182B62e6B9340f1eF887269C38c");
-            let receipt = await node.deploy(nameInput, symbolInput, [asset0.toDeploymentPayload(), asset1.toDeploymentPayload()]);
-            if (receipt) return receipt.contractAddress;
+            let node = MockPrototypeVaultNodeInterface("0xa3d19477B551C8d0f4AD8A5eE0080ED5Ad094dC5");
+            let receipt = await node.deploy(nameInput, symbolInput, deployment);
+            if (receipt) return receipt.hash;
             return null;
         }
         catch (e: unknown) {
@@ -355,7 +252,7 @@ export function GetStarted(): ReactNode {
 
                             <FlexCol style={{gap: "20px"}}>
                                 <AssetForm count="01" setTknInput={setTknInput0} setTknCurPathInput={setTknCurPathInput0} setCurTknPathInput={setCurTknPathInput0} setAllocationInput={setAllocationInput0}/>
-                                <AssetForm count="02" setTknInput={setCurInput1} setTknCurPathInput={setTknCurPathInput1} setCurTknPathInput={setCurTknPathInput1} setAllocationInput={setAllocationInput1}/>
+                                <AssetForm count="02" setTknInput={setTknInput1} setTknCurPathInput={setTknCurPathInput1} setCurTknPathInput={setCurTknPathInput1} setAllocationInput={setAllocationInput1}/>
                             </FlexCol>
                         </FlexRow>
                     </FlexCol>

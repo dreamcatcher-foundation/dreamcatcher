@@ -38,6 +38,7 @@ contract VaultNode {
         address vToken = IOwnableTokenFactory(_ownableTokenFactory).deploy(name, symbol, address(this));
         address vault = IVaultFactory(_vaultFactory).deploy(IVToken(vToken), assets);
         IOwnableToken(vToken).transferOwnership(vault);
+        _deployed.push(vault);
         emit Deploy(msg.sender, vault);
         return vault;
     }
