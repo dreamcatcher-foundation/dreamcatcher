@@ -8,8 +8,9 @@ import {Asset} from "./Asset.sol";
 
 interface IVaultNode {
     event Deploy(address deployer, address instance);
-    function deployed() external view returns (address[] memory);
+    function size() external view returns (uint256);
+    function child(uint256 i) external view returns (address[] memory);
     function vaultFactory() external view returns (address);
     function ownableTokenFactory() external view returns (address);
-    function deploy(string memory name, string memory symbol, Asset[] memory assets) external returns (address);
+    function mint(string memory name, string memory symbol, Asset[] memory assets) external returns (address);
 }

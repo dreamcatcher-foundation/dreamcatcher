@@ -6,7 +6,8 @@ import { Contract } from "ethers";
 import { ContractFactory } from "ethers";
 import { Interface } from "ethers";
 import { TransactionReceipt } from "ethers";
-import { require } from "@lib/ErrorHandler";
+import {node} from "@component/MockPrototypeVaultNodeInterface";
+import {require} from "@lib/ErrorHandler";
 
 export type ClientErrorCode
     =
@@ -154,6 +155,28 @@ export async function accountChainId() {
     require<ClientErrorCode>(connected(), "client-not-connected");
     let network: Network = await _session!.Network();
     return network.chainId();
+}
+
+export async function accountDeployed(): Promise<string[]> {
+    let size: bigint = await node.size();
+    let children: [string, string][] = [];
+    let cursor: bigint = 0n;
+    while (cursor < size) {
+        children.push(await node.child(cursor));
+        cursor++;
+    }
+    let deployed: string[] = [];
+    let address: string = await accountAddress();
+    cursor = 0n;
+    while (cursor < size) {
+        let deployer: string = children[Number(cursor)][0];
+        if (deployer === address) {
+            let instance: string = children[Number(cursor)][1];
+            deployed.push(instance);
+        }
+        cursor++;
+    }
+    return deployed;
 }
 
 export async function query({ to, methodSignature, methodName, methodArgs }: { to: string; methodSignature: string; methodName: string; methodArgs?: unknown[]; }) {

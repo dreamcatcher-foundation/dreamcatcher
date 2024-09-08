@@ -1,6 +1,7 @@
 import { TransactionReceipt } from "@component/Client";
 import { query } from "@component/Client";
 import { call } from "@component/Client";
+import { Erc20Interface } from "./Erc20Interface";
 
 export type MockPrototypeVaultInterface
     = {
@@ -20,11 +21,11 @@ export type MockPrototypeVaultInterface
 export function MockPrototypeVaultInterface(_address: string): MockPrototypeVaultInterface {
 
     async function name(): Promise<string> {
-        return await query({
+        return ((await query({
             to: _address,
             methodSignature: "function name() external view returns (string)",
             methodName: "name"
-        }) as string;
+        })) as string);
     }
 
     async function symbol(): Promise<string> {
@@ -77,7 +78,7 @@ export function MockPrototypeVaultInterface(_address: string): MockPrototypeVaul
         let x: [bigint, bigint, bigint] = await query({
             to: _address,
             methodSignature: "function totalAssets() external view returns (uint256, uint256, uint256)",
-            methodName: "totaAssets"
+            methodName: "totalAssets"
         }) as [bigint, bigint, bigint];
         let real: number = Number(x[0]) / 10**18;
         let best: number = Number(x[1]) / 10**18;
@@ -102,6 +103,11 @@ export function MockPrototypeVaultInterface(_address: string): MockPrototypeVaul
     }
 
     async function mint(assetsIn: number): Promise<TransactionReceipt | null> {
+        let usdc = Erc20Interface("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359");
+        /// if transaction is replaced the approval transaction is lost and the
+        /// chain is broken. a better system needs to be put in place, likely a
+        /// global transaction handler.
+        let approval = await usdc.approve(_address, assetsIn);
         return (await call({
             to: _address,
             methodSignature: "function mint(uint256) external",
