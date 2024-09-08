@@ -14,6 +14,8 @@ import {RetroMinimaCardContainer} from "@component/retro-minima/RetroMinimaCardC
 import {MockPrototypeVaultNodeInterface} from "@component/MockPrototypeVaultNodeInterface";
 import {useState} from "react";
 import {useEffect} from "react";
+import {node} from "@component/MockPrototypeVaultNodeInterface";
+import {accountAddress} from "@component/Client";
 import * as ColorPalette from "@component/ColorPalette";
 
 export type InputSetter = (input: string) => unknown;
@@ -211,17 +213,29 @@ export function GetStarted(): ReactNode {
         allocationInput1
     ]);
     
-    async function deploy(): Promise<string | null> {
-        if (!deployment) return null;
+    async function onConfirmButtonClick(): Promise<void> {
+        if (!deployment) return;
         try {
-            let node = MockPrototypeVaultNodeInterface("0xa3d19477B551C8d0f4AD8A5eE0080ED5Ad094dC5");
-            let receipt = await node.deploy(nameInput, symbolInput, deployment);
-            if (receipt) return receipt.hash;
-            return null;
+            let instance = await _deploy({
+                name: nameInput,
+                symbol: symbolInput,
+                tkn0: deployment[0][0],
+                cur0: deployment[0][1],
+                tknCurPath0: deployment[0][2],
+                curTknPath0: deployment[0][3],
+                allocation0: deployment[0][4],
+                tkn1: deployment[1][0],
+                cur1: deployment[1][1],
+                tknCurPath1: deployment[1][2],
+                curTknPath1: deployment[1][3],
+                allocation1: deployment[1][4]
+            });
+            console.log(instance);
+            return;
         }
         catch (e: unknown) {
             console.error(e);
-            return null;
+            return;
         }
     }
 
@@ -244,7 +258,7 @@ export function GetStarted(): ReactNode {
                                 <MetadataForm setNameInput={setNameInput} setSymbolInput={setSymbolInput}/>
 
                                 <FlexRow style={{width: "100%", justifyContent: "space-between"}}>
-                                    <RetroMinimaButton caption="Confirm" onClick={() => deploy()}/>
+                                    <RetroMinimaButton caption="Confirm" onClick={onConfirmButtonClick}/>
                                     <RetroMinimaButton caption="Help"/>
                                 </FlexRow>
                             </FlexCol>
@@ -305,4 +319,42 @@ export function AssetForm({count, setTknInput, setTknCurPathInput, setCurTknPath
             </RetroMinimaCardContainer>
         </FlexCol>
     </>
+}
+
+async function _deploy({
+    name,
+    symbol,
+    tkn0,
+    cur0,
+    tknCurPath0,
+    curTknPath0,
+    allocation0,
+    tkn1,
+    cur1,
+    tknCurPath1,
+    curTknPath1,
+    allocation1
+}: {
+    name: string;
+    symbol: string;
+    tkn0: string;
+    cur0: string;
+    tknCurPath0: string[];
+    curTknPath0: string[];
+    allocation0: bigint;
+    tkn1: string;
+    cur1: string;
+    tknCurPath1: string[];
+    curTknPath1: string[];
+    allocation1: bigint;
+}): Promise<string> {
+    let address = await accountAddress();
+    let asset0 = [tkn0, cur0, tknCurPath0, curTknPath0, allocation0];
+    let asset1 = [tkn1, cur1, tknCurPath1, curTknPath1, allocation1];
+    await node.deploy(name, symbol, [(asset0 as any), (asset1 as any)]);
+    let children = await node.children();
+    let instance = "";
+    for (let i = 0; i < children.length; i++) if (children[i].deployer() === address) instance = children[i].instance();
+    if (instance === "") throw Error("missing-child");
+    return instance;
 }

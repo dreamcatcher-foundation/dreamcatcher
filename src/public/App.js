@@ -50183,16 +50183,129 @@ function TearDropBulletPoint({ caption, content }) {
   }, undefined, false, undefined, this);
 }
 
-// src/public/component/module/client/interface/MockPrototypeVaultNodeInterface.tsx
-function MockPrototypeVaultNodeInterface(_address) {
-  async function deployed() {
+// src/public/component/module/client/interface/MockPrototypeVaultInterface.tsx
+function MockPrototypeVaultInterface(_address) {
+  async function name() {
+    return await query({
+      to: _address,
+      methodSignature: "function name() external view returns (string)",
+      methodName: "name"
+    });
+  }
+  async function symbol() {
+    return await query({
+      to: _address,
+      methodSignature: "function symbol() external view returns (string)",
+      methodName: "symbol"
+    });
+  }
+  async function secondsLeftToNextRebalance() {
+    return await query({
+      to: _address,
+      methodSignature: "function secondsLeftToNextRebalance() external view returns (uint256)",
+      methodName: "secondsLeftToNextRebalance"
+    });
+  }
+  async function previewMint(assetsIn) {
+    return Number(await query({
+      to: _address,
+      methodSignature: "function previewMint(uint256) external view returns (uint256)",
+      methodName: "previewMint",
+      methodArgs: [BigInt(assetsIn * 1000000000000000000)]
+    })) / 1000000000000000000;
+  }
+  async function previewBurn(supplyIn) {
+    return Number(await query({
+      to: _address,
+      methodSignature: "function previewBurn(uint256) external view returns (uint256)",
+      methodName: "previewBurn",
+      methodArgs: [BigInt(supplyIn * 1000000000000000000)]
+    })) / 1000000000000000000;
+  }
+  async function quote() {
     let x = await query({
       to: _address,
-      methodSignature: "function deployed() external view returns (address[])",
-      methodName: "deployed"
+      methodSignature: "function quote() external view returns (uint256, uint256, uint256)",
+      methodName: "quote"
     });
-    console.log("deployed", x);
-    return x;
+    let real = Number(x[0]) / 1000000000000000000;
+    let best = Number(x[1]) / 1000000000000000000;
+    let slippage = Number(x[2]) / 1000000000000000000;
+    return [real, best, slippage];
+  }
+  async function totalAssets() {
+    let x = await query({
+      to: _address,
+      methodSignature: "function totalAssets() external view returns (uint256, uint256, uint256)",
+      methodName: "totaAssets"
+    });
+    let real = Number(x[0]) / 1000000000000000000;
+    let best = Number(x[1]) / 1000000000000000000;
+    let slippage = Number(x[2]) / 1000000000000000000;
+    return [real, best, slippage];
+  }
+  async function totalSupply() {
+    return Number(await query({
+      to: _address,
+      methodSignature: "function totalSupply() external view returns (uint256)",
+      methodName: "totalSupply"
+    })) / 1000000000000000000;
+  }
+  async function rebalance() {
+    return await call3({
+      to: _address,
+      methodSignature: "function rebalance() external",
+      methodName: "rebalance"
+    });
+  }
+  async function mint(assetsIn) {
+    return await call3({
+      to: _address,
+      methodSignature: "function mint(uint256) external",
+      methodName: "mint",
+      methodArgs: [BigInt(assetsIn * 1000000000000000000)]
+    });
+  }
+  async function burn(supplyIn) {
+    return await call3({
+      to: _address,
+      methodSignature: "function burn(uint256) external",
+      methodName: "burn",
+      methodArgs: [BigInt(supplyIn * 1000000000000000000)]
+    });
+  }
+  return { name, symbol, secondsLeftToNextRebalance, previewMint, previewBurn, quote, totalAssets, totalSupply, rebalance, mint, burn };
+}
+
+// src/public/component/styled/page/ExplorePage.tsx
+var import_react32 = __toESM(require_react(), 1);
+var import_react33 = __toESM(require_react(), 1);
+
+// src/public/component/module/client/interface/MockPrototypeVaultNodeInterface.tsx
+function MockPrototypeVaultNodeChild(_deployer, _instance, _timestamp) {
+  return { deployer, instance, timestamp };
+  function deployer() {
+    return _deployer;
+  }
+  function instance() {
+    return _instance;
+  }
+  function timestamp() {
+    return _timestamp;
+  }
+}
+function MockPrototypeVaultNodeInterface(_address) {
+  return { children, vaultFactory, ownableTokenFactory, deploy };
+  async function children() {
+    let response = await query({
+      to: _address,
+      methodSignature: "function children() external view returns ((string, string, uint256)[])",
+      methodName: "children"
+    });
+    let children2 = [];
+    for (let i = 0;i < response.length; i++)
+      children2.push(MockPrototypeVaultNodeChild(response[i][0], response[i][1], response[i][2]));
+    return children2;
   }
   async function vaultFactory() {
     return await query({
@@ -50216,46 +50329,65 @@ function MockPrototypeVaultNodeInterface(_address) {
       methodArgs: [name, symbol, assets]
     });
   }
-  return { deployed, vaultFactory, deploy };
 }
+var node = MockPrototypeVaultNodeInterface("0xd5E97178fBa5A760d23c81D79d0dBFFdEA1bE844");
 
 // src/public/component/styled/page/ExplorePage.tsx
-var import_react32 = __toESM(require_react(), 1);
-var import_react33 = __toESM(require_react(), 1);
 function ExplorePage() {
   let [batch, setBatch] = import_react33.useState([]);
-  let [batchCursor, setBatchCursor] = import_react33.useState(0);
+  let [batchCursor, setBatchCursor] = import_react33.useState(0n);
   import_react32.useEffect(() => {
-    (async () => {
-      let stored;
-      try {
-        console.log("fetching");
-        stored = await MockPrototypeVaultNodeInterface("0xa3d19477B551C8d0f4AD8A5eE0080ED5Ad094dC5").deployed();
-      } catch (e) {
-        console.error(e);
-        stored = [];
-      }
-      console.log(stored);
-      if (stored.length === 0) {
-        return;
-      }
-      let batchSize = 6;
-      let batch2 = [];
-      let chunk = [];
-      let cursor = 0;
-      while (stored.length > 0) {
-        let item = stored[cursor];
-        chunk.push(item);
-        if (chunk.length === batchSize) {
-          batch2.push(chunk);
-          chunk = [];
+    try {
+      let Chunk = function() {
+        let _minSize = 0n;
+        let _maxSize = 6n;
+        let _storage = [];
+        {
+          return { hasEmptySpace, read, wipe, push };
         }
-        cursor += 1;
-      }
-      setBatch(batch2);
+        function hasEmptySpace() {
+          if (_storage.length >= _maxSize)
+            return false;
+          return true;
+        }
+        function read(i) {
+          let min = _minSize;
+          let max = BigInt(_storage.length);
+          if (i < min || i > max)
+            throw Error("OUT_OF_BOUNDS");
+          return _storage[Number(i)];
+        }
+        function wipe() {
+          let storage = [..._storage];
+          _storage = [];
+          return storage;
+        }
+        function push(string2) {
+          if (hasEmptySpace())
+            _storage.push(string2);
+          return null;
+        }
+      };
+      node.children().then((children) => {
+        let chunk = Chunk();
+        let batch2 = [];
+        for (let i = 0;i < children.length; i++) {
+          let child = children[i];
+          if (chunk.hasEmptySpace())
+            chunk.push(child.instance());
+          else {
+            batch2.push(chunk.wipe());
+          }
+        }
+        setBatch(batch2);
+        return;
+      });
       return;
-    })();
-    return;
+    } catch (e) {
+      console.error(e);
+      setBatch([]);
+      return;
+    }
   }, []);
   return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
     children: jsx_dev_runtime19.jsxDEV(FlexCol, {
@@ -50264,9 +50396,179 @@ function ExplorePage() {
         style: { width: "1024px", height: "100%", justifyContent: "start" },
         children: [
           jsx_dev_runtime19.jsxDEV(Nav, {}, undefined, false, undefined, this),
-          jsx_dev_runtime19.jsxDEV(FlexRow, {}, undefined, false, undefined, this)
+          jsx_dev_runtime19.jsxDEV(FlexRow, {
+            children: jsx_dev_runtime19.jsxDEV(Card, {
+              address: batch[Number(batchCursor)][0]
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function Card({ address: address18 }) {
+  let [name, setName] = import_react33.useState("****");
+  let [symbol, setSymbol] = import_react33.useState("****");
+  let [totalAssets, setTotalAssets] = import_react33.useState(0);
+  let [totalSupply, setTotalSupply] = import_react33.useState(0);
+  let [quote, setQuote] = import_react33.useState(0);
+  let [mounted, setMounted] = import_react33.useState(jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {}, undefined, false, undefined, this));
+  import_react32.useEffect(function() {
+    (async function() {
+      setMounted(jsx_dev_runtime19.jsxDEV(CardLoaderSlide, {}, undefined, false, undefined, this));
+      try {
+        let contract4 = MockPrototypeVaultInterface(address18);
+        setName(await contract4.name());
+        setSymbol(await contract4.symbol());
+        setTotalAssets(await contract4.totalAssets()[1]);
+        setTotalSupply(await contract4.totalSupply());
+        setQuote(await contract4.quote()[1]);
+      } catch (e) {
+        setName("****");
+        setSymbol("****");
+        setTotalAssets(0);
+        setTotalSupply(0);
+        setQuote(0);
+      } finally {
+        setMounted(jsx_dev_runtime19.jsxDEV(CardLoadedSlide, {
+          address: address18,
+          name,
+          symbol,
+          totalAssets,
+          totalSupply,
+          quote
+        }, undefined, false, undefined, this));
+        return;
+      }
+    })();
+    return;
+  }, [address18]);
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+      style: { padding: "10px", borderRadius: "10px", background: SOFT_OBSIDIAN.toString() },
+      children: mounted
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function CardLoadedSlide({ address: address18, name, symbol, totalAssets, totalSupply, quote }) {
+  let [amount, setAmount] = import_react33.useState(0);
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+      style: { width: "100%", height: "100%", gap: "10px", overflow: "hidden" },
+      children: [
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          style: { width: "100%", gap: "10px", justifyContent: "start" },
+          children: [
+            jsx_dev_runtime19.jsxDEV(Typography, {
+              content: name
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime19.jsxDEV(Typography, {
+              content: symbol
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          children: jsx_dev_runtime19.jsxDEV(Typography, {
+            content: address18,
+            style: { fontSize: "0.5em" }
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime19.jsxDEV(CardData, {
+          tag: "total-assets",
+          content: totalAssets.toFixed(2)
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime19.jsxDEV(CardData, {
+          tag: "total-supply",
+          content: totalSupply.toFixed(2)
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime19.jsxDEV(CardData, {
+          tag: "quote",
+          content: quote.toFixed(2)
+        }, undefined, false, undefined, this),
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          style: { width: "100%", gap: "10px" },
+          children: [
+            jsx_dev_runtime19.jsxDEV(Button, {
+              label0: "Mint",
+              label1: "\u27E1",
+              onClick: () => MockPrototypeVaultInterface(address18).mint(amount)
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime19.jsxDEV(Button, {
+              label0: "Burn",
+              label1: "\u2600\uFE0E",
+              onClick: () => MockPrototypeVaultInterface(address18).burn(amount)
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          children: jsx_dev_runtime19.jsxDEV("input", {
+            type: "number",
+            placeholder: `USDC (Buy) or ${symbol} (Sell)`,
+            onChange: (e) => setAmount(Number(e.target.value)),
+            style: { width: "100%", all: "unset", pointerEvents: "auto", cursor: "text", color: TITANIUM.toString(), fontFamily: "satoshiRegular" }
+          }, undefined, false, undefined, this)
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function CardData({ tag, content }) {
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(GhostIronBorder, {
+      width: "100%",
+      children: jsx_dev_runtime19.jsxDEV(FlexRow, {
+        style: { width: "100%" },
+        children: [
+          jsx_dev_runtime19.jsxDEV(FlexRow, {
+            style: { width: "100%" },
+            children: jsx_dev_runtime19.jsxDEV(FlexRow, {
+              style: { width: "100%", padding: "10%", justifyContent: "start" },
+              children: jsx_dev_runtime19.jsxDEV(Typography, {
+                content: tag
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this),
+          jsx_dev_runtime19.jsxDEV(FlexRow, {
+            style: { width: "100%" },
+            children: jsx_dev_runtime19.jsxDEV(FlexRow, {
+              style: { width: "100%", padding: "10%", justifyContent: "start" },
+              children: jsx_dev_runtime19.jsxDEV(Typography, {
+                content
+              }, undefined, false, undefined, this)
+            }, undefined, false, undefined, this)
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function CardLoaderSlide() {
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+      style: { width: "100%", height: "100%" },
+      children: jsx_dev_runtime19.jsxDEV(Sprite, {
+        src: "../../../img/animation/loader/Infinity.svg",
+        style: { width: "50px", aspectRatio: "1/1" }
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function Button({ label0, label1, onClick }) {
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(DualLabelButton, {
+      label0,
+      label1,
+      size: 100,
+      color: GHOST_IRON.toString(),
+      onClick
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
+}
+function GhostIronBorder({ width, height, children }) {
+  return jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+    children: jsx_dev_runtime19.jsxDEV(FlexCol, {
+      style: { width, height, borderColor: GHOST_IRON.toString(), borderWidth: "1px", borderStyle: "solid" },
+      children
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
 }
@@ -50715,18 +51017,29 @@ function GetStarted() {
     curTknPathInput1,
     allocationInput1
   ]);
-  async function deploy() {
+  async function onConfirmButtonClick() {
     if (!deployment)
-      return null;
+      return;
     try {
-      let node = MockPrototypeVaultNodeInterface("0xa3d19477B551C8d0f4AD8A5eE0080ED5Ad094dC5");
-      let receipt = await node.deploy(nameInput, symbolInput, deployment);
-      if (receipt)
-        return receipt.hash;
-      return null;
+      let instance = await _deploy({
+        name: nameInput,
+        symbol: symbolInput,
+        tkn0: deployment[0][0],
+        cur0: deployment[0][1],
+        tknCurPath0: deployment[0][2],
+        curTknPath0: deployment[0][3],
+        allocation0: deployment[0][4],
+        tkn1: deployment[1][0],
+        cur1: deployment[1][1],
+        tknCurPath1: deployment[1][2],
+        curTknPath1: deployment[1][3],
+        allocation1: deployment[1][4]
+      });
+      console.log(instance);
+      return;
     } catch (e) {
       console.error(e);
-      return null;
+      return;
     }
   }
   return jsx_dev_runtime24.jsxDEV(jsx_dev_runtime24.Fragment, {
@@ -50772,7 +51085,7 @@ function GetStarted() {
                           children: [
                             jsx_dev_runtime24.jsxDEV(RetroMinimaButton, {
                               caption: "Confirm",
-                              onClick: () => deploy()
+                              onClick: onConfirmButtonClick
                             }, undefined, false, undefined, this),
                             jsx_dev_runtime24.jsxDEV(RetroMinimaButton, {
                               caption: "Help"
@@ -50957,6 +51270,33 @@ function AssetForm({ count, setTknInput, setTknCurPathInput, setCurTknPathInput,
       }, undefined, false, undefined, this)
     }, undefined, false, undefined, this)
   }, undefined, false, undefined, this);
+}
+async function _deploy({
+  name,
+  symbol,
+  tkn0,
+  cur0,
+  tknCurPath0,
+  curTknPath0,
+  allocation0,
+  tkn1,
+  cur1,
+  tknCurPath1,
+  curTknPath1,
+  allocation1
+}) {
+  let address18 = await accountAddress();
+  let asset0 = [tkn0, cur0, tknCurPath0, curTknPath0, allocation0];
+  let asset1 = [tkn1, cur1, tknCurPath1, curTknPath1, allocation1];
+  await node.deploy(name, symbol, [asset0, asset1]);
+  let children = await node.children();
+  let instance = "";
+  for (let i = 0;i < children.length; i++)
+    if (children[i].deployer() === address18)
+      instance = children[i].instance();
+  if (instance === "")
+    throw Error("missing-child");
+  return instance;
 }
 
 // src/public/component/Render.tsx

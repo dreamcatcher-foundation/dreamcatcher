@@ -1,6 +1,6 @@
 import type {ReactNode} from "react";
 import {MockPrototypeVaultInterface} from "@component/MockPrototypeVaultInterface";
-import {MockPrototypeVaultNodeInterface} from "@component/MockPrototypeVaultNodeInterface";
+import {MockPrototypeVaultNodeChild} from "@component/MockPrototypeVaultNodeInterface";
 import {FlexRow} from "@component/FlexRow";
 import {FlexCol} from "@component/FlexCol";
 import {Nav} from "@component/Nav";
@@ -9,54 +9,85 @@ import {Sprite} from "@component/Sprite";
 import {Typography} from "@component/Typography";
 import {DualLabelButton} from "@component/DualLabelButton";
 import {createMachine as Machine} from "xstate";
-import {useSpring} from "react-spring";
+import {a, useSpring} from "react-spring";
 import {useMachine} from "@xstate/react";
 import {useEffect, useMemo} from "react";
 import {useState} from "react";
+import {node} from "@component/MockPrototypeVaultNodeInterface";
 import * as ColorPalette from "@component/ColorPalette";
 
 export function ExplorePage(): ReactNode {
-    let [batch, setBatch] = useState<(string[])[]>([]);
-    let [batchCursor, setBatchCursor] = useState<number>(0);
-    useEffect(() => {
-        (async () => {
-            let stored: string[];
-            try {
-                console.log("fetching");
-                stored = await MockPrototypeVaultNodeInterface("0xa3d19477B551C8d0f4AD8A5eE0080ED5Ad094dC5").deployed();
+    let [batch, setBatch] = useState<string[][]>([]);
+    let [batchCursor, setBatchCursor] = useState<bigint>(0n);
+
+    useEffect((): void => {
+        try  {
+            interface Chunk {
+                hasEmptySpace(): boolean;
+                read(i: bigint): string;
+                wipe(): string[];
+                push(string: string): null;
             }
-            catch (e: unknown) {
-                console.error(e);
-                stored = [];
-            }
-            console.log(stored);
-            if (stored.length === 0) {
-                return;
-            }
-            let batchSize: number = 6;
-            let batch: string[][] = [];
-            let chunk: string[] = [];
-            let cursor: number = 0;
-            while (stored.length > 0) {
-                let item: string = stored[cursor];
-                chunk.push(item);
-                if (chunk.length === batchSize) {
-                    batch.push(chunk);
-                    chunk = [];
+
+            function Chunk(): Chunk {
+                let _minSize: bigint = 0n;
+                let _maxSize: bigint = 6n;
+                let _storage: string[] = [];
+                /***/ {
+                    return {hasEmptySpace, read, wipe, push};
                 }
-                cursor += 1;
+                function hasEmptySpace(): boolean {
+                    if (_storage.length >= _maxSize) return false;
+                    return true;
+                }
+                function read(i: bigint): string {
+                    let min: bigint = _minSize;
+                    let max: bigint = BigInt(_storage.length);
+                    if (i < min || i > max) throw Error("OUT_OF_BOUNDS");
+                    return _storage[Number(i)];
+                }
+                function wipe(): string[] {
+                    let storage: string[] = [... _storage];
+                    _storage = [];
+                    return storage;
+                }
+                function push(string: string): null {
+                    if (hasEmptySpace()) _storage.push(string);
+                    return null;
+                }
             }
-            setBatch(batch);
+
+            node
+                .children()
+                .then(children => {
+                    let chunk: Chunk = Chunk();
+                    let batch: string[][] = [];
+                    for (let i = 0; i < children.length; i++) {
+                        let child = children[i];
+                        if (chunk.hasEmptySpace()) chunk.push(child.instance());
+                        else {
+                            batch.push(chunk.wipe());
+                        }
+                    }
+                    setBatch(batch);
+                    return;
+                });
+
             return;
-        })();
-        return;
+        }
+        catch (e: unknown) {
+            console.error(e);
+            setBatch([]);
+            return;
+        }
     }, []);
+
     return <>
         <FlexCol style={{width: "100vw", height: "100vh", overflow: "hidden", pointerEvents: "none", background: ColorPalette.OBSIDIAN.toString()}}>
             <FlexCol style={{width: "1024px", height: "100%", justifyContent: "start"}}>
                 <Nav/>
                 <FlexRow>
-                    
+                    <Card address={batch[Number(batchCursor)][0]}/>
                 </FlexRow>
             </FlexCol>
         </FlexCol>

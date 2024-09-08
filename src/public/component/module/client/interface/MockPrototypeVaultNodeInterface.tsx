@@ -3,69 +3,43 @@ import {call} from "@component/Client";
 
 export type Asset = [string, string, string[], string[], bigint];
 
+export let node = MockPrototypeVaultNodeInterface("0xd5E97178fBa5A760d23c81D79d0dBFFdEA1bE844");
 
+export interface MockPrototypeVaultNodeChild {
+    deployer(): string;
+    instance(): string;
+    timestamp(): bigint;
+}
 
-class Node {
+export function MockPrototypeVaultNodeChild(_deployer: string, _instance: string, _timestamp: bigint): MockPrototypeVaultNodeChild {
 
-    public constructor(private address: string) {}
+    /***/ return {deployer, instance, timestamp};
 
-    public Child = class {
-        public constructor(
-            private readonly _deployer: string,
-            private readonly _instance: string,
-            private readonly _timestamp: bigint
-        ) {}
-    
-        public deployer(): string {
-            return this._deployer;
-        }
-    
-        public instance(): string {
-            return this._instance;
-        }
-    
-        public timestamp(): bigint {
-            return this._timestamp;
-        }
+    function deployer(): string {
+        return _deployer;
     }
 
-    public async children(): Promise<Node["Child"][]> {
+    function instance(): string {
+        return _instance;
+    }
 
-        return [];
+    function timestamp(): bigint {
+        return _timestamp;
     }
 }
 
-
-
 export function MockPrototypeVaultNodeInterface(_address: string) {
 
-    /***/ return {Child};
+    /***/ return {children, vaultFactory, ownableTokenFactory, deploy};
 
-    function Child(_deployer: string, _instance: string, _timestamp: bigint) {
-        
-        /***/ return {deployer, instance, timestamp};
-
-        function deployer(): string {
-            return _deployer;
-        }
-        function instance(): string {
-            return _instance;
-        }
-        function timestamp(): bigint {
-            return _timestamp;
-        }
-    }
-
-
-
-    async function children(): Promise<Child[]> {
+    async function children(): Promise<MockPrototypeVaultNodeChild[]> {
         let response = (await query({
             to: _address,
             methodSignature: "function children() external view returns ((string, string, uint256)[])",
             methodName: "children"
         })) as [string, string, bigint][];
-        let children: Child[] = [];
-        for (let i = 0; i < response.length; i++) children.push(new Child(response[i][0], response[i][1], response[i][2]));
+        let children: MockPrototypeVaultNodeChild[] = [];
+        for (let i = 0; i < response.length; i++) children.push(MockPrototypeVaultNodeChild(response[i][0], response[i][1], response[i][2]));
         return children;
     }
 
@@ -93,6 +67,4 @@ export function MockPrototypeVaultNodeInterface(_address: string) {
             methodArgs: [name, symbol, assets]
         })
     }
-
-    return {children, vaultFactory, deploy};
 }
