@@ -1,4 +1,4 @@
-import { TransactionReceipt } from "@component/Client";
+import { accountAddress, TransactionReceipt } from "@component/Client";
 import { query } from "@component/Client";
 import { call } from "@component/Client";
 import { Erc20Interface } from "./Erc20Interface";
@@ -104,10 +104,11 @@ export function MockPrototypeVaultInterface(_address: string): MockPrototypeVaul
 
     async function mint(assetsIn: number): Promise<TransactionReceipt | null> {
         let usdc = Erc20Interface("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359");
+        if ((await usdc.allowance(await accountAddress(), _address)) < assetsIn) throw Error("insufficient-allowance");
         /// if transaction is replaced the approval transaction is lost and the
         /// chain is broken. a better system needs to be put in place, likely a
         /// global transaction handler.
-        let approval = await usdc.approve(_address, assetsIn);
+        /// let approval = await usdc.approve(_address, assetsIn);
         return (await call({
             to: _address,
             methodSignature: "function mint(uint256) external",

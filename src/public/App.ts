@@ -5,6 +5,7 @@ import { Err } from "@lib/Result";
 import { transpileReactApp } from "doka-tools";
 import { join } from "path";
 import { compile } from "@lib/Solc";
+import {readFileSync} from "fs";
 import Express from "express";
 
 (async function() {
@@ -39,6 +40,15 @@ import Express from "express";
     Express()
         .use(Express.static(__dirname))
         .use(Express.json())
+
+        .get("/tokens", async (request, response): Promise<unknown> => {
+            let path: string = join(__dirname, "./lib/indexer/Tokens.json");
+            let content: string = readFileSync(path, "utf-8");
+            let tokens: string[] = JSON.parse(content);
+            return response
+                .status(200)
+                .send(tokens);
+        })
         
         .get("/", async (request, response) => response.status(200).sendFile(join(__dirname, "App.html")))
         /**

@@ -50384,7 +50384,8 @@ function MockPrototypeVaultInterface(_address) {
   }
   async function mint(assetsIn) {
     let usdc = Erc20Interface("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359");
-    let approval = await usdc.approve(_address, assetsIn);
+    if (await usdc.allowance(await accountAddress(), _address) < assetsIn)
+      throw Error("insufficient-allowance");
     return await call3({
       to: _address,
       methodSignature: "function mint(uint256) external",
@@ -50551,6 +50552,21 @@ function ExplorePageCardLoadedSlide({ address: address18, name, symbol, totalAss
             }, undefined, false, undefined, this),
             jsx_dev_runtime19.jsxDEV(Button, {
               label0: "Burn",
+              label1: "\u2600\uFE0E",
+              onClick: () => MockPrototypeVaultInterface(address18).burn(parseFloat(amount.current))
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        jsx_dev_runtime19.jsxDEV(FlexRow, {
+          style: { width: "100%", gap: "10px" },
+          children: [
+            jsx_dev_runtime19.jsxDEV(Button, {
+              label0: "Approve USDC",
+              label1: "\u27E1",
+              onClick: () => MockPrototypeVaultInterface(address18).mint(parseFloat(amount.current))
+            }, undefined, false, undefined, this),
+            jsx_dev_runtime19.jsxDEV(Button, {
+              label0: `Approve ${symbol}`,
               label1: "\u2600\uFE0E",
               onClick: () => MockPrototypeVaultInterface(address18).burn(parseFloat(amount.current))
             }, undefined, false, undefined, this)

@@ -1,5 +1,6 @@
 import type {ReactNode} from "react";
 import {MockPrototypeVaultInterface} from "@component/MockPrototypeVaultInterface";
+import {Erc20Interface} from "@component/Erc20Interface";
 import {FlexRow} from "@component/FlexRow";
 import {FlexCol} from "@component/FlexCol";
 import {Nav} from "@component/Nav";
@@ -9,16 +10,19 @@ import {DualLabelButton} from "@component/DualLabelButton";
 import {VerticalFlexPage} from "@component/VerticalFlexPage";
 import {FlexSlide} from "@component/FlexSlide";
 import {FlexSlideLayer} from "@component/FlexSlideLayer";
-import {useEffect, useRef} from "react";
+import {useEffect} from "react";
 import {useState} from "react";
+import {useRef} from "react";
 import {node} from "@component/MockPrototypeVaultNodeInterface";
 import * as ColorPalette from "@component/ColorPalette";
+import * as Oracle from "@component/module/oracle/Oracle";
 
 export function ExplorePage(): ReactNode {
     let [address, setAddress] = useState<string>("");
 
     useEffect((): void => {
         (async (): Promise<void> => {
+
             setAddress((await node.child(0n))[1]);
         })();
         return;
@@ -101,6 +105,15 @@ export function ExplorePageCardLoaderSlide(): ReactNode {
 
 export function ExplorePageCardLoadedSlide({address, name, symbol, totalAssets, totalSupply, quote}: {address: string; name: string; symbol: string; totalAssets: number; totalSupply: number; quote: number;}): ReactNode {
     let amount = useRef<string>("0");
+    async function approveMint(): Promise<void> {
+        let usdc: Erc20Interface = Erc20Interface("0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359");
+        await usdc.approve(address, parseFloat(amount.current));
+        return;
+    }
+    async function approveBurn(): Promise<void> {
+        let instance: MockPrototypeVaultInterface = MockPrototypeVaultInterface(address);
+        
+    }
     return <>
         <FlexCol style={{width: "100%", height: "100%", gap: "10px", overflow: "hidden"}}>
             <FlexRow style={{width: "100%", gap: "10px", justifyContent: "start"}}>
@@ -114,6 +127,10 @@ export function ExplorePageCardLoadedSlide({address, name, symbol, totalAssets, 
             <FlexRow style={{width: "100%", gap: "10px"}}>
                 <Button label0="Mint" label1="⟡" onClick={() => MockPrototypeVaultInterface(address).mint(parseFloat(amount.current))}/>
                 <Button label0="Burn" label1="☀︎" onClick={() => MockPrototypeVaultInterface(address).burn(parseFloat(amount.current))}/>
+            </FlexRow>
+            <FlexRow style={{width: "100%", gap: "10px"}}>
+                <Button label0="Approve USDC" label1="⟡" onClick={() => MockPrototypeVaultInterface(address).mint(parseFloat(amount.current))}/>
+                <Button label0={`Approve ${symbol}`} label1="☀︎" onClick={() => MockPrototypeVaultInterface(address).burn(parseFloat(amount.current))}/>
             </FlexRow>
             <FlexRow>
                 <input onChange={e => amount.current = e.target.value} type="number" placeholder={`USDC (Buy) or ${symbol} (Sell)`} style={{width: "100%", all: "unset", pointerEvents: "auto", cursor: "text", color: ColorPalette.TITANIUM.toString(), fontFamily: "satoshiRegular"}}/>
