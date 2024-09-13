@@ -262,3 +262,6 @@ export function VirtualMachine(_url: string): VirtualMachine {
         return network.chainId;
     }
 }
+
+export {SelectorWithReturn} from "../selector/SelectorWithReturn";
+export {Selector} from "../selector/Selector";
